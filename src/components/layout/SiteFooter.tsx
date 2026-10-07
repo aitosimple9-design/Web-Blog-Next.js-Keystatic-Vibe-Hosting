@@ -5,7 +5,7 @@ import { SocialIcons } from "@/components/layout/SocialIcons";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-paper-raised text-ink">
+    <footer className="seam-top bg-paper-raised text-ink">
       <div className="wrap pt-s8 pb-s6">
         <div className="grid gap-s5 tablet:grid-cols-[1fr_auto_1fr] tablet:items-center">
           <Link

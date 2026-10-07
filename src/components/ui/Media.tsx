@@ -3,6 +3,7 @@
 // Luôn có tỉ lệ cố định để trang không nhảy khi ảnh tải. `transitionName` cho phép ảnh "bay" từ thẻ sang trang bài.
 import Image from "next/image";
 import { ViewTransition } from "react";
+import { bookCovers } from "@/config/covers";
 import { CoverArt } from "@/components/ui/CoverArt";
 import { ScrollParallax } from "@/components/ui/Motion";
 
@@ -16,6 +17,8 @@ type PostImageProps = {
   sizes?: string;
   className?: string;
   rounded?: boolean;
+  /** Không đổ bóng riêng (khi ảnh nằm trong thẻ đã có bóng) */
+  flat?: boolean;
   /** Lấp đầy chiều cao khung cha thay vì giữ tỉ lệ 3:2 (ô lưới bento) */
   fill?: boolean;
   /** Tên View Transition để ảnh morph giữa thẻ và trang bài (vd: `post-<slug>`) */
@@ -34,6 +37,7 @@ export function PostImage({
   sizes = "(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw",
   className = "",
   rounded = true,
+  flat = false,
   fill = false,
   transitionName,
   parallax = false,
@@ -51,7 +55,7 @@ export function PostImage({
     <div
       className={`relative w-full overflow-hidden bg-paper-deep ${
         fill ? "h-full min-h-32" : "aspect-(--post-image-ratio)"
-      } ${rounded ? "rounded-md" : ""} ${className}`}
+      } ${rounded ? (flat ? "rounded-md" : "rounded-md img-elevated") : ""} ${className}`}
     >
       {parallax ? <ScrollParallax className="absolute inset-0">{art}</ScrollParallax> : art}
       {!src && label ? (
@@ -90,14 +94,23 @@ export function BookCover({
   /** (giữ để tương thích) */
   tone?: "deep" | "ink" | "sunk";
 }) {
+  // Có ảnh bìa (truyền vào hoặc bìa demo theo tên sách) thì dùng ảnh; không thì CoverArt sinh tự động
+  const cover = src ?? (title ? bookCovers[title] : undefined);
   return (
     <div
       className={`relative aspect-(--cover-ratio) shrink-0 overflow-hidden rounded-cover bg-paper-deep text-ink shadow-cover-shadow ${
         fluid ? "w-full" : widths[size]
       } ${className}`}
     >
-      {src ? (
-        <Image src={src} alt={title ? `Bìa sách ${title}` : ""} fill sizes="300px" className="object-cover" />
+      {cover ? (
+        <Image
+          src={cover}
+          alt={title ? `Bìa sách ${title}` : ""}
+          fill
+          sizes="300px"
+          unoptimized={cover.endsWith(".svg")}
+          className="object-cover"
+        />
       ) : (
         <>
           <CoverArt seed={seed ?? title ?? "bia"} orientation="tall" />

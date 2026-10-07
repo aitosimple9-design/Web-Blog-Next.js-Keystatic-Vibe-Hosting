@@ -108,7 +108,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
 
         <div
           id={listId}
-          className={`${showPanel ? "block" : "hidden"} mt-s2 max-h-[60vh] overflow-auto rounded-md border-(length:--border-width) border-rule bg-paper-raised text-ink desktop:absolute desktop:top-[calc(100%+8px)] desktop:right-0 desktop:z-10 desktop:mt-0 desktop:w-96`}
+          className={`${showPanel ? "block" : "hidden"} mt-s2 max-h-[60vh] overflow-auto rounded-md border-(length:--border-width) border-rule bg-paper-raised shadow-elevated-lg text-ink desktop:absolute desktop:top-[calc(100%+8px)] desktop:right-0 desktop:z-10 desktop:mt-0 desktop:w-96`}
         >
           {results.length ? (
             <ul>

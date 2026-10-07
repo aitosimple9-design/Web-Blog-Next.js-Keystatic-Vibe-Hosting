@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { site } from "@/config/site";
+import { brushStyle } from "@/lib/brush";
 import { topicBySlug } from "@/config/topics";
 import { getAllPosts, getPost, getRelatedPosts } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
@@ -10,13 +11,15 @@ import { Newsletter } from "@/components/layout/Newsletter";
 import { ArticleHeader, SourceBox } from "@/components/article/ArticleParts";
 import { TOC } from "@/components/article/TOC";
 import { RelatedSlider } from "@/components/article/RelatedSlider";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { PostImage } from "@/components/ui/Media";
 import { ScrollProgress } from "@/components/ui/Motion";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
-export const generateStaticParams = () => getAllPosts().map((p) => ({ slug: p.slug }));
+export const generateStaticParams = () =>
+  getAllPosts().map((p) => ({ slug: p.slug }));
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -52,7 +55,11 @@ export default async function ArticlePage({ params }: Props) {
     description: post.description,
     datePublished: post.date,
     author: { "@type": "Person", name: post.source.author },
-    isBasedOn: { "@type": "Book", name: post.source.book, author: post.source.author },
+    isBasedOn: {
+      "@type": "Book",
+      name: post.source.book,
+      author: post.source.author,
+    },
     articleSection: topic?.name,
     inLanguage: "vi",
     mainEntityOfPage: `${site.url}/bai-viet/${post.slug}`,
@@ -62,24 +69,46 @@ export default async function ArticlePage({ params }: Props) {
     <PageShell tone="paper">
       <ScrollProgress />
       <article>
-        {/* HERO: ảnh tràn hết bề ngang; khối tiêu đề nền đặc gối lên đáy ảnh (không đặt chữ trực tiếp lên ảnh) */}
+        {/* HERO: ảnh tràn hết bề ngang, chủ đề / tiêu đề / mô tả / ngày nằm GIỮA ảnh (không có nền riêng bên dưới);
+            lớp phủ `inverse` 55% (màu phẳng) giữ chữ dễ đọc; đáy cắt bằng mask nét cọ */}
         <section aria-label="Đầu bài">
-          <div className="relative h-[clamp(240px,46vw,600px)] w-full overflow-hidden bg-paper-deep">
-            <PostImage
-              src={post.cover}
-              alt=""
-              seed={post.slug}
-              fill
-              rounded={false}
-              priority
-              parallax
-              transitionName={`post-${post.slug}`}
-              sizes="100vw"
-            />
-          </div>
-          <div className="wrap relative z-10 -mt-s8 tablet:-mt-s9">
-            <div className="mx-auto max-w-4xl rounded-lg border-(length:--border-width) border-rule bg-paper px-s5 py-s6 tablet:px-s8 tablet:py-s7">
+          <div
+            className="on-inverse brush-bottom relative isolate min-h-[clamp(560px,52vw,680px)] w-full overflow-hidden bg-inverse text-on-inverse"
+            style={brushStyle}
+          >
+            <div className="absolute inset-0 -z-20">
+              <PostImage
+                src={post.cover}
+                alt=""
+                seed={post.slug}
+                fill
+                rounded={false}
+                priority
+                parallax
+                transitionName={`post-${post.slug}`}
+                sizes="100vw"
+              />
+            </div>
+            <div aria-hidden className="absolute inset-0 -z-10 bg-inverse/62" />
+            <div className="wrap flex min-h-[inherit] flex-col items-center justify-center pt-s8 pb-[calc(var(--brush-h)+var(--space-9))]">
               <ArticleHeader post={post} />
+              <Breadcrumb
+                center
+                className="absolute bottom-[calc(var(--brush-h)+var(--space-4))] left-1/2 w-max max-w-[calc(100%-32px)] -translate-x-1/2"
+                items={[
+                  { label: "Trang chủ", href: "/" },
+                  { label: "Blog", href: "/blog" },
+                  ...(topicBySlug(post.category)
+                    ? [
+                        {
+                          label: topicBySlug(post.category)!.name,
+                          href: `/blog/${post.category}`,
+                        },
+                      ]
+                    : []),
+                  { label: post.title },
+                ]}
+              />
             </div>
           </div>
         </section>
@@ -90,7 +119,11 @@ export default async function ArticlePage({ params }: Props) {
           </div>
 
           <div className="min-w-0">
-            <SourceBox book={post.source.book} author={post.source.author} className="min-[1280px]:hidden" />
+            <SourceBox
+              book={post.source.book}
+              author={post.source.author}
+              className="min-[1280px]:hidden"
+            />
 
             <div
               className="prose-article mx-auto mt-s5 desktop:mx-0 tablet:mt-s6"
@@ -100,7 +133,11 @@ export default async function ArticlePage({ params }: Props) {
 
           <div className="hidden min-w-0 min-[1280px]:block">
             <div className="sticky top-[calc(var(--header-height)+var(--space-6))]">
-              <SourceBox book={post.source.book} author={post.source.author} compact />
+              <SourceBox
+                book={post.source.book}
+                author={post.source.author}
+                compact
+              />
             </div>
           </div>
         </div>
@@ -111,7 +148,9 @@ export default async function ArticlePage({ params }: Props) {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
       />
     </PageShell>
   );

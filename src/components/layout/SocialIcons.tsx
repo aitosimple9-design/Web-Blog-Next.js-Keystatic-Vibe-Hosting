@@ -1,34 +1,80 @@
-// 7 icon mạng xã hội. URL cấu hình ở src/config/site.ts (Q14). Chưa có URL thì hiển thị mờ, chưa bấm được.
-// Mỗi icon là vùng bấm 44x44px, cách nhau 8px; hàng tự xuống dòng khi hết chỗ (7 icon = 356px > 327px ở 375px).
+// 7 icon mạng xã hội. URL cấu hình ở src/config/site.ts (Q14; hiện là URL demo). Chưa có URL thì hiển thị mờ, chưa bấm được.
+// Dạng chip tròn nổi; hover: nhấc lên, nền gradient hiện dần, icon phóng, nhãn tên nền tảng nổi phía trên.
+// Mặc định: mỗi chip 44px, hàng tự xuống dòng khi hết chỗ (chân trang).
+// `featured` (Hero): MỘT hàng duy nhất, icon được chọn nằm giữa, to nhất và luôn có nền gradient; 6 chip còn lại nhỏ 36px
+// (vùng bấm vẫn đủ 44px nhờ lớp mở rộng 4px mỗi phía, nên hai vùng bấm kề nhau chạm sát; khoảng cách giữa các vòng 8px).
+import type { SocialId } from "@/config/site";
 import { socialLinks } from "@/config/site";
 import { SocialIcon } from "@/components/ui/Icon";
 
-export function SocialIcons({ className = "" }: { className?: string }) {
+export function SocialIcons({
+  className = "",
+  featured,
+}: {
+  className?: string;
+  featured?: SocialId;
+}) {
+  // Đưa icon nổi bật vào vị trí chính giữa hàng
+  const list = (() => {
+    if (!featured) return socialLinks;
+    const rest = socialLinks.filter((l) => l.id !== featured);
+    const main = socialLinks.find((l) => l.id === featured);
+    if (!main) return socialLinks;
+    rest.splice(Math.floor(socialLinks.length / 2), 0, main);
+    return rest;
+  })();
   return (
-    <ul className={`flex flex-wrap gap-2 ${className}`} aria-label="Mạng xã hội">
-      {socialLinks.map((s) => (
-        <li key={s.id}>
-          {s.href ? (
-            <a
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={s.label}
-              className="tap inline-flex items-center justify-center rounded-sm transition-[transform,background-color] duration-(--motion-normal) ease-(--ease-smooth) hover:-translate-y-1 hover:bg-current/10 active:scale-95"
-            >
-              <SocialIcon id={s.id} />
-            </a>
-          ) : (
-            <span
-              role="img"
-              aria-label={`${s.label} (chưa có liên kết)`}
-              className="tap inline-flex items-center justify-center rounded-sm opacity-50"
-            >
-              <SocialIcon id={s.id} />
-            </span>
-          )}
-        </li>
-      ))}
+    <ul
+      className={`flex gap-s2 ${featured ? "flex-nowrap items-center" : "flex-wrap"} ${className}`}
+      aria-label="Mạng xã hội"
+    >
+      {list.map((s) => {
+        const big = featured === s.id;
+        const small = !!featured && !big;
+        return (
+          <li key={s.id}>
+            {s.href ? (
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${s.label} (mở trang mới)`}
+                className={`group/soc relative isolate inline-flex items-center justify-center rounded-pill border-(length:--border-width) no-underline ${
+                  big
+                    ? "btn-grad-bg size-[60px] border-transparent text-on-accent shadow-elevated-md outline-1 outline-offset-4 outline-accent-warm/50"
+                    : `border-rule-strong bg-paper-raised text-ink-soft shadow-elevated-sm ${small ? "size-9 after:absolute after:-inset-1 after:content-['']" : "tap"}`
+                }  transition-[transform,box-shadow,color,border-color] duration-(--motion-normal) ease-(--ease-smooth) hover:border-transparent hover:text-on-accent hover:shadow-elevated-md motion-safe:hover:-translate-y-1 active:scale-95`}
+              >
+                {/* Nền gradient hiện dần khi hover */}
+                <span
+                  aria-hidden
+                  className="btn-grad-bg absolute inset-0 -z-10 rounded-pill opacity-0 transition-opacity duration-(--motion-normal) ease-(--ease-smooth) group-hover/soc:opacity-100 group-focus-visible/soc:opacity-100"
+                />
+                <SocialIcon
+                  id={s.id}
+                  size={big ? 32 : small ? 20 : 24}
+                  className="transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover/soc:scale-110"
+                />
+                {/* Nhãn tên nền tảng nổi lên phía trên */}
+                <span
+                  aria-hidden
+                  className="type-caption pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 translate-y-1 rounded-sm bg-ink px-s2 py-s1 whitespace-nowrap text-paper opacity-0 shadow-elevated-sm transition-[opacity,transform] duration-(--motion-fast) ease-(--ease-smooth) group-hover/soc:translate-y-0 group-hover/soc:opacity-100 group-focus-visible/soc:translate-y-0 group-focus-visible/soc:opacity-100"
+                >
+                  {s.label}
+                </span>
+              </a>
+            ) : (
+              <span
+                role="img"
+                aria-label={`${s.label} (chưa có liên kết)`}
+                className="tap inline-flex items-center justify-center rounded-sm opacity-50"
+              >
+                <SocialIcon id={s.id} />
+              </span>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

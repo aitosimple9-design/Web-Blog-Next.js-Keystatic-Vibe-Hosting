@@ -5,7 +5,6 @@ import { topicBySlug } from "@/config/topics";
 import { formatDateLong, formatDateShort, formatReadTime } from "@/lib/format";
 import type { PostMeta } from "@/lib/posts";
 import { PostImage } from "@/components/ui/Media";
-import { TopicTag } from "@/components/ui/Tag";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 
 export function PostCard({
@@ -23,19 +22,40 @@ export function PostCard({
   const href = `/bai-viet/${post.slug}`;
 
   if (variant === "tile") {
+    // Vùng ảnh kéo xuống phủ cả nhãn, tiêu đề và ngày; một lớp phủ `inverse` 65% (màu phẳng) giữ chữ dễ đọc
     return (
-      <article className={`group lift relative flex h-full flex-col gap-s4 ${className}`}>
-        <div className="min-h-0 flex-1">
-          <PostImage src={post.cover} seed={post.slug} label={topic} fill priority={priority} transitionName={`post-${post.slug}`} />
+      <article
+        className={`group lift surface-hover on-inverse relative isolate flex h-full flex-col justify-end overflow-hidden rounded-md bg-inverse p-s5 text-on-inverse shadow-elevated-md ${className}`}
+      >
+        <div className="absolute inset-0 -z-20">
+          <PostImage
+            src={post.cover}
+            seed={post.slug}
+            label={topic}
+            fill
+            flat
+            rounded={false}
+            priority={priority}
+            transitionName={`post-${post.slug}`}
+          />
         </div>
-        <div className="flex flex-col gap-s2">
-          <TopicTag>{topic}</TopicTag>
-          <h3 className="type-title line-clamp-2">
-            <Link href={href} className="no-underline after:absolute after:inset-0">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-inverse/65 transition-opacity duration-(--motion-normal) ease-(--ease-smooth) group-hover:opacity-80"
+        />
+        <div className="flex flex-col gap-s4">
+          <span className="type-caption inline-flex w-fit rounded-pill border-(length:--border-width) border-on-inverse-soft/60 bg-on-inverse/15 px-s3 py-1 text-on-inverse">
+            {topic}
+          </span>
+          <h3 className="type-title line-clamp-2 leading-normal">
+            <Link
+              href={href}
+              className="no-underline after:absolute after:inset-0"
+            >
               <span className="ul-grow">{post.title}</span>
             </Link>
           </h3>
-          <p className="type-caption text-ink-faint">
+          <p className="type-caption text-on-inverse-soft">
             {formatDateLong(post.date)} · {formatReadTime(post.readingMinutes)}
           </p>
         </div>
@@ -43,22 +63,50 @@ export function PostCard({
     );
   }
 
+  // Thẻ bài (lưới Blog): cùng khuôn với thẻ chủ đề, ảnh tràn cả thẻ 3:4 phủ `inverse` 65%, chữ nằm thẳng trên ảnh, nổi `elevated`
   return (
-    <article className={`group lift relative flex h-full flex-col gap-s4 ${className}`}>
-      <PostImage src={post.cover} seed={post.slug} label={topic} priority={priority} transitionName={`post-${post.slug}`} />
-      <div className="flex flex-1 flex-col gap-s3">
-        <TopicTag>{topic}</TopicTag>
-        <h3 className="type-title line-clamp-2 text-balance">
-          <Link href={href} className="no-underline after:absolute after:inset-0">
+    <article
+      className={`group lift surface-hover on-inverse relative isolate flex aspect-[3/4] h-full w-full flex-col justify-end overflow-hidden rounded-lg bg-inverse p-s5 text-on-inverse shadow-elevated-lg ${className}`}
+    >
+      <div className="absolute inset-0 -z-20">
+        <PostImage
+          src={post.cover}
+          seed={post.slug}
+          label={topic}
+          fill
+          flat
+          rounded={false}
+          priority={priority}
+          transitionName={`post-${post.slug}`}
+        />
+      </div>
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-inverse/65 transition-opacity duration-(--motion-normal) ease-(--ease-smooth) group-hover:opacity-80"
+      />
+      <div className="flex flex-col gap-s4">
+        <span className="type-caption inline-flex w-fit rounded-pill border-(length:--border-width) border-on-inverse-soft/60 bg-on-inverse/15 px-s3 py-1 text-on-inverse">
+          {topic}
+        </span>
+        <h3 className="type-display-sm line-clamp-2 text-balance leading-normal">
+          <Link
+            href={href}
+            className="no-underline after:absolute after:inset-0"
+          >
             <span className="ul-grow">{post.title}</span>
           </Link>
         </h3>
-        <p className="type-excerpt line-clamp-2 text-ink-soft">{post.description}</p>
-        <div className="mt-auto flex items-center justify-between gap-s3 pt-s2">
-          <p className="type-caption text-ink-faint">
+        <p className="type-excerpt line-clamp-2 text-on-inverse">
+          {post.description}
+        </p>
+        <div className="flex items-center justify-between gap-s3">
+          <p className="type-caption text-on-inverse-soft">
             {formatDateShort(post.date)} · {post.readingMinutes} phút
           </p>
-          <span className="type-label inline-flex items-center gap-s1" aria-hidden>
+          <span
+            className="type-label inline-flex items-center gap-s1"
+            aria-hidden
+          >
             Đọc bài
             <ArrowRightIcon className="transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:translate-x-2" />
           </span>

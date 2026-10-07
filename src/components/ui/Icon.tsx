@@ -56,6 +56,19 @@ export const ChevronDownIcon = ({ size = 16, ...p }: P) => (
   </svg>
 );
 
+export const ChevronRightIcon = ({ size = 14, ...p }: P) => (
+  <svg {...base(size, p)}>
+    <path d="m9 6 6 6-6 6" />
+  </svg>
+);
+
+export const HomeIcon = ({ size = 16, ...p }: P) => (
+  <svg {...base(size, p)}>
+    <path d="m4 11 8-6.5 8 6.5M6 9.8V19h12V9.8" />
+    <path d="M10 19v-5h4v5" />
+  </svg>
+);
+
 export const ArrowRightIcon = ({ size = 16, ...p }: P) => (
   <svg {...base(size, p)}>
     <path d="M5 12h14M13 6l6 6-6 6" />
@@ -78,23 +91,6 @@ export const AlertIcon = ({ size = 16, ...p }: P) => (
   <svg {...base(size, p)}>
     <circle cx="12" cy="12" r="9" />
     <path d="M12 7.5v5.5M12 16.4v.1" />
-  </svg>
-);
-
-const glyph = (size: number, p: SVGProps<SVGSVGElement>, text: string, fs = 13) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable={false} {...p}>
-    <text
-      x="12"
-      y="12"
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontFamily="var(--font-sans-stack)"
-      fontWeight={700}
-      fontSize={fs}
-      fill="currentColor"
-    >
-      {text}
-    </text>
   </svg>
 );
 
@@ -123,13 +119,38 @@ export function SocialIcon({ id, size = 20, ...p }: P & { id: SocialId }) {
         </svg>
       );
     case "facebook":
-      return glyph(size, p, "f", 18);
+      return (
+        <svg {...base(size, p)} fill="currentColor" stroke="none">
+          <path d="M13.6 21v-7.6h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.1H8v3h2.5V21z" />
+        </svg>
+      );
     case "linkedin":
-      return glyph(size, p, "in", 12);
+      return (
+        <svg {...base(size, p)}>
+          <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
+          <path d="M8.2 10.5v5.8M8.2 7.9v.01M12 16.3v-5.8m0 2.6c0-1.6 1-2.7 2.5-2.7s2.2 1.1 2.2 2.7v3.1" />
+        </svg>
+      );
     case "x":
-      return glyph(size, p, "X", 14);
+      // Logo X: hai nét chéo (đặc), vẽ theo logo chính thức
+      return (
+        <svg {...base(size, p)} fill="currentColor" stroke="none">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      );
     case "zalo":
-      return glyph(size, p, "Z", 14);
+      // Logo Zalo: bong bóng chat đặc, chữ "Zalo" khoét rỗng bên trong
+      return (
+        <svg {...base(size, p)} fill="currentColor" stroke="none">
+          <mask id="zalo-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+            <rect width="24" height="24" fill="white" />
+            <text x="12" y="13.6" textAnchor="middle" fontSize="7.4" fontWeight="800" fontFamily="Arial, Helvetica, sans-serif" fill="black">
+              Zalo
+            </text>
+          </mask>
+          <path mask="url(#zalo-mask)" d="M12 2.5c5.3 0 9.5 3.6 9.5 8.2s-4.2 8.2-9.5 8.2c-1 0-2-.1-2.9-.4L5 20.6l.9-3.6C3.9 15.6 2.5 13.3 2.5 10.7 2.5 6.1 6.7 2.5 12 2.5Z" />
+        </svg>
+      );
   }
 }
 

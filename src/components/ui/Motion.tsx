@@ -136,24 +136,20 @@ export function CountUp({ to, suffix = "", className = "" }: { to: number; suffi
   );
 }
 
-/* ---------- Dải chữ chạy theo thanh cuộn (không tự chạy, nên không cần nút dừng) ---------- */
+/* ---------- Dải chữ tự trôi chậm (CSS .marquee-run; dừng khi rê chuột, tắt khi giảm chuyển động) ---------- */
 
 export function ScrollMarquee({ words, className = "" }: { words: string[]; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const x = useTransform(scrollYProgress, [0, 1], ["6%", "-34%"]);
-  const row = [...words, ...words, ...words];
+  const row = [...words, ...words, ...words, ...words];
   return (
-    <div ref={ref} aria-hidden className={`overflow-hidden ${className}`}>
-      <motion.div className="flex w-max items-center gap-s6 whitespace-nowrap" style={reduce ? undefined : { x }}>
+    <div aria-hidden className={`marquee-wrap overflow-hidden ${className}`}>
+      <div className="marquee-run flex w-max items-center gap-s5 whitespace-nowrap tablet:gap-s6">
         {row.map((w, i) => (
-          <span key={i} className="flex items-center gap-s6">
+          <span key={i} className="flex items-center gap-s5 tablet:gap-s6">
             <span>{w}</span>
-            <span className="block size-3 rounded-pill bg-current opacity-40" />
+            <span className="block size-1.5 rotate-45 rounded-[1px] bg-accent-warm opacity-70" />
           </span>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }

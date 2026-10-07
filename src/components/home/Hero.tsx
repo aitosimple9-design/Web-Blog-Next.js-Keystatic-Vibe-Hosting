@@ -1,5 +1,5 @@
 // Hero Trang chủ (dải paper-sunk). Một CTA chính duy nhất: "Đọc bài mới nhất".
-// 375: 1 cột (tiêu đề, ảnh vuông, chữ + CTA + icon, số liệu) · 768: 2 cột (ảnh 4:5 trái; chữ + số liệu phải) ·
+// 375: 1 cột (tiêu đề, ảnh 3:4 hẹp ≤ 22rem, chữ + CTA + icon, số liệu) · 768: 2 cột (ảnh 3:4 trái; chữ + số liệu phải) ·
 // 1024+: 3 cột (chữ | ảnh | số liệu dọc), tiêu đề hai dòng đè lên mép trên ảnh.
 // Chuyển động: tiêu đề hiện từng chữ, ảnh bung ra, chữ/CTA/số liệu nổi lên lần lượt (CSS, chạy ngay khi vẽ);
 // ảnh nghiêng + các lớp trôi theo con trỏ; số liệu đếm lên khi cuộn tới (Motion.tsx).
@@ -50,9 +50,9 @@ export function Hero({
         style={{ "--delay": "260ms" } as React.CSSProperties}
       >
         <PointerScene tilt={4} className="h-full">
-        <article className="group relative h-full">
+        <article className="group relative mx-auto w-full max-w-[22rem] desktop:max-w-[21rem]">
           <PointerLayer depth={-6} className="h-full">
-            <div className="aspect-square overflow-hidden rounded-md tablet:aspect-[4/5] desktop:aspect-auto desktop:h-full desktop:min-h-[420px]">
+            <div className="aspect-[3/4] overflow-hidden rounded-md">
               <PostImage
                 src={featured?.cover}
                 seed={featured?.slug}
@@ -73,7 +73,7 @@ export function Hero({
           ) : null}
 
           <PointerLayer depth={10} className="absolute inset-x-s3 bottom-s3">
-            <div className="flex items-center justify-between gap-s4 rounded-md bg-paper-raised p-s4 text-ink">
+            <div className="flex items-center justify-between gap-s4 rounded-md surface-raised p-s4 text-ink">
               <div className="min-w-0">
                 <p className="type-eyebrow uppercase text-ink-faint">Bài nổi bật</p>
                 <h2 className="type-title mt-s1 line-clamp-2 text-balance">
@@ -108,7 +108,7 @@ export function Hero({
         </div>
         <div className="anim-fade-rise mt-s5" style={{ "--delay": "760ms" } as React.CSSProperties}>
           <p className="type-caption text-ink-faint">Theo dõi</p>
-          <SocialIcons className="mt-s2 -ml-1" />
+          <SocialIcons featured="zalo" className="mt-s3" />
         </div>
       </div>
 

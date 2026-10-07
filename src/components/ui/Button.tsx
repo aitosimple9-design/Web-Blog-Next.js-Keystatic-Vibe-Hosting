@@ -4,20 +4,22 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "quiet" | "on-inverse" | "secondary-on-inverse";
 
+// Nền "quét" từ trái sang phải khi hover (nút phụ)
+const sweep =
+  "before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:transition-transform before:duration-(--motion-normal) before:ease-(--ease-smooth) hover:before:scale-x-100 ";
+
+// Nút chính: gradient cùng tông màu nhấn + viền sáng trong + vệt sáng quét (lớp .btn-grad trong globals.css)
 const variants: Record<Variant, string> = {
-  primary: "bg-accent text-on-accent px-(--button-pad-x) before:bg-accent-strong",
-  secondary:
-    "border-(length:--border-width) border-rule-strong text-ink px-(--button-pad-x) before:bg-paper-sunk",
-  quiet: "text-accent hover:underline underline-offset-(--underline-offset) px-s2 before:hidden",
-  "on-inverse": "bg-on-inverse text-inverse px-(--button-pad-x) before:bg-inverse/15",
-  "secondary-on-inverse":
-    "border-(length:--border-width) border-on-inverse-soft text-on-inverse px-(--button-pad-x) before:bg-on-inverse/15",
+  primary: "btn-grad bg-accent text-on-accent px-(--button-pad-x)",
+  secondary: `${sweep}border-(length:--border-width) border-rule-strong text-ink px-(--button-pad-x) before:bg-paper-sunk`,
+  quiet: "text-accent hover:underline underline-offset-(--underline-offset) px-s2",
+  "on-inverse": "btn-grad btn-grad-inverse bg-on-inverse text-inverse px-(--button-pad-x)",
+  "secondary-on-inverse": `${sweep}border-(length:--border-width) border-on-inverse-soft text-on-inverse px-(--button-pad-x) before:bg-on-inverse/15`,
 };
 
-// Hover: nền "quét" từ trái sang phải, mũi tên cuối nút trượt nhẹ; nhấn: thu về 0.95 (skill motion-system)
+// Hover: mũi tên cuối nút trượt nhẹ; nhấn: thu về 0.95 (skill motion-system)
 const base =
   "type-button tap relative isolate inline-flex items-center justify-center gap-s2 overflow-hidden rounded-sm text-center no-underline select-none " +
-  "before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:transition-transform before:duration-(--motion-normal) before:ease-(--ease-smooth) hover:before:scale-x-100 " +
   "[&_svg:last-child]:transition-transform [&_svg:last-child]:duration-(--motion-normal) [&_svg:last-child]:ease-(--ease-smooth) hover:[&_svg:last-child]:translate-x-1 " +
   "transition-[color,transform] duration-(--motion-fast) active:scale-95 disabled:pointer-events-none disabled:opacity-60";
 

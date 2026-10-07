@@ -26,13 +26,13 @@ export function TopicHero({
 }) {
   const [b1, b2, b3] = [books[0], books[1] ?? books[0], books[2] ?? books[0]];
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s6 pb-s8 text-center desktop:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_320px] desktop:items-center desktop:gap-x-s7 desktop:pt-s6 desktop:text-left">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s3 pb-s9 text-center desktop:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_220px] desktop:items-start desktop:gap-x-s5 desktop:pt-s2 desktop:text-left">
       {/* Chữ + CTA */}
       <div className="anim-fade-rise mx-auto max-w-xl desktop:mx-0 desktop:max-w-none">
         <p className="type-eyebrow inline-block rounded-pill border-(length:--border-width) border-on-inverse-soft px-s4 py-s1 uppercase text-on-inverse-soft tablet:py-s2">
           Chủ đề
         </p>
-        <h2 className="type-display-lg mt-s4 text-balance text-on-inverse">{topic.name}</h2>
+        <h2 className="type-display-lg mt-s3 text-balance text-on-inverse">{topic.name}</h2>
         <p className="type-dek mt-s3 text-on-inverse-soft">{topic.description}</p>
         {latestHref ? (
           <Button href={latestHref} variant="on-inverse" className="mt-s5">

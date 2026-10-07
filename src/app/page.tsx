@@ -22,7 +22,7 @@ export default function HomePage() {
   const [featured, ...rest] = posts;
   return (
     <PageShell tone="sunk">
-      <section className="bg-paper-sunk text-ink" aria-label="Giới thiệu">
+      <section className="seam-bottom bg-paper-sunk text-ink" aria-label="Giới thiệu">
         <Hero
           featured={featured}
           stats={[
@@ -32,8 +32,8 @@ export default function HomePage() {
           ]}
         />
       </section>
-      <div className="bg-paper py-s6 text-ink-faint tablet:py-s7">
-        <ScrollMarquee words={["Đọc", "Ghi chép", "Suy ngẫm", "Áp dụng", "Nhớ lâu"]} className="type-display-xl font-semibold" />
+      <div className="bg-paper py-s4 text-ink-soft tablet:py-s5">
+        <ScrollMarquee words={["Đọc", "Ghi chép", "Suy ngẫm", "Áp dụng", "Nhớ lâu"]} className="type-display-sm font-medium tracking-wide" />
       </div>
       <TopicSlider topics={topics} counts={countByTopic()} />
       <LatestGrid posts={rest.slice(0, 4)} total={stats.posts} />

@@ -7,7 +7,7 @@
 // Tương tác (docs/design-system/EXTENSIONS.md): nhãn một dòng + "Tùy chọn" tách riêng; icon đầu ô đổi màu và phóng nhẹ khi focus;
 // gạch chân nhấn chạy từ trái sang phải khi focus; hover đổi viền; ô lỗi lắc một lần; các vòng trang trí trôi theo con trỏ;
 // dấu tích thành công được "vẽ". Tất cả tắt khi giảm chuyển động.
-import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { AlertIcon, CheckIcon, MailIcon, PhoneIcon, UserIcon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { PointerLayer, PointerScene } from "@/components/ui/Motion";
@@ -36,9 +36,9 @@ async function submitSubscription(data: Fields): Promise<void> {
 }
 
 const icons: Record<keyof Fields, ReactNode> = {
-  name: <UserIcon />,
-  phone: <PhoneIcon />,
-  email: <MailIcon />,
+  name: <UserIcon size={18} />,
+  phone: <PhoneIcon size={18} />,
+  email: <MailIcon size={18} />,
 };
 
 export function Newsletter({ className = "" }: { className?: string }) {
@@ -48,6 +48,21 @@ export function Newsletter({ className = "" }: { className?: string }) {
   const [errors, setErrors] = useState<Errors>({});
   const [shakeKey, setShakeKey] = useState(0);
   const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
+
+  // Ghi nhận người dùng đang dùng chuột hay bàn phím để CSS (.field-premium) ẩn / hiện vòng focus cho đúng
+  useEffect(() => {
+    const root = document.documentElement;
+    const onPointer = () => (root.dataset.modality = "pointer");
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Tab" || e.key.startsWith("Arrow")) root.dataset.modality = "keyboard";
+    };
+    document.addEventListener("pointerdown", onPointer, true);
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer, true);
+      document.removeEventListener("keydown", onKey, true);
+    };
+  }, []);
 
   const set = (k: keyof Fields) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -79,19 +94,10 @@ export function Newsletter({ className = "" }: { className?: string }) {
     const err = errors[k];
     return (
       <div key={`${k}-${err ? shakeKey : 0}`} className={`group/field ${opts?.span ? "tablet:col-span-2" : ""} ${err ? "anim-shake" : ""}`}>
-        <div className="mb-s2 flex items-baseline justify-between gap-s3">
-          <label
-            htmlFor={id}
-            className="type-label whitespace-nowrap text-ink-soft transition-colors duration-(--motion-fast) group-focus-within/field:text-ink"
-          >
-            {label}
-          </label>
-          {opts?.optional ? <span className="type-caption whitespace-nowrap text-ink-faint">Tùy chọn</span> : null}
-        </div>
         <div className="relative">
           <span
             aria-hidden
-            className="pointer-events-none absolute top-1/2 left-s4 -translate-y-1/2 text-ink-faint transition-[color,transform] duration-(--motion-normal) ease-(--ease-smooth) group-focus-within/field:scale-110 group-focus-within/field:text-accent group-hover/field:text-ink-soft"
+            className="pointer-events-none absolute top-1/2 left-s4 -translate-y-1/2 text-input-icon-color opacity-60 transition-[color,transform,opacity] duration-200 ease-in-out group-focus-within/field:scale-110 group-focus-within/field:text-accent group-focus-within/field:opacity-100 group-hover/field:opacity-80"
           >
             {icons[k]}
           </span>
@@ -102,13 +108,29 @@ export function Newsletter({ className = "" }: { className?: string }) {
             onChange={set(k)}
             aria-invalid={err ? true : undefined}
             aria-describedby={err ? `${id}-err` : undefined}
-            className={`type-ui-body tap block w-full rounded-sm bg-paper-raised pr-s4 pl-11 text-ink transition-[border-color,background-color] duration-(--motion-fast) placeholder:text-ink-faint hover:bg-paper focus:bg-paper-raised ${
+            className={`field-premium type-ui-body block h-11 w-full rounded-sm bg-paper-raised pl-11 text-ink placeholder:text-transparent focus:placeholder:text-ink-faint ${"pr-s4"} ${
               err
                 ? "border-(length:--border-width-strong) border-accent-strong"
                 : "border-(length:--border-width) border-rule-strong hover:border-ink-soft focus:border-accent"
             }`}
             {...props}
           />
+          {/* Nhãn nổi: nằm trong ô như placeholder; khi focus hoặc đã nhập thì thu nhỏ, bay lên đè viền trên (chỉ transform) */}
+          <label
+            htmlFor={id}
+            className={`type-label pointer-events-none absolute top-0 left-0 flex h-11 origin-left items-center whitespace-nowrap transition-[transform,color] duration-200 ease-in-out group-focus-within/field:text-ink ${
+              values[k] ? "text-ink [&>span]:bg-paper-raised" : "text-ink-soft"
+            } ${values[k] ? "translate-x-3 -translate-y-[22px] scale-[0.82]" : "translate-x-[40px] group-focus-within/field:translate-x-3 group-focus-within/field:-translate-y-[22px] group-focus-within/field:scale-[0.82] group-focus-within/field:[&>span]:bg-paper-raised"}`}
+          >
+            <span className="rounded-sm px-1 leading-none">{label}</span>
+          </label>
+          {opts?.optional ? (
+            <span
+              className={`type-caption pointer-events-none absolute top-0 right-3 -translate-y-1/2 rounded-sm bg-paper-raised px-1 leading-none whitespace-nowrap text-ink-faint transition-opacity duration-200 ease-in-out group-focus-within/field:opacity-100 ${values[k] ? "opacity-100" : "opacity-0"}`}
+            >
+              Tùy chọn
+            </span>
+          ) : null}
           {/* Gạch nhấn chạy từ trái sang phải khi focus */}
           <span
             aria-hidden
@@ -128,7 +150,7 @@ export function Newsletter({ className = "" }: { className?: string }) {
   return (
     <section aria-labelledby={`${uid}-title`} className={`bg-paper text-ink ${className}`}>
       <div className="wrap py-s7 tablet:py-s9">
-        <PointerScene className="group/news relative overflow-hidden rounded-lg bg-paper-sunk p-s5 tablet:p-s6 desktop:grid desktop:grid-cols-[1fr_1.05fr] desktop:items-center desktop:gap-s8 desktop:p-s8">
+        <PointerScene className="group/news relative overflow-hidden rounded-lg bg-paper-sunk shadow-elevated-lg p-s5 tablet:p-s6 desktop:grid desktop:grid-cols-[1fr_1.05fr] desktop:items-center desktop:gap-s8 desktop:p-s8">
           {/* Vòng trang trí trôi theo con trỏ */}
           <PointerLayer depth={16} className="pointer-events-none absolute -top-16 -right-16">
             <svg aria-hidden viewBox="0 0 200 200" className="size-56 text-rule-strong opacity-35" fill="none" stroke="currentColor" strokeWidth="1">
@@ -167,7 +189,7 @@ export function Newsletter({ className = "" }: { className?: string }) {
             </ul>
           </div>
 
-          <div className="relative mt-s6 rounded-md border-(length:--border-width) border-transparent bg-paper-raised p-s5 transition-[border-color] duration-(--motion-normal) hover:border-rule-strong focus-within:border-rule-strong desktop:mt-0">
+          <div className="relative mt-s6 rounded-md surface-raised surface-float border-(length:--border-width) border-rule p-s5 transition-[border-color] duration-(--motion-normal) hover:border-rule-strong focus-within:border-rule-strong desktop:mt-0">
             {status === "success" ? (
               <div role="status" className="animate-fade-up py-s4 text-center">
                 <span className="mx-auto grid size-12 place-items-center rounded-pill bg-accent text-on-accent">
