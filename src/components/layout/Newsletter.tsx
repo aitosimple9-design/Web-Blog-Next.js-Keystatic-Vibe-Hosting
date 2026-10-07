@@ -3,9 +3,14 @@
 // Form đăng ký nhận bài — component DUY NHẤT, dùng ở cả 3 trang (CLAUDE.md mục 6).
 // 375: chữ rồi form, mỗi ô một hàng · 768: Họ tên + Số điện thoại cùng hàng · 1024+: chữ trái, form phải.
 // Q11 (chưa chốt): form CHƯA gửi dữ liệu đi đâu. Hàm `submitSubscription` là chỗ duy nhất cần nối backend.
-import { useId, useRef, useState, type FormEvent } from "react";
-import { AlertIcon, CheckIcon } from "@/components/ui/Icon";
+//
+// Tương tác (docs/design-system/EXTENSIONS.md): nhãn một dòng + "Tùy chọn" tách riêng; icon đầu ô đổi màu và phóng nhẹ khi focus;
+// gạch chân nhấn chạy từ trái sang phải khi focus; hover đổi viền; ô lỗi lắc một lần; các vòng trang trí trôi theo con trỏ;
+// dấu tích thành công được "vẽ". Tất cả tắt khi giảm chuyển động.
+import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { AlertIcon, CheckIcon, MailIcon, PhoneIcon, UserIcon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
+import { PointerLayer, PointerScene } from "@/components/ui/Motion";
 
 type Fields = { name: string; phone: string; email: string };
 type Errors = Partial<Record<keyof Fields, string>>;
@@ -30,11 +35,18 @@ async function submitSubscription(data: Fields): Promise<void> {
   await new Promise((r) => setTimeout(r, 700));
 }
 
+const icons: Record<keyof Fields, ReactNode> = {
+  name: <UserIcon />,
+  phone: <PhoneIcon />,
+  email: <MailIcon />,
+};
+
 export function Newsletter({ className = "" }: { className?: string }) {
   const uid = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const [values, setValues] = useState<Fields>({ name: "", phone: "", email: "" });
   const [errors, setErrors] = useState<Errors>({});
+  const [shakeKey, setShakeKey] = useState(0);
   const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
 
   const set = (k: keyof Fields) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +60,7 @@ export function Newsletter({ className = "" }: { className?: string }) {
     setErrors(errs);
     const first = (["name", "phone", "email"] as const).find((k) => errs[k]);
     if (first) {
+      setShakeKey((n) => n + 1);
       formRef.current?.querySelector<HTMLInputElement>(`[name="${first}"]`)?.focus();
       return;
     }
@@ -60,29 +73,48 @@ export function Newsletter({ className = "" }: { className?: string }) {
     k: keyof Fields,
     label: string,
     props: React.InputHTMLAttributes<HTMLInputElement>,
-    span?: boolean,
+    opts?: { span?: boolean; optional?: boolean },
   ) => {
     const id = `${uid}-${k}`;
     const err = errors[k];
     return (
-      <div className={span ? "tablet:col-span-2" : ""}>
-        <label htmlFor={id} className="type-label mb-s2 block">
-          {label}
-        </label>
-        <input
-          id={id}
-          name={k}
-          value={values[k]}
-          onChange={set(k)}
-          aria-invalid={err ? true : undefined}
-          aria-describedby={err ? `${id}-err` : undefined}
-          className={`type-ui-body tap block w-full rounded-sm bg-paper-raised px-s4 text-ink placeholder:text-ink-faint ${
-            err
-              ? "border-(length:--border-width-strong) border-accent-strong"
-              : "border-(length:--border-width) border-rule-strong"
-          }`}
-          {...props}
-        />
+      <div key={`${k}-${err ? shakeKey : 0}`} className={`group/field ${opts?.span ? "tablet:col-span-2" : ""} ${err ? "anim-shake" : ""}`}>
+        <div className="mb-s2 flex items-baseline justify-between gap-s3">
+          <label
+            htmlFor={id}
+            className="type-label whitespace-nowrap text-ink-soft transition-colors duration-(--motion-fast) group-focus-within/field:text-ink"
+          >
+            {label}
+          </label>
+          {opts?.optional ? <span className="type-caption whitespace-nowrap text-ink-faint">Tùy chọn</span> : null}
+        </div>
+        <div className="relative">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute top-1/2 left-s4 -translate-y-1/2 text-ink-faint transition-[color,transform] duration-(--motion-normal) ease-(--ease-smooth) group-focus-within/field:scale-110 group-focus-within/field:text-accent group-hover/field:text-ink-soft"
+          >
+            {icons[k]}
+          </span>
+          <input
+            id={id}
+            name={k}
+            value={values[k]}
+            onChange={set(k)}
+            aria-invalid={err ? true : undefined}
+            aria-describedby={err ? `${id}-err` : undefined}
+            className={`type-ui-body tap block w-full rounded-sm bg-paper-raised pr-s4 pl-11 text-ink transition-[border-color,background-color] duration-(--motion-fast) placeholder:text-ink-faint hover:bg-paper focus:bg-paper-raised ${
+              err
+                ? "border-(length:--border-width-strong) border-accent-strong"
+                : "border-(length:--border-width) border-rule-strong hover:border-ink-soft focus:border-accent"
+            }`}
+            {...props}
+          />
+          {/* Gạch nhấn chạy từ trái sang phải khi focus */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-1 bottom-0 h-[2px] origin-left scale-x-0 rounded-pill bg-accent transition-transform duration-(--motion-normal) ease-(--ease-smooth) group-focus-within/field:scale-x-100"
+          />
+        </div>
         {err ? (
           <p id={`${id}-err`} className="type-caption mt-s2 flex items-start gap-s2 text-ink">
             <AlertIcon className="mt-[2px] shrink-0" />
@@ -96,19 +128,21 @@ export function Newsletter({ className = "" }: { className?: string }) {
   return (
     <section aria-labelledby={`${uid}-title`} className={`bg-paper text-ink ${className}`}>
       <div className="wrap py-s7 tablet:py-s9">
-        <div className="relative overflow-hidden rounded-lg bg-paper-sunk p-s5 tablet:p-s6 desktop:grid desktop:grid-cols-[1fr_1.05fr] desktop:items-center desktop:gap-s8 desktop:p-s8">
-          <svg
-            aria-hidden
-            viewBox="0 0 200 200"
-            className="pointer-events-none absolute -top-16 -right-16 size-56 text-rule-strong opacity-35"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          >
-            <circle cx="100" cy="100" r="96" />
-            <circle cx="100" cy="100" r="72" />
-            <circle cx="100" cy="100" r="48" />
-          </svg>
+        <PointerScene className="group/news relative overflow-hidden rounded-lg bg-paper-sunk p-s5 tablet:p-s6 desktop:grid desktop:grid-cols-[1fr_1.05fr] desktop:items-center desktop:gap-s8 desktop:p-s8">
+          {/* Vòng trang trí trôi theo con trỏ */}
+          <PointerLayer depth={16} className="pointer-events-none absolute -top-16 -right-16">
+            <svg aria-hidden viewBox="0 0 200 200" className="size-56 text-rule-strong opacity-35" fill="none" stroke="currentColor" strokeWidth="1">
+              <circle cx="100" cy="100" r="96" />
+              <circle cx="100" cy="100" r="72" />
+              <circle cx="100" cy="100" r="48" />
+            </svg>
+          </PointerLayer>
+          <PointerLayer depth={-12} className="pointer-events-none absolute -bottom-20 -left-16 hidden tablet:block">
+            <svg aria-hidden viewBox="0 0 200 200" className="size-48 text-rule-strong opacity-25" fill="none" stroke="currentColor" strokeWidth="1">
+              <circle cx="100" cy="100" r="96" />
+              <circle cx="100" cy="100" r="64" />
+            </svg>
+          </PointerLayer>
 
           <div className="relative">
             <p className="type-eyebrow uppercase text-ink-soft">Bản tin</p>
@@ -120,8 +154,11 @@ export function Newsletter({ className = "" }: { className?: string }) {
             </p>
             <ul className="mt-s5 grid gap-s3">
               {perks.map((p) => (
-                <li key={p} className="type-ui-body flex items-center gap-s3">
-                  <span className="grid size-6 shrink-0 place-items-center rounded-pill bg-accent text-on-accent">
+                <li
+                  key={p}
+                  className="group/perk type-ui-body flex items-center gap-s3 transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:hover:translate-x-1"
+                >
+                  <span className="grid size-6 shrink-0 place-items-center rounded-pill bg-accent text-on-accent transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover/perk:scale-125">
                     <CheckIcon size={14} />
                   </span>
                   {p}
@@ -130,11 +167,13 @@ export function Newsletter({ className = "" }: { className?: string }) {
             </ul>
           </div>
 
-          <div className="relative mt-s6 rounded-md bg-paper-raised p-s5 desktop:mt-0">
+          <div className="relative mt-s6 rounded-md border-(length:--border-width) border-transparent bg-paper-raised p-s5 transition-[border-color] duration-(--motion-normal) hover:border-rule-strong focus-within:border-rule-strong desktop:mt-0">
             {status === "success" ? (
               <div role="status" className="animate-fade-up py-s4 text-center">
                 <span className="mx-auto grid size-12 place-items-center rounded-pill bg-accent text-on-accent">
-                  <CheckIcon size={24} />
+                  <span className="draw-check">
+                    <CheckIcon size={26} />
+                  </span>
                 </span>
                 <h3 className="type-display-sm mt-s4">Đã nhận đăng ký</h3>
                 <p className="type-ui-body mt-s2 text-ink-soft">
@@ -159,19 +198,19 @@ export function Newsletter({ className = "" }: { className?: string }) {
             ) : (
               <form ref={formRef} onSubmit={onSubmit} noValidate aria-busy={status === "sending"}>
                 <p className="type-ui-strong mb-s4">Đăng ký nhận bài</p>
-                <div className="grid gap-s4 tablet:grid-cols-2">
+                <div className="grid items-start gap-s4 tablet:grid-cols-2">
                   {field("name", "Họ tên", { type: "text", autoComplete: "name", placeholder: "Nguyễn Văn A" })}
-                  {field("phone", "Số điện thoại (không bắt buộc)", {
-                    type: "tel",
-                    autoComplete: "tel",
-                    inputMode: "tel",
-                    placeholder: "09xx xxx xxx",
-                  })}
+                  {field(
+                    "phone",
+                    "Số điện thoại",
+                    { type: "tel", autoComplete: "tel", inputMode: "tel", placeholder: "09xx xxx xxx" },
+                    { optional: true },
+                  )}
                   {field(
                     "email",
                     "Email",
                     { type: "email", autoComplete: "email", inputMode: "email", placeholder: "ban@example.com" },
-                    true,
+                    { span: true },
                   )}
                 </div>
                 <Button type="submit" wide className="mt-s5" disabled={status === "sending"}>
@@ -181,7 +220,7 @@ export function Newsletter({ className = "" }: { className?: string }) {
               </form>
             )}
           </div>
-        </div>
+        </PointerScene>
       </div>
     </section>
   );

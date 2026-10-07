@@ -35,7 +35,8 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 
 ### Newsletter (form đăng ký)
 - Chữ: nhãn "Bản tin", tiêu đề "Nhận bài mới qua email", dek "Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.", 3 gạch đầu dòng: "Ý chính, ví dụ và cách áp dụng" · "Đọc trong khoảng 10 phút" · "Hủy đăng ký bất cứ lúc nào".
-- Form: tiêu đề "Đăng ký nhận bài"; trường **Họ tên**, **Số điện thoại**, **Email** (Email chiếm cả hàng); nút chính "Đăng ký" rộng hết khung; dòng nhỏ "Chỉ gửi bài mới, không quảng cáo."
+- Form: tiêu đề "Đăng ký nhận bài"; trường **Họ tên**, **Số điện thoại** (kèm chữ riêng "Tùy chọn" cùng hàng nhãn, nhãn luôn một dòng), **Email** (chiếm cả hàng), mỗi ô có icon đầu ô; nút chính "Đăng ký" rộng hết khung; dòng nhỏ "Chỉ gửi bài mới, không quảng cáo."
+- Tương tác (đã duyệt, xem `docs/design-system/EXTENSIONS.md`): hover đổi viền / nền ô; focus: icon đổi màu + gạch nhấn chạy; lỗi lắc một lần; thành công: dấu tích được vẽ; vòng trang trí trôi theo con trỏ.
 - Có phần trang trí (`deco`).
 - 375: chữ rồi form, mỗi ô một hàng · 768: Họ tên và Số điện thoại cùng một hàng · 1024+: chữ trái, form phải.
 - Dải nền: `paper` (Design System cho phép `paper-sunk` hoặc `inverse`); khối bo `radius-lg`.

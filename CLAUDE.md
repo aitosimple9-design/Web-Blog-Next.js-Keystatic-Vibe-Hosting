@@ -9,7 +9,7 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 - `docs/HANDOFF.md` — ĐỌC ĐẦU TIÊN mỗi phiên mới: phiên trước dừng ở đâu, việc kế tiếp (xem mục 4).
 - `docs/WORKFLOW.md` — quy trình Issue → nhánh → kế hoạch → code → kiểm tra → PR. BẮT BUỘC làm theo.
 - `docs/PLAN.md` — giai đoạn hiện tại, việc tiếp theo, quyết định đang chờ (Q1–Q14).
-- `docs/design-system/` — Design System, đọc trước bất kỳ việc UI nào: `README.md` (cách dùng), `DESIGN-SYSTEM.md` (nguyên tắc, component), `tokens.json` (giá trị). Lộc quản lý thư mục này; khi lệch với CLAUDE.md thì báo Lộc.
+- `docs/design-system/` — Design System, đọc trước bất kỳ việc UI nào: `README.md` (cách dùng), `DESIGN-SYSTEM.md` (nguyên tắc, component), `tokens.json` (giá trị), `EXTENSIONS.md` (các mở rộng đã duyệt cho dự án này). Lộc quản lý thư mục này; khi lệch với CLAUDE.md thì báo Lộc.
 - `docs/layout/` — layout 3 trang: `README.md` (chỉ mục, khối dùng chung) + mỗi trang một thư mục (`chi-tiet-bai/`, `blog/`, `trang-chu/`) gồm spec `README.md` và mockup. Đọc spec trang trước khi dựng trang đó.
 - `docs/claude-log.md` — các lỗi đã gặp, đừng lặp lại.
 
@@ -110,6 +110,9 @@ draft: false                         # true = không hiển thị, không vào s
   - Hero và thẻ phải có ảnh hoặc hiệu ứng, không để ô trống. Chưa có ảnh thật: dùng `CoverArt` (ảnh nghệ thuật sinh từ slug, đơn sắc, không gradient). Ảnh thật chỉ dùng ảnh có giấy phép cho phép, ghi nguồn ở `public/images/CREDITS.md`.
   - Được phép: hiện chữ từng từ, nổi lên khi vào trang (CSS: `anim-*` trong globals.css); hover (nhấc thẻ, phóng ảnh, nền nút quét, gạch chân chạy, mũi tên trượt); nghiêng / trôi lớp theo con trỏ; chạy theo thanh cuộn (dải chữ, thị sai, thanh tiến độ đọc); đếm số; chuyển trang bằng `<ViewTransition>` (ảnh bay từ thẻ sang trang bài).
   - KHÔNG: vòng lặp vô hạn, tự chạy không dừng, animate width / height / top / left, thêm màu / gradient / đổ bóng mới.
+  - **Hero trang bài:** ảnh bìa là HERO tràn hết bề ngang đầu trang; khối tiêu đề nền đặc gối lên đáy ảnh (chữ không đặt trực tiếp lên ảnh). Thẻ **bài liên quan** là hình chữ nhật ngang 3:2 có ảnh (không vuông / không dọc).
+  - **Form:** nhãn trường luôn MỘT dòng, thông tin phụ ("Tùy chọn") là chữ riêng cùng hàng; hai ô cùng hàng phải thẳng hàng. Tương tác form xem `docs/design-system/EXTENSIONS.md`.
+  - **Mỗi khi đổi quy ước giao diện (code + yêu cầu của Lộc): cập nhật CÙNG LÚC** CLAUDE.md mục 6, `docs/design-system/EXTENSIONS.md`, spec trang trong `docs/layout/`, `.claude/agents/design-reviewer.md`, và `docs/PLAN.md` — không chỉ sửa code.
   - Bắt buộc: chỉ `transform` + `opacity`; hover chỉ trên thiết bị có chuột; theo con trỏ chỉ khi `pointer: fine`; tắt khi `prefers-reduced-motion`; duration / spring lấy từ `src/lib/motion-tokens.ts` (CSS: biến `--motion-*`, `--ease-smooth`); nhấn nút thu về `0.95`; lớp tương tác nằm trong `src/components/ui/Motion.tsx` (client).
   Màu nhấn trùng màu mực nên liên kết trong bài LUÔN gạch chân; thứ bậc đến từ cỡ chữ, độ đậm, khoảng trắng.
 - Component dùng đúng tên trong Design System (`PostCard`, `TopicCard`, `FeaturedPost`, `BookRef`, `Takeaways`, `Newsletter`, `SiteHeader`, `SiteFooter`, `Tag`);

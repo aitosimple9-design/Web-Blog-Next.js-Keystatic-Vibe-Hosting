@@ -132,3 +132,23 @@ export function SocialIcon({ id, size = 20, ...p }: P & { id: SocialId }) {
       return glyph(size, p, "Z", 14);
   }
 }
+
+export const UserIcon = ({ size = 18, ...p }: P) => (
+  <svg {...base(size, p)}>
+    <circle cx="12" cy="8" r="3.5" />
+    <path d="M5 20c.8-3.6 3.4-5.5 7-5.5s6.2 1.9 7 5.5" />
+  </svg>
+);
+
+export const PhoneIcon = ({ size = 18, ...p }: P) => (
+  <svg {...base(size, p)}>
+    <path d="M6.5 4h3l1.5 4-2 1.3a11 11 0 0 0 5.7 5.7L16 13l4 1.5v3a2 2 0 0 1-2 2A14 14 0 0 1 4.5 6a2 2 0 0 1 2-2Z" />
+  </svg>
+);
+
+export const MailIcon = ({ size = 18, ...p }: P) => (
+  <svg {...base(size, p)}>
+    <rect x="3.5" y="5.5" width="17" height="13" rx="2.5" />
+    <path d="m4.5 7.5 7.5 5.5 7.5-5.5" />
+  </svg>
+);

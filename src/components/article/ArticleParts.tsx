@@ -9,13 +9,13 @@ import { BookCover } from "@/components/ui/Media";
 export function ArticleHeader({ post }: { post: PostMeta }) {
   const topic = topicBySlug(post.category);
   return (
-    <header className="min-[1280px]:text-center">
+    <header className="tablet:text-center">
       {topic ? (
         <Link href={`/blog/${topic.slug}`} className="tap -my-2 inline-flex items-center no-underline" aria-label={`Chủ đề ${topic.name}`}>
           <TopicTag>{topic.name}</TopicTag>
         </Link>
       ) : null}
-      <h1 className="type-display-lg mt-s4 max-w-4xl text-balance min-[1280px]:mx-auto" aria-label={post.title}>
+      <h1 className="type-display-lg mt-s4 max-w-4xl text-balance tablet:mx-auto" aria-label={post.title}>
         {post.title.split(" ").map((w, i) => (
           <span key={i} aria-hidden className="word-mask mr-[0.22em]">
             <span className="anim-word" style={{ "--i": Math.min(i, 14), "--delay": "120ms" } as React.CSSProperties}>
@@ -24,7 +24,7 @@ export function ArticleHeader({ post }: { post: PostMeta }) {
           </span>
         ))}
       </h1>
-      <p className="type-dek anim-fade-rise mt-s4 max-w-2xl text-ink-soft min-[1280px]:mx-auto" style={{ "--delay": "560ms" } as React.CSSProperties}>
+      <p className="type-dek anim-fade-rise mt-s4 max-w-2xl text-ink-soft tablet:mx-auto" style={{ "--delay": "560ms" } as React.CSSProperties}>
         {post.description}
       </p>
       <p className="type-caption anim-fade-rise mt-s4 text-ink-faint" style={{ "--delay": "680ms" } as React.CSSProperties}>

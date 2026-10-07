@@ -103,6 +103,7 @@ Layout đã duyệt nằm ở `docs/layout/<trang>/README.md`. Làm theo thứ t
 - [x] (dựng xong, chờ Lộc duyệt) Trang chủ — `docs/layout/trang-chu/` (trang đích: hiểu ngay blog nói về gì, 1 CTA chính "Đọc bài mới nhất")
 - [x] Trang 404 (ngoài 3 trang chính)
 - [x] Hiệu ứng hover + animation + ảnh cho hero và thẻ (2026-10-07): xem CLAUDE.md mục 6 "Chuyển động và hình ảnh"
+- [x] (2026-10-07, đợt 2) Hero trang bài full-width; thẻ bài liên quan chữ nhật 3:2 + hover; form đăng ký sửa nhãn một dòng + tương tác; ghi vào `docs/design-system/EXTENSIONS.md`
 - [x] Ảnh minh họa demo: 12 ảnh Wikimedia Commons (CC0 / phạm vi công cộng / CC BY) trong `public/images/stock/`, nguồn ở `public/images/CREDITS.md`; ảnh CC BY phải ghi công trên web thật (Lộc duyệt ảnh, thay bằng ảnh riêng khi có)
 
 Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `design-reviewer`.

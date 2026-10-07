@@ -319,3 +319,37 @@ html {
   animation-duration: 450ms;
   animation-timing-function: var(--ease-smooth);
 }
+
+/* Lắc nhẹ một lần khi ô nhập báo lỗi (không lặp) */
+@keyframes shake {
+  0%,
+  100% {
+    transform: none;
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+@utility anim-shake {
+  animation: shake 320ms var(--ease-smooth) both;
+}
+
+/* Dấu tích được "vẽ" khi gửi thành công */
+@keyframes draw-stroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@utility draw-check {
+  & path {
+    stroke-dasharray: 26;
+    stroke-dashoffset: 26;
+    animation: draw-stroke 520ms var(--ease-smooth) 160ms forwards;
+  }
+}

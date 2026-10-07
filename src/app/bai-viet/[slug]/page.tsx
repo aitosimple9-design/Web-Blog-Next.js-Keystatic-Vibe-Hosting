@@ -62,9 +62,27 @@ export default async function ArticlePage({ params }: Props) {
     <PageShell tone="paper">
       <ScrollProgress />
       <article>
-        <div className="wrap pt-s7 tablet:pt-s9">
-          <ArticleHeader post={post} />
-        </div>
+        {/* HERO: ảnh tràn hết bề ngang; khối tiêu đề nền đặc gối lên đáy ảnh (không đặt chữ trực tiếp lên ảnh) */}
+        <section aria-label="Đầu bài">
+          <div className="relative h-[clamp(240px,46vw,600px)] w-full overflow-hidden bg-paper-deep">
+            <PostImage
+              src={post.cover}
+              alt=""
+              seed={post.slug}
+              fill
+              rounded={false}
+              priority
+              parallax
+              transitionName={`post-${post.slug}`}
+              sizes="100vw"
+            />
+          </div>
+          <div className="wrap relative z-10 -mt-s8 tablet:-mt-s9">
+            <div className="mx-auto max-w-4xl rounded-lg border-(length:--border-width) border-rule bg-paper px-s5 py-s6 tablet:px-s8 tablet:py-s7">
+              <ArticleHeader post={post} />
+            </div>
+          </div>
+        </section>
 
         <div className="wrap grid gap-s6 pt-s7 pb-s8 desktop:grid-cols-[var(--toc-width)_minmax(0,1fr)] desktop:gap-x-s7 min-[1280px]:grid-cols-[180px_minmax(0,var(--measure-prose))_minmax(0,1fr)] min-[1280px]:gap-x-s6">
           <div className="mx-auto w-full max-w-175 desktop:mx-0 desktop:max-w-none">
@@ -72,21 +90,10 @@ export default async function ArticlePage({ params }: Props) {
           </div>
 
           <div className="min-w-0">
-            <PostImage
-              src={post.cover}
-              alt=""
-              seed={post.slug}
-              label={topic?.name}
-              priority
-              parallax
-              transitionName={`post-${post.slug}`}
-              sizes="(min-width: 1120px) 690px, 100vw"
-            />
-
-            <SourceBox book={post.source.book} author={post.source.author} className="mt-s5 min-[1280px]:hidden" />
+            <SourceBox book={post.source.book} author={post.source.author} className="min-[1280px]:hidden" />
 
             <div
-              className="prose-article mx-auto mt-s6 desktop:mx-0 tablet:mt-s7"
+              className="prose-article mx-auto mt-s5 desktop:mx-0 tablet:mt-s6"
               dangerouslySetInnerHTML={{ __html: post.html }}
             />
           </div>
