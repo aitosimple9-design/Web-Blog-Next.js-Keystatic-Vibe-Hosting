@@ -106,6 +106,11 @@ draft: false                         # true = không hiển thị, không vào s
 - Form đăng ký là component tái sử dụng DUY NHẤT (`Newsletter`: Họ tên, Số điện thoại, Email), có ở cả 3 trang; không viết bản thứ hai. Nơi gửi dữ liệu: chờ Q11, KHÔNG tự chọn.
 - Tailwind (Q3): ánh xạ token của Design System vào theme Tailwind; không tự thêm màu ngoài token.
 - Chỉ có MỘT màu nhấn (`accent`); không đổ bóng ngoài `cover-shadow` của bìa sách; không gradient.
+- **Chuyển động và hình ảnh (Lộc mở rộng 2026-10-07, vẫn nằm trong bảng màu / bo góc / bóng của Design System):**
+  - Hero và thẻ phải có ảnh hoặc hiệu ứng, không để ô trống. Chưa có ảnh thật: dùng `CoverArt` (ảnh nghệ thuật sinh từ slug, đơn sắc, không gradient). Ảnh thật chỉ dùng ảnh có giấy phép cho phép, ghi nguồn ở `public/images/CREDITS.md`.
+  - Được phép: hiện chữ từng từ, nổi lên khi vào trang (CSS: `anim-*` trong globals.css); hover (nhấc thẻ, phóng ảnh, nền nút quét, gạch chân chạy, mũi tên trượt); nghiêng / trôi lớp theo con trỏ; chạy theo thanh cuộn (dải chữ, thị sai, thanh tiến độ đọc); đếm số; chuyển trang bằng `<ViewTransition>` (ảnh bay từ thẻ sang trang bài).
+  - KHÔNG: vòng lặp vô hạn, tự chạy không dừng, animate width / height / top / left, thêm màu / gradient / đổ bóng mới.
+  - Bắt buộc: chỉ `transform` + `opacity`; hover chỉ trên thiết bị có chuột; theo con trỏ chỉ khi `pointer: fine`; tắt khi `prefers-reduced-motion`; duration / spring lấy từ `src/lib/motion-tokens.ts` (CSS: biến `--motion-*`, `--ease-smooth`); nhấn nút thu về `0.95`; lớp tương tác nằm trong `src/components/ui/Motion.tsx` (client).
   Màu nhấn trùng màu mực nên liên kết trong bài LUÔN gạch chân; thứ bậc đến từ cỡ chữ, độ đậm, khoảng trắng.
 - Component dùng đúng tên trong Design System (`PostCard`, `TopicCard`, `FeaturedPost`, `BookRef`, `Takeaways`, `Newsletter`, `SiteHeader`, `SiteFooter`, `Tag`);
   KHÔNG tự tạo component trùng vai trò. Thiếu component (phân trang, tìm kiếm, bình luận, trang tác giả — Known Gaps) → hỏi Lộc, đề xuất ghép từ component sẵn có.

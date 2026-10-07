@@ -7,6 +7,7 @@ date: 2026-08-04
 source:
   book: "Sách mẫu 2"
   author: "Tác giả mẫu 4"
+cover: /images/stock/reading-room.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

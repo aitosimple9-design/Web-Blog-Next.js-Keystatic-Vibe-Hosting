@@ -17,7 +17,7 @@ export function PageShell({ tone = "paper", children }: { tone?: HeaderTone; chi
   return (
     <>
       <HeaderBar tone={tone} searchIndex={searchIndex} />
-      <main id="main" tabIndex={-1} className="outline-none">
+      <main id="main" tabIndex={-1} className="anim-page outline-none">
         {children}
       </main>
       <SiteFooter />

@@ -24,15 +24,15 @@ export function PostCard({
 
   if (variant === "tile") {
     return (
-      <article className={`group relative flex h-full flex-col gap-s4 ${className}`}>
+      <article className={`group lift relative flex h-full flex-col gap-s4 ${className}`}>
         <div className="min-h-0 flex-1">
-          <PostImage src={post.cover} label={topic} fill priority={priority} />
+          <PostImage src={post.cover} seed={post.slug} label={topic} fill priority={priority} transitionName={`post-${post.slug}`} />
         </div>
         <div className="flex flex-col gap-s2">
           <TopicTag>{topic}</TopicTag>
           <h3 className="type-title line-clamp-2">
             <Link href={href} className="no-underline after:absolute after:inset-0">
-              {post.title}
+              <span className="ul-grow">{post.title}</span>
             </Link>
           </h3>
           <p className="type-caption text-ink-faint">
@@ -44,13 +44,13 @@ export function PostCard({
   }
 
   return (
-    <article className={`group relative flex h-full flex-col gap-s4 ${className}`}>
-      <PostImage src={post.cover} label={topic} priority={priority} />
+    <article className={`group lift relative flex h-full flex-col gap-s4 ${className}`}>
+      <PostImage src={post.cover} seed={post.slug} label={topic} priority={priority} transitionName={`post-${post.slug}`} />
       <div className="flex flex-1 flex-col gap-s3">
         <TopicTag>{topic}</TopicTag>
         <h3 className="type-title line-clamp-2 text-balance">
           <Link href={href} className="no-underline after:absolute after:inset-0">
-            {post.title}
+            <span className="ul-grow">{post.title}</span>
           </Link>
         </h3>
         <p className="type-excerpt line-clamp-2 text-ink-soft">{post.description}</p>
@@ -60,7 +60,7 @@ export function PostCard({
           </p>
           <span className="type-label inline-flex items-center gap-s1" aria-hidden>
             Đọc bài
-            <ArrowRightIcon className="transition-transform duration-200 motion-safe:group-hover:translate-x-1" />
+            <ArrowRightIcon className="transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:translate-x-2" />
           </span>
         </div>
       </div>

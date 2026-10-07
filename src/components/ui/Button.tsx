@@ -5,20 +5,21 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 type Variant = "primary" | "secondary" | "quiet" | "on-inverse" | "secondary-on-inverse";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-accent text-on-accent hover:bg-accent-strong active:bg-accent-strong px-(--button-pad-x)",
+  primary: "bg-accent text-on-accent px-(--button-pad-x) before:bg-accent-strong",
   secondary:
-    "border-(length:--border-width) border-rule-strong text-ink hover:bg-paper-sunk px-(--button-pad-x)",
-  quiet: "text-accent hover:underline underline-offset-(--underline-offset) px-s2",
-  "on-inverse":
-    "bg-on-inverse text-inverse hover:bg-accent-on-inverse px-(--button-pad-x)",
+    "border-(length:--border-width) border-rule-strong text-ink px-(--button-pad-x) before:bg-paper-sunk",
+  quiet: "text-accent hover:underline underline-offset-(--underline-offset) px-s2 before:hidden",
+  "on-inverse": "bg-on-inverse text-inverse px-(--button-pad-x) before:bg-inverse/15",
   "secondary-on-inverse":
-    "border-(length:--border-width) border-on-inverse-soft text-on-inverse hover:bg-on-inverse/10 px-(--button-pad-x)",
+    "border-(length:--border-width) border-on-inverse-soft text-on-inverse px-(--button-pad-x) before:bg-on-inverse/15",
 };
 
+// Hover: nền "quét" từ trái sang phải, mũi tên cuối nút trượt nhẹ; nhấn: thu về 0.95 (skill motion-system)
 const base =
-  "type-button tap inline-flex items-center justify-center gap-s2 rounded-sm text-center no-underline select-none " +
-  "transition-colors duration-(--motion-fast) active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none";
+  "type-button tap relative isolate inline-flex items-center justify-center gap-s2 overflow-hidden rounded-sm text-center no-underline select-none " +
+  "before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:transition-transform before:duration-(--motion-normal) before:ease-(--ease-smooth) hover:before:scale-x-100 " +
+  "[&_svg:last-child]:transition-transform [&_svg:last-child]:duration-(--motion-normal) [&_svg:last-child]:ease-(--ease-smooth) hover:[&_svg:last-child]:translate-x-1 " +
+  "transition-[color,transform] duration-(--motion-fast) active:scale-95 disabled:pointer-events-none disabled:opacity-60";
 
 type CommonProps = {
   variant?: Variant;

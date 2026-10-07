@@ -52,6 +52,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
             <TopicTabs topics={topics} current={slug} />
           </div>
           <TopicHero
+            key={slug}
             topic={topic}
             topics={topics}
             counts={counts}

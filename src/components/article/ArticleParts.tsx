@@ -15,9 +15,19 @@ export function ArticleHeader({ post }: { post: PostMeta }) {
           <TopicTag>{topic.name}</TopicTag>
         </Link>
       ) : null}
-      <h1 className="type-display-lg mt-s4 max-w-4xl text-balance min-[1280px]:mx-auto">{post.title}</h1>
-      <p className="type-dek mt-s4 max-w-2xl text-ink-soft min-[1280px]:mx-auto">{post.description}</p>
-      <p className="type-caption mt-s4 text-ink-faint">
+      <h1 className="type-display-lg mt-s4 max-w-4xl text-balance min-[1280px]:mx-auto" aria-label={post.title}>
+        {post.title.split(" ").map((w, i) => (
+          <span key={i} aria-hidden className="word-mask mr-[0.22em]">
+            <span className="anim-word" style={{ "--i": Math.min(i, 14), "--delay": "120ms" } as React.CSSProperties}>
+              {w}
+            </span>
+          </span>
+        ))}
+      </h1>
+      <p className="type-dek anim-fade-rise mt-s4 max-w-2xl text-ink-soft min-[1280px]:mx-auto" style={{ "--delay": "560ms" } as React.CSSProperties}>
+        {post.description}
+      </p>
+      <p className="type-caption anim-fade-rise mt-s4 text-ink-faint" style={{ "--delay": "680ms" } as React.CSSProperties}>
         <time dateTime={post.date}>{formatDateLong(post.date)}</time> · {formatReadTime(post.readingMinutes)}
       </p>
     </header>

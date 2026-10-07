@@ -36,6 +36,9 @@ const posts = [
   ["demo-21-nghe-sach-noi", "chu-de-5", "Sách nói có tính là đã đọc?", "So sánh việc nghe và đọc: khi nào nghe có ích, khi nào nên cầm sách giấy."],
 ];
 
+// Ảnh bìa demo (public/images/stock, nguồn ở public/images/CREDITS.md). Dùng lần lượt theo thứ tự bài.
+const covers = ["journal-coffee", "notebook-wood", "books-lamps", "reading-room", "notes-laptop", "desk-notes", "feather-pen", "vintage-book-sofa", "yellow-book-couch", "reading-bed-window", "woman-reading-sofa", "reading-couch-window"];
+
 const intro = [
   "Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.",
   "Điều đáng giữ lại nằm ở cách đặt vấn đề: trước khi tìm giải pháp, hãy gọi đúng tên điều đang cản trở mình. Phần lớn thời gian ta mất đi không phải vì thiếu cách làm, mà vì chưa biết mình đang giải quyết chuyện gì.",
@@ -101,6 +104,7 @@ posts.forEach(([slug, category, title, description], i) => {
     "source:",
     `  book: "${book}"`,
     `  author: "${author}"`,
+    `cover: /images/stock/${covers[i % covers.length]}.jpg`,
     "draft: false",
     "---",
     "",

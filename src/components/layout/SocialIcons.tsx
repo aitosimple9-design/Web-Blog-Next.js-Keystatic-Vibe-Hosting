@@ -14,7 +14,7 @@ export function SocialIcons({ className = "" }: { className?: string }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={s.label}
-              className="tap inline-flex items-center justify-center rounded-sm transition-colors duration-(--motion-fast) hover:bg-current/10"
+              className="tap inline-flex items-center justify-center rounded-sm transition-[transform,background-color] duration-(--motion-normal) ease-(--ease-smooth) hover:-translate-y-1 hover:bg-current/10 active:scale-95"
             >
               <SocialIcon id={s.id} />
             </a>

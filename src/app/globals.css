@@ -109,6 +109,7 @@
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
@@ -180,4 +181,141 @@ html {
 }
 @utility animate-fade-up {
   animation: fade-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* =====================================================================
+   CHUYỂN ĐỘNG (CLAUDE.md mục 6): chỉ transform + opacity, không vòng lặp vô hạn,
+   tự tắt khi người dùng bật "giảm chuyển động". Giá trị khớp src/lib/motion-tokens.ts
+   ===================================================================== */
+:root {
+  --motion-normal: 350ms;
+  --motion-slow: 600ms;
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes rise-word {
+  from {
+    transform: translateY(112%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fan-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--fx, 0), 24px) rotate(0deg) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(var(--r, 0deg)) scale(1);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Mỗi chữ trượt lên từ sau mặt nạ. Dùng: <span class="word-mask"><span class="anim-word" style="--i:0">Chữ</span></span> */
+@utility word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em; /* chừa chỗ cho dấu tiếng Việt thấp (ạ, ệ) */
+  margin-bottom: -0.14em;
+}
+@utility anim-word {
+  display: inline-block;
+  animation: rise-word var(--motion-slow) var(--ease-smooth) both;
+  animation-delay: calc(var(--delay, 0ms) + var(--i, 0) * 70ms);
+}
+@utility anim-fade-rise {
+  animation: fade-rise var(--motion-slow) var(--ease-smooth) both;
+  animation-delay: var(--delay, 0ms);
+}
+@utility anim-pop {
+  animation: pop-in var(--motion-slow) var(--ease-smooth) both;
+  animation-delay: var(--delay, 0ms);
+}
+@utility anim-fan {
+  animation: fan-in 800ms var(--ease-smooth) both;
+  animation-delay: var(--delay, 0ms);
+}
+@utility anim-page {
+  animation: page-in var(--motion-normal) var(--ease-smooth) both;
+}
+
+/* ===== Hover: chỉ trên thiết bị có chuột, và chỉ khi cho phép chuyển động ===== */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .lift {
+    transition: transform var(--motion-normal) var(--ease-smooth);
+  }
+  .lift:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Gạch chân chạy từ trái sang phải (đặt trên span bên trong liên kết hoặc thẻ .group) */
+.ul-grow {
+  position: relative;
+  display: inline;
+  background: none;
+}
+.ul-grow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: var(--border-width-strong);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-normal) var(--ease-smooth);
+}
+@media (hover: hover) {
+  .group:hover .ul-grow::after,
+  .ul-grow:hover::after,
+  a:hover > .ul-grow::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Chuyển trang bằng View Transitions: tắt khi giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+::view-transition-group(*) {
+  animation-duration: 450ms;
+  animation-timing-function: var(--ease-smooth);
 }

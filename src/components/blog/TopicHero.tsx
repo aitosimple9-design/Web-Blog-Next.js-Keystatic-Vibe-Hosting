@@ -5,6 +5,7 @@ import type { Topic } from "@/config/topics";
 import { Button } from "@/components/ui/Button";
 import { BookCover } from "@/components/ui/Media";
 import { ArrowRightIcon } from "@/components/ui/Icon";
+import { CountUp, PointerLayer, PointerScene } from "@/components/ui/Motion";
 
 type Stat = { value: number; label: string };
 
@@ -27,7 +28,7 @@ export function TopicHero({
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s6 pb-s8 text-center desktop:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_320px] desktop:items-center desktop:gap-x-s7 desktop:pt-s6 desktop:text-left">
       {/* Chữ + CTA */}
-      <div className="mx-auto max-w-xl desktop:mx-0 desktop:max-w-none">
+      <div className="anim-fade-rise mx-auto max-w-xl desktop:mx-0 desktop:max-w-none">
         <p className="type-eyebrow inline-block rounded-pill border-(length:--border-width) border-on-inverse-soft px-s4 py-s1 uppercase text-on-inverse-soft tablet:py-s2">
           Chủ đề
         </p>
@@ -41,13 +42,29 @@ export function TopicHero({
         ) : null}
       </div>
 
-      {/* Bìa sách: ba cuốn xếp chồng nhẹ, cuốn giữa nổi lên */}
-      <div aria-hidden className="relative mx-auto flex h-56 w-full max-w-md items-center justify-center tablet:h-72">
-        <div className="absolute top-1/2 left-1/2 size-44 -translate-x-1/2 -translate-y-1/2 rounded-pill bg-on-inverse/10 tablet:size-60" />
-        <BookCover title={b2} tone="sunk" className="relative -mr-7 w-24! -rotate-6 opacity-90 tablet:-mr-9 tablet:w-28!" />
-        <BookCover title={b1} tone="deep" className="relative z-10 w-32! tablet:w-44!" />
-        <BookCover title={b3} tone="ink" className="relative -ml-7 w-24! rotate-6 opacity-90 tablet:-ml-9 tablet:w-28!" />
-      </div>
+      {/* Bìa sách: xòe ra khi vào trang, trôi theo con trỏ theo độ sâu */}
+      <PointerScene className="mx-auto w-full max-w-md">
+        <div aria-hidden className="relative flex h-56 items-center justify-center tablet:h-72">
+          <PointerLayer depth={-14} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="anim-pop size-44 rounded-pill bg-on-inverse/10 tablet:size-60" style={{ "--delay": "0ms" } as React.CSSProperties} />
+          </PointerLayer>
+          <PointerLayer depth={-8} className="relative -mr-7 tablet:-mr-9">
+            <div className="anim-fan" style={{ "--fx": "70px", "--r": "-6deg", "--delay": "180ms" } as React.CSSProperties}>
+              <BookCover title={b2} className="w-24! tablet:w-28!" />
+            </div>
+          </PointerLayer>
+          <PointerLayer depth={12} className="relative z-10">
+            <div className="anim-pop" style={{ "--delay": "80ms" } as React.CSSProperties}>
+              <BookCover title={b1} className="w-32! tablet:w-44!" />
+            </div>
+          </PointerLayer>
+          <PointerLayer depth={-8} className="relative -ml-7 tablet:-ml-9">
+            <div className="anim-fan" style={{ "--fx": "-70px", "--r": "6deg", "--delay": "260ms" } as React.CSSProperties}>
+              <BookCover title={b3} className="w-24! tablet:w-28!" />
+            </div>
+          </PointerLayer>
+        </div>
+      </PointerScene>
 
       {/* Danh sách chủ đề dọc (từ 1024px) */}
       <nav aria-label="Chủ đề" className="hidden desktop:block">
@@ -85,7 +102,9 @@ export function TopicHero({
       <dl className="mx-auto grid w-full max-w-md grid-cols-3 divide-x divide-on-inverse-soft/30 rounded-md bg-on-inverse/10 py-s4 tablet:max-w-xl desktop:col-span-2 desktop:mx-0 desktop:max-w-none desktop:bg-transparent desktop:py-0 desktop:text-left desktop:[&>div]:px-s6 desktop:[&>div:first-child]:pl-0">
         {stats.map((s) => (
           <div key={s.label} className="px-s2">
-            <dd className="type-display-md tabular-nums text-on-inverse">{s.value}</dd>
+            <dd className="type-display-md tabular-nums text-on-inverse">
+              <CountUp to={s.value} />
+            </dd>
             <dt className="type-caption text-on-inverse-soft">{s.label}</dt>
           </div>
         ))}

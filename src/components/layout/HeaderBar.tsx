@@ -23,10 +23,10 @@ function Logo() {
   return (
     <Link
       href="/"
-      className="tap inline-flex items-center gap-s2 rounded-sm no-underline"
+      className="group tap inline-flex items-center gap-s2 rounded-sm no-underline"
       aria-label={`${site.name} — về Trang chủ`}
     >
-      <span aria-hidden className="block size-[22px] rounded-cover bg-current" />
+      <span aria-hidden className="block size-[22px] rounded-cover bg-current transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:rotate-90" />
       <span className="font-serif text-(length:--logo-size) leading-none font-semibold">{site.name}</span>
     </Link>
   );
@@ -80,7 +80,7 @@ export function HeaderBar({ tone, searchIndex }: { tone: HeaderTone; searchIndex
               key={l.href}
               href={l.href}
               aria-current={isActive(l.href) ? "page" : undefined}
-              className={`${linkBase} after:absolute after:inset-x-s3 after:bottom-2 after:h-(--border-width-strong) after:bg-current after:opacity-0 aria-[current=page]:after:opacity-100`}
+              className={`${linkBase} after:absolute after:inset-x-s3 after:bottom-2 after:h-(--border-width-strong) after:origin-center after:scale-x-0 after:bg-current after:transition-transform after:duration-(--motion-normal) after:ease-(--ease-smooth) hover:after:scale-x-100 aria-[current=page]:after:scale-x-100`}
             >
               {l.label}
             </Link>

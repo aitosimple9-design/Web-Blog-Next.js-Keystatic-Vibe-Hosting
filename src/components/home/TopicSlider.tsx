@@ -6,10 +6,10 @@ import { ArrowRightIcon } from "@/components/ui/Icon";
 
 function TopicCard({ topic, index, count }: { topic: Topic; index: number; count: number }) {
   return (
-    <article className="group relative flex h-full flex-col items-center rounded-lg border-(length:--border-width) border-rule bg-paper-raised p-s5 text-center transition-transform duration-200 motion-safe:hover:-translate-y-1">
+    <article className="group lift relative flex h-full flex-col items-center rounded-lg border-(length:--border-width) border-rule bg-paper-raised p-s5 text-center transition-colors duration-(--motion-normal) hover:border-rule-strong">
       <span
         aria-hidden
-        className="type-title grid size-12 place-items-center rounded-pill bg-accent-soft text-accent-soft-ink tabular-nums"
+        className="type-title grid size-12 place-items-center rounded-pill bg-accent-soft text-accent-soft-ink tabular-nums transition-[background-color,color,transform] duration-(--motion-normal) ease-(--ease-smooth) group-hover:scale-110 group-hover:bg-accent group-hover:text-on-accent motion-reduce:group-hover:scale-100"
       >
         {String(index + 1).padStart(2, "0")}
       </span>
@@ -22,7 +22,7 @@ function TopicCard({ topic, index, count }: { topic: Topic; index: number; count
         style={{ marginTop: "var(--space-5)" }}
       >
         Xem bài <span className="sr-only-x">chủ đề {topic.name}</span>
-        <ArrowRightIcon className="transition-transform duration-200 motion-safe:group-hover:translate-x-1" />
+        <ArrowRightIcon className="transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:translate-x-2" />
       </Link>
     </article>
   );

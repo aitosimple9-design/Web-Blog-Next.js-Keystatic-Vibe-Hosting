@@ -2,7 +2,7 @@
 
 // Hiện dần khi cuộn tới (fade + trượt nhẹ). An toàn SSR / không JS: nội dung LUÔN hiển thị trước,
 // chỉ phần nằm dưới màn hình đầu mới được ẩn rồi hiện lại. Tắt hoàn toàn khi bật "giảm chuyển động".
-import { animate } from "motion";
+import { animate } from "motion/react";
 import { useEffect, useRef, type ReactNode } from "react";
 
 export function Reveal({

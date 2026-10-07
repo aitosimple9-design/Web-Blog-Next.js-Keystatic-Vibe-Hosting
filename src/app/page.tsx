@@ -8,6 +8,7 @@ import { Newsletter } from "@/components/layout/Newsletter";
 import { Hero } from "@/components/home/Hero";
 import { TopicSlider } from "@/components/home/TopicSlider";
 import { LatestGrid } from "@/components/home/LatestGrid";
+import { ScrollMarquee } from "@/components/ui/Motion";
 
 export const metadata: Metadata = {
   title: { absolute: `${site.name} — ${site.tagline}` },
@@ -25,12 +26,15 @@ export default function HomePage() {
         <Hero
           featured={featured}
           stats={[
-            { value: `${stats.posts}+`, label: "Bài viết" },
-            { value: String(stats.topics), label: "Chủ đề" },
-            { value: `${stats.books}+`, label: "Cuốn sách" },
+            { value: stats.posts, suffix: "+", label: "Bài viết" },
+            { value: stats.topics, label: "Chủ đề" },
+            { value: stats.books, suffix: "+", label: "Cuốn sách" },
           ]}
         />
       </section>
+      <div className="bg-paper py-s6 text-ink-faint tablet:py-s7">
+        <ScrollMarquee words={["Đọc", "Ghi chép", "Suy ngẫm", "Áp dụng", "Nhớ lâu"]} className="type-display-xl font-semibold" />
+      </div>
       <TopicSlider topics={topics} counts={countByTopic()} />
       <LatestGrid posts={rest.slice(0, 4)} total={stats.posts} />
       <Newsletter />

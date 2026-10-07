@@ -9,7 +9,7 @@ function RelatedCard({ post, dark }: { post: PostMeta; dark: boolean }) {
   const topic = topicBySlug(post.category)?.name ?? post.category;
   return (
     <article
-      className={`group relative flex h-full min-h-72 flex-col justify-between gap-s5 rounded-md p-s5 transition-transform duration-200 motion-safe:hover:-translate-y-1 ${
+      className={`group relative flex h-full min-h-72 flex-col justify-between gap-s5 rounded-md p-s5 transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:hover:-translate-y-2 ${
         dark ? "on-inverse bg-inverse text-on-inverse" : "bg-paper-raised text-ink"
       }`}
     >

@@ -11,6 +11,7 @@ import { ArticleHeader, SourceBox } from "@/components/article/ArticleParts";
 import { TOC } from "@/components/article/TOC";
 import { RelatedSlider } from "@/components/article/RelatedSlider";
 import { PostImage } from "@/components/ui/Media";
+import { ScrollProgress } from "@/components/ui/Motion";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -59,6 +60,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <PageShell tone="paper">
+      <ScrollProgress />
       <article>
         <div className="wrap pt-s7 tablet:pt-s9">
           <ArticleHeader post={post} />
@@ -70,7 +72,16 @@ export default async function ArticlePage({ params }: Props) {
           </div>
 
           <div className="min-w-0">
-            <PostImage src={post.cover} alt="" label={topic?.name} priority sizes="(min-width: 1120px) 690px, 100vw" />
+            <PostImage
+              src={post.cover}
+              alt=""
+              seed={post.slug}
+              label={topic?.name}
+              priority
+              parallax
+              transitionName={`post-${post.slug}`}
+              sizes="(min-width: 1120px) 690px, 100vw"
+            />
 
             <SourceBox book={post.source.book} author={post.source.author} className="mt-s5 min-[1280px]:hidden" />
 
