@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# env files (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# misc
+.DS_Store
+*.log
+.claude/settings.local.json
+
+# bàn giao giữa các phiên (trạng thái cục bộ, không commit)
+docs/HANDOFF.md
