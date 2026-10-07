@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#ebe7db"/>
+  <rect x="14" y="0" width="3" height="600" fill="#0a0a0a" opacity="0.18"/>
+  <path d="M90 340V210a110 110 0 0 1 220 0v130z" fill="#4a3b2c"/><path d="M135 340V215a65 65 0 0 1 130 0v125z" fill="#ebe7db"/><rect x="70" y="340" width="260" height="6" fill="#0a0a0a"/>
+  <text x="200" y="440" text-anchor="middle" font-family="'Source Serif 4', Georgia, 'Times New Roman', serif" font-size="38" font-weight="600" fill="#0a0a0a">SÁCH MẪU 3</text>
+  <rect x="150" y="466" width="100" height="2" fill="#0a0a0a" opacity="0.5"/>
+  <text x="200" y="500" text-anchor="middle" font-family="'Source Serif 4', Georgia, 'Times New Roman', serif" font-size="20" fill="#0a0a0a" opacity="0.85">Tác giả mẫu 1</text>
+  <text x="200" y="560" text-anchor="middle" font-family="'Source Serif 4', Georgia, 'Times New Roman', serif" font-size="12" letter-spacing="3" fill="#0a0a0a" opacity="0.55">BẢN DEMO</text>
+</svg>

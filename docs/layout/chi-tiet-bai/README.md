@@ -3,20 +3,21 @@
 Mockup gốc: `Main.dc.html` (cùng thư mục). Khối dùng chung (Nav, Newsletter, Footer, Slider): xem `../README.md`.
 Một layout cho mọi chủ đề (không còn 3 layout theo danh mục).
 
-> **Đã chỉnh so với wireframe gốc (Lộc yêu cầu 2026-10-07):** (1) ảnh bìa bài thành **HERO tràn hết bề ngang** ở đầu trang;
+> **Đã chỉnh so với wireframe gốc (Lộc yêu cầu 2026-10-07):** (1) ảnh bìa bài thành **HERO tràn hết bề ngang** ở đầu trang, chữ tiêu đề nằm giữa ảnh;
 > (2) nền thẻ **Bài liên quan** là hình chữ nhật DỌC 3:4 bo góc (bố cục bên trong giữ như wireframe). Spec dưới đây là bản ĐANG ÁP DỤNG; khi lệch với `Main.dc.html` thì theo spec này.
 
 ## Thứ tự khối (từ trên xuống)
 1. **Nav** — dải riêng, dính trên cùng
-2. **Hero** — ảnh bìa bài **tràn hết bề ngang** (cao `clamp(240px, 46vw, 600px)`), trôi chậm hơn nội dung khi cuộn (thị sai),
-   ảnh "bay" mượt từ thẻ bài sang đây khi bấm (View Transition). Khối tiêu đề (**nền đặc `paper`, viền `rule`, bo `radius-lg`**)
-   gối lên đáy ảnh (kéo lên `space-8` / `space-9`) gồm: nhãn chủ đề, tiêu đề `h1` serif (hiện từng chữ), dek, meta "03 tháng 10, 2026 · 8 phút đọc".
-   KHÔNG đặt chữ trực tiếp lên ảnh (Design System).
+2. **Hero** — ảnh bìa bài **tràn hết bề ngang** (cao tối thiểu `clamp(560px, 52vw, 680px)`), trôi chậm hơn nội dung khi cuộn (thị sai),
+   ảnh "bay" mượt từ thẻ bài sang đây khi bấm (View Transition). **Cập nhật 2026-10-07 (Lộc yêu cầu):** nhãn chủ đề, tiêu đề `h1` serif (hiện từng chữ), dek, meta "03 tháng 10, 2026 · 8 phút đọc" nằm
+   **chính giữa trên ảnh** (căn giữa ngang và dọc), KHÔNG có khối nền riêng bên dưới. Ảnh phủ lớp `inverse` 62% (màu phẳng) để chữ `on-inverse` đọc rõ (ngoại lệ chữ trên ảnh thứ bảy).
+   Đáy ảnh cắt bằng mask nét cọ (lớp `brush-bottom`).
+   Các dòng nhãn / tiêu đề / mô tả / ngày cách nhau `space-5`. **Breadcrumb:** căn giữa, neo gần ĐÁY ảnh hero (cách mép cọ `space-4`), tách xa khối chữ phía trên (tông tối `inverse`): "Trang chủ › Blog › {chủ đề} › {tên bài}", mục hiện tại là pill trong mờ.
 3. **Thân bài** gồm 3 khối:
-   - **TOC** — mục lục: nút "Mục lục ▾" mở/đóng; liệt kê các tiêu đề H2 và "Tổng kết"; mục đang đọc có vạch + chữ đậm
-   - **SourceBox** (= `BookRef`) — bìa sách 2:3, nhãn "Bài viết dựa trên", "Tên sách — Tác giả"
+   - **TOC** — mục lục (thiết kế lại 2026-10-07): dạng trục dọc mảnh có nút mốc đánh số "01, 02…"; đoạn đã đọc phủ màu `accent`, mục đang đọc có nút to + vòng sáng + số màu `accent-warm` + chữ đậm; tiêu đề cột có dấu thoi `accent-warm` và số mục. Dưới 1024px: nút pill "Mục lục · N" mở / đóng bảng nổi `elevated-sm`
+   - **SourceBox** (= `BookRef`, thiết kế lại 2026-10-07) — bìa sách làm NỀN cả khối (phóng to, lấy phần hình phía trên; phủ `inverse` 45%), bo `radius-lg`, `elevated-md`; huy hiệu pill "Bài viết dựa trên" ở trên, tên sách + tác giả nằm thẳng trên bìa ở đáy. Cột phải (1280+): tỉ lệ 3:4; dưới 1280px: dải ngang cao tối thiểu 208 / 240px
    - **Prose** — thân bài, khổ dòng 66ch; H2 là tiêu đề mục
-4. **RelatedSlider** — "Bài liên quan. Đọc tiếp những bài cùng chủ đề."
+4. **RelatedSlider** — tiêu đề nổi bật hơn (`display-lg`, phần "Đọc tiếp…" cỡ `display-md`, giữ căn trái, từ 768px luôn nằm MỘT hàng) kèm đường kẻ họa tiết hình thoi `accent-warm` căn trái bên dưới (`Ornament align="left"`): "Bài liên quan. Đọc tiếp những bài cùng chủ đề." Thẻ 3:4: ảnh bài màu gốc tràn cả thẻ phủ `inverse` 55% (không xen kẽ đen / trắng nữa), chữ `on-inverse` nằm thẳng trên ảnh, giữ bố cục wireframe (nhãn, tiêu đề, bìa sách demo nhỏ, tóm tắt, thời gian đọc), lơ lửng `elevated-lg` (hover nhấc lên); track chừa đệm dưới ≈128px (kéo lại bằng lề âm) và đệm trái để bóng không bị cắt.
 5. **Newsletter** → 6. **Footer**
 - Thanh tiến độ đọc 3px (màu nhấn) cố định ở mép trên cửa sổ.
 

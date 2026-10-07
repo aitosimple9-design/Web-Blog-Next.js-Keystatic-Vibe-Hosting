@@ -12,10 +12,12 @@ const push = (s = "") => out.push(s);
 
 const colors = t.color.tokens;
 const shadows = t.shadow.tokens;
+const gradients = t.gradient?.tokens ?? [];
 
 const themeVars = (mode) => [
   ...colors.map((c) => `  --${c.name}: ${c.value[mode]};`),
   ...shadows.map((s) => `  --${s.name}: ${s.value[mode]};`),
+  ...gradients.map((g) => `  --${g.name}: ${g.value[mode]};`),
 ];
 
 push("/* TỰ ĐỘNG SINH từ docs/design-system/tokens.json bằng scripts/build-tokens.mjs. KHÔNG sửa tay. */");

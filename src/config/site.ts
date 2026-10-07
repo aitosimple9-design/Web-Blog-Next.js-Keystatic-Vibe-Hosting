@@ -30,15 +30,15 @@ export type SocialId =
   | "x"
   | "zalo";
 
-// Q14: điền URL thật. Href rỗng = icon hiển thị nhưng chưa bấm được.
+// Q14: URL DEMO (trang chủ từng nền tảng) — thay bằng trang thật của blog khi có. Href rỗng = icon hiển thị nhưng chưa bấm được.
 export const socialLinks: { id: SocialId; label: string; href: string }[] = [
-  { id: "youtube", label: "YouTube", href: "" },
-  { id: "tiktok", label: "TikTok", href: "" },
-  { id: "facebook", label: "Facebook", href: "" },
-  { id: "instagram", label: "Instagram", href: "" },
-  { id: "linkedin", label: "LinkedIn", href: "" },
-  { id: "x", label: "X", href: "" },
-  { id: "zalo", label: "Zalo", href: "" },
+  { id: "youtube", label: "YouTube", href: "https://www.youtube.com/" },
+  { id: "tiktok", label: "TikTok", href: "https://www.tiktok.com/" },
+  { id: "facebook", label: "Facebook", href: "https://www.facebook.com/" },
+  { id: "instagram", label: "Instagram", href: "https://www.instagram.com/" },
+  { id: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/" },
+  { id: "x", label: "X", href: "https://x.com/" },
+  { id: "zalo", label: "Zalo", href: "https://zalo.me/" },
 ];
 
 // Q13: số bài mỗi trang ở trang Blog (cố định, lưới tự đổi số cột theo màn hình).

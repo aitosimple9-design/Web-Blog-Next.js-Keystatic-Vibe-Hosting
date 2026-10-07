@@ -88,6 +88,12 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [x] Hai theme Giấy / Đêm: nút chuyển theme, nhớ lựa chọn, không nháy sáng khi tải
 - [x] Layout gốc: global nav, footer
 - [x] Component cơ bản: nút chính, nút phụ, card bài viết, nhãn danh mục
+- [x] Nâng cấp premium (2026-10-07): token `accent-warm`, `gradient-*`, `elevated-*`, `input-icon-*`; nút, ô nhập, thẻ, khối form, ảnh bài
+- [x] Ảnh nền thẻ chủ đề 3:4 + Hero Blog theo chủ đề, nhãn nổi trong form, ô nhập glow / focus-visible, dải chữ tự trôi, icon mạng xã hội chip + URL demo, `SectionHead` căn giữa (2026-10-07)
+- [x] Bìa sách demo SVG 7 cuốn + `src/config/covers.ts` (2026-10-07)
+- [x] Breadcrumb ở trang Blog, ẩn tiêu đề "Blog"; breadcrumb viên nổi giữa đường giao ảnh hero / khối trắng ở trang bài; tiêu đề "Bài liên quan" nổi bật (2026-10-07)
+- [x] Đường nối mềm giữa các dải nền, bỏ viền kẻ dải chữ (2026-10-07)
+- [ ] Review bằng mắt toàn bộ trang cũ ở 2 theme + 5 mốc, `design-reviewer` duyệt
 - [x] Component `Newsletter` (form đăng ký) tái sử dụng được, đủ trạng thái (mặc định, lỗi, thành công)
 - [x] Component dùng chung theo `docs/layout/README.md`: `SiteHeader` (có tìm kiếm, nút theme, ☰), `SiteFooter` (7 icon mạng xã hội), `Slider` (chấm + nút ‹ ›), `SocialIcons`, `SearchBox`
 - [ ] Component riêng từng trang (làm khi dựng trang đó): xem mục "Component cần dựng" trong spec của trang

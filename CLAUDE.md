@@ -38,6 +38,7 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 ```
 content/posts/<slug>.md         ← bài viết (nguồn dữ liệu duy nhất)
 public/images/posts/<slug>/     ← ảnh của từng bài
+public/images/covers/           ← bìa sách demo (SVG, sinh bằng scripts/gen-demo-covers.mjs)
 docs/                           ← WORKFLOW, PLAN, claude-log, HANDOFF (cục bộ, gitignore)
 docs/design-system/              ← Design System (README, DESIGN-SYSTEM, tokens.json) — Lộc quản lý
 docs/layout/                     ← layout từng trang (wireframe + spec), Lộc quản lý
@@ -47,9 +48,9 @@ src/app/keystatic/              ← giao diện quản trị Keystatic
 src/app/api/keystatic/          ← API của Keystatic
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
 src/components/                 ← UI components (ui/, layout/, home/, blog/, article/)
-src/config/                     ← site.ts (tên blog, nav, mạng xã hội), topics.ts (danh mục: nơi DUY NHẤT sửa/thêm chủ đề)
+src/config/                     ← site.ts (tên blog, nav, mạng xã hội), topics.ts (danh mục: nơi DUY NHẤT sửa/thêm chủ đề), covers.ts (bìa sách demo theo tên sách)
 src/styles/                     ← tokens.css (TỰ SINH từ docs/design-system/tokens.json bằng `npm run tokens`), prose.css
-scripts/                        ← build-tokens.mjs, seed-demo-posts.mjs (bài mẫu demo-*.md)
+scripts/                        ← build-tokens.mjs, seed-demo-posts.mjs (bài mẫu demo-*.md), gen-demo-covers.mjs (bìa sách demo)
 ```
 Mọi trang lấy bài viết qua `src/lib/posts.ts`. Không gọi API Keystatic rải rác trong components —
 để sau này đổi CMS (kể cả lên WordPress Headless) chỉ cần sửa 1 file.
@@ -105,17 +106,17 @@ draft: false                         # true = không hiển thị, không vào s
   - Chỉ dùng token (`var(--ink)`, `var(--paper)`…), KHÔNG viết mã hex trong CSS; mọi component phải đẹp ở cả 2 theme.
 - Form đăng ký là component tái sử dụng DUY NHẤT (`Newsletter`: Họ tên, Số điện thoại, Email), có ở cả 3 trang; không viết bản thứ hai. Nơi gửi dữ liệu: chờ Q11, KHÔNG tự chọn.
 - Tailwind (Q3): ánh xạ token của Design System vào theme Tailwind; không tự thêm màu ngoài token.
-- Chỉ có MỘT màu nhấn (`accent`); không đổ bóng ngoài `cover-shadow` của bìa sách; không gradient.
+- Chỉ có MỘT màu nhấn (`accent`; tông ấm `accent-warm` chỉ làm đầu gradient và họa tiết, không làm chữ hay nền phẳng); phong cách **premium** (Lộc duyệt 2026-10-07): gradient CHỈ cho nút chính / CTA và bề mặt khối nổi (token `gradient-primary*`, `gradient-surface`, pha từ `accent` + `accent-warm`; lớp `.btn-grad`, `.surface-raised` trong globals.css); đổ bóng nhiều lớp CHỈ theo thang `elevated-sm/md/lg` (+ `cover-shadow` cho bìa sách), không tự chế giá trị. KHÔNG gradient cho nền trang, chữ, ảnh bài (ngoại lệ DUY NHẤT: vùng chuyển mờ giữa các dải nền, lớp `seam-top` / `seam-bottom` / `seam-both`; đáy ảnh hero cắt bằng mask nét cọ `brush-bottom` thay cho bóng mờ, pha từ `paper` sang trong suốt; không dùng đường kẻ ngang cứng giữa các dải).
 - **Chuyển động và hình ảnh (Lộc mở rộng 2026-10-07, vẫn nằm trong bảng màu / bo góc / bóng của Design System):**
-  - Hero và thẻ phải có ảnh hoặc hiệu ứng, không để ô trống. Chưa có ảnh thật: dùng `CoverArt` (ảnh nghệ thuật sinh từ slug, đơn sắc, không gradient). Ảnh thật chỉ dùng ảnh có giấy phép cho phép, ghi nguồn ở `public/images/CREDITS.md`.
+  - Hero và thẻ phải có ảnh hoặc hiệu ứng, không để ô trống. Chưa có ảnh thật: dùng `CoverArt` (ảnh nghệ thuật sinh từ slug, đơn sắc, không gradient). Ảnh thật chỉ dùng ảnh có giấy phép cho phép, ghi nguồn ở `public/images/CREDITS.md`. Thẻ chủ đề Trang chủ tỉ lệ 3:4: ảnh theo chủ đề (`image` trong `src/config/topics.ts`) tràn cả thẻ phủ `inverse` 65%, chữ và nút nằm thẳng trên ảnh, không khung bó (ngoại lệ thứ hai cho chữ trên ảnh; ô "Bài viết mới nhất" cũng có vùng ảnh kéo xuống phủ cả chữ, giữ bento gốc; thẻ bài ở lưới Blog và thẻ bài liên quan cùng khuôn ảnh tràn + chữ trên ảnh); khối lớn (thẻ chủ đề, form Newsletter) lơ lửng bằng `elevated-lg`; Hero trang Blog có ảnh nền theo chủ đề phủ lớp `inverse` 80% (ngoại lệ cho chữ trên ảnh).
   - Được phép: hiện chữ từng từ, nổi lên khi vào trang (CSS: `anim-*` trong globals.css); hover (nhấc thẻ, phóng ảnh, nền nút quét, gạch chân chạy, mũi tên trượt); nghiêng / trôi lớp theo con trỏ; chạy theo thanh cuộn (dải chữ, thị sai, thanh tiến độ đọc); đếm số; chuyển trang bằng `<ViewTransition>` (ảnh bay từ thẻ sang trang bài).
-  - KHÔNG: vòng lặp vô hạn, tự chạy không dừng, animate width / height / top / left, thêm màu / gradient / đổ bóng mới.
-  - **Hero trang bài:** ảnh bìa là HERO tràn hết bề ngang đầu trang; khối tiêu đề nền đặc gối lên đáy ảnh (chữ không đặt trực tiếp lên ảnh). Thẻ **bài liên quan**: nền là hình chữ nhật DỌC tỉ lệ 3:4 bo góc `radius-lg` (không vuông), bố cục bên trong giữ như wireframe (nhãn, tiêu đề, bìa sách nhỏ, tóm tắt, thời gian đọc).
-  - **Form:** nhãn trường luôn MỘT dòng, thông tin phụ ("Tùy chọn") là chữ riêng cùng hàng; hai ô cùng hàng phải thẳng hàng. Tương tác form xem `docs/design-system/EXTENSIONS.md`.
+  - KHÔNG: vòng lặp vô hạn / tự chạy không dừng (NGOẠI LỆ duy nhất, Lộc duyệt 2026-10-07: dải chữ `ScrollMarquee` trôi chậm 60s, dừng khi rê chuột, tắt khi giảm chuyển động), animate width / height / top / left, thêm màu ngoài token, đổ bóng ngoài thang `elevated-*`, gradient cho nền trang / chữ / ảnh.
+  - **Hero trang bài:** ảnh bìa là HERO tràn hết bề ngang đầu trang; nhãn chủ đề / tiêu đề / mô tả / ngày nằm CHÍNH GIỮA trên ảnh, không có khối nền riêng (ảnh phủ `inverse` 62%; ngoại lệ chữ trên ảnh); đáy ảnh cắt bằng mask nét cọ. Thẻ **bài liên quan**: nền là hình chữ nhật DỌC tỉ lệ 3:4 bo góc `radius-lg` (không vuông), dùng ảnh bài màu gốc tràn cả thẻ phủ `inverse` 55% (không còn nền đen / trắng xen kẽ), bố cục bên trong giữ như wireframe (nhãn, tiêu đề, bìa sách nhỏ, tóm tắt, thời gian đọc).
+  - **Form:** nhãn nổi (floating label) nằm trong ô, bay lên đè viền trên khi focus / đã nhập; nhãn luôn MỘT dòng, thông tin phụ ("Tùy chọn") là chữ riêng ở mép phải viền trên; hai ô cùng hàng phải thẳng hàng. Tương tác form xem `docs/design-system/EXTENSIONS.md`.
   - **Mỗi khi đổi quy ước giao diện (code + yêu cầu của Lộc): cập nhật CÙNG LÚC** CLAUDE.md mục 6, `docs/design-system/EXTENSIONS.md`, spec trang trong `docs/layout/`, `.claude/agents/design-reviewer.md`, và `docs/PLAN.md` — không chỉ sửa code.
   - Bắt buộc: chỉ `transform` + `opacity`; hover chỉ trên thiết bị có chuột; theo con trỏ chỉ khi `pointer: fine`; tắt khi `prefers-reduced-motion`; duration / spring lấy từ `src/lib/motion-tokens.ts` (CSS: biến `--motion-*`, `--ease-smooth`); nhấn nút thu về `0.95`; lớp tương tác nằm trong `src/components/ui/Motion.tsx` (client).
   Màu nhấn trùng màu mực nên liên kết trong bài LUÔN gạch chân; thứ bậc đến từ cỡ chữ, độ đậm, khoảng trắng.
-- Component dùng đúng tên trong Design System (`PostCard`, `TopicCard`, `FeaturedPost`, `BookRef`, `Takeaways`, `Newsletter`, `SiteHeader`, `SiteFooter`, `Tag`);
+- Component dùng đúng tên trong Design System (thêm `SectionHead`, `SocialIcons`, `ScrollMarquee`, `Breadcrumb` đã duyệt 2026-10-07; `PostCard`, `TopicCard`, `FeaturedPost`, `BookRef`, `Takeaways`, `Newsletter`, `SiteHeader`, `SiteFooter`, `Tag`);
   KHÔNG tự tạo component trùng vai trò. Thiếu component (phân trang, tìm kiếm, bình luận, trang tác giả — Known Gaps) → hỏi Lộc, đề xuất ghép từ component sẵn có.
 - Chữ: tiêu đề và bài đọc serif, giao diện sans; không hạ line-height dưới giá trị token (dấu tiếng Việt); `prose-sm` từ 480px trở xuống.
 - Lỗi form: biểu tượng + chữ giải thích cách sửa + viền dày; không báo lỗi chỉ bằng màu. Vòng focus bàn phím không bao giờ tắt.
@@ -128,7 +129,7 @@ draft: false                         # true = không hiển thị, không vào s
 - Responsive bắt buộc test đủ 5 mốc: 375px (mobile nhỏ), 414px (mobile lớn), 768px (tablet dọc), 1024px (tablet ngang), 1440px (desktop).
   Giữa các mốc: layout phải reflow mượt (fluid), không vỡ cột / tràn chữ ở bất kỳ điểm nào trong khoảng — không chỉ đúng tại 5 con số trên.
   Dùng chung điểm ngắt của Design System (`bp-phone` 480, `bp-tablet` 768, `bp-desktop` 1024, `bp-wide` 1120).
-- Vùng bấm tối thiểu 44x44px (WCAG 2.5.5 / Apple HIG). Khoảng cách tối thiểu giữa 2 vùng bấm liền kề: 8px
+- Vùng bấm tối thiểu 44x44px (WCAG 2.5.5 / Apple HIG; ngoại lệ đã duyệt: hàng icon mạng xã hội ở Hero, chip nhỏ 36px mở rộng vùng bấm lên 44px). Khoảng cách tối thiểu giữa 2 vùng bấm liền kề: 8px
   (tránh bấm nhầm, nhất là các nút hành động gần nhau như Xóa cạnh Sửa).
 - Vùng bấm chính (CTA, nút gửi, nút xác nhận) ưu tiên đặt trong thumb zone — 2/3 dưới màn hình trên mobile.
 - Kiểm thử: Chrome DevTools responsive mode cho 5 mốc trên + bắt buộc test tay trên tối thiểu 1 thiết bị iOS thật

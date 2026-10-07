@@ -307,6 +307,180 @@ html {
   }
 }
 
+/* ===== Premium (Lộc duyệt 2026-10-07): gradient + đổ bóng nhiều lớp + vi chuyển động. Chỉ dùng token trong tokens.json ===== */
+/* Nút chính: gradient-primary (accent -> accent-warm), viền sáng trong 1px, vệt sáng quét khi hover, nổi lên elevated-md */
+.btn-grad,
+.btn-grad-bg {
+  background-image: var(--gradient-primary);
+}
+.btn-grad {
+  box-shadow: var(--elevated-sm);
+  --btn-line: color-mix(in srgb, var(--on-accent) 26%, transparent);
+  --btn-sheen: color-mix(in srgb, var(--on-accent) 34%, transparent);
+}
+/* Nút trên nền đảo: kem -> cát pha với inverse */
+.btn-grad-inverse {
+  --btn-line: color-mix(in srgb, var(--inverse) 22%, transparent);
+  --btn-sheen: color-mix(in srgb, var(--inverse) 18%, transparent);
+  background-image: linear-gradient(135deg, var(--on-inverse) 0%, color-mix(in srgb, var(--on-inverse) 70%, var(--accent-warm)) 100%);
+}
+.btn-grad::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  border: 1px solid var(--btn-line);
+  pointer-events: none;
+}
+.btn-grad::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  z-index: -1;
+  background-image: linear-gradient(105deg, transparent 0%, var(--btn-sheen) 50%, transparent 100%);
+  transform: translateX(-130%) skewX(-18deg);
+  pointer-events: none;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn-grad {
+    transition: transform var(--motion-fast) var(--ease-smooth), box-shadow var(--motion-normal) var(--ease-smooth), color var(--motion-fast);
+  }
+  .btn-grad:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--elevated-md);
+  }
+  .btn-grad:not(.btn-grad-inverse):hover {
+    background-image: var(--gradient-primary-hover);
+  }
+  .btn-grad:active {
+    transform: translateY(0) scale(0.95);
+  }
+  .btn-grad::after {
+    transition: transform 700ms var(--ease-smooth);
+  }
+  .btn-grad:hover::after {
+    transform: translateX(330%) skewX(-18deg);
+  }
+}
+
+/* Bề mặt nổi: thẻ / khối form. Gradient rất nhẹ + elevated-md, hover nâng lên elevated-lg */
+.surface-raised {
+  background-image: var(--gradient-surface);
+  box-shadow: var(--elevated-md);
+}
+/* Khối lớn lơ lửng: bóng cao nhất của thang (thẻ chủ đề, khối form đăng ký) */
+.surface-raised.surface-float {
+  box-shadow: var(--elevated-lg);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .surface-hover {
+    transition: box-shadow var(--motion-normal) var(--ease-smooth), transform var(--motion-normal) var(--ease-smooth);
+  }
+  .surface-hover:hover {
+    box-shadow: var(--elevated-lg);
+  }
+}
+/* Ảnh bài đứng trên nền: nổi lên khi hover thẻ cha (.group) */
+.img-elevated {
+  box-shadow: var(--elevated-md);
+  transition: box-shadow var(--motion-normal) var(--ease-smooth);
+}
+@media (hover: hover) {
+  .group:hover .img-elevated {
+    box-shadow: var(--elevated-lg);
+  }
+}
+
+/* Ô nhập: nghỉ (viền mảnh, icon mờ) -> hover (viền đậm hơn, con trỏ text) -> focus (viền accent + glow 3px accent ~10%, icon rõ).
+   Vòng focus bàn phím (:focus-visible) vẫn giữ nguyên; glow chỉ là lớp bổ sung. */
+.field-premium {
+  cursor: text;
+  box-shadow: var(--elevated-sm);
+  transition: box-shadow 200ms ease-in-out, border-color 180ms ease-in-out, background-color 180ms ease-in-out;
+}
+.field-premium:hover {
+  box-shadow: var(--elevated-md);
+}
+.field-premium:focus {
+  box-shadow: var(--elevated-md), 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
+  transition-duration: 240ms;
+}
+/* Ô nhập luôn khớp :focus-visible kể cả khi bấm chuột, nên phân biệt bằng data-modality trên <html>
+   (đặt bởi Newsletter: pointerdown -> "pointer", keydown -> "keyboard").
+   Bấm chuột: ẩn outline, chỉ còn viền accent + glow. Bàn phím / chưa rõ: giữ vòng focus accent, bo theo ô, cách 2px. */
+html[data-modality="pointer"] .field-premium:focus-visible {
+  outline-color: transparent;
+}
+.field-premium:focus-visible {
+  outline: var(--focus-ring-width) solid var(--accent);
+  outline-offset: var(--focus-ring-offset);
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-premium {
+    transition: none;
+  }
+}
+
+/* Dải chữ tự trôi chậm (Lộc duyệt 2026-10-07): bốn bản chữ nối nhau, dịch đúng một bản rồi lặp nên không thấy khớp nối.
+   Chỉ transform; dừng khi rê chuột / focus vào dải; tắt hẳn khi giảm chuyển động. */
+@keyframes marquee-run {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+.marquee-run {
+  animation: marquee-run 60s linear infinite;
+}
+@media (hover: hover) {
+  .marquee-wrap:hover .marquee-run {
+    animation-play-state: paused;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-run {
+    animation: none;
+  }
+}
+
+/* Đường nối giữa các dải nền (Lộc duyệt 2026-10-07): thay đường ngang / cạnh cứng bằng vùng chuyển mờ dần sang màu `paper`.
+   Gắn lên dải KHÔNG phải `paper` (paper-sunk, paper-raised): seam-top / seam-bottom / seam-both. Chiều cao vùng chuyển: --seam. */
+.seam-top,
+.seam-bottom,
+.seam-both {
+  --seam: clamp(56px, 8vw, 112px);
+}
+.seam-top {
+  background-image: linear-gradient(to bottom, var(--paper), transparent var(--seam));
+}
+.seam-bottom {
+  background-image: linear-gradient(to top, var(--paper), transparent var(--seam));
+}
+.seam-both {
+  background-image:
+    linear-gradient(to bottom, var(--paper), transparent var(--seam)),
+    linear-gradient(to top, var(--paper), transparent var(--seam));
+}
+
+/* Đáy ảnh hero cắt bằng mask "nét cọ" (mép lởm chởm như vệt cọ khô) thay cho bóng mờ.
+   Cần đặt biến --brush-url (xem brushStyle trong src/lib/brush.ts; url nằm ở style nội tuyến để bundler không xử lý).
+   Mask gồm: khối đặc phía trên + dải mép cọ cao 64px lát ngang ở đáy; phía dưới mép lộ nền trang (paper). */
+.brush-bottom {
+  --brush-h: clamp(40px, 5.5vw, 64px);
+  -webkit-mask-image: linear-gradient(#000, #000), var(--brush-url);
+  mask-image: linear-gradient(#000, #000), var(--brush-url);
+  -webkit-mask-size: 100% calc(100% - var(--brush-h) + 1px), 1200px var(--brush-h);
+  mask-size: 100% calc(100% - var(--brush-h) + 1px), 1200px var(--brush-h);
+  -webkit-mask-position: top, bottom;
+  mask-position: top, bottom;
+  -webkit-mask-repeat: no-repeat, repeat-x;
+  mask-repeat: no-repeat, repeat-x;
+}
+
 /* Chuyển trang bằng View Transitions: tắt khi giảm chuyển động */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),

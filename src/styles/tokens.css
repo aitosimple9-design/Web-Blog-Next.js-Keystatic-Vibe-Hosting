@@ -14,6 +14,8 @@
   --rule-strong: #85817a;
   --accent: #0a0a0a;
   --accent-strong: #2e2e2e;
+  --accent-warm: #4a3b2c;
+  --input-icon-color: #64615a;
   --on-accent: #ffffff;
   --accent-soft: #ebe7db;
   --accent-soft-ink: #0a0a0a;
@@ -22,6 +24,12 @@
   --on-inverse-soft: #b5b2a9;
   --accent-on-inverse: #ffffff;
   --cover-shadow: 0 1px 2px rgba(31, 26, 23, 0.2), 0 12px 28px -8px rgba(31, 26, 23, 0.35);
+  --elevated-sm: 0 1px 2px rgba(31, 26, 23, 0.18), 0 4px 10px -2px rgba(31, 26, 23, 0.22);
+  --elevated-md: 0 2px 4px rgba(31, 26, 23, 0.16), 0 10px 22px -6px rgba(31, 26, 23, 0.3), 0 22px 40px -16px rgba(31, 26, 23, 0.26);
+  --elevated-lg: 0 4px 8px rgba(31, 26, 23, 0.18), 0 20px 36px -10px rgba(31, 26, 23, 0.34), 0 40px 70px -24px rgba(31, 26, 23, 0.34);
+  --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+  --gradient-primary-hover: linear-gradient(135deg, var(--accent-warm) 0%, var(--accent) 100%);
+  --gradient-surface: linear-gradient(160deg, var(--paper-raised) 0%, var(--accent-soft) 100%);
 }
 
 :root[data-theme="dark"] {
@@ -37,6 +45,8 @@
   --rule-strong: #78756c;
   --accent: #f5f3ec;
   --accent-strong: #ffffff;
+  --accent-warm: #dcc79e;
+  --input-icon-color: #9f9b91;
   --on-accent: #0a0a0a;
   --accent-soft: #25241f;
   --accent-soft-ink: #f5f3ec;
@@ -45,6 +55,12 @@
   --on-inverse-soft: #bdb9af;
   --accent-on-inverse: #f5f3ec;
   --cover-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 14px 30px -8px rgba(0, 0, 0, 0.7);
+  --elevated-sm: 0 1px 2px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --elevated-md: 0 2px 4px rgba(0, 0, 0, 0.6), 0 12px 24px -6px rgba(0, 0, 0, 0.7), 0 24px 42px -16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --elevated-lg: 0 4px 8px rgba(0, 0, 0, 0.65), 0 22px 40px -10px rgba(0, 0, 0, 0.78), 0 44px 76px -24px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+  --gradient-primary-hover: linear-gradient(135deg, var(--accent-warm) 0%, var(--accent) 100%);
+  --gradient-surface: linear-gradient(160deg, var(--paper-raised) 0%, var(--accent-soft) 100%);
 }
 
 /* Khi chưa có data-theme (chưa chạy script / tắt JS): theo hệ điều hành */
@@ -62,6 +78,8 @@
     --rule-strong: #78756c;
     --accent: #f5f3ec;
     --accent-strong: #ffffff;
+    --accent-warm: #dcc79e;
+    --input-icon-color: #9f9b91;
     --on-accent: #0a0a0a;
     --accent-soft: #25241f;
     --accent-soft-ink: #f5f3ec;
@@ -70,6 +88,12 @@
     --on-inverse-soft: #bdb9af;
     --accent-on-inverse: #f5f3ec;
     --cover-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 14px 30px -8px rgba(0, 0, 0, 0.7);
+    --elevated-sm: 0 1px 2px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    --elevated-md: 0 2px 4px rgba(0, 0, 0, 0.6), 0 12px 24px -6px rgba(0, 0, 0, 0.7), 0 24px 42px -16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --elevated-lg: 0 4px 8px rgba(0, 0, 0, 0.65), 0 22px 40px -10px rgba(0, 0, 0, 0.78), 0 44px 76px -24px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+    --gradient-primary-hover: linear-gradient(135deg, var(--accent-warm) 0%, var(--accent) 100%);
+    --gradient-surface: linear-gradient(160deg, var(--paper-raised) 0%, var(--accent-soft) 100%);
   }
 }
 
@@ -121,6 +145,7 @@
   --header-blur: 12px;
   --header-backdrop-saturate: 160%;
   --header-backdrop-opacity: 92%;
+  --input-icon-size: 18px;
   --bp-wide: 1120px;
   --bp-desktop: 1024px;
   --bp-tablet: 768px;
@@ -140,6 +165,8 @@
   --color-rule-strong: var(--rule-strong);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
+  --color-accent-warm: var(--accent-warm);
+  --color-input-icon-color: var(--input-icon-color);
   --color-on-accent: var(--on-accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-soft-ink: var(--accent-soft-ink);
@@ -149,6 +176,9 @@
   --color-accent-on-inverse: var(--accent-on-inverse);
   --shadow-*: initial;
   --shadow-cover-shadow: var(--cover-shadow);
+  --shadow-elevated-sm: var(--elevated-sm);
+  --shadow-elevated-md: var(--elevated-md);
+  --shadow-elevated-lg: var(--elevated-lg);
 }
 
 @theme {

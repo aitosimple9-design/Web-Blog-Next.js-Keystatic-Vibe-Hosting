@@ -1,4 +1,4 @@
-Blog Book Mono là phiên bản đen trắng phối kem nhẹ của Blog Book: giấy kem, chữ serif cho bài đọc dài, một màu tương tác duy nhất là đen (sang theme Đêm thì thành kem), và bìa sách là vật thể duy nhất có đổ bóng. Giữ nguyên chữ, bố cục, hình dạng và component của Blog Book (đỏ đô); đổi màu nhấn và bổ sung một nền trang trí riêng (`paper-deep`) cho tông kem, để hai bản vẫn đối chiếu được công bằng.
+Blog Book Mono là phiên bản đen trắng phối kem nhẹ của Blog Book: giấy kem, chữ serif cho bài đọc dài, một màu tương tác duy nhất là đen (sang theme Đêm thì thành kem), và bìa sách có đổ bóng riêng. Phiên bản dự án có thêm lớp premium (từ 2026-10-07): gradient `gradient-primary*` / `gradient-surface`, tông ấm `accent-warm`, thang đổ bóng `elevated-sm/md/lg`; chi tiết ở `EXTENSIONS.md`. Giữ nguyên chữ, bố cục, hình dạng và component của Blog Book (đỏ đô); đổi màu nhấn và bổ sung một nền trang trí riêng (`paper-deep`) cho tông kem, để hai bản vẫn đối chiếu được công bằng.
 
 ## Cách dùng
 
@@ -11,4 +11,5 @@ Blog Book Mono là phiên bản đen trắng phối kem nhẹ của Blog Book: g
 ## Nguyên tắc và giá trị
 
 - Nguyên tắc về màu, chữ, bố cục, hình dạng, đổ bóng, nội dung và trạng thái: xem `DESIGN-SYSTEM.md`.
-- Giá trị số liệu (màu, cỡ chữ, khoảng cách, bo góc, breakpoint, đổ bóng): xem `tokens.json`.
+- Giá trị số liệu (màu, cỡ chữ, khoảng cách, bo góc, breakpoint, đổ bóng, gradient): xem `tokens.json`. Token gradient được script `scripts/build-tokens.mjs` đưa vào `src/styles/tokens.css` (biến `--gradient-*`, `--elevated-*`); class dùng chung `.btn-grad`, `.surface-raised`, `.field-premium`, `.img-elevated`, `.marquee-run` nằm ở `src/app/globals.css`.
+- Mở rộng đã được duyệt cho dự án (ngoài Design System gốc): xem `EXTENSIONS.md`.

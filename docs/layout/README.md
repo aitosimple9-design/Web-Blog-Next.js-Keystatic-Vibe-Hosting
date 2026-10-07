@@ -33,9 +33,15 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Nằm trong dải nền đầu trang của từng trang (Trang chủ: `paper-sunk` cùng Hero; Blog: dải tối cùng Hero; Chi tiết bài: dải riêng).
 - Mọi nút ≥ 44x44px, cách nhau ≥ 8px; nút icon có `aria-label` ("Tìm kiếm", "Đổi theme", "Menu").
 
+### Nút chính (mọi trang)
+- Gradient `gradient-primary` (accent → accent-warm), viền sáng trong 1px, vệt sáng quét + nổi `elevated-md` khi hover (chỉ chuột, tắt khi giảm chuyển động). Khối form / thẻ dùng `surface-raised`; ô nhập `field-premium` có icon. Đã duyệt 2026-10-07, xem `docs/design-system/EXTENSIONS.md`. Nút phụ giữ nền quét phẳng.
+
+### Đường nối giữa các dải nền (2026-10-07)
+- Không dùng đường kẻ ngang cứng hay cạnh đổi màu đột ngột giữa các dải: dải `paper-sunk` / chân trang `paper-raised` có vùng chuyển mờ về `paper` ở mép tiếp giáp (lớp `seam-*`). Dải chữ trang chủ không còn viền trên / dưới. Hero trang Blog và ảnh hero trang bài thì cắt đáy bằng mask nét cọ (`brush-bottom`), không dùng bóng mờ.
+
 ### Newsletter (form đăng ký)
 - Chữ: nhãn "Bản tin", tiêu đề "Nhận bài mới qua email", dek "Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.", 3 gạch đầu dòng: "Ý chính, ví dụ và cách áp dụng" · "Đọc trong khoảng 10 phút" · "Hủy đăng ký bất cứ lúc nào".
-- Form: tiêu đề "Đăng ký nhận bài"; trường **Họ tên**, **Số điện thoại** (kèm chữ riêng "Tùy chọn" cùng hàng nhãn, nhãn luôn một dòng), **Email** (chiếm cả hàng), mỗi ô có icon đầu ô; nút chính "Đăng ký" rộng hết khung; dòng nhỏ "Chỉ gửi bài mới, không quảng cáo."
+- Form: tiêu đề "Đăng ký nhận bài"; trường **Họ tên**, **Số điện thoại** (**nhãn nổi**: nằm trong ô như placeholder, khi focus hoặc đã nhập thì thu nhỏ bay lên đè viền trên; nhãn luôn một dòng; "Tùy chọn" là chữ riêng hiện cùng hàng nhãn, ở mép phải viền trên, khi ô nổi nhãn), **Email** (chiếm cả hàng), mỗi ô có icon đầu ô; nút chính "Đăng ký" rộng hết khung; dòng nhỏ "Chỉ gửi bài mới, không quảng cáo."
 - Tương tác (đã duyệt, xem `docs/design-system/EXTENSIONS.md`): hover đổi viền / nền ô; focus: icon đổi màu + gạch nhấn chạy; lỗi lắc một lần; thành công: dấu tích được vẽ; vòng trang trí trôi theo con trỏ.
 - Có phần trang trí (`deco`).
 - 375: chữ rồi form, mỗi ô một hàng · 768: Họ tên và Số điện thoại cùng một hàng · 1024+: chữ trái, form phải.
@@ -46,6 +52,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Hàng 1: Logo · menu (Trang chủ, Blog) · 7 icon mạng xã hội (YouTube, TikTok, Facebook, Instagram, LinkedIn, X, Zalo).
 - Hàng 2: "© 2026 Logo. Ghi chép kiến thức từ sách." · Điều khoản · Chính sách.
 - 375: xếp dọc (logo, menu, mạng xã hội, pháp lý) · 768+: logo trái · menu giữa · 7 icon phải.
+- Icon mạng xã hội: chip tròn 44px, icon 24px (chi tiết: `trang-chu/README.md`).
 - 7 icon x 44px + 6 khe x 8px = 356px, lớn hơn bề rộng khả dụng ở 375px (327px sau lề 24px): phải xuống 2 hàng hoặc cuộn ngang; Lộc chốt khi dựng.
 - Dải nền `paper-raised`.
 
