@@ -17,3 +17,18 @@ out/
 
 # bàn giao giữa các phiên (trạng thái cục bộ, không commit)
 docs/HANDOFF.md
+
+# next.js / node (bổ sung)
+/node_modules
+/coverage
+/build
+.DS_Store
+*.pem
+npm-debug.log*
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# ảnh chụp kiểm thử giao diện (cục bộ)
+shots/
+.playwright-mcp/
