@@ -17,7 +17,7 @@ Mọi mở rộng vẫn dùng đúng bảng màu, bo góc, kiểu chữ, token c
 | 2026-10-07 | **Hiệu ứng vào trang** (chữ hiện từng từ, nổi lên lần lượt), **theo con trỏ** (nghiêng, lớp trôi), **theo cuộn** (dải chữ, thị sai, thanh tiến độ đọc), **đếm số**, **View Transition** ảnh thẻ → trang bài | Hero Trang chủ, hero Blog, trang bài |
 | 2026-10-07 | **Hover**: nút nền quét, thẻ nhấc + ảnh phóng, gạch chân chạy, mũi tên trượt, icon nhấc, logo xoay | Toàn site |
 | 2026-10-07 | **Hero trang bài full-width**: ảnh tràn hết bề ngang, khối tiêu đề nền đặc `paper` gối lên đáy ảnh | `docs/layout/chi-tiet-bai/` |
-| 2026-10-07 | **Thẻ bài liên quan hình chữ nhật 3:2** có ảnh, khung chữ nền đặc gối đáy ảnh, hover nổi + nút mũi tên đổi màu nhấn | `docs/layout/chi-tiet-bai/` |
+| 2026-10-07 | **Nền thẻ bài liên quan hình chữ nhật DỌC 3:4, bo góc `radius-lg`** (bố cục bên trong giữ như wireframe gốc; đã thử bản ngang 3:2 có ảnh nhưng Lộc không chọn) | `docs/layout/chi-tiet-bai/` |
 | 2026-10-07 | **Form đăng ký tương tác**: nhãn một dòng + "Tùy chọn" tách riêng, icon đầu ô đổi màu khi focus, gạch nhấn chạy khi focus, hover đổi viền / nền, lỗi lắc một lần, dấu tích "vẽ" khi thành công, vòng trang trí trôi theo con trỏ | `Newsletter` (cả 3 trang) |
 
 ## Quy tắc dựng form (bổ sung)

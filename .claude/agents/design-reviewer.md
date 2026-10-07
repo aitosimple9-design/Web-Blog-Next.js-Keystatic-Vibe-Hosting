@@ -27,7 +27,7 @@ Bạn là người duyệt thiết kế cho blog sách. Chỉ ĐỌC, không s�
 - Responsive: 375 / 414 / 768 / 1024 / 1440px và các điểm giữa (fluid), không tràn chữ, không nhảy bố cục khi ảnh tải (có width/height hoặc aspect-ratio).
 - Biểu tượng SVG `currentColor`; nút biểu tượng có `aria-label`.
 - Animation chỉ chạy khi không bật giảm chuyển động; không animation lặp vô hạn. Các mở rộng đã duyệt nằm ở `docs/design-system/EXTENSIONS.md` (không coi là lỗi).
-- Trang bài: ảnh bìa là hero tràn hết bề ngang, khối tiêu đề nền đặc gối lên ảnh; chữ KHÔNG đặt trực tiếp lên ảnh. Thẻ bài liên quan là hình chữ nhật ngang 3:2.
+- Trang bài: ảnh bìa là hero tràn hết bề ngang, khối tiêu đề nền đặc gối lên ảnh; chữ KHÔNG đặt trực tiếp lên ảnh. Nền thẻ bài liên quan là hình chữ nhật dọc 3:4 bo góc `radius-lg` (bố cục trong thẻ như wireframe).
 - Form: nhãn một dòng (thông tin phụ là chữ riêng cùng hàng), hai ô cùng hàng thẳng hàng, có trạng thái hover / focus / lỗi / thành công, lỗi có biểu tượng + chữ.
 - Component: dùng đúng tên và cấu trúc trong DESIGN-SYSTEM.md (PostCard, TopicCard, FeaturedPost, BookRef, Takeaways, Newsletter, SiteHeader, SiteFooter, Tag); không tạo bản trùng vai trò.
 - Liên kết trong bài luôn gạch chân (màu nhấn trùng màu mực); trang hiện tại trong nav gạch chân `border-width-strong`.

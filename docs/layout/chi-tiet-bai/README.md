@@ -4,7 +4,7 @@ Mockup gốc: `Main.dc.html` (cùng thư mục). Khối dùng chung (Nav, Newsle
 Một layout cho mọi chủ đề (không còn 3 layout theo danh mục).
 
 > **Đã chỉnh so với wireframe gốc (Lộc yêu cầu 2026-10-07):** (1) ảnh bìa bài thành **HERO tràn hết bề ngang** ở đầu trang;
-> (2) thẻ **Bài liên quan** là hình chữ nhật ngang 3:2 có ảnh. Spec dưới đây là bản ĐANG ÁP DỤNG; khi lệch với `Main.dc.html` thì theo spec này.
+> (2) nền thẻ **Bài liên quan** là hình chữ nhật DỌC 3:4 bo góc (bố cục bên trong giữ như wireframe). Spec dưới đây là bản ĐANG ÁP DỤNG; khi lệch với `Main.dc.html` thì theo spec này.
 
 ## Thứ tự khối (từ trên xuống)
 1. **Nav** — dải riêng, dính trên cùng
@@ -33,10 +33,11 @@ Dải nền: Nav (paper, viền dưới) · hero (ảnh) · thân bài (`paper`)
 - Khung nội dung tối đa 1120px; ảnh hero KHÔNG bị giới hạn (tràn hết chiều rộng màn hình).
 - Nav: ☰ ẩn từ 768; ô tìm kiếm mở rộng từ 1024.
 
-### RelatedSlider — thẻ HÌNH CHỮ NHẬT NGANG
-- Thẻ tỉ lệ **3:2**; ảnh phủ cả thẻ. Chip chủ đề ở góc trên trái (nền `paper-raised`); khung chữ nền đặc `paper-raised` gối lên đáy ảnh gồm: tiêu đề (2 dòng), "6 phút đọc", nút tròn mũi tên.
-- Rộng: 375 → 300px (lộ mép thẻ kế) · 768 → 340px · 1024+ → 380px · hàng tràn ra mép phải màn hình, thẻ cuối vẫn cuộn vào đủ.
-- **Hover:** thẻ nhấc lên, ảnh phóng 1.05, khung chữ nổi lên 4px, chip đảo màu (nền `ink`), tiêu đề gạch chân chạy, nút mũi tên đổi sang màu nhấn và trượt phải. Bấm được cả thẻ (một liên kết duy nhất).
+### RelatedSlider — nền thẻ HÌNH CHỮ NHẬT DỌC 3:4
+- **Nền thẻ:** hình chữ nhật dọc tỉ lệ **3:4**, bo góc `radius-lg` (16px), xen kẽ nền tối (`inverse`) / sáng (`paper-raised`).
+- **Bố cục bên trong (giữ đúng wireframe, không đổi):** hàng trên gồm nhãn chủ đề (chữ viết hoa nhỏ) + tiêu đề (tối đa 3 dòng) bên trái và bìa sách nhỏ bên phải; hàng dưới gồm tóm tắt 2 dòng và "6 phút đọc".
+- Rộng: 375 → 272px (lộ mép thẻ kế) · 768 → 300px · 1024+ → 320px (cao = rộng × 4/3) · hàng tràn ra mép phải màn hình, thẻ cuối vẫn cuộn vào đủ.
+- **Hover:** thẻ nhấc lên 8px. Bấm được cả thẻ (một liên kết duy nhất, phủ cả thẻ).
 - Có chấm vị trí và ‹ › (xem `../README.md`).
 
 ## Component cần dựng

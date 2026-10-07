@@ -1,39 +1,36 @@
-// Bài liên quan: hàng thẻ trượt, thẻ HÌNH CHỮ NHẬT NGANG (tỉ lệ 3:2).
-// Ảnh phủ cả thẻ; chữ nằm trong khung nền đặc (paper-raised) gối lên đáy ảnh — không đặt chữ trực tiếp lên ảnh.
-// 375: 300px (lộ mép thẻ kế) · 768: 340px · 1024+: 380px · tràn ra mép phải màn hình.
-// Hover: thẻ nhấc lên, ảnh phóng nhẹ, khung chữ nổi lên, nhãn đảo màu, nút mũi tên đổi sang màu nhấn và trượt.
+// Bài liên quan: hàng thẻ trượt. Nền thẻ là HÌNH CHỮ NHẬT DỌC tỉ lệ 3:4, bo góc radius-lg; bố cục bên trong giữ như wireframe
+// (nhãn chủ đề, tiêu đề, bìa sách nhỏ, tóm tắt, thời gian đọc; xen kẽ nền tối / sáng).
+// 375: 272px (lộ mép thẻ kế) · 768: 300px · 1024+: 320px · tràn ra mép phải màn hình.
 import Link from "next/link";
 import { topicBySlug } from "@/config/topics";
 import type { PostMeta } from "@/lib/posts";
 import { Slider } from "@/components/ui/Slider";
-import { PostImage } from "@/components/ui/Media";
-import { ArrowRightIcon } from "@/components/ui/Icon";
+import { BookCover } from "@/components/ui/Media";
 
-function RelatedCard({ post }: { post: PostMeta }) {
+function RelatedCard({ post, dark }: { post: PostMeta; dark: boolean }) {
   const topic = topicBySlug(post.category)?.name ?? post.category;
   return (
-    <article className="group lift relative aspect-(--post-image-ratio) overflow-hidden rounded-md bg-paper-deep">
-      <PostImage src={post.cover} seed={post.slug} fill rounded={false} sizes="380px" />
-
-      <span className="type-caption absolute top-s3 left-s3 rounded-pill bg-paper-raised px-3 py-1 text-ink transition-colors duration-(--motion-normal) group-hover:bg-ink group-hover:text-paper">
-        {topic}
-      </span>
-
-      <div className="absolute inset-x-s3 bottom-s3 flex items-end justify-between gap-s3 rounded-md bg-paper-raised p-s4 text-ink transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:-translate-y-1">
+    <article
+      className={`group relative flex aspect-[3/4] w-full flex-col justify-between gap-s5 overflow-hidden rounded-lg p-s5 transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:hover:-translate-y-2 ${
+        dark ? "on-inverse bg-inverse text-on-inverse" : "bg-paper-raised text-ink"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-s4">
         <div className="min-w-0">
-          <h3 className="type-ui-strong line-clamp-2 text-balance">
+          <p className={`type-eyebrow uppercase ${dark ? "text-on-inverse-soft" : "text-ink-faint"}`}>{topic}</p>
+          <h3 className="type-title mt-s2 line-clamp-3 text-balance">
             <Link href={`/bai-viet/${post.slug}`} className="no-underline after:absolute after:inset-0">
-              <span className="ul-grow">{post.title}</span>
+              {post.title}
             </Link>
           </h3>
-          <p className="type-caption mt-s1 text-ink-faint">{post.readingMinutes} phút đọc</p>
         </div>
-        <span
-          aria-hidden
-          className="grid size-9 shrink-0 place-items-center rounded-pill border-(length:--border-width) border-rule-strong transition-[background-color,color,border-color,transform] duration-(--motion-normal) ease-(--ease-smooth) group-hover:border-accent group-hover:bg-accent group-hover:text-on-accent motion-safe:group-hover:translate-x-1"
-        >
-          <ArrowRightIcon />
-        </span>
+        <BookCover size="sm" title={post.source.book} tone={dark ? "sunk" : "deep"} className="mt-s1" />
+      </div>
+      <div>
+        <p className={`type-excerpt line-clamp-2 ${dark ? "text-on-inverse-soft" : "text-ink-soft"}`}>{post.description}</p>
+        <p className={`type-caption mt-s3 ${dark ? "text-on-inverse-soft" : "text-ink-faint"}`}>
+          {post.readingMinutes} phút đọc
+        </p>
       </div>
     </article>
   );
@@ -53,9 +50,9 @@ export function RelatedSlider({ posts }: { posts: PostMeta[] }) {
             label="Danh sách bài liên quan"
             gapClassName="gap-s4"
             trackClassName="bleed-r pt-2 pb-2"
-            itemClassName="w-[300px] tablet:w-[340px] desktop:w-[380px]"
-            items={posts.map((p) => (
-              <RelatedCard key={p.slug} post={p} />
+            itemClassName="w-[272px] tablet:w-[300px] desktop:w-[320px]"
+            items={posts.map((p, i) => (
+              <RelatedCard key={p.slug} post={p} dark={i % 2 === 0} />
             ))}
           />
         </div>
