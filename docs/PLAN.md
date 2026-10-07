@@ -29,19 +29,19 @@ Layout từng trang (wireframe + spec) nằm ở `docs/layout/` (mỗi trang m�
 | # | Quyết định | Đề xuất | Cần trước giai đoạn |
 |---|---|---|---|
 | Q1 | Hệ điều hành máy làm việc (Windows / macOS) | **Windows** (chốt 2026-10-06) | 0 |
-| Q2 | TypeScript hay JavaScript | TypeScript | 1 |
+| Q2 | TypeScript hay JavaScript | **TypeScript** (chốt 2026-10-07) | 1 |
 | Q3 | Tailwind hay CSS Modules | **Tailwind CSS, bản mới nhất** (chốt 2026-10-06; kiểm tra số phiên bản lúc cài) | 1 |
-| Q4 | npm hay pnpm | npm | 1 |
-| Q5 | Phiên bản Next.js (A: kiểm tra lỗi Keystatic GitHub mode trên Next.js 16) | — | 1 |
+| Q4 | npm hay pnpm | **npm** (chốt 2026-10-07) | 1 |
+| Q5 | Phiên bản Next.js (A: kiểm tra lỗi Keystatic GitHub mode trên Next.js 16) | **Next.js 16.4.0** (chốt 2026-10-07). Còn phải kiểm tra lỗi Keystatic GitHub mode trên Next 16 ở GĐ2/GĐ8; nếu lỗi thì hạ về 15.x | 1 |
 | Q6 | Thư viện đọc frontmatter / render Markdown | **Dùng cả 2** (đọc frontmatter + render Markdown); tên thư viện cụ thể: hỏi trước khi cài ở GĐ2 (chốt 2026-10-06) | 2 |
 | Q7 | Tên thật của 3 danh mục | **Làm demo trước**; danh mục nằm ở một chỗ cấu hình, sửa / thêm được khi cần (chốt 2026-10-06). Lưu ý: wireframe mẫu dùng 5 chủ đề, CLAUDE.md mục 5 còn ghi 3 → đồng bộ khi dựng (đổi cấu trúc bài ⇒ hỏi, đồng bộ sang dự án B) | 2 |
 | Q8 | Font dự phòng hiển thị đủ dấu tiếng Việt | **Theo Design System** trong `docs/design-system/` (Blog Book Mono: Source Serif 4 + Be Vietnam Pro, subset `vietnamese`) (chốt 2026-10-06) | 3 |
 | Q9 | Nhà cung cấp hosting [A] / thiết lập Cloudflare [B] | — | 8 |
 | Q10 | Tên miền | — | 8 |
-| Q11 | Form đăng ký (Họ tên + Số điện thoại + Email) gửi đi đâu, lưu ở đâu; trường nào bắt buộc; câu đồng ý dữ liệu cá nhân | — | 3 (giao diện) / 4 (kết nối) |
-| Q12 | Ô tìm kiếm trên thanh đầu trang: làm chức năng ngay hay chỉ dựng giao diện (PLAN cũ xếp tìm kiếm vào sau ra mắt) | — | 3 |
-| Q13 | Blog: URL từng chủ đề / từng trang; số bài mỗi trang cố định (đề xuất 6) hay đổi 2 / 4 / 6 theo màn hình; có tab "Tất cả" không | — | 4 |
-| Q14 | Tên blog, logo, link 7 mạng xã hội, trang Điều khoản / Chính sách; 7 icon x 44px không vừa hàng ở 375px (xuống 2 hàng hay cuộn) | — | 3 |
+| Q11 | Form đăng ký (Họ tên + Số điện thoại + Email) gửi đi đâu, lưu ở đâu; trường nào bắt buộc; câu đồng ý dữ liệu cá nhân | Giả định tạm: Họ tên + Email bắt buộc, SĐT tùy chọn; CHƯA gửi đi đâu (hàm `submitSubscription` trong `Newsletter.tsx`) | 3 (giao diện) / 4 (kết nối) |
+| Q12 | Ô tìm kiếm trên thanh đầu trang: làm chức năng ngay hay chỉ dựng giao diện (PLAN cũ xếp tìm kiếm vào sau ra mắt) | Đã làm tìm kiếm cơ bản phía trình duyệt (tiêu đề, mô tả, chủ đề, sách; không phân biệt dấu); nâng cấp sau | 3 |
+| Q13 | Blog: URL từng chủ đề / từng trang; số bài mỗi trang cố định (đề xuất 6) hay đổi 2 / 4 / 6 theo màn hình; có tab "Tất cả" không | Giả định tạm: `/blog/<chu-de>`, `/blog/<chu-de>/trang/<n>`, bài `/bai-viet/<slug>`; 6 bài/trang cố định; `/blog` chuyển về chủ đề đầu; không có tab "Tất cả" | 4 |
+| Q14 | Tên blog, logo, link 7 mạng xã hội, trang Điều khoản / Chính sách; 7 icon x 44px không vừa hàng ở 375px (xuống 2 hàng hay cuộn) | Giả định tạm: tên "Logo", icon chưa có link (hiển thị mờ), xuống 2 hàng ở màn hẹp. Sửa ở `src/config/site.ts` | 3 |
 
 Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ngày, và cập nhật mục "Stack" trong CLAUDE.md.
 
@@ -62,12 +62,12 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 **Xong khi:** `/memory` hiển thị CLAUDE.md, `/mcp` kết nối đủ, có Issue mẫu đầu tiên.
 
 ## Giai đoạn 1 — Khởi tạo Next.js
-- [ ] Chốt Q2 → Q5
-- [ ] Tạo project bằng `create-next-app` trong repo hiện tại (không tạo thư mục con)
+- [x] Chốt Q2 → Q5
+- [x] Tạo project bằng `create-next-app` trong repo hiện tại (không tạo thư mục con)
 - [ ] Cấu trúc thư mục đúng mục 3 CLAUDE.md
 - [ ] [B] `output: 'export'`, `images: { unoptimized: true }`
-- [ ] `npm run dev`, `npm run lint`, `npm run build` đều chạy được
-- [ ] `.gitignore` có `.env*`, `node_modules`, `.next`, `out`
+- [x] `npm run dev`, `npm run lint`, `npm run build` đều chạy được
+- [x] `.gitignore` có `.env*`, `node_modules`, `.next`, `out`
 
 **Xong khi:** trang mặc định chạy, build không lỗi, PR đã merge.
 
@@ -84,12 +84,12 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 
 ## Giai đoạn 3 — Design system trong code
 - [x] Chốt Q8 (theo Design System)
-- [ ] Token màu, chữ, khoảng cách, bo góc lấy từ `docs/design-system/tokens.json` (CSS variables), ánh xạ vào theme Tailwind
-- [ ] Hai theme Giấy / Đêm: nút chuyển theme, nhớ lựa chọn, không nháy sáng khi tải
-- [ ] Layout gốc: global nav, footer
-- [ ] Component cơ bản: nút chính, nút phụ, card bài viết, nhãn danh mục
-- [ ] Component `Newsletter` (form đăng ký) tái sử dụng được, đủ trạng thái (mặc định, lỗi, thành công)
-- [ ] Component dùng chung theo `docs/layout/README.md`: `SiteHeader` (có tìm kiếm, nút theme, ☰), `SiteFooter` (7 icon mạng xã hội), `Slider` (chấm + nút ‹ ›), `SocialIcons`, `SearchBox`
+- [x] Token màu, chữ, khoảng cách, bo góc lấy từ `docs/design-system/tokens.json` (CSS variables), ánh xạ vào theme Tailwind (`npm run tokens` sinh `src/styles/tokens.css`)
+- [x] Hai theme Giấy / Đêm: nút chuyển theme, nhớ lựa chọn, không nháy sáng khi tải
+- [x] Layout gốc: global nav, footer
+- [x] Component cơ bản: nút chính, nút phụ, card bài viết, nhãn danh mục
+- [x] Component `Newsletter` (form đăng ký) tái sử dụng được, đủ trạng thái (mặc định, lỗi, thành công)
+- [x] Component dùng chung theo `docs/layout/README.md`: `SiteHeader` (có tìm kiếm, nút theme, ☰), `SiteFooter` (7 icon mạng xã hội), `Slider` (chấm + nút ‹ ›), `SocialIcons`, `SearchBox`
 - [ ] Component riêng từng trang (làm khi dựng trang đó): xem mục "Component cần dựng" trong spec của trang
 - [ ] `design-reviewer` duyệt bộ component
 
@@ -97,11 +97,11 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 
 ## Giai đoạn 4 — Các trang
 Layout đã duyệt nằm ở `docs/layout/<trang>/README.md`. Làm theo thứ tự ưu tiên (mỗi trang một Issue):
-- [ ] Trang chi tiết bài — `docs/layout/chi-tiet-bai/` (ưu tiên 1; đích của quảng cáo; 1 layout cho mọi chủ đề, có `Newsletter`)
-- [ ] Trang Blog — `docs/layout/blog/` (Hero theo chủ đề, danh sách, phân trang; cần chốt Q13 trước)
+- [x] (dựng xong, chờ Lộc duyệt) Trang chi tiết bài — `docs/layout/chi-tiet-bai/` (ưu tiên 1; đích của quảng cáo; 1 layout cho mọi chủ đề, có `Newsletter`)
+- [x] (dựng xong, chờ Lộc duyệt) Trang Blog — `docs/layout/blog/` (Hero theo chủ đề, danh sách, phân trang; cần chốt Q13 trước)
   - [B] lọc phía trình duyệt hoặc route tĩnh riêng cho từng chủ đề, không dùng `searchParams` phía server
-- [ ] Trang chủ — `docs/layout/trang-chu/` (trang đích: hiểu ngay blog nói về gì, 1 CTA chính "Đọc bài mới nhất")
-- [ ] Trang 404 (ngoài 3 trang chính, làm sau cùng)
+- [x] (dựng xong, chờ Lộc duyệt) Trang chủ — `docs/layout/trang-chu/` (trang đích: hiểu ngay blog nói về gì, 1 CTA chính "Đọc bài mới nhất")
+- [x] Trang 404 (ngoài 3 trang chính)
 
 Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `design-reviewer`.
 

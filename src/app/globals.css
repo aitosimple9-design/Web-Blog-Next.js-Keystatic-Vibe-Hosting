@@ -1,0 +1,183 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/prose.css";
+
+/* ===== Nền tảng ===== */
+@layer base {
+  html {
+    background: var(--paper);
+    scroll-padding-top: calc(var(--header-height) + var(--space-5));
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans-stack);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Vòng focus bàn phím: không bao giờ tắt (Design System) */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--accent);
+    outline-offset: var(--focus-ring-offset);
+  }
+  .on-inverse :focus-visible {
+    outline-color: var(--on-inverse);
+  }
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+  button {
+    cursor: pointer;
+    font: inherit;
+  }
+  /* Chữ viết tắt bị tô nhầm màu trên Safari */
+  button,
+  input,
+  select,
+  textarea {
+    color: inherit;
+  }
+}
+
+/* ===== Khung nội dung: tối đa content-max, lề 24px (32px từ tablet) ===== */
+@utility wrap {
+  width: min(100% - 2 * var(--space-5), var(--content-max));
+  margin-inline: auto;
+  @media (min-width: 768px) {
+    width: min(100% - 2 * var(--space-6), var(--content-max));
+  }
+}
+
+/* Padding dọc một dải: space-7 dưới tablet, space-9 từ tablet */
+@utility band-y {
+  padding-block: var(--space-7);
+  @media (min-width: 768px) {
+    padding-block: var(--space-9);
+  }
+}
+
+/* Vùng bấm tối thiểu 44x44 */
+@utility tap {
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Liên kết trong chữ: luôn gạch chân (màu nhấn trùng màu mực) */
+@utility text-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-width);
+  text-underline-offset: var(--underline-offset);
+  &:hover {
+    text-decoration-thickness: var(--border-width-strong);
+  }
+}
+
+/* Chữ chỉ dành cho trình đọc màn hình */
+@utility sr-only-x {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Chuyển động: chỉ khi người dùng không bật giảm chuyển động ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Lướt đến mục từ liên kết (mục lục): mượt khi cho phép chuyển động */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Nhảy đến nội dung chính */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: var(--space-3);
+}
+
+/* ===== Lề ngang và thanh trượt tràn mép màn hình ===== */
+:root {
+  --gutter: var(--space-5);
+}
+@media (min-width: 768px) {
+  :root {
+    --gutter: var(--space-6);
+  }
+}
+html {
+  overflow-x: clip;
+}
+
+/* Cho phần tử trong khung `wrap` tràn ra hai mép màn hình, nhưng nội dung vẫn thẳng hàng với khung */
+@utility bleed {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+  scroll-padding-inline: calc(50vw - 50%);
+}
+@utility bleed-r {
+  margin-right: calc(50% - 50vw);
+  padding-right: calc(50vw - 50%);
+  scroll-padding-inline: 0;
+}
+@utility bleed-none {
+  margin-inline: 0;
+  padding-inline: 0;
+  scroll-padding-inline: 0;
+}
+
+/* Hiện nhẹ khi xuất hiện (chỉ dùng cho trạng thái thành công); tự tắt khi giảm chuyển động */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility animate-fade-up {
+  animation: fade-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}

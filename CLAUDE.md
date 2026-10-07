@@ -19,6 +19,8 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
   - CMS: Keystatic — hiện dùng `storage: { kind: 'local' }`; chuyển sang `kind: 'github'` ở giai đoạn deploy
   - Hosting dự kiến: PaaS Việt Nam hỗ trợ Node.js — CHƯA mua
   - Máy làm việc: Windows (Q1)
+  - TypeScript, npm, Next.js 16.4.0 (Q2, Q4, Q5; kiểm tra lỗi Keystatic GitHub mode ở GĐ2/GĐ8, lỗi thì hạ về 15.x)
+  - `next.config.ts` KHÔNG bật `cacheComponents` (chưa chắc tương thích Keystatic); xem lại ở GĐ2
   - CSS: Tailwind CSS bản mới nhất (Q3)
   - Đọc bài: dùng cả thư viện đọc frontmatter và thư viện render Markdown (Q6); chọn cụ thể + hỏi trước khi cài
   - Danh mục: demo trước, đặt ở một nơi cấu hình để sửa / thêm được (Q7)
@@ -30,6 +32,7 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 - `npm run dev` — http://localhost:3000, quản trị bài: http://localhost:3000/keystatic
 - `npm run lint`
 - `npm run build` — PHẢI chạy không lỗi trước khi mở PR
+- `npm run typecheck` — kiểm tra kiểu TypeScript; `npm run tokens` — sinh lại `src/styles/tokens.css` khi sửa `tokens.json`
 
 ## 3. Cấu trúc thư mục (đổi cấu trúc = phải hỏi trước)
 ```
@@ -43,7 +46,10 @@ src/app/                        ← routes (App Router)
 src/app/keystatic/              ← giao diện quản trị Keystatic
 src/app/api/keystatic/          ← API của Keystatic
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
-src/components/                 ← UI components
+src/components/                 ← UI components (ui/, layout/, home/, blog/, article/)
+src/config/                     ← site.ts (tên blog, nav, mạng xã hội), topics.ts (danh mục: nơi DUY NHẤT sửa/thêm chủ đề)
+src/styles/                     ← tokens.css (TỰ SINH từ docs/design-system/tokens.json bằng `npm run tokens`), prose.css
+scripts/                        ← build-tokens.mjs, seed-demo-posts.mjs (bài mẫu demo-*.md)
 ```
 Mọi trang lấy bài viết qua `src/lib/posts.ts`. Không gọi API Keystatic rải rác trong components —
 để sau này đổi CMS (kể cả lên WordPress Headless) chỉ cần sửa 1 file.
