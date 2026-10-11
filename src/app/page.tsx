@@ -9,7 +9,7 @@ import { brushStyle } from "@/lib/brush";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
 import { SocialIcons } from "@/components/layout/SocialIcons";
-import { HeroBackdrop } from "@/components/home/HeroBackdrop";
+import { PersonBackdrop } from "@/components/about/PersonBackdrop";
 import { PersonHero } from "@/components/about/PersonHero";
 import { StorySection } from "@/components/about/StorySection";
 import { PrincipleCards } from "@/components/about/PrincipleCards";
@@ -47,11 +47,8 @@ export default function HomePage() {
         style={brushStyle}
         aria-label="Giới thiệu"
       >
-        <HeroBackdrop
-          word={profile.nickname}
-          orbClassName="absolute bottom-[12%] left-[4%] hidden size-[clamp(72px,9vw,128px)] tablet:block"
-        />
-        <PersonHero />
+        <PersonBackdrop />
+        <PersonHero stats={{ posts: stats.posts, topics: stats.topics }} />
       </section>
 
       <StorySection />

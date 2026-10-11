@@ -1,20 +1,18 @@
-// Hero Trang chủ cá nhân (dải tối `inverse`, đáy nét cọ; họa tiết nền ở HeroBackdrop với chữ viền = tên ngắn). Một CTA chính: "Đăng ký nhận bài".
+// Hero Trang chủ cá nhân (dải tối `inverse`, đáy nét cọ; nền lưới dọc + vòm ở PersonBackdrop). Một CTA chính: "Đăng ký nhận bài".
 // 375: 1 cột căn giữa (chân dung, tên, định vị, nút, icon) · 768: 2 cột (chân dung trái, chữ phải căn trái) · 1024+: chữ trái, chân dung lớn bên phải.
-// Chân dung là sân khấu 3D (PortraitStage): ảnh + vòng tròn + khung ở các độ sâu khác nhau, nghiêng theo con trỏ / thanh cuộn.
+// Chân dung nằm trong "cánh cửa gập" 3D (GatefoldStage): bìa đóng có chữ cái đầu, hai cánh mở ra một lần để lộ ảnh, rồi nghiêng theo con trỏ / thanh cuộn.
 // Tiêu đề hiện từng chữ, các phần còn lại nổi lên lần lượt (CSS `anim-*`, chạy ngay khi vẽ).
 import Image from "next/image";
-import { profile, shelf } from "@/config/profile";
+import { profile } from "@/config/profile";
 import { Button } from "@/components/ui/Button";
-import { BookCover } from "@/components/ui/Media";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 import { SocialIcons } from "@/components/layout/SocialIcons";
-import { PortraitStage } from "@/components/about/PortraitStage";
+import { GatefoldStage } from "@/components/about/GatefoldStage";
 
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as React.CSSProperties;
 
-export function PersonHero() {
+export function PersonHero({ stats }: { stats: { posts: number; topics: number } }) {
   const words = profile.name.split(" ");
-  const reading = shelf.books[0].title;
 
   return (
     <div className="wrap grid items-center gap-x-s7 gap-y-s7 pt-s5 pb-[calc(var(--brush-h)+var(--space-7))] tablet:grid-cols-2 tablet:pb-[calc(var(--brush-h)+var(--space-8))] desktop:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] desktop:pt-s7">
@@ -53,7 +51,10 @@ export function PersonHero() {
         className="anim-pop order-1 mx-auto w-full max-w-[19rem] px-s4 tablet:max-w-[22rem] desktop:order-2 desktop:ml-auto desktop:max-w-[28rem]"
         style={delay(200)}
       >
-        <PortraitStage
+        <GatefoldStage
+          left={{ initials: "T·N", name: "Trần Ngọc" }}
+          right={{ initials: "H·N", name: "Hoàng Ni" }}
+          stats={stats}
           photo={
             <Image
               src={profile.portrait.src}
@@ -64,13 +65,6 @@ export function PersonHero() {
               className="object-cover"
               style={{ objectPosition: profile.portrait.position }}
             />
-          }
-          book={<BookCover fluid title={reading} seed={reading} />}
-          badge={
-            <div className="rounded-md surface-raised p-s3 text-ink tablet:p-s4">
-              <p className="type-eyebrow uppercase text-ink-faint">Đang đọc</p>
-              <p className="type-title mt-s1 line-clamp-1">{reading}</p>
-            </div>
           }
         />
       </div>

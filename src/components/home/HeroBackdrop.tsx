@@ -6,11 +6,7 @@
 // Chuyển động: chỉ transform, trôi nhẹ theo thanh cuộn (chữ đi lên, vòng tròn đi xuống), tắt khi giảm chuyển động, không vòng lặp.
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
-const defaultOrb =
-  "absolute top-[4%] right-[6%] hidden size-[clamp(96px,13vw,120px)] tablet:block desktop:top-[5%] desktop:right-[27%] desktop:size-[clamp(150px,17vw,230px)]";
-
-/** `word`: chữ viền khổng lồ (Trang Book: "Đọc"; Trang chủ cá nhân: tên ngắn). `orbClassName`: vị trí vòng tròn nếu khác mặc định */
-export function HeroBackdrop({ word = "Đọc", orbClassName = defaultOrb }: { word?: string; orbClassName?: string }) {
+export function HeroBackdrop() {
   const reduce = useReducedMotion();
   const { scrollY } = useScroll();
   const wordY = useTransform(scrollY, [0, 700], [0, -60]);
@@ -43,7 +39,7 @@ export function HeroBackdrop({ word = "Đọc", orbClassName = defaultOrb }: { w
             vectorEffect="non-scaling-stroke"
             style={{ fontFamily: "var(--font-serif-stack)" }}
           >
-            {word}
+            Đọc
           </text>
         </svg>
       </motion.div>
@@ -51,7 +47,7 @@ export function HeroBackdrop({ word = "Đọc", orbClassName = defaultOrb }: { w
       {/* (3) Vòng tròn phẳng accent-warm + vòng viền lệch tâm (nhỏ, ló sau góc trên phải của thẻ ảnh; ẩn dưới 768px vì đè lên tiêu đề) */}
       <motion.div
         style={drift(orbY)}
-        className={orbClassName}
+        className="absolute top-[4%] right-[6%] hidden size-[clamp(96px,13vw,120px)] tablet:block desktop:top-[5%] desktop:right-[27%] desktop:size-[clamp(150px,17vw,230px)]"
       >
         <span className="absolute inset-0 rounded-pill bg-accent-warm" />
         <span className="absolute -inset-[14%] translate-x-[8%] translate-y-[6%] rounded-pill border-(length:--border-width) border-on-inverse/25" />
