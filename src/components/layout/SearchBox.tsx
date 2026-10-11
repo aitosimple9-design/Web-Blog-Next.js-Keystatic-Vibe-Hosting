@@ -85,7 +85,8 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
             }
           }}
         >
-          <label className="tap flex w-full items-center gap-s2 rounded-pill border-(length:--border-width) border-rule-strong bg-paper-raised px-s4 text-ink focus-within:outline-(length:--focus-ring-width) focus-within:outline-accent desktop:w-60">
+          {/* Từ 1024px ô cao 32px cho thanh đầu trang gọn; vùng bấm vẫn 44px nhờ lớp ::after kéo ra 7px mỗi phía trên / dưới (tính cả viền 1px) */}
+          <label className="tap relative flex w-full items-center gap-s2 rounded-pill border-(length:--border-width) border-rule-strong bg-paper-raised px-s4 text-ink focus-within:outline-(length:--focus-ring-width) focus-within:outline-accent desktop:h-8 desktop:min-h-0 desktop:w-56 desktop:gap-s1 desktop:px-s3 desktop:after:absolute desktop:after:inset-x-0 desktop:after:-inset-y-[7px] desktop:after:content-['']">
             <SearchIcon size={18} className="shrink-0 text-ink-faint" />
             <span className="sr-only-x">Tìm bài viết</span>
             <input
@@ -101,7 +102,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
               autoComplete="off"
               enterKeyHint="search"
               aria-controls={listId}
-              className="type-ui-body min-h-(--touch-target) min-w-0 flex-1 self-stretch bg-transparent outline-none placeholder:text-ink-faint"
+              className="type-ui-body min-h-(--touch-target) min-w-0 flex-1 self-stretch desktop:min-h-0 bg-transparent outline-none placeholder:text-ink-faint"
             />
           </label>
         </form>

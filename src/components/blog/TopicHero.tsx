@@ -1,5 +1,6 @@
 // Hero chủ đề trên dải tối (inverse). 375: căn giữa · 768: căn giữa, tiêu đề lớn hơn, số liệu trong thẻ ·
 // 1024+: chữ + CTA trái, bìa giữa, danh sách chủ đề dọc bên phải, số liệu một hàng bên dưới.
+// Lưới 1fr | cột giữa | 1fr: hai cột bên BẰNG NHAU nên cụm bìa nằm chính giữa, khoảng cách hai bên đều.
 import Link from "next/link";
 import type { Topic } from "@/config/topics";
 import { Button } from "@/components/ui/Button";
@@ -26,7 +27,7 @@ export function TopicHero({
 }) {
   const [b1, b2, b3] = [books[0], books[1] ?? books[0], books[2] ?? books[0]];
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s3 pb-s9 text-center desktop:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_220px] desktop:items-start desktop:gap-x-s5 desktop:pt-s2 desktop:text-left">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s3 pb-s9 text-center desktop:grid-cols-[minmax(0,1fr)_minmax(0,clamp(18rem,32vw,24rem))_minmax(0,1fr)] desktop:items-start desktop:gap-x-s5 desktop:pt-s2 desktop:text-left">
       {/* Chữ + CTA */}
       <div className="anim-fade-rise mx-auto max-w-xl desktop:mx-0 desktop:max-w-none">
         <p className="type-eyebrow inline-block rounded-pill border-(length:--border-width) border-on-inverse-soft px-s4 py-s1 uppercase text-on-inverse-soft tablet:py-s2">

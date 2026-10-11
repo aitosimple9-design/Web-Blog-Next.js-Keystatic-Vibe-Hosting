@@ -21,7 +21,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 ## Điểm chuyển mốc chung (đã khớp Design System)
 | Mốc | Thanh đầu trang | Ghi chú |
 |---|---|---|
-| 375 / 414 | Logo trái · tìm kiếm (icon) + ☾ + ☰ bên phải | Lề 24px |
+| 375 / 414 | ☰ + Logo bên trái · tìm kiếm (icon) + ☾ bên phải; ☰ mở ngăn kéo menu từ trái (xem dưới) | Lề 24px |
 | 768 | Menu (Trang chủ · Blog) căn giữa, ☰ ẩn | Lề 32px |
 | 1024 | Ô tìm kiếm mở rộng ("Tìm bài viết") | |
 | 1440 | Như 1024 | Khung nội dung tối đa 1120px; dải nền vẫn tràn hết chiều rộng |
@@ -32,6 +32,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Logo (nút, có dấu hiệu `mark`) · menu: Trang chủ, Blog (trang hiện tại có trạng thái `on`) · tìm kiếm · nút đổi theme (☾) · ☰ (chỉ dưới 768).
 - Nằm trong dải nền đầu trang của từng trang (Trang chủ: `paper-sunk` cùng Hero; Blog: dải tối cùng Hero; Chi tiết bài: dải riêng).
 - Mọi nút ≥ 44x44px, cách nhau ≥ 8px; nút icon có `aria-label` ("Tìm kiếm", "Đổi theme", "Menu").
+- Menu ngăn kéo dưới 768px (`MobileMenu`, cập nhật 2026-10-10): trượt từ trái, rộng 70% màn hình (tỉ lệ 70 / 30, bên phải 30% còn thấy nội dung), KHÔNG phủ tối phần bên phải (vẫn thấy nội dung); bấm ra ngoài, Esc hoặc ☰ để đóng. Mỗi mục có icon + chữ cao 44px; các nhóm cách nhau bằng đường kẻ ngang tự vẽ; mục có danh sách con (Blog → các chủ đề, có đường dọc bên trái nối từ icon mục cha) thu gọn sẵn, bấm mới xổ, đóng menu thì thu lại. Dữ liệu từ `navGroups` trong `src/config/site.ts`: thêm trang = thêm 1 dòng vào nhóm (hoặc thêm nhóm mới), icon tra ở `NavIcon.tsx`.
 
 ### Nút chính (mọi trang)
 - Gradient `gradient-primary` (accent → accent-warm), viền sáng trong 1px, vệt sáng quét + nổi `elevated-md` khi hover (chỉ chuột, tắt khi giảm chuyển động). Khối form / thẻ dùng `surface-raised`; ô nhập `field-premium` có icon. Đã duyệt 2026-10-07, xem `docs/design-system/EXTENSIONS.md`. Nút phụ giữ nền quét phẳng.
