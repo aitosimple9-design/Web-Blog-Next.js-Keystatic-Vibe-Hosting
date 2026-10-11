@@ -3,7 +3,7 @@
 Mockup: `Home.dc.html` (cùng thư mục). Khối dùng chung (Nav, Newsletter, Footer, Slider): xem `../README.md`.
 
 ## Thứ tự khối
-1. **Dải Hero** (`paper-sunk`, chứa cả Nav)
+1. **Dải Hero** (cập nhật 2026-10-11: nền TỐI `inverse`, không ảnh nền, đáy cắt nét cọ `brush-bottom`, chứa cả Nav tông `inverse`). Họa tiết nền (`HeroBackdrop`, aria-hidden, chỉ token): dòng kẻ ngang mảnh như trang vở, chữ "Đọc" khổng lồ chỉ có nét viền ở đáy trái, vòng tròn phẳng `accent-warm` kèm vòng viền lệch tâm (chỉ từ 768px, dưới đó ẩn vì đè lên tiêu đề); trôi nhẹ theo thanh cuộn (transform), tắt khi giảm chuyển động. Chữ dùng `on-inverse` / `on-inverse-soft`, nút CTA biến thể `on-inverse`, nút Zalo đảo màu (`SocialIcons onDark`)
    - Tiêu đề `h1`: "Điều đọng lại sau mỗi cuốn sách" (xuống dòng ở màn hình hẹp)
    - **FeaturedPost** — ảnh bài nổi bật, bấm được cả khối; lớp chữ: nhãn "Bài nổi bật", tiêu đề, mũi tên
    - Dek: "Mỗi bài ghi chép một cuốn sách: ý chính, ví dụ và cách áp dụng."

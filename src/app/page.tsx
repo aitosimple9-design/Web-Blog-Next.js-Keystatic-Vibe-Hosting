@@ -6,6 +6,8 @@ import { countByTopic, getAllPosts, getSiteStats } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
 import { Hero } from "@/components/home/Hero";
+import { HeroBackdrop } from "@/components/home/HeroBackdrop";
+import { brushStyle } from "@/lib/brush";
 import { TopicSlider } from "@/components/home/TopicSlider";
 import { LatestGrid } from "@/components/home/LatestGrid";
 import { ScrollMarquee } from "@/components/ui/Motion";
@@ -21,8 +23,13 @@ export default function HomePage() {
   const stats = getSiteStats();
   const [featured, ...rest] = posts;
   return (
-    <PageShell tone="sunk">
-      <section className="seam-bottom bg-paper-sunk text-ink" aria-label="Giới thiệu">
+    <PageShell tone="inverse">
+      <section
+        className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse text-on-inverse"
+        style={brushStyle}
+        aria-label="Giới thiệu"
+      >
+        <HeroBackdrop />
         <Hero
           featured={featured}
           stats={[

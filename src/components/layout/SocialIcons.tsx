@@ -10,9 +10,12 @@ import { SocialIcon } from "@/components/ui/Icon";
 export function SocialIcons({
   className = "",
   featured,
+  onDark,
 }: {
   className?: string;
   featured?: SocialId;
+  /** Đặt trên dải nền tối (inverse): nút nổi bật đảo màu để không chìm vào nền */
+  onDark?: boolean;
 }) {
   // Đưa icon nổi bật vào vị trí chính giữa hàng
   const list = (() => {
@@ -41,7 +44,7 @@ export function SocialIcons({
                 aria-label={`${s.label} (mở trang mới)`}
                 className={`group/soc relative isolate inline-flex items-center justify-center rounded-pill border-(length:--border-width) no-underline ${
                   big
-                    ? "btn-grad-bg size-[60px] border-transparent text-on-accent shadow-elevated-md outline-1 outline-offset-4 outline-accent-warm/50"
+                    ? `size-[60px] border-transparent shadow-elevated-md outline-1 outline-offset-4 outline-accent-warm/50 ${onDark ? "bg-on-inverse text-inverse" : "btn-grad-bg text-on-accent"}`
                     : `border-rule-strong bg-paper-raised text-ink-soft shadow-elevated-sm ${small ? "size-9 after:absolute after:-inset-1 after:content-['']" : "tap"}`
                 }  transition-[transform,box-shadow,color,border-color] duration-(--motion-normal) ease-(--ease-smooth) hover:border-transparent hover:text-on-accent hover:shadow-elevated-md motion-safe:hover:-translate-y-1 active:scale-95`}
               >

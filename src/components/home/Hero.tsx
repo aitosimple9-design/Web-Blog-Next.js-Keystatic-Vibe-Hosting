@@ -1,4 +1,4 @@
-// Hero Trang chủ (dải paper-sunk). Một CTA chính duy nhất: "Đọc bài mới nhất".
+// Hero Trang chủ (dải tối `inverse`, đáy cắt nét cọ, họa tiết nền ở HeroBackdrop). Một CTA chính duy nhất: "Đọc bài mới nhất".
 // 375: 1 cột (tiêu đề, ảnh 3:4 hẹp ≤ 22rem, chữ + CTA + icon, số liệu) · 768: 2 cột (ảnh 3:4 trái; chữ + số liệu phải) ·
 // 1024+: 3 cột (chữ | ảnh | số liệu dọc), tiêu đề hai dòng đè lên mép trên ảnh.
 // Chuyển động: tiêu đề hiện từng chữ, ảnh bung ra, chữ/CTA/số liệu nổi lên lần lượt (CSS, chạy ngay khi vẽ);
@@ -28,7 +28,7 @@ export function Hero({
   let w = 0;
 
   return (
-    <div className="wrap grid gap-x-s6 gap-y-s5 pt-s5 pb-s7 tablet:grid-cols-2 tablet:pb-s9 desktop:grid-cols-[minmax(0,340px)_minmax(0,1fr)_minmax(0,220px)] desktop:gap-x-s6 desktop:pt-s7">
+    <div className="wrap grid gap-x-s6 gap-y-s5 pt-s5 pb-[calc(var(--brush-h)+var(--space-7))] tablet:grid-cols-2 tablet:pb-[calc(var(--brush-h)+var(--space-8))] desktop:grid-cols-[minmax(0,340px)_minmax(0,1fr)_minmax(0,220px)] desktop:gap-x-s6 desktop:pt-s7">
       {/* Tiêu đề: từng chữ trượt lên; đè lên mép trên ảnh từ 1024px */}
       <h1 className="type-display-xl relative z-10 text-balance tablet:col-span-2 desktop:col-span-2 desktop:col-start-1 desktop:row-start-1">
         {title.map((line, li) => (
@@ -97,24 +97,24 @@ export function Hero({
 
       {/* Chữ + CTA + theo dõi */}
       <div className="tablet:col-start-2 tablet:row-start-2 desktop:col-start-1 desktop:row-start-2 desktop:self-start">
-        <p className="type-dek anim-fade-rise text-ink-soft" style={{ "--delay": "520ms" } as React.CSSProperties}>
+        <p className="type-dek anim-fade-rise text-on-inverse-soft" style={{ "--delay": "520ms" } as React.CSSProperties}>
           Mỗi bài ghi chép một cuốn sách: ý chính, ví dụ và cách áp dụng.
         </p>
         <div className="anim-fade-rise" style={{ "--delay": "640ms" } as React.CSSProperties}>
-          <Button href={href} className="mt-s5 w-full tablet:w-auto">
+          <Button href={href} variant="on-inverse" className="mt-s5 w-full tablet:w-auto">
             Đọc bài mới nhất
             <ArrowRightIcon />
           </Button>
         </div>
         <div className="anim-fade-rise mt-s5" style={{ "--delay": "760ms" } as React.CSSProperties}>
-          <p className="type-caption text-ink-faint">Theo dõi</p>
-          <SocialIcons featured="zalo" className="mt-s3" />
+          <p className="type-caption text-on-inverse-soft">Theo dõi</p>
+          <SocialIcons featured="zalo" onDark className="mt-s3" />
         </div>
       </div>
 
       {/* Số liệu: đếm lên khi cuộn tới */}
       <dl
-        className="anim-fade-rise grid grid-cols-3 divide-x divide-rule-strong/40 text-center tablet:col-start-2 tablet:row-start-3 tablet:text-left desktop:col-start-3 desktop:row-span-2 desktop:row-start-1 desktop:mt-s8 desktop:grid-cols-1 desktop:divide-x-0 desktop:divide-y desktop:self-center [&>div]:px-s2 tablet:[&>div]:px-s4 tablet:[&>div:first-child]:pl-0 desktop:[&>div]:px-0 desktop:[&>div]:py-s5"
+        className="anim-fade-rise grid grid-cols-3 divide-x divide-on-inverse/20 text-center tablet:col-start-2 tablet:row-start-3 tablet:text-left desktop:col-start-3 desktop:row-span-2 desktop:row-start-1 desktop:mt-s8 desktop:grid-cols-1 desktop:divide-x-0 desktop:divide-y desktop:self-center [&>div]:px-s2 tablet:[&>div]:px-s4 tablet:[&>div:first-child]:pl-0 desktop:[&>div]:px-0 desktop:[&>div]:py-s5"
         style={{ "--delay": "880ms" } as React.CSSProperties}
       >
         {stats.map((s) => (
@@ -122,7 +122,7 @@ export function Hero({
             <dd className="type-display-md tabular-nums">
               <CountUp to={s.value} suffix={s.suffix} />
             </dd>
-            <dt className="type-caption text-ink-faint">{s.label}</dt>
+            <dt className="type-caption text-on-inverse-soft">{s.label}</dt>
           </div>
         ))}
       </dl>
