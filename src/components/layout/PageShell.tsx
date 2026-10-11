@@ -15,12 +15,14 @@ export function PageShell({ tone = "paper", children }: { tone?: HeaderTone; chi
     book: p.source.book,
   }));
   return (
-    <>
+    // Một thẻ gốc duy nhất: nếu trả về 3 phần tử rời, Next.js sau khi chuyển trang gọi scrollIntoView trên cả
+    // header / main / footer và trang bị cuộn xuống đáy (footer được cuộn tới trước).
+    <div>
       <HeaderBar tone={tone} searchIndex={searchIndex} />
       <main id="main" tabIndex={-1} className="anim-page outline-none">
         {children}
       </main>
       <SiteFooter />
-    </>
+    </div>
   );
 }
