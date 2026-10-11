@@ -1,15 +1,33 @@
 "use client";
 
-// Mục lục. 375–1023px: nút "Mục lục ▾" mở / đóng · 1024px+: cột dính (sticky) bên trái.
+// Mục lục. variant "inline" (dưới 1024px): hàng "Mục lục ▾" trong thẻ chung với nguồn sách · variant "sidebar" (1024px+): cột dính (sticky) bên trái.
 // Trục dọc mảnh có các nút mốc đánh số; đoạn đã đọc phủ màu accent, mục đang đọc có nút to + vòng sáng + chữ đậm (không chỉ đổi màu).
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState, type MouseEvent } from "react";
+import { flushSync } from "react-dom";
 import type { Heading } from "@/lib/posts";
 import { ChevronDownIcon } from "@/components/ui/Icon";
 
-export function TOC({ headings }: { headings: Heading[] }) {
+export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; variant?: "inline" | "sidebar" }) {
   const [open, setOpen] = useState(false);
+  const [instant, setInstant] = useState(false);
   const [active, setActive] = useState(headings[0]?.id ?? "");
   const id = useId();
+
+  // Bấm một mục ở thẻ dưới 1024px: thẻ phải thu lại NGAY (không animation, flushSync cập nhật DOM tại chỗ) RỒI MỚI cuộn.
+  // Nếu để thẻ vừa thu vừa cuộn, điểm đến bị tính lúc thẻ còn xổ (cao hơn ~190px) nên cuộn lố, tiêu đề chui xuống sau Header.
+  // `scrollIntoView` tự theo `scroll-margin-top` của tiêu đề và `scroll-behavior` của trang (mượt, tắt khi giảm chuyển động).
+  const jumpTo = (e: MouseEvent<HTMLAnchorElement>, headingId: string) => {
+    const el = document.getElementById(headingId);
+    if (!el) return;
+    e.preventDefault();
+    flushSync(() => {
+      setInstant(true);
+      setOpen(false);
+    });
+    el.scrollIntoView();
+    history.replaceState(null, "", `#${headingId}`);
+    setInstant(false);
+  };
 
   useEffect(() => {
     const els = headings
@@ -60,7 +78,7 @@ export function TOC({ headings }: { headings: Heading[] }) {
               <a
                 href={`#${h.id}`}
                 aria-current={on ? "location" : undefined}
-                onClick={() => setOpen(false)}
+                onClick={variant === "inline" ? (e) => jumpTo(e, h.id) : undefined}
                 className={`group/toc tap relative flex items-baseline gap-s3 rounded-sm py-s2 pl-s5 no-underline transition-colors duration-(--motion-fast) hover:text-ink ${
                   on ? "text-ink" : "text-ink-soft"
                 }`}
@@ -94,16 +112,16 @@ export function TOC({ headings }: { headings: Heading[] }) {
     </div>
   );
 
-  return (
-    <nav aria-label="Mục lục">
-      {/* Dưới 1024px: nút mở / đóng */}
-      <div className="desktop:hidden">
+  // Dưới 1024px (variant "inline"): hàng "Mục lục ▾" nằm TRONG thẻ chung với nguồn sách (khung do page.tsx đặt), bấm xổ danh sách ngay trong thẻ.
+  if (variant === "inline") {
+    return (
+      <nav aria-label="Mục lục">
         <button
           type="button"
           aria-expanded={open}
           aria-controls={id}
           onClick={() => setOpen((v) => !v)}
-          className="type-button tap flex w-full items-center justify-between gap-s3 rounded-pill border-(length:--border-width) border-rule-strong bg-paper-raised px-s5 text-ink shadow-elevated-sm transition-[background-color,box-shadow] duration-(--motion-fast) hover:shadow-elevated-md tablet:w-auto tablet:min-w-64"
+          className="type-button tap flex w-full items-center justify-between gap-s3 px-s4 text-ink"
         >
           <span className="inline-flex items-center gap-s3">
             Mục lục
@@ -118,18 +136,26 @@ export function TOC({ headings }: { headings: Heading[] }) {
         <div
           id={id}
           inert={!open}
-          className={`grid transition-[grid-template-rows] duration-200 motion-reduce:transition-none ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+          className={`grid motion-reduce:transition-none ${instant ? "transition-none" : "transition-[grid-template-rows] duration-200"} ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
         >
           <div className="overflow-hidden">
-            <div className="mt-s3 rounded-lg border-(length:--border-width) border-rule bg-paper-raised px-s4 py-s3 shadow-elevated-sm">
-              {list}
-            </div>
+            <div className="px-s4 pt-s1 pb-s3">{list}</div>
           </div>
         </div>
-      </div>
+      </nav>
+    );
+  }
 
-      {/* Từ 1024px: cột dính */}
-      <div className="sticky top-[calc(var(--header-height)+var(--space-6))] hidden desktop:block">
+  return (
+    // Từ 1024px chính <nav> là phần tử dính: khối cha của nó (ô lưới ở page.tsx) cao hết bài nên mới có chỗ để trượt.
+    // Nếu đặt sticky vào phần tử con bên trong nav (cao đúng bằng nội dung) thì mục lục không bao giờ dính.
+    <nav
+      aria-label="Mục lục"
+      className="sticky top-[calc(var(--header-height)+var(--space-6))]"
+    >
+      {/* Mục lục dài hơn màn hình thì tự cuộn trong khối này.
+          Đệm trái / phải (kèm lề âm) chừa chỗ cho nút mốc tròn và vòng sáng, tránh bị overflow cắt mất nửa vòng tròn. */}
+      <div className="-mx-s2 max-h-[calc(100dvh-var(--header-height)-var(--space-6)-var(--space-4))] overflow-y-auto overscroll-contain px-s2">
         <p className="type-eyebrow mb-s3 flex items-center gap-s2 uppercase text-ink-faint">
           <span
             aria-hidden

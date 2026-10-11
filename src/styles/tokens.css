@@ -27,6 +27,8 @@
   --elevated-sm: 0 1px 2px rgba(31, 26, 23, 0.18), 0 4px 10px -2px rgba(31, 26, 23, 0.22);
   --elevated-md: 0 2px 4px rgba(31, 26, 23, 0.16), 0 10px 22px -6px rgba(31, 26, 23, 0.3), 0 22px 40px -16px rgba(31, 26, 23, 0.26);
   --elevated-lg: 0 4px 8px rgba(31, 26, 23, 0.18), 0 20px 36px -10px rgba(31, 26, 23, 0.34), 0 40px 70px -24px rgba(31, 26, 23, 0.34);
+  --inset-sunk: inset 6px 6px 12px rgba(31, 26, 23, 0.16), inset -6px -6px 12px rgba(255, 255, 255, 0.95);
+  --inset-sunk-pressed: inset 3px 3px 7px rgba(31, 26, 23, 0.2), inset -3px -3px 7px rgba(255, 255, 255, 0.95);
   --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
   --gradient-primary-hover: linear-gradient(135deg, var(--accent-warm) 0%, var(--accent) 100%);
   --gradient-surface: linear-gradient(160deg, var(--paper-raised) 0%, var(--accent-soft) 100%);
@@ -58,6 +60,8 @@
   --elevated-sm: 0 1px 2px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --elevated-md: 0 2px 4px rgba(0, 0, 0, 0.6), 0 12px 24px -6px rgba(0, 0, 0, 0.7), 0 24px 42px -16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --elevated-lg: 0 4px 8px rgba(0, 0, 0, 0.65), 0 22px 40px -10px rgba(0, 0, 0, 0.78), 0 44px 76px -24px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --inset-sunk: inset 6px 6px 12px rgba(0, 0, 0, 0.7), inset -6px -6px 12px rgba(255, 255, 255, 0.05);
+  --inset-sunk-pressed: inset 3px 3px 7px rgba(0, 0, 0, 0.75), inset -3px -3px 7px rgba(255, 255, 255, 0.04);
   --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
   --gradient-primary-hover: linear-gradient(135deg, var(--accent-warm) 0%, var(--accent) 100%);
   --gradient-surface: linear-gradient(160deg, var(--paper-raised) 0%, var(--accent-soft) 100%);
@@ -91,6 +95,8 @@
     --elevated-sm: 0 1px 2px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     --elevated-md: 0 2px 4px rgba(0, 0, 0, 0.6), 0 12px 24px -6px rgba(0, 0, 0, 0.7), 0 24px 42px -16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     --elevated-lg: 0 4px 8px rgba(0, 0, 0, 0.65), 0 22px 40px -10px rgba(0, 0, 0, 0.78), 0 44px 76px -24px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    --inset-sunk: inset 6px 6px 12px rgba(0, 0, 0, 0.7), inset -6px -6px 12px rgba(255, 255, 255, 0.05);
+    --inset-sunk-pressed: inset 3px 3px 7px rgba(0, 0, 0, 0.75), inset -3px -3px 7px rgba(255, 255, 255, 0.04);
     --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
     --gradient-primary-hover: linear-gradient(135deg, var(--accent-warm) 0%, var(--accent) 100%);
     --gradient-surface: linear-gradient(160deg, var(--paper-raised) 0%, var(--accent-soft) 100%);
@@ -115,7 +121,7 @@
   --radius-pill: 9999px;
   --measure-prose: 66ch;
   --content-max: 1120px;
-  --header-height: 64px;
+  --header-height: 48px;
   --cover-ratio: 2 / 3;
   --post-image-ratio: 3 / 2;
   --touch-target: 44px;
@@ -179,6 +185,8 @@
   --shadow-elevated-sm: var(--elevated-sm);
   --shadow-elevated-md: var(--elevated-md);
   --shadow-elevated-lg: var(--elevated-lg);
+  --shadow-inset-sunk: var(--inset-sunk);
+  --shadow-inset-sunk-pressed: var(--inset-sunk-pressed);
 }
 
 @theme {

@@ -6,6 +6,7 @@ import type { PostMeta } from "@/lib/posts";
 import Image from "next/image";
 import { bookCovers } from "@/config/covers";
 import { CoverArt } from "@/components/ui/CoverArt";
+import { BookCover } from "@/components/ui/Media";
 
 export function ArticleHeader({ post }: { post: PostMeta }) {
   const topic = topicBySlug(post.category);
@@ -59,19 +60,38 @@ export function ArticleHeader({ post }: { post: PostMeta }) {
   );
 }
 
-/** Nguồn sách: "Bài viết dựa trên" + tên sách — tác giả. `compact`: cột phải hẹp ở 1280px+. */
+/**
+ * Nguồn sách: "Bài viết dựa trên" + tên sách — tác giả.
+ *  - `compact`: thẻ đứng có bìa làm nền, cột phải hẹp ở 1280px+ (khung gần tỉ lệ bìa nên không bị kéo giãn).
+ *  - `variant="strip"`: dải ngang, bìa nhỏ đúng tỉ lệ 2:3 bên trái + chữ bên phải, KHÔNG có khung riêng (khung do nơi dùng đặt).
+ *    Dùng dưới 1280px, nơi khung ngang không hợp để phóng bìa dọc làm nền (trước đây bị cắt, trông như biến dạng).
+ */
 export function SourceBox({
   book,
   author,
   className = "",
   compact = false,
+  variant = "card",
 }: {
   book: string;
   author: string;
   className?: string;
   compact?: boolean;
+  variant?: "card" | "strip";
 }) {
   const cover = bookCovers[book];
+  if (variant === "strip") {
+    return (
+      <aside aria-label="Nguồn sách" className={`flex items-center gap-s4 ${className}`}>
+        <BookCover src={cover} seed={book} className="w-14! tablet:w-16!" />
+        <div className="min-w-0">
+          <p className="type-eyebrow uppercase text-ink-faint">Bài viết dựa trên</p>
+          <p className="type-title mt-s1 text-balance text-ink">{book}</p>
+          <p className="type-caption mt-s1 text-ink-soft">{author}</p>
+        </div>
+      </aside>
+    );
+  }
   return (
     <aside
       aria-label="Nguồn sách"

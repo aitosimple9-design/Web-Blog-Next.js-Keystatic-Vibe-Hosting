@@ -14,8 +14,8 @@ Một layout cho mọi chủ đề (không còn 3 layout theo danh mục).
    Đáy ảnh cắt bằng mask nét cọ (lớp `brush-bottom`).
    Các dòng nhãn / tiêu đề / mô tả / ngày cách nhau `space-5`. **Breadcrumb:** căn giữa, neo gần ĐÁY ảnh hero (cách mép cọ `space-4`), tách xa khối chữ phía trên (tông tối `inverse`): "Trang chủ › Blog › {chủ đề} › {tên bài}", mục hiện tại là pill trong mờ.
 3. **Thân bài** gồm 3 khối:
-   - **TOC** — mục lục (thiết kế lại 2026-10-07): dạng trục dọc mảnh có nút mốc đánh số "01, 02…"; đoạn đã đọc phủ màu `accent`, mục đang đọc có nút to + vòng sáng + số màu `accent-warm` + chữ đậm; tiêu đề cột có dấu thoi `accent-warm` và số mục. Dưới 1024px: nút pill "Mục lục · N" mở / đóng bảng nổi `elevated-sm`
-   - **SourceBox** (= `BookRef`, thiết kế lại 2026-10-07) — bìa sách làm NỀN cả khối (phóng to, lấy phần hình phía trên; phủ `inverse` 45%), bo `radius-lg`, `elevated-md`; huy hiệu pill "Bài viết dựa trên" ở trên, tên sách + tác giả nằm thẳng trên bìa ở đáy. Cột phải (1280+): tỉ lệ 3:4; dưới 1280px: dải ngang cao tối thiểu 208 / 240px
+   - **TOC** — mục lục (thiết kế lại 2026-10-07): dạng trục dọc mảnh có nút mốc đánh số "01, 02…"; đoạn đã đọc phủ màu `accent`, mục đang đọc có nút to + vòng sáng + số màu `accent-warm` + chữ đậm; tiêu đề cột có dấu thoi `accent-warm` và số mục. Dưới 1024px (cập nhật 2026-10-10): KHÔNG còn nút pill riêng; mục lục là hàng "Mục lục · N ▾" nằm TRONG thẻ chung với nguồn sách, bấm xổ danh sách ngay trong thẻ (`TOC variant="inline"`). Từ 1024px: cột dính bên trái (`variant="sidebar"`; sticky đặt ở `<nav>`, phần cuộn nội bộ có đệm 8px để không cắt nút mốc tròn)
+   - **SourceBox** (= `BookRef`, thiết kế lại 2026-10-07) — bìa sách làm NỀN cả khối (phóng to, lấy phần hình phía trên; phủ `inverse` 45%), bo `radius-lg`, `elevated-md`; huy hiệu pill "Bài viết dựa trên" ở trên, tên sách + tác giả nằm thẳng trên bìa ở đáy. Chỉ ở cột phải (1280+): thẻ đứng tỉ lệ 3:4. Dưới 1280px (cập nhật 2026-10-10): dạng DẢI NGANG (`variant="strip"`), bìa nhỏ đúng tỉ lệ 2:3 (56px; 64px từ 768) bên trái + "Bài viết dựa trên" / tên sách / tác giả bên phải, khung LÕM vào nền (`inset-sunk`, nền `paper`, không viền, hover / nhấn co lại `inset-sunk-pressed`); bìa KHÔNG còn phóng làm nền ở khung ngang vì bị cắt, trông như biến dạng. Dưới 1024px dải này chung thẻ với hàng "Mục lục" (cao khoảng 163px khi thu gọn, trước đó hai khối cao khoảng 290px)
    - **Prose** — thân bài, khổ dòng 66ch; H2 là tiêu đề mục
 4. **RelatedSlider** — tiêu đề nổi bật hơn (`display-lg`, phần "Đọc tiếp…" cỡ `display-md`, giữ căn trái, từ 768px luôn nằm MỘT hàng) kèm đường kẻ họa tiết hình thoi `accent-warm` căn trái bên dưới (`Ornament align="left"`): "Bài liên quan. Đọc tiếp những bài cùng chủ đề." Thẻ 3:4: ảnh bài màu gốc tràn cả thẻ phủ `inverse` 55% (không xen kẽ đen / trắng nữa), chữ `on-inverse` nằm thẳng trên ảnh, giữ bố cục wireframe (nhãn, tiêu đề, bìa sách demo nhỏ, tóm tắt, thời gian đọc), lơ lửng `elevated-lg` (hover nhấc lên); track chừa đệm dưới ≈128px (kéo lại bằng lề âm) và đệm trái để bóng không bị cắt.
 5. **Newsletter** → 6. **Footer**
@@ -26,9 +26,9 @@ Dải nền: Nav (paper, viền dưới) · hero (ảnh) · thân bài (`paper`)
 ## Thay đổi theo mốc
 | Mốc | Hero | Khối tiêu đề | Mục lục | SourceBox | Thân bài |
 |---|---|---|---|---|---|
-| 375 / 414 | ảnh tràn, cao ~ `46vw` (tối thiểu 240px) | căn trái, lề 24px, gối lên ảnh `space-8` | nút mở/đóng | trên thân bài | 1 cột, lề 24px |
-| 768 | như trên | **căn giữa**, rộng tối đa 896px, gối `space-9` | nút mở/đóng | trên thân bài | căn giữa, 66ch, lề 32px |
-| 1024 | ảnh tràn, cao ~ 470px | như 768 | **cột dính (sticky) bên trái** | trong cột phải, trên thân bài | cột phải |
+| 375 / 414 | ảnh tràn, cao ~ `46vw` (tối thiểu 240px) | căn trái, lề 24px, gối lên ảnh `space-8` | hàng xổ trong thẻ chung | thẻ chung (dải ngang) trên thân bài | 1 cột, lề 24px |
+| 768 | như trên | **căn giữa**, rộng tối đa 896px, gối `space-9` | hàng xổ trong thẻ chung | thẻ chung (dải ngang) trên thân bài | căn giữa, 66ch, lề 32px |
+| 1024 | ảnh tràn, cao ~ 470px | như 768 | **cột dính (sticky) bên trái** | dải ngang trong cột thân bài, trên thân bài | cột phải |
 | 1280+ | ảnh tràn, tối đa 600px | như 768 | cột dính bên trái | **cột phải**, dính | 3 cột: TOC 180px · Prose 66ch · SourceBox |
 
 - Khung nội dung tối đa 1120px; ảnh hero KHÔNG bị giới hạn (tràn hết chiều rộng màn hình).

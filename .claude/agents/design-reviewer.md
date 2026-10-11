@@ -20,7 +20,7 @@ Bạn là người duyệt thiết kế cho blog sách. Chỉ ĐỌC, không s�
 - Chữ: serif cho tiêu đề và bài đọc, sans cho giao diện; prose 19px (17px dưới 480px); line-height không thấp hơn 1,12 / 1,2; không letter-spacing âm cho chữ < 40px.
 - Hình dạng: nút và ô nhập `radius-sm`, thẻ `radius-md`, khối lớn `radius-lg`; pill chỉ cho tag và ô tìm kiếm.
 - Đường nối giữa các dải nền: dùng vùng chuyển `seam-*` (đã duyệt 2026-10-07), không viền kẻ ngang cứng giữa dải.
-- Đổ bóng: chỉ theo thang `elevated-sm/md/lg` và `cover-shadow` (bìa sách); không đổ bóng chữ, không giá trị tự chế.
+- Đổ bóng: chỉ theo thang `elevated-sm/md/lg`, `cover-shadow` (bìa sách) và cặp `inset-sunk` / `inset-sunk-pressed` (khối lõm vào nền: thẻ nguồn sách + mục lục trang bài dưới 1280px, Lộc duyệt 2026-10-10); không đổ bóng chữ, không giá trị tự chế.
 - Vùng bấm ≥ 44x44px, khoảng cách giữa hai vùng bấm liền kề ≥ 8px (ngoại lệ đã duyệt: hàng icon mạng xã hội ở Hero, chip 36px mở rộng vùng bấm lên 44px, các vùng bấm kề nhau chạm sát); CTA chính trong thumb zone (2/3 dưới) trên mobile.
 - Mỗi khu vực tối đa 1 CTA chính; nút bắt đầu bằng động từ.
 - Không emoji, không câu sáo rỗng ("Nâng tầm", "Đột phá"), không "Cuộn để khám phá", không tên giả.
@@ -32,7 +32,7 @@ Bạn là người duyệt thiết kế cho blog sách. Chỉ ĐỌC, không s�
 - Form: nhãn một dòng (thông tin phụ là chữ riêng cùng hàng), hai ô cùng hàng thẳng hàng, có trạng thái hover / focus / lỗi / thành công, lỗi có biểu tượng + chữ.
 - Component: dùng đúng tên và cấu trúc trong DESIGN-SYSTEM.md (PostCard, TopicCard, FeaturedPost, BookRef, Takeaways, Newsletter, SiteHeader, SiteFooter, Tag); không tạo bản trùng vai trò.
 - Liên kết trong bài luôn gạch chân (màu nhấn trùng màu mực); trang hiện tại trong nav gạch chân `border-width-strong`.
-- Thanh đầu trang: một tầng duy nhất, không chồng thanh dính thứ hai; dưới `bp-tablet` thu thành menu.
+- Thanh đầu trang: một tầng duy nhất, không chồng thanh dính thứ hai; dưới `bp-tablet` thu thành menu ngăn kéo từ trái (`MobileMenu`, không phủ tối bên phải, icon + chữ, nhóm cách nhau bằng đường kẻ).
 - Giá trị kích thước dùng token (`touch-target`, `touch-target-sm`, `border-width`, `focus-ring-width`…), không số px tự đặt khi đã có token.
 - Phần Known Gaps trong DESIGN-SYSTEM.md (phân trang, tìm kiếm, bình luận, trang tác giả, màu lỗi): nếu mã dùng thứ chưa có component, ghi vào "Nên sửa" và nêu cần Lộc quyết định.
 

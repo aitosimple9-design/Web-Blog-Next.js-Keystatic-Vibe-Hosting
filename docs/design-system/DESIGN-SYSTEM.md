@@ -173,7 +173,7 @@ Hệ thống kế thừa sự tiết chế của bản Apple Design đầu tiên
 - Một màu tương tác duy nhất, chính là màu mực (`{colors.accent}`: đen ở theme Giấy, kem ở theme Đêm). Vì gần như trùng `{colors.ink}`, thứ bậc đến từ cỡ chữ, độ đậm và khoảng trắng; liên kết trong bài luôn gạch chân.
 - Chữ serif (`Source Serif 4`) cho tiêu đề và bài đọc; chữ sans (`Be Vietnam Pro`) cho giao diện (nút, nav, meta, form).
 - Dải nền xen kẽ (`paper` ↔ `paper-sunk` ↔ `inverse`) là đường phân cách; không dùng viền giữa các dải. Từ 2026-10-07, chỗ nối giữa `paper` và `paper-sunk` / `paper-raised` (chân trang) được làm mềm bằng vùng chuyển mờ (`seam-*`, cao 56–112px) thay cho cạnh cứng, để không hiện đường phân màu.
-- Đổ bóng theo đúng thang `elevated-sm/md/lg` (nhiều lớp, có giá trị riêng cho Giấy / Đêm) và `cover-shadow` cho bìa sách; không tự chế giá trị ngoài thang.
+- Đổ bóng theo đúng thang `elevated-sm/md/lg` (nhiều lớp, có giá trị riêng cho Giấy / Đêm) và `cover-shadow` cho bìa sách; riêng khối LÕM vào nền dùng cặp `inset-sunk` / `inset-sunk-pressed` (xem `EXTENSIONS.md`); không tự chế giá trị ngoài các token này.
 - Nút hành động bo `radius-sm`; `radius-pill` chỉ cho tag và ô tìm kiếm.
 - Mục tiêu chạm đủ lớn (xem Touch Targets); mọi cặp chữ và nền đạt ngưỡng tương phản WCAG ở cả hai theme (xem bảng Contrast).
 - Gradient chỉ cho nút hành động chính, CTA và bề mặt khối nổi (`gradient-primary`, `gradient-primary-hover`, `gradient-surface`); không dùng cho nền trang, chữ hay ảnh bài. Không ảnh nền phủ chữ. (Lộc duyệt 2026-10-07, xem `EXTENSIONS.md`.)
@@ -409,7 +409,7 @@ Giá trị từng mốc: xem nhóm `breakpoint` trong `tokens.json`.
 3. Cách nạp `tokens.css`, `components/bundle.css` và đặt `data-theme`: xem README.md.
 4. Tiêu đề và bài đọc luôn serif; giao diện luôn sans. Ranh giới này không phá.
 5. Khi cần nhấn: đổi nền dải trước, rồi mới tới cỡ chữ và độ đậm, cuối cùng mới tới viền.
-6. Đổ bóng theo thang `elevated-sm/md/lg`; `cover-shadow` chỉ cho bìa sách.
+6. Đổ bóng theo thang `elevated-sm/md/lg`; `cover-shadow` chỉ cho bìa sách; `inset-sunk*` chỉ cho khối lõm vào nền đã duyệt.
 7. Trạng thái và chuyển động: xem mục Content & States.
 
 ## Known Gaps
