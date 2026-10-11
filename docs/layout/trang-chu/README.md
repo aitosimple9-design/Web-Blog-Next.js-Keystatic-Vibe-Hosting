@@ -5,9 +5,13 @@ Mục tiêu: người đọc tin người viết trước khi đăng ký. CTA ch
 Menu: Trang chủ · Book · Blog (`navGroups`, icon `home` / `book` / `blog`).
 
 ## Thứ tự khối
-1. **Hero** (`PersonHero`, dải tối `inverse`, đáy `brush-bottom`, không ảnh nền, chứa Nav tông `inverse`; thiết kế lại 2026-10-11, KHÔNG dùng ý tưởng sách). Nền = `PersonBackdrop` (tĩnh): các đường dọc mảnh như cột lưới `on-inverse` 7% + chấm tròn phẳng `accent-warm` (từ 768px).
-   - Chữ: nhãn "Xin chào, mình là" · `h1` tên · định vị (1 câu) · nút "Đăng ký nhận bài" · "Theo dõi mình" + `SocialIcons featured="zalo" onDark`.
-   - **Chân dung "cánh cửa gập" 3D** (`GatefoldStage`, ý tưởng bìa đĩa than gập đôi): lúc vào trang là tấm bìa đóng kín (hai nửa `paper-raised`, chữ cái đầu "T·N" / "H·N" + tên); sau 0,7s hai cánh xoay quanh mép ngoài về phía người xem tới 100° (CSS `anim-door-l/r`, 1,5s, MỘT lần, không lặp) để lộ ảnh 3:4 `radius-lg`; mặt sau cánh cửa `accent-warm` phẳng; tấm nền `accent-warm` lệch xuống phải ở sau ảnh; hai thẻ số liệu `surface-raised` (Bài viết, Chủ đề, đếm từ nội dung) nổi phía trước, hiện sau khi cửa mở. Độ sâu `translateZ`: nền -60, ảnh 0, cửa 24, thẻ 70; `perspective` 2200px. Sau khi mở, khối nghiêng ±10° / ±7° theo con trỏ (chỉ `pointer: fine`) và xoay thêm theo thanh cuộn (cả cảm ứng). Chỉ `transform` + `opacity`; bật giảm chuyển động thì cửa mở sẵn, không nghiêng.
+1. **Hero** (`PersonHero`, bố cục TRUNG TÂM; thiết kế lại lần 2 ngày 2026-10-11 theo 2 ảnh tham khảo của Lộc: tên khổng lồ sau người + thẻ kính mờ; không dùng ý tưởng sách). Dải tối `inverse`, đáy `brush-bottom`, chứa Nav tông `inverse`; nền `PersonBackdrop` (tĩnh): các đường dọc mảnh như cột lưới `on-inverse` 7%.
+   - **Chân dung xóa phông ở giữa**: ảnh WebP nền trong suốt `public/images/profile/portrait-cutout.webp` (người ngồi quay thẳng, tỉ lệ 1100x1587), bề rộng `--pw` = clamp(15rem, 41vw, 30rem); đáy cắt bằng nét cọ (`brush-bottom`); chấm tròn phẳng `accent-warm` (≈ 0,92 bề rộng người) nằm sau thân người.
+   - **Tên khổng lồ SAU người** (`HeroName`, là `h1` thật, `aria-label` đọc nguyên tên): hai hàng, mỗi hàng hai chữ in hoa serif: "TRẦN NGỌC" chữ đặc, "HOÀNG NI" chỉ nét viền `on-inverse`; từ 768px khoảng giữa mỗi hàng rộng bằng đầu (0,5 bề rộng người) / vai (0,82) nên người che đúng khoảng trống giữa hai chữ (ý tưởng bìa tạp chí); dưới 768px tên xếp nguyên chữ phía trên người (không bị che). Hiệu ứng: từng chữ cái trượt lên từ sau mặt nạ (CSS `anim-word`, một lần, bắt đầu 650ms), sau đó tên trôi ngược chiều với người theo con trỏ (`PointerLayer` -18) và theo thanh cuộn (`Drift` 0 → -56px).
+   - **Cánh cửa mở đầu trang** (`HeroCurtain`, thay cho video vì video nặng và chậm trang quảng cáo): hai cánh `inverse` phủ kín Hero, mang "T·N" | "H·N", xoay quanh mép ngoài về phía người xem tới 100° (CSS `anim-door-l/r`, 1,5s, MỘT lần, bắt đầu 250ms) để lộ Hero; người phóng nhẹ từ 1,08 về 1 (`anim-person`); aria-hidden, không nhận chuột; nội dung thật luôn nằm sẵn bên dưới.
+   - **Chữ + CTA**: định vị (1 câu) · nút chính "Đăng ký nhận bài" (`#dang-ky`) · "Theo dõi mình" + `SocialIcons featured="zalo" onDark`. 1024+: góc dưới trái (rộng ≤ 22rem); dưới 1024px: dưới sân khấu, căn giữa.
+   - **Thẻ kính mờ** (glass: `backdrop-blur-md`, nền `on-inverse` 10%, viền `on-inverse` 25%, `elevated-md`; mở rộng đã duyệt): "21+ Bài viết", "5 Chủ đề" (`CountUp`, đếm từ nội dung thật). 1024+: góc dưới phải xếp dọc; dưới 1024px: lưới 2 cột dưới chữ. Không có hàng avatar / số người dùng giả.
+   - Cả cảnh nghiêng ±2,5° theo con trỏ (`PointerScene`, chỉ `pointer: fine`); chỉ `transform` + `opacity`; bật giảm chuyển động thì cửa mở sẵn, không nghiêng / trôi.
 2. **Câu chuyện** (`StorySection`, `paper`): nhãn, `h2`, ảnh thứ hai, 4 đoạn `prose-article` (66ch). Ảnh trôi chậm (`ScrollParallax`).
 3. **Cách mình đọc** (`PrincipleCards`, `paper-sunk`): `SectionHead` + 4 thẻ nguyên tắc đánh số (số `accent-warm`, `surface-raised`, `elevated-md`).
 4. **Con số** (`paper`): bài viết · cuốn sách · chủ đề, `CountUp`, đếm từ nội dung thật (`getSiteStats`).
@@ -28,7 +32,7 @@ Chỗ chừa (chưa dựng, thêm sau không phải thiết kế lại): Hành t
 `title` "<Tên> — <tagline>", meta description = câu định vị, Open Graph `profile`, canonical `/`, JSON-LD `Person` (trong `page.tsx`).
 
 ## Ảnh
-Chưa có ảnh thật: chân dung dùng `woman-reading-sofa.jpg` (CC BY 3.0, Julia Spranger), ảnh thứ hai `vintage-book-sofa.jpg` (CC BY 2.0); cả hai phải ghi công khi đăng thật (`public/images/CREDITS.md`). Thay bằng ảnh của chính Lộc ở `src/config/profile.ts`.
+Chân dung demo: ảnh Pexels của Eugene Lisyuk (giấy phép Pexels, miễn phí), xóa phông cục bộ bằng `rembg` (model `isnet-general-use`), xuất WebP nền trong suốt 1100px; ghi nguồn ở `public/images/CREDITS.md`. Ảnh thứ hai (khối Câu chuyện): `vintage-book-sofa.jpg` (CC BY 2.0, phải ghi công khi đăng thật). Thay bằng ảnh thật của Lộc: ảnh người ngồi quay thẳng, ĐÃ xóa phông (PNG / WebP nền trong suốt, tỉ lệ ≈ 0,69), sửa đường dẫn ở `src/config/profile.ts`.
 
 ## Ghi chú kiểm tra
 - Ảnh chân dung cắt dọc 3:4 từ ảnh ngang bằng `object-position` (`profile.portrait.position`).

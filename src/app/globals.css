@@ -528,7 +528,7 @@ html[data-modality="pointer"] .field-premium:focus-visible {
   }
 }
 
-/* ===== Hero Trang chủ cá nhân: hai cánh cửa gập mở ra như bìa đĩa than (chỉ transform + opacity, chạy một lần) =====
+/* ===== Hero Trang chủ cá nhân: cánh cửa mở đầu trang (HeroCurtain; chỉ transform + opacity, chạy một lần) =====
    Cánh trái xoay quanh mép trái, cánh phải quanh mép phải, đều xoay về phía người xem tới 100 độ rồi dừng.
    Bật giảm chuyển động: quy tắc chung ở trên rút thời lượng còn 0,01ms nên cửa mở sẵn ngay khi vẽ. */
 @keyframes door-open-l {
@@ -541,16 +541,6 @@ html[data-modality="pointer"] .field-premium:focus-visible {
     transform: rotateY(100deg);
   }
 }
-@keyframes reveal-in {
-  from {
-    opacity: 0.35;
-    transform: scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 @utility anim-door-l {
   transform-origin: left center;
   animation: door-open-l 1500ms cubic-bezier(0.65, 0, 0.35, 1) both;
@@ -561,7 +551,19 @@ html[data-modality="pointer"] .field-premium:focus-visible {
   animation: door-open-r 1500ms cubic-bezier(0.65, 0, 0.35, 1) both;
   animation-delay: var(--delay, 700ms);
 }
-@utility anim-reveal {
-  animation: reveal-in 1500ms var(--ease-smooth) both;
-  animation-delay: var(--delay, 700ms);
+
+/* Chân dung Hero Trang chủ cá nhân: phóng nhẹ từ lớn về đúng cỡ khi cửa mở */
+@keyframes person-in {
+  from {
+    opacity: 0;
+    transform: scale(1.08) translateY(3%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility anim-person {
+  animation: person-in 1400ms var(--ease-smooth) both;
+  animation-delay: var(--delay, 450ms);
 }
