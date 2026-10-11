@@ -16,14 +16,14 @@ Blog kiến thức nâng cao từ sách, làm trang đích cho traffic quảng c
 - Dựng hoàn chỉnh trên máy trước; chỉ trả tiền tên miền + hosting khi deploy
 - So sánh 2 phương án A và B, sau đó chọn 1 để vận hành chính thức
 
-Phạm vi trang (3 trang), cả ba phải được thiết kế UI/UX tối ưu để thu hút người đọc:
-1. **Trang chủ**
+Phạm vi trang (4 trang; từ 2026-10-11 Trang chủ `/` là trang thương hiệu cá nhân, Trang chủ cũ thành `/book`), tất cả phải được thiết kế UI/UX tối ưu để thu hút người đọc:
+1. **Trang chủ** (thương hiệu cá nhân) và **Trang Book** (trang chủ cũ)
 2. **Trang Blog** (danh sách bài)
 3. **Trang chi tiết nội dung** (bài viết) — có **form đăng ký**
 
 Form đăng ký (`Newsletter`: Họ tên, Số điện thoại, Email) làm thành **component tái sử dụng** — một nơi định nghĩa, dùng ở cả 3 trang theo layout đã duyệt.
 
-Layout từng trang (wireframe + spec) nằm ở `docs/layout/` (mỗi trang một thư mục con: `chi-tiet-bai/`, `blog/`, `trang-chu/`). Thứ tự ưu tiên: Chi tiết bài → Blog → Trang chủ.
+Layout từng trang (wireframe + spec) nằm ở `docs/layout/` (mỗi trang một thư mục con: `chi-tiet-bai/`, `blog/`, `trang-chu/`, `book/`). Thứ tự ưu tiên: Chi tiết bài → Blog → Trang chủ.
 
 ## Quyết định đang chờ (Claude KHÔNG tự chọn)
 | # | Quyết định | Đề xuất | Cần trước giai đoạn |
@@ -93,7 +93,8 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [x] Bìa sách demo SVG 7 cuốn + `src/config/covers.ts` (2026-10-07)
 - [x] Breadcrumb ở trang Blog, ẩn tiêu đề "Blog"; breadcrumb viên nổi giữa đường giao ảnh hero / khối trắng ở trang bài; tiêu đề "Bài liên quan" nổi bật (2026-10-07)
 - [x] Đường nối mềm giữa các dải nền, bỏ viền kẻ dải chữ (2026-10-07)
-- [x] Hero Trang chủ nền tối, đáy nét cọ, họa tiết bằng token (dòng kẻ, chữ "Đọc" nét viền, vòng tròn `accent-warm`), không ảnh (2026-10-11)
+- [x] Trang chủ mới (thương hiệu cá nhân, `/`): Hero chân dung 3D, Câu chuyện, Cách mình đọc, Con số, Tủ sách, Bài tiêu biểu, Kết nối; Trang chủ cũ chuyển sang `/book`; menu Trang chủ · Book · Blog; nội dung mẫu ở `src/config/profile.ts` (2026-10-11)
+- [x] Hero Trang book nền tối, đáy nét cọ, họa tiết bằng token (dòng kẻ, chữ "Đọc" nét viền, vòng tròn `accent-warm`), không ảnh (2026-10-11)
 - [ ] Review bằng mắt toàn bộ trang cũ ở 2 theme + 5 mốc, `design-reviewer` duyệt
 - [x] Component `Newsletter` (form đăng ký) tái sử dụng được, đủ trạng thái (mặc định, lỗi, thành công)
 - [x] Component dùng chung theo `docs/layout/README.md`: `SiteHeader` (có tìm kiếm, nút theme, ☰), `SiteFooter` (7 icon mạng xã hội), `Slider` (chấm + nút ‹ ›), `SocialIcons`, `SearchBox`

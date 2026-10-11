@@ -16,13 +16,19 @@ export const site = {
 //  - Mục có `children` thì thu gọn sẵn, bấm mới xổ ra danh sách con.
 //  - Menu ngang (768px+) và chân trang lấy các mục cấp trên của mọi nhóm (`mainNav`).
 // `icon` là mã trong `NavIcon` (src/components/layout/NavIcon.tsx); mã mới thì thêm vào đó.
-export type NavIconId = "home" | "blog";
+export type NavIconId = "home" | "book" | "blog";
 export type NavLink = { label: string; href: string };
 export type NavItem = NavLink & { icon: NavIconId; children?: NavLink[] };
 export type NavGroup = { id: string; items: NavItem[] };
 
 export const navGroups: NavGroup[] = [
-  { id: "chinh", items: [{ label: "Trang chủ", href: "/", icon: "home" }] },
+  {
+    id: "chinh",
+    items: [
+      { label: "Trang chủ", href: "/", icon: "home" },
+      { label: "Book", href: "/book", icon: "book" },
+    ],
+  },
   {
     id: "noi-dung",
     items: [

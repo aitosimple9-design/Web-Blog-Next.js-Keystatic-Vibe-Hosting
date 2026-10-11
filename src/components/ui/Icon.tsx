@@ -76,6 +76,13 @@ export const BookIcon = ({ size = 16, ...p }: P) => (
   </svg>
 );
 
+export const NotesIcon = ({ size = 16, ...p }: P) => (
+  <svg {...base(size, p)}>
+    <path d="M6 4.5h9l3 3V19.5H6z" />
+    <path d="M9 11h6M9 14.5h6M9 8h3" />
+  </svg>
+);
+
 export const ArrowRightIcon =({ size = 16, ...p }: P) => (
   <svg {...base(size, p)}>
     <path d="M5 12h14M13 6l6 6-6 6" />

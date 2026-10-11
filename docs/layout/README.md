@@ -1,4 +1,4 @@
-# Layout 3 trang — chỉ mục và phần dùng chung
+# Layout 4 trang — chỉ mục và phần dùng chung
 
 Nguồn: wireframe thang xám do Lộc cung cấp (2026-10-07). Wireframe CHỈ cho cấu trúc và hành vi;
 màu, chữ, bo góc, đổ bóng lấy từ Design System (`docs/design-system/`), không lấy từ wireframe.
@@ -7,7 +7,8 @@ màu, chữ, bo góc, đổ bóng lấy từ Design System (`docs/design-system/
 |---|---|---|---|---|
 | Chi tiết bài | `chi-tiet-bai/` | 1 (đích của quảng cáo) | `README.md` | `Main.dc.html` |
 | Blog | `blog/` | 2 | `README.md` | `Blog.dc.html` |
-| Trang chủ | `trang-chu/` | 3 | `README.md` | `Home.dc.html` |
+| Trang chủ (thương hiệu cá nhân, `/`) | `trang-chu/` | 3 | `README.md` | `Intro.dc.html` |
+| Book (Trang chủ cũ, `/book`) | `book/` | 4 | `README.md` | `Home.dc.html` |
 
 Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `README.md` (spec) + mockup, rồi thêm một dòng vào bảng trên.
 
@@ -22,14 +23,14 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 | Mốc | Thanh đầu trang | Ghi chú |
 |---|---|---|
 | 375 / 414 | ☰ + Logo bên trái · tìm kiếm (icon) + ☾ bên phải; ☰ mở ngăn kéo menu từ trái (xem dưới) | Lề 24px |
-| 768 | Menu (Trang chủ · Blog) căn giữa, ☰ ẩn | Lề 32px |
+| 768 | Menu (Trang chủ · Book · Blog) căn giữa, ☰ ẩn | Lề 32px |
 | 1024 | Ô tìm kiếm mở rộng ("Tìm bài viết") | |
 | 1440 | Như 1024 | Khung nội dung tối đa 1120px; dải nền vẫn tràn hết chiều rộng |
 
 ## Khối dùng chung ở cả 3 trang (làm MỘT component, không viết bản thứ hai)
 
 ### Nav (`SiteHeader`)
-- Logo (nút, có dấu hiệu `mark`) · menu: Trang chủ, Blog (trang hiện tại có trạng thái `on`) · tìm kiếm · nút đổi theme (☾) · ☰ (chỉ dưới 768).
+- Logo (nút, có dấu hiệu `mark`) · menu: Trang chủ, Book, Blog (trang hiện tại có trạng thái `on`) · tìm kiếm · nút đổi theme (☾) · ☰ (chỉ dưới 768).
 - Nằm trong dải nền đầu trang của từng trang (Trang chủ: `paper-sunk` cùng Hero; Blog: dải tối cùng Hero; Chi tiết bài: dải riêng).
 - Mọi nút ≥ 44x44px, cách nhau ≥ 8px; nút icon có `aria-label` ("Tìm kiếm", "Đổi theme", "Menu").
 - Menu ngăn kéo dưới 768px (`MobileMenu`, cập nhật 2026-10-10): trượt từ trái, rộng 70% màn hình (tỉ lệ 70 / 30, bên phải 30% còn thấy nội dung), KHÔNG phủ tối phần bên phải (vẫn thấy nội dung); bấm ra ngoài, Esc hoặc ☰ để đóng. Mỗi mục có icon + chữ cao 44px; các nhóm cách nhau bằng đường kẻ ngang tự vẽ; mục có danh sách con (Blog → các chủ đề, có đường dọc bên trái nối từ icon mục cha) thu gọn sẵn, bấm mới xổ, đóng menu thì thu lại. Dữ liệu từ `navGroups` trong `src/config/site.ts`: thêm trang = thêm 1 dòng vào nhóm (hoặc thêm nhóm mới), icon tra ở `NavIcon.tsx`.
@@ -50,7 +51,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Lỗi: biểu tượng + chữ giải thích cách sửa + viền dày (Design System); không báo lỗi chỉ bằng màu.
 
 ### Footer (`SiteFooter`)
-- Hàng 1: Logo · menu (Trang chủ, Blog) · 7 icon mạng xã hội (YouTube, TikTok, Facebook, Instagram, LinkedIn, X, Zalo).
+- Hàng 1: Logo · menu (Trang chủ, Book, Blog) · 7 icon mạng xã hội (YouTube, TikTok, Facebook, Instagram, LinkedIn, X, Zalo).
 - Hàng 2: "© 2026 Logo. Ghi chép kiến thức từ sách." · Điều khoản · Chính sách.
 - 375: xếp dọc (logo, menu, mạng xã hội, pháp lý) · 768+: logo trái · menu giữa · 7 icon phải.
 - Icon mạng xã hội: chip tròn 44px, icon 24px (chi tiết: `trang-chu/README.md`).

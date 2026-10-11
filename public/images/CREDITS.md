@@ -21,3 +21,5 @@
 Ảnh chủ đề (`src/config/topics.ts`): chu-de-1 `books-lamps`, chu-de-2 `journal-coffee`, chu-de-3 `reading-room`, chu-de-4 `notes-laptop`, chu-de-5 `vintage-book-sofa`. `notes-laptop` và `vintage-book-sofa` là CC BY 2.0: phải ghi công khi đăng lên web thật.
 
 Bìa sách demo (`public/images/covers/sach-mau-1..7.svg`) do dự án tự vẽ bằng `scripts/gen-demo-covers.mjs`, không có bản quyền bên thứ ba; thay bằng bìa thật khi có. Sách chưa có bìa trong `src/config/covers.ts` dùng hình học tự sinh (`CoverArt`).
+
+Trang chủ cá nhân (`/`, `src/config/profile.ts`): chân dung Hero tạm dùng `woman-reading-sofa.jpg` (CC BY 3.0, Julia Spranger) và ảnh Câu chuyện dùng `vintage-book-sofa.jpg` (CC BY 2.0, Shixart1985): phải ghi công khi đăng lên web thật; thay bằng ảnh thật của chủ blog khi có.

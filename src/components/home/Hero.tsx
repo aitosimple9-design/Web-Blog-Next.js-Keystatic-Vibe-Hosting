@@ -1,4 +1,4 @@
-// Hero Trang chủ (dải tối `inverse`, đáy cắt nét cọ, họa tiết nền ở HeroBackdrop). Một CTA chính duy nhất: "Đọc bài mới nhất".
+// Hero Trang Book (/book) (dải tối `inverse`, đáy cắt nét cọ, họa tiết nền ở HeroBackdrop). Một CTA chính duy nhất: "Đọc bài mới nhất".
 // 375: 1 cột (tiêu đề, ảnh 3:4 hẹp ≤ 22rem, chữ + CTA + icon, số liệu) · 768: 2 cột (ảnh 3:4 trái; chữ + số liệu phải) ·
 // 1024+: 3 cột (chữ | ảnh | số liệu dọc), tiêu đề hai dòng đè lên mép trên ảnh.
 // Chuyển động: tiêu đề hiện từng chữ, ảnh bung ra, chữ/CTA/số liệu nổi lên lần lượt (CSS, chạy ngay khi vẽ);

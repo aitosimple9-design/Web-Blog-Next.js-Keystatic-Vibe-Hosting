@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const u = (p: string) => `${site.url}${p}`;
   return [
     { url: u("/"), changeFrequency: "weekly", priority: 1 },
+    { url: u("/book"), changeFrequency: "weekly", priority: 0.9 },
     ...topics.flatMap((t) =>
       Array.from({ length: totalPagesFor(t.slug) }, (_, i) => ({
         url: u(i === 0 ? `/blog/${t.slug}` : `/blog/${t.slug}/trang/${i + 1}`),
