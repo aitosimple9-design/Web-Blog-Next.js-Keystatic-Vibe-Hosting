@@ -17,12 +17,16 @@ import { HeroCurtain } from "@/components/about/HeroCurtain";
 import { HeroName } from "@/components/about/HeroName";
 
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
-// --pw: bề rộng người · --ph: chiều cao người (tỉ lệ ảnh 1100x1587) · --bh: chiều cao nét cọ ở đáy dải
+// --pw: bề rộng người · --ph: chiều cao người (tỉ lệ ảnh 844x866) · --bh: chiều cao nét cọ ở đáy dải
 const vars = {
-  "--pw": "clamp(15rem, 41vw, 30rem)",
-  "--ph": "calc(var(--pw) * 1.443)",
+  "--pw": "clamp(16rem, 44vw, 38rem)",
+  "--ph": "calc(var(--pw) * 1.026)",
   "--bh": "clamp(40px, 5.5vw, 64px)",
 } as CSSProperties;
+
+// Vành elip quanh thân người (nét phẳng accent-warm): nửa trên nằm sau, nửa dưới đè lên người
+const ring =
+  "absolute bottom-[calc(var(--ph)*0.05)] left-1/2 h-[calc(var(--pw)*0.34)] w-[calc(var(--pw)*1.5)] -translate-x-1/2 rounded-pill border-2 border-accent-warm";
 
 const glass =
   "rounded-lg border-(length:--border-width) border-on-inverse/25 bg-on-inverse/10 shadow-elevated-md backdrop-blur-md";
@@ -30,7 +34,8 @@ const glass =
 export function PersonHero({ stats }: { stats: { posts: number; topics: number } }) {
   return (
     <div className="relative [perspective:1800px]" style={vars}>
-      <PointerScene tilt={2.5}>
+      <div className="anim-dolly [transform-style:preserve-3d]">
+      <PointerScene tilt={3.5}>
         <div className="wrap relative pb-[calc(var(--bh)+var(--space-7))] desktop:pb-0">
           {/* Sân khấu: tên (sau) · chấm tròn · người (trước) */}
           <div className="relative h-[calc(var(--ph)+3.25rem+var(--nh))] [--nh:7rem] tablet:[--nh:0rem]">
@@ -40,7 +45,10 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
             </p>
 
             <Drift from={0} to={-24} className="pointer-events-none absolute inset-0">
-              <span aria-hidden className="absolute top-[calc(3.25rem+var(--nh)+var(--ph)*0.3)] left-1/2 size-[calc(var(--pw)*0.92)] -translate-x-1/2 rounded-pill bg-accent-warm" />
+              <span aria-hidden className="absolute top-[calc(3.25rem+var(--nh)+var(--ph)*0.14)] left-1/2 size-[calc(var(--pw)*0.9)] -translate-x-1/2 rounded-pill bg-accent-warm" />
+              <PointerLayer depth={-10} className="absolute inset-0">
+                <span aria-hidden className={ring} />
+              </PointerLayer>
             </Drift>
 
             <Drift from={0} to={-56} className="pointer-events-none absolute inset-0 z-[1]">
@@ -49,9 +57,9 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
               </PointerLayer>
             </Drift>
 
-            <PointerLayer depth={12} className="pointer-events-none absolute inset-0 z-[2]">
+            <PointerLayer depth={14} className="pointer-events-none absolute inset-0 z-[2]">
               <div
-                className="brush-bottom anim-person absolute bottom-0 left-1/2 aspect-[1100/1587] w-(--pw) -translate-x-1/2"
+                className="brush-bottom anim-person absolute bottom-0 left-1/2 aspect-[844/866] w-(--pw) -translate-x-1/2"
                 style={{ ...brushStyle, ...delay(450) }}
               >
                 <Image
@@ -60,10 +68,15 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
                   width={profile.portrait.width}
                   height={profile.portrait.height}
                   priority
-                  sizes="(min-width: 1024px) 480px, 41vw"
+                  sizes="(min-width: 1024px) 608px, 44vw"
                   className="size-full object-contain"
                 />
               </div>
+            </PointerLayer>
+
+            {/* Nửa trước của vành: đi ngang qua TRƯỚC người, nửa sau (ở trên) nằm sau người → cảm giác vành quấn quanh thân */}
+            <PointerLayer depth={30} className="pointer-events-none absolute inset-0 z-[3]">
+              <span aria-hidden className={`${ring} [clip-path:inset(50%_0_0_0)]`} />
             </PointerLayer>
           </div>
 
@@ -100,6 +113,7 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
           </dl>
         </div>
       </PointerScene>
+      </div>
 
       <HeroCurtain left="T·N" right="H·N" />
     </div>

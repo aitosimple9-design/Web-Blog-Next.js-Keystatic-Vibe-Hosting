@@ -533,13 +533,39 @@ html[data-modality="pointer"] .field-premium:focus-visible {
    Bật giảm chuyển động: quy tắc chung ở trên rút thời lượng còn 0,01ms nên cửa mở sẵn ngay khi vẽ. */
 @keyframes door-open-l {
   to {
-    transform: rotateY(-100deg);
+    transform: translateZ(140px) rotateY(-104deg);
   }
 }
 @keyframes door-open-r {
   to {
-    transform: rotateY(100deg);
+    transform: translateZ(140px) rotateY(104deg);
   }
+}
+/* Ánh sáng ấm lộ ra sau khe cửa rồi tan dần; cả cảnh lùi xa rồi tiến lại gần (dolly) */
+@keyframes light-out {
+  0%,
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes dolly-in {
+  from {
+    transform: translateZ(-380px) scale(0.9);
+  }
+  to {
+    transform: none;
+  }
+}
+@utility anim-light {
+  animation: light-out 2000ms var(--ease-smooth) both;
+  animation-delay: var(--delay, 250ms);
+}
+@utility anim-dolly {
+  animation: dolly-in 2200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 250ms);
 }
 @utility anim-door-l {
   transform-origin: left center;

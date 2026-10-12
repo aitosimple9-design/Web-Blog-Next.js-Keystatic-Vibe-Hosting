@@ -6,8 +6,8 @@ export const profile = {
   name: "Trần Ngọc Hoàng Ni",
   /** Một câu định vị [mẫu] */
   positioning: "Mình ghi lại điều đọng lại sau mỗi cuốn sách.",
-  /** Ảnh chân dung ĐÃ XÓA PHÔNG (PNG / WebP nền trong suốt, người ngồi quay thẳng, tỉ lệ ~ 0,69). Ảnh demo Pexels (Eugene Lisyuk), xem public/images/CREDITS.md */
-  portrait: { src: "/images/profile/portrait-cutout.webp", alt: "Chân dung Trần Ngọc Hoàng Ni (ảnh minh họa)", width: 1100, height: 1587 },
+  /** Ảnh chân dung ĐÃ XÓA PHÔNG (PNG / WebP nền trong suốt, người ngồi quay thẳng, tỉ lệ ~ 0,97). Ảnh do Lộc cung cấp (đã tách nền, đầu căn giữa khung) */
+  portrait: { src: "/images/profile/portrait-cutout.webp", alt: "Chân dung Trần Ngọc Hoàng Ni", width: 844, height: 866 },
   /** Ảnh thứ hai ở khối Câu chuyện */
   storyImage: { src: "/images/stock/vintage-book-sofa.jpg", alt: "Cuốn sách cũ đặt trên ghế sofa", position: "50% 50%" },
 } as const;

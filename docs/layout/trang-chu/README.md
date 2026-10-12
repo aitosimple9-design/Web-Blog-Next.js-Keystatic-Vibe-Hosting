@@ -37,3 +37,7 @@ Chân dung demo: ảnh Pexels của Eugene Lisyuk (giấy phép Pexels, miễn p
 ## Ghi chú kiểm tra
 - Ảnh chân dung cắt dọc 3:4 từ ảnh ngang bằng `object-position` (`profile.portrait.position`).
 - Hydration warning của `Newsletter` (PointerScene, `useReducedMotion`) có từ trước, không thuộc trang này.
+
+## Cập nhật 2026-10-12: chiều sâu cho Hero + ảnh chân dung của Lộc
+- Ảnh chân dung: ảnh Lộc cung cấp (đã tách nền), `portrait-cutout.webp` 844x866, đầu căn giữa khung; tỉ lệ `--ph = --pw × 1.026`.
+- Chiều sâu: cả cảnh lùi xa rồi tiến lại (`anim-dolly`, translateZ + scale, 2,2s); hai cánh cửa xoay ra phía người xem, mép trong viền `accent-warm`, ánh sáng ấm lộ ở khe giữa rồi tan (`anim-light`); vành elip `accent-warm` quấn quanh thân (nửa sau nằm sau người, nửa trước đè lên người), trôi theo con trỏ ở độ sâu khác nhau. Chỉ transform + opacity, nét phẳng, không gradient.

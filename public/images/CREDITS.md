@@ -22,4 +22,4 @@
 
 Bìa sách demo (`public/images/covers/sach-mau-1..7.svg`) do dự án tự vẽ bằng `scripts/gen-demo-covers.mjs`, không có bản quyền bên thứ ba; thay bằng bìa thật khi có. Sách chưa có bìa trong `src/config/covers.ts` dùng hình học tự sinh (`CoverArt`).
 
-Trang chủ cá nhân (`/`, `src/config/profile.ts`): chân dung Hero `profile/portrait-cutout.webp` là ảnh Pexels của **Eugene Lisyuk** (https://www.pexels.com/photo/photo-of-a-beautiful-model-sitting-on-a-white-chair-while-smiling-at-the-camera-6483562/, giấy phép Pexels miễn phí) đã xóa phông cục bộ bằng `rembg` (model `isnet-general-use`) và nén WebP 1100px; chỉ là ảnh DEMO, thay bằng ảnh thật của chủ blog (người ngồi quay thẳng, đã xóa phông). Ảnh khối Câu chuyện dùng `vintage-book-sofa.jpg` (CC BY 2.0, Shixart1985): phải ghi công khi đăng lên web thật.
+Trang chủ cá nhân (`/`, `src/config/profile.ts`): chân dung Hero `profile/portrait-cutout.webp` là ảnh do chủ blog cung cấp (đã tách nền sẵn, cắt viền và căn đầu vào giữa khung, WebP 844x866). Ảnh khối Câu chuyện dùng `vintage-book-sofa.jpg` (CC BY 2.0, Shixart1985): phải ghi công khi đăng lên web thật.

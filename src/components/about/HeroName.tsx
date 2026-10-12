@@ -25,13 +25,13 @@ export function HeroName({ name, className = "" }: { name: string; className?: s
   // Tên 4 chữ chia thành 2 hàng, mỗi hàng 2 chữ (đổi tên khác 4 chữ thì sửa ở đây)
   const [a, b, c, d] = name.split(" ");
   const rows: Row[] = [
-    { words: [a, b], gap: "calc(var(--pw) * 0.5)", startIndex: 0 },
-    { words: [c, d], gap: "calc(var(--pw) * 0.82)", outline: true, startIndex: a.length + b.length },
+    { words: [a, b], gap: "calc(var(--pw) * 0.56)", startIndex: 0 },
+    { words: [c, d], gap: "calc(var(--pw) * 0.86)", outline: true, startIndex: a.length + b.length },
   ];
   return (
     <h1
       aria-label={name}
-      className={`type-display-xl block font-semibold uppercase leading-[1.04] tracking-tight text-on-inverse text-[min(calc(var(--pw)*0.27),15vw)] tablet:text-[min(calc(var(--pw)*0.27),10.5vw)] ${className}`}
+      className={`type-display-xl block font-semibold uppercase leading-[1.04] tracking-tight text-on-inverse text-[min(calc(var(--pw)*0.27),15vw)] tablet:text-[min(calc(var(--pw)*0.16),7.4vw)] ${className}`}
     >
       {rows.map((r) => (
         <span
