@@ -2,6 +2,7 @@
 // Các lớp từ sau ra trước: tên khổng lồ (HeroName, nằm SAU người) · chấm tròn phẳng `accent-warm` · chân dung xóa phông (nền trong suốt) ·
 // chữ + CTA + icon (trái) và hai thẻ kính mờ số liệu (phải) · cánh cửa mở đầu trang (HeroCurtain, tách riêng, chạy một lần).
 // 375 / 768: sân khấu (tên + người) ở trên, chữ + thẻ số liệu xếp dọc bên dưới · 1024+: chữ ở góc dưới trái, thẻ kính ở góc dưới phải, người ở giữa.
+// Chữ + CTA + icon và thẻ số liệu nằm NGOÀI cảnh 3D (không bị transform / perspective bao quanh) và có z-20 để luôn bấm được.
 // Chuyển động: cửa mở, người phóng về đúng cỡ, tên trượt lên từng chữ cái; sau đó cả cảnh nghiêng nhẹ + các lớp trôi theo con trỏ (chỉ chuột),
 // tên / chấm tròn trôi theo thanh cuộn (Drift). Chỉ transform + opacity, tắt khi giảm chuyển động.
 import Image from "next/image";
@@ -34,9 +35,9 @@ const glass =
 export function PersonHero({ stats }: { stats: { posts: number; topics: number } }) {
   return (
     <div className="relative [perspective:1800px]" style={vars}>
-      <div className="anim-dolly [transform-style:preserve-3d]">
-      <PointerScene tilt={3.5}>
-        <div className="wrap relative pb-[calc(var(--bh)+var(--space-7))] desktop:pb-0">
+      <div className="wrap relative pb-[calc(var(--bh)+var(--space-7))] desktop:pb-0">
+        <div className="anim-dolly">
+        <PointerScene tilt={3.5}>
           {/* Sân khấu: tên (sau) · chấm tròn · người (trước) */}
           <div className="relative h-[calc(var(--ph)+3.25rem+var(--nh))] [--nh:7rem] tablet:[--nh:0rem]">
             <p className="type-eyebrow anim-fade-rise absolute inset-x-0 top-s2 z-10 flex items-center justify-center gap-s2 uppercase text-on-inverse-soft" style={delay(900)}>
@@ -79,10 +80,12 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
               <span aria-hidden className={`${ring} [clip-path:inset(50%_0_0_0)]`} />
             </PointerLayer>
           </div>
+        </PointerScene>
+        </div>
 
           {/* Chữ + CTA + icon: dưới sân khấu (375 / 768), góc dưới trái (1024+) */}
           <div
-            className="anim-fade-rise z-10 mx-auto mt-s5 max-w-xl text-center desktop:absolute desktop:bottom-[calc(var(--bh)+var(--space-6))] desktop:left-0 desktop:mx-0 desktop:mt-0 desktop:w-[min(22rem,27%)] desktop:text-left"
+            className="anim-fade-rise relative z-20 mx-auto mt-s5 max-w-xl text-center desktop:absolute! desktop:bottom-[calc(var(--bh)+var(--space-6))] desktop:left-0 desktop:mx-0 desktop:mt-0 desktop:w-[min(22rem,27%)] desktop:text-left"
             style={delay(1300)}
           >
             <p className="type-dek text-pretty text-on-inverse-soft">{profile.positioning}</p>
@@ -96,7 +99,7 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
 
           {/* Thẻ kính mờ: số liệu thật, đếm từ nội dung */}
           <dl
-            className="anim-fade-rise z-10 mx-auto mt-s6 grid max-w-xl grid-cols-2 gap-s3 desktop:absolute desktop:right-0 desktop:bottom-[calc(var(--bh)+var(--space-6))] desktop:mx-0 desktop:mt-0 desktop:w-[min(13rem,17%)] desktop:grid-cols-1"
+            className="anim-fade-rise relative z-20 mx-auto mt-s6 grid max-w-xl grid-cols-2 gap-s3 desktop:absolute! desktop:right-0 desktop:bottom-[calc(var(--bh)+var(--space-6))] desktop:mx-0 desktop:mt-0 desktop:w-[min(13rem,17%)] desktop:grid-cols-1"
             style={delay(1550)}
           >
             {[
@@ -111,8 +114,6 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
               </div>
             ))}
           </dl>
-        </div>
-      </PointerScene>
       </div>
 
       <HeroCurtain left="T·N" right="H·N" />
