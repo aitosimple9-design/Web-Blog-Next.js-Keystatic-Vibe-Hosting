@@ -8,7 +8,7 @@ const start = { "--delay": "250ms" } as CSSProperties;
 
 export function HeroCurtain({ left, right }: { left: string; right: string }) {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 z-30 [transform-style:preserve-3d]">
+    <div aria-hidden className="anim-curtain-gone pointer-events-none absolute inset-0 z-30 [transform-style:preserve-3d]">
       {/* Ánh sáng ấm lộ ra sau khe cửa rồi tan dần (flat accent-warm, chỉ opacity) */}
       <div className="anim-light absolute inset-0 bg-accent-warm" style={start} />
       <div className="absolute inset-y-0 left-0 w-1/2 [transform-style:preserve-3d]">

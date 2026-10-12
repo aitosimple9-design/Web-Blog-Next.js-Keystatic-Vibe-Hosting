@@ -559,6 +559,19 @@ html[data-modality="pointer"] .field-premium:focus-visible {
     transform: none;
   }
 }
+/* Sau khi cửa mở xong, ẩn hẳn lớp cửa (visibility) để chắc chắn không còn chặn bấm / chạm */
+@keyframes curtain-gone {
+  0% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+@utility anim-curtain-gone {
+  animation: curtain-gone 100ms linear forwards;
+  animation-delay: 2700ms;
+}
 @utility anim-light {
   animation: light-out 2000ms var(--ease-smooth) both;
   animation-delay: var(--delay, 250ms);
