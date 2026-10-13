@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Kiểm tra tĩnh + unit test + build. Tự bỏ qua khi nhánh chưa có code (package.json).
+  check:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Phát hiện dự án Node
+        id: detect
+        run: |
+          if [ -f package.json ]; then echo "has_app=true" >> "$GITHUB_OUTPUT"; else echo "has_app=false" >> "$GITHUB_OUTPUT"; echo "Chưa có package.json, bỏ qua CI."; fi
+
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.has_app == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Cài thư viện
+        if: steps.detect.outputs.has_app == 'true'
+        run: npm ci
+
+      - name: Lint
+        if: steps.detect.outputs.has_app == 'true'
+        run: npm run lint
+
+      - name: Typecheck
+        if: steps.detect.outputs.has_app == 'true'
+        run: npm run typecheck
+
+      - name: Unit test
+        if: steps.detect.outputs.has_app == 'true'
+        run: npm test --if-present
+
+      - name: Build
+        if: steps.detect.outputs.has_app == 'true'
+        run: npm run build
+
+  # Test giao diện bằng Playwright. Chỉ chạy khi dự án có playwright.config.ts.
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Phát hiện cấu hình Playwright
+        id: detect
+        run: |
+          if [ -f playwright.config.ts ]; then echo "has_e2e=true" >> "$GITHUB_OUTPUT"; else echo "has_e2e=false" >> "$GITHUB_OUTPUT"; echo "Chưa có playwright.config.ts, bỏ qua E2E."; fi
+
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.has_e2e == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Cài thư viện
+        if: steps.detect.outputs.has_e2e == 'true'
+        run: npm ci
+
+      - name: Cài trình duyệt Playwright
+        if: steps.detect.outputs.has_e2e == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Chạy E2E
+        if: steps.detect.outputs.has_e2e == 'true'
+        run: npm run test:e2e
+
+      - name: Lưu báo cáo khi lỗi
+        if: failure() && steps.detect.outputs.has_e2e == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
