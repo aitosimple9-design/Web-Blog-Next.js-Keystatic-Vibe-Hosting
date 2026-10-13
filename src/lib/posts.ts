@@ -56,7 +56,9 @@ function toIsoDate(file: string, v: unknown): string {
 }
 
 function parseMeta(file: string, data: Record<string, unknown>, body: string): PostMeta {
-  const slug = str(file, data, "slug");
+  // Keystatic lấy slug từ tên file và không ghi `slug:` vào frontmatter → thiếu thì dùng tên file;
+  // có thì phải trùng tên file (bài viết tay / dự án B vẫn khai báo `slug:`).
+  const slug = data.slug === undefined ? file.replace(/\.md$/, "") : str(file, data, "slug");
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
     fail(file, `slug "${slug}" phải là chữ thường, không dấu, nối bằng "-"`);
   }

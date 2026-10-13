@@ -64,6 +64,16 @@ test("robots.txt và sitemap.xml hoạt động, sitemap chứa bài", async ({ 
   expect(await sm.text()).toContain(`/bai-viet/${postSlug}`);
 });
 
+test("trang quản trị Keystatic mở được và không bị lập chỉ mục", async ({ page }) => {
+  const res = await page.goto("/keystatic");
+  expect(res?.status()).toBe(200);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+});
+
+test("sitemap không chứa trang quản trị", async ({ request }) => {
+  expect(await (await request.get("/sitemap.xml")).text()).not.toContain("/keystatic");
+});
+
 test("theme: mặc định theo hệ thống, ưu tiên lựa chọn đã lưu", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");

@@ -76,7 +76,7 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [ ] `src/lib/posts.ts`: lấy danh sách bài, lấy 1 bài theo slug, lọc theo danh mục, bỏ bài `draft: true`
 - [ ] Kiểm tra dữ liệu: thiếu trường bắt buộc → build báo lỗi rõ ràng (không im lặng bỏ qua)
 - [ ] 3 bài mẫu, mỗi danh mục 1 bài, dùng chung cho A và B
-- [ ] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local
+- [x] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local (2026-10-13; `slug` lấy từ tên file, khai báo `fields.ignored()`; có test `tests/unit/keystatic.test.ts`)
 - [ ] [B] `public/admin/index.html` + `config.yml` khớp mục 5 CLAUDE.md
 - [ ] Thử: sửa bài qua CMS trên máy → file `.md` thay đổi đúng định dạng
 
@@ -144,7 +144,8 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
 
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
 - [ ] Chốt Q9, Q10
-- [ ] [A] Keystatic chuyển sang GitHub mode (GitHub App/OAuth + biến môi trường)
+- [ ] [A] Keystatic chuyển sang GitHub mode (GitHub App/OAuth + biến môi trường). Next 16 dev cần `allowedDevOrigins: ["127.0.0.1"]` (đã thêm, Thinkmill/keystatic#1549); chờ Lộc chọn GitHub App hay OAuth
+- [ ] [A] Hosting: Vercel (đang chờ MCP Vercel); local mode không chạy được trên Vercel nên cần GitHub mode
 - [ ] [A] Deploy lên hosting Node.js đã chọn
 - [ ] [B] Deploy lên Cloudflare + Worker `sveltia-cms-auth` + GitHub OAuth App
 - [ ] Gắn tên miền, HTTPS

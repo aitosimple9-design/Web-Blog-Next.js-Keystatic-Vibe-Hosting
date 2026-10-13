@@ -143,7 +143,7 @@ draft: false                         # true = không hiển thị, không vào s
 - Toàn site: `src/app/sitemap.ts` + `src/app/robots.ts`; bài `draft: true` không vào sitemap
 
 ## 8. Riêng cho Keystatic
-- Giữ `keystatic.config.ts` khớp 100% với mục 5 (tên trường, kiểu dữ liệu, thư mục).
+- Giữ `keystatic.config.ts` khớp 100% với mục 5 (tên trường, kiểu dữ liệu, thư mục). Ngoại lệ duy nhất: Keystatic lấy `slug` từ TÊN FILE và không ghi `slug:` vào frontmatter nên `slug` khai báo `fields.ignored()`; `posts.ts` dùng tên file khi thiếu `slug:` (có thì phải trùng). Bài do Keystatic lưu có thể không có dòng `slug:`.
 - Giai đoạn hiện tại chỉ dùng chế độ local. Chuyển sang GitHub mode là việc deploy → phải hỏi trước.
 - Không commit secret của Keystatic/GitHub; chỉ để trong biến môi trường.
 
