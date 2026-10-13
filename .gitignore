@@ -36,3 +36,6 @@ shots/
 # kết quả test
 /test-results
 /playwright-report
+
+# tài liệu gốc do chủ dự án cung cấp (giữ cục bộ)
+/Tài liệu/
