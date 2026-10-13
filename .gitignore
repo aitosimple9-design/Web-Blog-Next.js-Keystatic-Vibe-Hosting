@@ -32,3 +32,7 @@ next-env.d.ts
 # ảnh chụp kiểm thử giao diện (cục bộ)
 shots/
 .playwright-mcp/
+
+# kết quả test
+/test-results
+/playwright-report
