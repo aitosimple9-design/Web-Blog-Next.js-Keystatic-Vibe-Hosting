@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Wireframe: Trang chủ</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="wf.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Source+Serif+4:wght@400;600&amp;display=swap">
+</helmet>
+<div class="wf {{annCls}}">
+  <div class="top">
+    <div>
+      <span class="kicker">Wireframe · Blog Book Mono · thang xám, chưa có màu</span>
+      <h2 class="ptitle">Trang 4: Trang chủ (thương hiệu cá nhân)</h2>
+      <p class="psub">Bốn khung 375 · 768 · 1024 · 1440. Bố cục co giãn theo bề rộng khung, không cuộn ngang.</p>
+    </div>
+    <div class="ctl">
+      <div class="legend"><span><b class="lg-tap"></b>Vùng bấm 44px</span><span><b class="lg-sp"></b>Khe 8px</span><span><b class="lg-th"></b>Thumb zone</span><span>→ Điểm thay đổi giữa mốc</span></div>
+      <button type="button" class="tg" onClick="{{toggle}}">Chú thích: {{annLabel}}</button>
+    </div>
+  </div>
+
+  <div class="row">
+  <sc-for list="{{frames}}" as="f" hint-placeholder-count="4">
+  <div class="fcol {{f.cls}}">
+    <div class="fh">{{f.label}}<small>{{f.sub}}</small></div>
+    <div class="frame">
+      <div class="gutter l"><span>khoảng trống</span></div>
+      <div class="gutter r"><span>khoảng trống</span></div>
+      <div class="thumb"><span>Thumb zone</span><em>hết màn hình đầu (812px)</em></div>
+      <div class="page">
+
+<div class="band b-dark hero-i"><div class="in">
+  
+<div class="blk nav" data-c="Nav">
+  <button type="button" class="lnk logo tap"><span class="mark"></span>Logo</button>
+  <div class="links"><button type="button" class="lnk on tap">Trang chủ</button><i class="sp"></i><button type="button" class="lnk tap">Book</button><i class="sp"></i><button type="button" class="lnk tap">Blog</button></div>
+  <div class="act">
+    <button type="button" class="ib sico tap" aria-label="Tìm kiếm"><span class="mag"></span></button>
+    <label class="srch tap"><span class="mag"></span><input type="search" placeholder="Tìm bài viết" aria-label="Tìm bài viết"></label>
+    <i class="sp"></i>
+    <button type="button" class="ib tap" aria-label="Đổi theme"><span class="moon"></span></button>
+    <i class="sp b"></i>
+    <button type="button" class="ib burger tap" aria-label="Menu"><span class="bars"></span></button>
+  </div>
+  <div class="cl w1">Logo trái · tìm kiếm + ☰ bên phải</div>
+  <div class="cl w2">→ menu căn giữa, ☰ ẩn</div>
+  <div class="cl w3">→ ô tìm kiếm mở rộng</div>
+</div>
+  <div class="blk hi2" data-c="Hero">
+    <div class="ptr" aria-hidden="true"><span>Chân dung (ảnh thật)</span></div>
+    <div class="hx">
+      <span class="eyebrow">Xin chào, mình là</span>
+      <h1 class="h1 nm2">[TÊN HIỂN THỊ]</h1>
+      <p class="dek">[MỘT CÂU ĐỊNH VỊ]</p>
+      <button type="button" class="btn primary hcta tap">Đăng ký nhận bài</button>
+      <div class="follow"><p class="meta">Theo dõi mình</p><div class="socs"><button type="button" class="soc tap" aria-label="YouTube"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="3.5"></rect><path d="M10.4 9.6l4.2 2.4-4.2 2.4z" fill="currentColor"></path></svg></span></button><button type="button" class="soc tap" aria-label="TikTok"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v9.6a3.3 3.3 0 1 1-3.3-3.3"></path><path d="M14 4c.4 2.3 1.9 3.8 4.3 4.1"></path></svg></span></button><button type="button" class="soc tap" aria-label="Facebook"><span class="sg">f</span></button><button type="button" class="soc tap" aria-label="Instagram"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle cx="12" cy="12" r="3.6"></circle><circle cx="16.8" cy="7.2" r=".7" fill="currentColor"></circle></svg></span></button><button type="button" class="soc tap" aria-label="LinkedIn"><span class="sg sm">in</span></button><button type="button" class="soc tap" aria-label="X"><span class="sg">X</span></button><button type="button" class="soc tap" aria-label="Zalo"><span class="sg">Z</span></button></div></div>
+    </div>
+    <div class="cl w1">căn giữa, xếp dọc: chân dung, tên, định vị, nút, icon</div>
+    <div class="cl w2">→ 2 cột: chân dung trái, chữ phải</div>
+    <div class="cl w3">→ chữ trái, chân dung lớn bên phải</div>
+    <div class="cl w4">→ như 1024, rộng hơn trong khung 1120px</div>
+  </div>
+</div><div class="brush" aria-hidden="true"></div></div>
+
+<div class="band b-paper"><div class="in">
+  <div class="blk story" data-c="Story">
+    <div class="sy-h"><span class="eyebrow">Câu chuyện</span><h2 class="h2">Vì sao mình đọc và viết</h2></div>
+    <div class="sy-i"><div class="img r32"><span>Ảnh thứ hai</span></div></div>
+    <div class="sy-t"><small class="an">(chữ serif, khổ dòng 66ch)</small><div class="par"><i class="sk w100"></i><i class="sk w100"></i><i class="sk w58"></i></div><div class="par"><i class="sk w100"></i><i class="sk w100"></i><i class="sk w92"></i><i class="sk w58"></i></div><div class="par"><i class="sk w100"></i><i class="sk w100"></i><i class="sk w58"></i></div><div class="par"><i class="sk w100"></i><i class="sk w100"></i><i class="sk w92"></i><i class="sk w58"></i></div></div>
+    <div class="cl w1">tiêu đề, ảnh 3:2, rồi 4 đoạn ngắn</div>
+    <div class="cl w2">→ ảnh rộng phía trên, thân bài 66ch căn giữa</div>
+    <div class="cl w3">→ 2 cột: chữ 66ch bên trái, ảnh dọc 4:5 bên phải</div>
+    <div class="cl w4">→ như 1024, rộng hơn trong khung 1120px</div>
+  </div>
+  <div class="slot" aria-hidden="true"><span class="eyebrow">Chỗ chừa</span><p>Hành trình (timeline). Chèn thêm một dải ở đây, các khối khác giữ nguyên.</p></div>
+</div></div>
+
+<div class="band b-sunk"><div class="in">
+  <div class="sec-c"><span class="eyebrow">Điểm khác biệt</span><h2 class="h2">Cách mình đọc</h2><p class="dek1">Bốn nguyên tắc mình giữ khi ghi chép một cuốn sách.</p></div>
+  <div class="blk pg2" data-c="Principles">
+    <div class="blk pc" data-c="PrincipleCard"><span class="pnum">01</span><p class="h3">Diễn giải bằng lời mới</p><div class="skg p"><i class="sk w100"></i><i class="sk w85"></i><i class="sk w58"></i></div></div><div class="blk pc" data-c="PrincipleCard"><span class="pnum">02</span><p class="h3">Có ví dụ</p><div class="skg p"><i class="sk w100"></i><i class="sk w85"></i><i class="sk w58"></i></div></div><div class="blk pc" data-c="PrincipleCard"><span class="pnum">03</span><p class="h3">Ghi nguồn</p><div class="skg p"><i class="sk w100"></i><i class="sk w85"></i><i class="sk w58"></i></div></div><div class="blk pc" data-c="PrincipleCard"><span class="pnum">04</span><p class="h3">[Nguyên tắc 4, tùy chọn]</p><div class="skg p"><i class="sk w100"></i><i class="sk w85"></i><i class="sk w58"></i></div></div>
+    <div class="cl w1">1 cột, thẻ xếp dọc</div>
+    <div class="cl w2">→ lưới 2×2</div>
+    <div class="cl w3">→ 4 thẻ trên một hàng</div>
+    <div class="cl w4">→ như 1024, rộng hơn trong khung 1120px</div>
+  </div>
+</div></div>
+
+<div class="band b-paper nb"><div class="in"><div class="blk nums" data-c="Counters">
+  <div class="ns"><b>000</b><p class="meta">Bài viết</p></div>
+  <div class="ns"><b>000</b><p class="meta">Cuốn sách</p></div>
+  <div class="ns"><b>000</b><p class="meta">Chủ đề</p></div>
+  <div class="cl w1">đếm lên từ 0 khi cuộn tới; bật giảm chuyển động thì hiện số luôn</div><div class="cl w2">đếm lên từ 0 khi cuộn tới; bật giảm chuyển động thì hiện số luôn</div><div class="cl w3">đếm lên từ 0 khi cuộn tới; bật giảm chuyển động thì hiện số luôn</div><div class="cl w4">đếm lên từ 0 khi cuộn tới; bật giảm chuyển động thì hiện số luôn</div>
+</div></div></div>
+
+<div class="band b-dark sh"><div class="in">
+  <div class="sec-c"><h2 class="h2">Tủ sách của mình</h2><p class="dek1">Những cuốn sách ảnh hưởng đến mình nhiều nhất. Bấm vào bìa để đọc các bài cùng chủ đề.</p></div>
+  <div class="blk sl-wrap shelf" data-c="BookShelf">
+    <div class="sl"><div class="bk tap whole" data-c="BookLink"><div class="cover"><span>Bìa 1</span></div><div class="bk-t"><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><span class="tag">→ Chủ đề 1</span></div></div><div class="bk tap whole" data-c="BookLink"><div class="cover"><span>Bìa 2</span></div><div class="bk-t"><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><span class="tag">→ Chủ đề 2</span></div></div><div class="bk tap whole" data-c="BookLink"><div class="cover"><span>Bìa 3</span></div><div class="bk-t"><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><span class="tag">→ Chủ đề 3</span></div></div><div class="bk tap whole" data-c="BookLink"><div class="cover"><span>Bìa 4</span></div><div class="bk-t"><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><span class="tag">→ Chủ đề 1</span></div></div><div class="bk tap whole" data-c="BookLink"><div class="cover"><span>Bìa 5</span></div><div class="bk-t"><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><span class="tag">→ Chủ đề 4</span></div></div><div class="bk tap whole" data-c="BookLink"><div class="cover"><span>Bìa 6</span></div><div class="bk-t"><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><span class="tag">→ Chủ đề 5</span></div></div></div>
+    <div class="sl-ctl">
+        <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <div class="arrs"><button type="button" class="arrb dis tap" aria-label="Trước" data-sl="-1"><i class="arr l"></i></button><i class="sp"></i><button type="button" class="arrb tap" aria-label="Sau" data-sl="1"><i class="arr"></i></button></div>
+      </div>
+    <div class="cl w1">trượt ngang: khoảng 2,3 bìa, 5 chấm vị trí</div>
+    <div class="cl w2">→ khoảng 4,4 bìa, 3 chấm</div>
+    <div class="cl w3">→ 5 bìa hiện đủ; ‹ › trượt tới bìa thứ 6, 2 chấm</div>
+    <div class="cl w4">→ như 1024, rộng hơn trong khung 1120px</div>
+  </div>
+</div></div>
+
+<div class="band b-sunk"><div class="in">
+  <div class="sec-h"><h2 class="h2">Bài tiêu biểu</h2><button type="button" class="lnk all tap">Xem tất cả bài viết <i class="arr"></i></button></div>
+  <div class="blk fp" data-c="FeaturedPosts">
+    <div class="blk pcd fpc tap whole" data-c="PostCard"><div class="img r32"><span>Ảnh 3:2</span></div><div class="fpc-b"><span class="tag">Chủ đề 1</span><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><div class="skg "><i class="sk m w85"></i><i class="sk m w60"></i></div><div class="pcd-f"><p class="meta">03 tháng 10 · 12 phút</p><span class="dkp">Đọc bài <i class="arr"></i></span></div></div></div><div class="blk pcd fpc tap whole" data-c="PostCard"><div class="img r32"><span>Ảnh 3:2</span></div><div class="fpc-b"><span class="tag">Chủ đề 2</span><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><div class="skg "><i class="sk m w85"></i><i class="sk m w60"></i></div><div class="pcd-f"><p class="meta">28 tháng 9 · 6 phút</p><span class="dkp">Đọc bài <i class="arr"></i></span></div></div></div><div class="blk pcd fpc tap whole" data-c="PostCard"><div class="img r32"><span>Ảnh 3:2</span></div><div class="fpc-b"><span class="tag">Chủ đề 3</span><div class="skg "><i class="sk t w100"></i><i class="sk t w70"></i></div><div class="skg "><i class="sk m w85"></i><i class="sk m w60"></i></div><div class="pcd-f"><p class="meta">20 tháng 9 · 10 phút</p><span class="dkp">Đọc bài <i class="arr"></i></span></div></div></div>
+    <div class="cl w1">1 cột, 3 thẻ</div>
+    <div class="cl w2">→ 2 cột: thẻ đầu nằm ngang, hai thẻ dưới</div>
+    <div class="cl w3">→ 3 thẻ trên một hàng</div>
+    <div class="cl w4">→ như 1024, rộng hơn trong khung 1120px</div>
+  </div>
+  <div class="slot" aria-hidden="true"><span class="eyebrow">Chỗ chừa</span><p>Lời chứng thực. Chèn thêm một dải ở đây.</p></div>
+  <div class="slot" aria-hidden="true"><span class="eyebrow">Chỗ chừa</span><p>Làm việc cùng tôi. Chèn thêm một dải ở đây.</p></div>
+</div></div>
+
+<div class="band b-paper b-tight-b"><div class="in"><div class="sec-c blk conn" data-c="Connect">
+  <span class="eyebrow">Kết nối</span><h2 class="h2">Kết nối với mình</h2>
+  <p class="dek1">Mình đăng ghi chép mới mỗi tuần. Theo dõi mình ở nền tảng bạn hay dùng, hoặc nhận bài thẳng qua email ngay bên dưới.</p>
+  <div class="socs"><button type="button" class="soc tap" aria-label="YouTube"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="3.5"></rect><path d="M10.4 9.6l4.2 2.4-4.2 2.4z" fill="currentColor"></path></svg></span></button><button type="button" class="soc tap" aria-label="TikTok"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v9.6a3.3 3.3 0 1 1-3.3-3.3"></path><path d="M14 4c.4 2.3 1.9 3.8 4.3 4.1"></path></svg></span></button><button type="button" class="soc tap" aria-label="Facebook"><span class="sg">f</span></button><button type="button" class="soc tap" aria-label="Instagram"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle cx="12" cy="12" r="3.6"></circle><circle cx="16.8" cy="7.2" r=".7" fill="currentColor"></circle></svg></span></button><button type="button" class="soc tap" aria-label="LinkedIn"><span class="sg sm">in</span></button><button type="button" class="soc tap" aria-label="X"><span class="sg">X</span></button><button type="button" class="soc tap" aria-label="Zalo"><span class="sg">Z</span></button></div>
+</div></div></div>
+
+<div class="band b-paper"><div class="in"><div class="blk cta" data-c="Newsletter">
+  <i class="deco"></i>
+  <div class="cta-t">
+    <span class="eyebrow">Bản tin</span>
+    <h2 class="h2">Nhận bài mới qua email</h2>
+    <p class="dek1">Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.</p>
+    <ul class="ticks"><li><i class="tk"></i>Ý chính, ví dụ và cách áp dụng</li><li><i class="tk"></i>Đọc trong khoảng 10 phút</li><li><i class="tk"></i>Hủy đăng ký bất cứ lúc nào</li></ul>
+  </div>
+  <div class="cta-f">
+    <p class="ttl">Đăng ký nhận bài</p>
+    <label class="fl"><span class="lb">Họ tên</span><input class="field tap fld" type="text" placeholder="Nguyễn Văn A"></label>
+    <label class="fl"><span class="lb">Số điện thoại</span><input class="field tap fld" type="tel" placeholder="09xx xxx xxx"></label>
+    <label class="fl full"><span class="lb">Email</span><input class="field tap fld" type="email" placeholder="ban@example.com"></label>
+    <button type="button" class="btn primary wide tap">Đăng ký</button>
+    <p class="meta">Chỉ gửi bài mới, không quảng cáo.</p>
+  </div>
+  <div class="cl w1">xếp dọc: chữ, rồi form (mỗi ô một hàng)</div>
+  <div class="cl w2">→ Họ tên và Số điện thoại cùng một hàng</div>
+  <div class="cl w3">→ chữ trái, form phải</div>
+</div></div></div>
+<div class="band b-raised b-foot"><div class="in"><div class="blk ft-b" data-c="Footer">
+  <div class="ft-r1">
+    <button type="button" class="lnk logo tap"><span class="mark"></span>Logo</button>
+    <div class="ft-l"><button type="button" class="lnk tap">Trang chủ</button><button type="button" class="lnk tap">Book</button><button type="button" class="lnk tap">Blog</button></div>
+    <div class="soc-r"><button type="button" class="soc tap" aria-label="YouTube"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="3.5"></rect><path d="M10.4 9.6l4.2 2.4-4.2 2.4z" fill="currentColor"></path></svg></span></button><button type="button" class="soc tap" aria-label="TikTok"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v9.6a3.3 3.3 0 1 1-3.3-3.3"></path><path d="M14 4c.4 2.3 1.9 3.8 4.3 4.1"></path></svg></span></button><button type="button" class="soc tap" aria-label="Facebook"><span class="sg">f</span></button><button type="button" class="soc tap" aria-label="Instagram"><span class="sg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle cx="12" cy="12" r="3.6"></circle><circle cx="16.8" cy="7.2" r=".7" fill="currentColor"></circle></svg></span></button><button type="button" class="soc tap" aria-label="LinkedIn"><span class="sg sm">in</span></button><button type="button" class="soc tap" aria-label="X"><span class="sg">X</span></button><button type="button" class="soc tap" aria-label="Zalo"><span class="sg">Z</span></button></div>
+  </div>
+  <div class="ft-r2"><p class="meta">© 2026 Logo. Ghi chép kiến thức từ sách.</p><div class="lg"><button type="button" class="lnk tap">Điều khoản</button><button type="button" class="lnk tap">Chính sách</button></div></div>
+  <div class="cl w1">xếp dọc: logo, menu, mạng xã hội, pháp lý</div>
+  <div class="cl w2">→ logo trái · menu giữa · 7 icon mạng xã hội phải</div>
+</div></div></div>
+      </div>
+    </div>
+  </div>
+  </sc-for>
+  </div>
+
+  <div class="notes">
+    <h3>Thay đổi giữa các mốc: Trang chủ</h3>
+    <div>
+      <h4>375 → 768</h4>
+      <ul>
+        <li>Thanh đầu trang: ☰ biến mất, menu Trang chủ · Book · Blog hiện ở giữa; lề 24px thành 32px.</li>
+        <li>Hero: từ 1 cột căn giữa (chân dung, tên, định vị, nút, icon) thành 2 cột: chân dung trái, chữ phải căn trái. Đáy Hero giữ nét cọ.</li>
+        <li>Câu chuyện: ảnh 3:2 tràn bề rộng, thân bài 66ch căn giữa. Cách mình đọc: 1 cột thành lưới 2×2. Tủ sách: từ khoảng 2,3 bìa thành 4,4 bìa. Bài tiêu biểu: thẻ đầu nằm ngang, hai thẻ dưới. Form đăng ký: Họ tên và Số điện thoại cùng một hàng.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>768 → 1024</h4>
+      <ul>
+        <li>Thanh đầu trang: icon tìm kiếm mở rộng thành ô nhập "Tìm bài viết".</li>
+        <li>Hero: chữ trái, chân dung lớn bên phải. Câu chuyện: 2 cột, chữ 66ch trái, ảnh dọc 4:5 bên phải.</li>
+        <li>Cách mình đọc: 4 thẻ trên một hàng. Tủ sách: 5 bìa hiện đủ, nút ‹ › trượt tới bìa thứ 6. Bài tiêu biểu: 3 thẻ trên một hàng. Đăng ký: chữ trái, form phải.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>1024 → 1440</h4>
+      <ul>
+        <li>Nội dung nằm trong khung tối đa 1120px; dải nền Hero và Tủ sách vẫn tràn hết chiều rộng.</li>
+        <li>Mọi khối giữ cấu trúc của 1024, chỉ rộng thêm. Ở chế độ chú thích, ba ô nét đứt "Chỗ chừa" cho thấy nơi thêm Hành trình, Lời chứng thực, Làm việc cùng tôi sau này mà không phải thiết kế lại.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":3847,"height":7640}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    try {
+      this._onClick = (e) => {
+        const path = e.composedPath ? e.composedPath() : [];
+        let btn = null, wrap = null;
+        for (const n of path) {
+          if (!btn && n && n.getAttribute && n.getAttribute('data-sl')) btn = n;
+          if (n && n.classList && n.classList.contains('sl-wrap')) { wrap = n; break; }
+        }
+        if (!btn || !wrap) return;
+        const sl = wrap.querySelector('.sl');
+        if (!sl || !sl.firstElementChild) return;
+        const gap = parseFloat(getComputedStyle(sl).columnGap) || 0;
+        const step = sl.firstElementChild.getBoundingClientRect().width + gap;
+        sl.scrollBy({ left: Number(btn.getAttribute('data-sl')) * step, behavior: 'smooth' });
+      };
+      this._onScroll = (e) => {
+        const sl = e.target;
+        if (!sl || !sl.classList || !sl.classList.contains('sl')) return;
+        const wrap = sl.closest('.sl-wrap');
+        const first = sl.firstElementChild;
+        if (!wrap || !first) return;
+        const dots = Array.from(wrap.querySelectorAll('.dots i')).filter((d) => d.offsetParent !== null);
+        const gap = parseFloat(getComputedStyle(sl).columnGap) || 0;
+        const step = first.getBoundingClientRect().width + gap;
+        const max = sl.scrollWidth - sl.clientWidth;
+        let idx = Math.round(sl.scrollLeft / step);
+        if (sl.scrollLeft >= max - 2) idx = dots.length - 1;
+        idx = Math.max(0, Math.min(dots.length - 1, idx));
+        dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+        const arr = wrap.querySelectorAll('.arrb');
+        if (arr[0]) arr[0].classList.toggle('dis', sl.scrollLeft <= 2);
+        if (arr[1]) arr[1].classList.toggle('dis', sl.scrollLeft >= max - 2);
+      };
+      document.addEventListener('click', this._onClick);
+      document.addEventListener('scroll', this._onScroll, true);
+    } catch (err) {}
+  }
+  componentWillUnmount() {
+    try {
+      document.removeEventListener('click', this._onClick);
+      document.removeEventListener('scroll', this._onScroll, true);
+    } catch (err) {}
+  }
+  renderVals() {
+    const on = this.state.ann === true;
+    const v = {};
+    return {
+      annCls: on ? 'ann-on' : '',
+      annLabel: on ? 'bật' : 'tắt',
+      toggle: () => this.setState({ ann: !on }),
+      frames: [
+        { cls: 'f375', label: '375px', sub: ' · giữ nguyên cho 414' },
+        { cls: 'f768', label: '768px', sub: '' },
+        { cls: 'f1024', label: '1024px', sub: '' },
+        { cls: 'f1440', label: '1440px', sub: ' · nội dung tối đa 1120px' }
+      ].map((f) => Object.assign({}, f, v))
+    };
+  }
+}
+</script>
+</body>
+</html>

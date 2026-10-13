@@ -1,0 +1,608 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/prose.css";
+
+/* ===== Nền tảng ===== */
+@layer base {
+  html {
+    background: var(--paper);
+    scroll-padding-top: calc(var(--header-height) + var(--space-5));
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans-stack);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Vòng focus bàn phím: không bao giờ tắt (Design System) */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--accent);
+    outline-offset: var(--focus-ring-offset);
+  }
+  .on-inverse :focus-visible {
+    outline-color: var(--on-inverse);
+  }
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+  button {
+    cursor: pointer;
+    font: inherit;
+  }
+  /* Chữ viết tắt bị tô nhầm màu trên Safari */
+  button,
+  input,
+  select,
+  textarea {
+    color: inherit;
+  }
+}
+
+/* ===== Khung nội dung: tối đa content-max, lề 24px (32px từ tablet) ===== */
+@utility wrap {
+  width: min(100% - 2 * var(--space-5), var(--content-max));
+  margin-inline: auto;
+  @media (min-width: 768px) {
+    width: min(100% - 2 * var(--space-6), var(--content-max));
+  }
+}
+
+/* Padding dọc một dải: space-7 dưới tablet, space-9 từ tablet */
+@utility band-y {
+  padding-block: var(--space-7);
+  @media (min-width: 768px) {
+    padding-block: var(--space-9);
+  }
+}
+
+/* Vùng bấm tối thiểu 44x44 */
+@utility tap {
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Liên kết trong chữ: luôn gạch chân (màu nhấn trùng màu mực) */
+@utility text-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-width);
+  text-underline-offset: var(--underline-offset);
+  &:hover {
+    text-decoration-thickness: var(--border-width-strong);
+  }
+}
+
+/* Chữ chỉ dành cho trình đọc màn hình */
+@utility sr-only-x {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Chuyển động: chỉ khi người dùng không bật giảm chuyển động ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Lướt đến mục từ liên kết (mục lục): mượt khi cho phép chuyển động */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Nhảy đến nội dung chính */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: var(--space-3);
+}
+
+/* ===== Lề ngang và thanh trượt tràn mép màn hình ===== */
+:root {
+  --gutter: var(--space-5);
+}
+@media (min-width: 768px) {
+  :root {
+    --gutter: var(--space-6);
+  }
+}
+html {
+  overflow-x: clip;
+}
+
+/* Cho phần tử trong khung `wrap` tràn ra hai mép màn hình, nhưng nội dung vẫn thẳng hàng với khung */
+@utility bleed {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+  scroll-padding-inline: calc(50vw - 50%);
+}
+@utility bleed-r {
+  margin-right: calc(50% - 50vw);
+  padding-right: calc(50vw - 50%);
+  scroll-padding-inline: 0;
+}
+@utility bleed-none {
+  margin-inline: 0;
+  padding-inline: 0;
+  scroll-padding-inline: 0;
+}
+
+/* Hiện nhẹ khi xuất hiện (chỉ dùng cho trạng thái thành công); tự tắt khi giảm chuyển động */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility animate-fade-up {
+  animation: fade-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* =====================================================================
+   CHUYỂN ĐỘNG (CLAUDE.md mục 6): chỉ transform + opacity, không vòng lặp vô hạn,
+   tự tắt khi người dùng bật "giảm chuyển động". Giá trị khớp src/lib/motion-tokens.ts
+   ===================================================================== */
+:root {
+  --motion-normal: 350ms;
+  --motion-slow: 600ms;
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes rise-word {
+  from {
+    transform: translateY(112%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fan-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--fx, 0), 24px) rotate(0deg) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(var(--r, 0deg)) scale(1);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Mỗi chữ trượt lên từ sau mặt nạ. Dùng: <span class="word-mask"><span class="anim-word" style="--i:0">Chữ</span></span> */
+@utility word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em; /* chừa chỗ cho dấu tiếng Việt thấp (ạ, ệ) */
+  margin-bottom: -0.14em;
+}
+@utility anim-word {
+  display: inline-block;
+  animation: rise-word var(--motion-slow) var(--ease-smooth) both;
+  animation-delay: calc(var(--delay, 0ms) + var(--i, 0) * 70ms);
+}
+@utility anim-fade-rise {
+  animation: fade-rise var(--motion-slow) var(--ease-smooth) both;
+  animation-delay: var(--delay, 0ms);
+}
+@utility anim-pop {
+  animation: pop-in var(--motion-slow) var(--ease-smooth) both;
+  animation-delay: var(--delay, 0ms);
+}
+@utility anim-fan {
+  animation: fan-in 800ms var(--ease-smooth) both;
+  animation-delay: var(--delay, 0ms);
+}
+@utility anim-page {
+  animation: page-in var(--motion-normal) var(--ease-smooth) both;
+}
+
+/* ===== Hover: chỉ trên thiết bị có chuột, và chỉ khi cho phép chuyển động ===== */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .lift {
+    transition: transform var(--motion-normal) var(--ease-smooth);
+  }
+  .lift:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Gạch chân chạy từ trái sang phải (đặt trên span bên trong liên kết hoặc thẻ .group) */
+.ul-grow {
+  position: relative;
+  display: inline;
+  background: none;
+}
+.ul-grow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: var(--border-width-strong);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-normal) var(--ease-smooth);
+}
+@media (hover: hover) {
+  .group:hover .ul-grow::after,
+  .ul-grow:hover::after,
+  a:hover > .ul-grow::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ===== Premium (Lộc duyệt 2026-10-07): gradient + đổ bóng nhiều lớp + vi chuyển động. Chỉ dùng token trong tokens.json ===== */
+/* Nút chính: gradient-primary (accent -> accent-warm), viền sáng trong 1px, vệt sáng quét khi hover, nổi lên elevated-md */
+.btn-grad,
+.btn-grad-bg {
+  background-image: var(--gradient-primary);
+}
+.btn-grad {
+  box-shadow: var(--elevated-sm);
+  --btn-line: color-mix(in srgb, var(--on-accent) 26%, transparent);
+  --btn-sheen: color-mix(in srgb, var(--on-accent) 34%, transparent);
+}
+/* Nút trên nền đảo: kem -> cát pha với inverse */
+.btn-grad-inverse {
+  --btn-line: color-mix(in srgb, var(--inverse) 22%, transparent);
+  --btn-sheen: color-mix(in srgb, var(--inverse) 18%, transparent);
+  background-image: linear-gradient(135deg, var(--on-inverse) 0%, color-mix(in srgb, var(--on-inverse) 70%, var(--accent-warm)) 100%);
+}
+.btn-grad::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  border: 1px solid var(--btn-line);
+  pointer-events: none;
+}
+.btn-grad::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  z-index: -1;
+  background-image: linear-gradient(105deg, transparent 0%, var(--btn-sheen) 50%, transparent 100%);
+  transform: translateX(-130%) skewX(-18deg);
+  pointer-events: none;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn-grad {
+    transition: transform var(--motion-fast) var(--ease-smooth), box-shadow var(--motion-normal) var(--ease-smooth), color var(--motion-fast);
+  }
+  .btn-grad:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--elevated-md);
+  }
+  .btn-grad:not(.btn-grad-inverse):hover {
+    background-image: var(--gradient-primary-hover);
+  }
+  .btn-grad:active {
+    transform: translateY(0) scale(0.95);
+  }
+  .btn-grad::after {
+    transition: transform 700ms var(--ease-smooth);
+  }
+  .btn-grad:hover::after {
+    transform: translateX(330%) skewX(-18deg);
+  }
+}
+
+/* Bề mặt nổi: thẻ / khối form. Gradient rất nhẹ + elevated-md, hover nâng lên elevated-lg */
+.surface-raised {
+  background-image: var(--gradient-surface);
+  box-shadow: var(--elevated-md);
+}
+/* Khối lớn lơ lửng: bóng cao nhất của thang (thẻ chủ đề, khối form đăng ký) */
+.surface-raised.surface-float {
+  box-shadow: var(--elevated-lg);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .surface-hover {
+    transition: box-shadow var(--motion-normal) var(--ease-smooth), transform var(--motion-normal) var(--ease-smooth);
+  }
+  .surface-hover:hover {
+    box-shadow: var(--elevated-lg);
+  }
+}
+/* Ảnh bài đứng trên nền: nổi lên khi hover thẻ cha (.group) */
+.img-elevated {
+  box-shadow: var(--elevated-md);
+  transition: box-shadow var(--motion-normal) var(--ease-smooth);
+}
+@media (hover: hover) {
+  .group:hover .img-elevated {
+    box-shadow: var(--elevated-lg);
+  }
+}
+
+/* Ô nhập: nghỉ (viền mảnh, icon mờ) -> hover (viền đậm hơn, con trỏ text) -> focus (viền accent + glow 3px accent ~10%, icon rõ).
+   Vòng focus bàn phím (:focus-visible) vẫn giữ nguyên; glow chỉ là lớp bổ sung. */
+.field-premium {
+  cursor: text;
+  box-shadow: var(--elevated-sm);
+  transition: box-shadow 200ms ease-in-out, border-color 180ms ease-in-out, background-color 180ms ease-in-out;
+}
+.field-premium:hover {
+  box-shadow: var(--elevated-md);
+}
+.field-premium:focus {
+  box-shadow: var(--elevated-md), 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
+  transition-duration: 240ms;
+}
+/* Ô nhập luôn khớp :focus-visible kể cả khi bấm chuột, nên phân biệt bằng data-modality trên <html>
+   (đặt bởi Newsletter: pointerdown -> "pointer", keydown -> "keyboard").
+   Bấm chuột: ẩn outline, chỉ còn viền accent + glow. Bàn phím / chưa rõ: giữ vòng focus accent, bo theo ô, cách 2px. */
+html[data-modality="pointer"] .field-premium:focus-visible {
+  outline-color: transparent;
+}
+.field-premium:focus-visible {
+  outline: var(--focus-ring-width) solid var(--accent);
+  outline-offset: var(--focus-ring-offset);
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-premium {
+    transition: none;
+  }
+}
+
+/* Dải chữ tự trôi chậm (Lộc duyệt 2026-10-07): bốn bản chữ nối nhau, dịch đúng một bản rồi lặp nên không thấy khớp nối.
+   Chỉ transform; dừng khi rê chuột / focus vào dải; tắt hẳn khi giảm chuyển động. */
+@keyframes marquee-run {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+.marquee-run {
+  animation: marquee-run 60s linear infinite;
+}
+@media (hover: hover) {
+  .marquee-wrap:hover .marquee-run {
+    animation-play-state: paused;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-run {
+    animation: none;
+  }
+}
+
+/* Đường nối giữa các dải nền (Lộc duyệt 2026-10-07): thay đường ngang / cạnh cứng bằng vùng chuyển mờ dần sang màu `paper`.
+   Gắn lên dải KHÔNG phải `paper` (paper-sunk, paper-raised): seam-top / seam-bottom / seam-both. Chiều cao vùng chuyển: --seam. */
+.seam-top,
+.seam-bottom,
+.seam-both {
+  --seam: clamp(56px, 8vw, 112px);
+}
+.seam-top {
+  background-image: linear-gradient(to bottom, var(--paper), transparent var(--seam));
+}
+.seam-bottom {
+  background-image: linear-gradient(to top, var(--paper), transparent var(--seam));
+}
+.seam-both {
+  background-image:
+    linear-gradient(to bottom, var(--paper), transparent var(--seam)),
+    linear-gradient(to top, var(--paper), transparent var(--seam));
+}
+
+/* Đáy ảnh hero cắt bằng mask "nét cọ" (mép lởm chởm như vệt cọ khô) thay cho bóng mờ.
+   Cần đặt biến --brush-url (xem brushStyle trong src/lib/brush.ts; url nằm ở style nội tuyến để bundler không xử lý).
+   Mask gồm: khối đặc phía trên + dải mép cọ cao 64px lát ngang ở đáy; phía dưới mép lộ nền trang (paper). */
+.brush-bottom {
+  --brush-h: clamp(40px, 5.5vw, 64px);
+  -webkit-mask-image: linear-gradient(#000, #000), var(--brush-url);
+  mask-image: linear-gradient(#000, #000), var(--brush-url);
+  -webkit-mask-size: 100% calc(100% - var(--brush-h) + 1px), 1200px var(--brush-h);
+  mask-size: 100% calc(100% - var(--brush-h) + 1px), 1200px var(--brush-h);
+  -webkit-mask-position: top, bottom;
+  mask-position: top, bottom;
+  -webkit-mask-repeat: no-repeat, repeat-x;
+  mask-repeat: no-repeat, repeat-x;
+}
+
+/* Chuyển trang bằng View Transitions: tắt khi giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+::view-transition-group(*) {
+  animation-duration: 450ms;
+  animation-timing-function: var(--ease-smooth);
+}
+
+/* Lắc nhẹ một lần khi ô nhập báo lỗi (không lặp) */
+@keyframes shake {
+  0%,
+  100% {
+    transform: none;
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+@utility anim-shake {
+  animation: shake 320ms var(--ease-smooth) both;
+}
+
+/* Dấu tích được "vẽ" khi gửi thành công */
+@keyframes draw-stroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@utility draw-check {
+  & path {
+    stroke-dasharray: 26;
+    stroke-dashoffset: 26;
+    animation: draw-stroke 520ms var(--ease-smooth) 160ms forwards;
+  }
+}
+
+/* ===== Hero Trang chủ cá nhân: cánh cửa mở đầu trang (HeroCurtain; chỉ transform + opacity, chạy một lần) =====
+   Cánh trái xoay quanh mép trái, cánh phải quanh mép phải, đều xoay về phía người xem tới 100 độ rồi dừng.
+   Bật giảm chuyển động: quy tắc chung ở trên rút thời lượng còn 0,01ms nên cửa mở sẵn ngay khi vẽ. */
+@keyframes door-open-l {
+  to {
+    transform: translateZ(140px) rotateY(-104deg);
+  }
+}
+@keyframes door-open-r {
+  to {
+    transform: translateZ(140px) rotateY(104deg);
+  }
+}
+/* Ánh sáng ấm lộ ra sau khe cửa rồi tan dần; cả cảnh lùi xa rồi tiến lại gần (dolly) */
+@keyframes light-out {
+  0%,
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes dolly-in {
+  from {
+    transform: translateZ(-380px) scale(0.9);
+  }
+  to {
+    transform: none;
+  }
+}
+/* Sau khi cửa mở xong, ẩn hẳn lớp cửa (visibility) để chắc chắn không còn chặn bấm / chạm */
+@keyframes curtain-gone {
+  0% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+@utility anim-curtain-gone {
+  animation: curtain-gone 100ms linear forwards;
+  animation-delay: 2700ms;
+}
+@utility anim-light {
+  animation: light-out 2000ms var(--ease-smooth) both;
+  animation-delay: var(--delay, 250ms);
+}
+@utility anim-dolly {
+  animation: dolly-in 2200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 250ms);
+}
+@utility anim-door-l {
+  transform-origin: left center;
+  animation: door-open-l 1500ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation-delay: var(--delay, 700ms);
+}
+@utility anim-door-r {
+  transform-origin: right center;
+  animation: door-open-r 1500ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation-delay: var(--delay, 700ms);
+}
+
+/* Chân dung Hero Trang chủ cá nhân: phóng nhẹ từ lớn về đúng cỡ khi cửa mở */
+@keyframes person-in {
+  from {
+    opacity: 0;
+    transform: scale(1.08) translateY(3%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility anim-person {
+  animation: person-in 1400ms var(--ease-smooth) both;
+  animation-delay: var(--delay, 450ms);
+}

@@ -1,4 +1,4 @@
-# Layout 3 trang — chỉ mục và phần dùng chung
+# Layout 4 trang — chỉ mục và phần dùng chung
 
 Nguồn: wireframe thang xám do Lộc cung cấp (2026-10-07). Wireframe CHỈ cho cấu trúc và hành vi;
 màu, chữ, bo góc, đổ bóng lấy từ Design System (`docs/design-system/`), không lấy từ wireframe.
@@ -7,7 +7,8 @@ màu, chữ, bo góc, đổ bóng lấy từ Design System (`docs/design-system/
 |---|---|---|---|---|
 | Chi tiết bài | `chi-tiet-bai/` | 1 (đích của quảng cáo) | `README.md` | `Main.dc.html` |
 | Blog | `blog/` | 2 | `README.md` | `Blog.dc.html` |
-| Trang chủ | `trang-chu/` | 3 | `README.md` | `Home.dc.html` |
+| Trang chủ (thương hiệu cá nhân, `/`) | `trang-chu/` | 3 | `README.md` | `Intro.dc.html` |
+| Book (Trang chủ cũ, `/book`) | `book/` | 4 | `README.md` | `Home.dc.html` |
 
 Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `README.md` (spec) + mockup, rồi thêm một dòng vào bảng trên.
 
@@ -21,30 +22,39 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 ## Điểm chuyển mốc chung (đã khớp Design System)
 | Mốc | Thanh đầu trang | Ghi chú |
 |---|---|---|
-| 375 / 414 | Logo trái · tìm kiếm (icon) + ☾ + ☰ bên phải | Lề 24px |
-| 768 | Menu (Trang chủ · Blog) căn giữa, ☰ ẩn | Lề 32px |
+| 375 / 414 | ☰ + Logo bên trái · tìm kiếm (icon) + ☾ bên phải; ☰ mở ngăn kéo menu từ trái (xem dưới) | Lề 24px |
+| 768 | Menu (Trang chủ · Book · Blog) căn giữa, ☰ ẩn | Lề 32px |
 | 1024 | Ô tìm kiếm mở rộng ("Tìm bài viết") | |
 | 1440 | Như 1024 | Khung nội dung tối đa 1120px; dải nền vẫn tràn hết chiều rộng |
 
 ## Khối dùng chung ở cả 3 trang (làm MỘT component, không viết bản thứ hai)
 
 ### Nav (`SiteHeader`)
-- Logo (nút, có dấu hiệu `mark`) · menu: Trang chủ, Blog (trang hiện tại có trạng thái `on`) · tìm kiếm · nút đổi theme (☾) · ☰ (chỉ dưới 768).
+- Logo (nút, có dấu hiệu `mark`) · menu: Trang chủ, Book, Blog (trang hiện tại có trạng thái `on`) · tìm kiếm · nút đổi theme (☾) · ☰ (chỉ dưới 768).
 - Nằm trong dải nền đầu trang của từng trang (Trang chủ: `paper-sunk` cùng Hero; Blog: dải tối cùng Hero; Chi tiết bài: dải riêng).
 - Mọi nút ≥ 44x44px, cách nhau ≥ 8px; nút icon có `aria-label` ("Tìm kiếm", "Đổi theme", "Menu").
+- Menu ngăn kéo dưới 768px (`MobileMenu`, cập nhật 2026-10-10): trượt từ trái, rộng 70% màn hình (tỉ lệ 70 / 30, bên phải 30% còn thấy nội dung), KHÔNG phủ tối phần bên phải (vẫn thấy nội dung); bấm ra ngoài, Esc hoặc ☰ để đóng. Mỗi mục có icon + chữ cao 44px; các nhóm cách nhau bằng đường kẻ ngang tự vẽ; mục có danh sách con (Blog → các chủ đề, có đường dọc bên trái nối từ icon mục cha) thu gọn sẵn, bấm mới xổ, đóng menu thì thu lại. Dữ liệu từ `navGroups` trong `src/config/site.ts`: thêm trang = thêm 1 dòng vào nhóm (hoặc thêm nhóm mới), icon tra ở `NavIcon.tsx`.
+
+### Nút chính (mọi trang)
+- Gradient `gradient-primary` (accent → accent-warm), viền sáng trong 1px, vệt sáng quét + nổi `elevated-md` khi hover (chỉ chuột, tắt khi giảm chuyển động). Khối form / thẻ dùng `surface-raised`; ô nhập `field-premium` có icon. Đã duyệt 2026-10-07, xem `docs/design-system/EXTENSIONS.md`. Nút phụ giữ nền quét phẳng.
+
+### Đường nối giữa các dải nền (2026-10-07)
+- Không dùng đường kẻ ngang cứng hay cạnh đổi màu đột ngột giữa các dải: dải `paper-sunk` / chân trang `paper-raised` có vùng chuyển mờ về `paper` ở mép tiếp giáp (lớp `seam-*`). Dải chữ trang chủ không còn viền trên / dưới. Hero trang Blog và ảnh hero trang bài thì cắt đáy bằng mask nét cọ (`brush-bottom`), không dùng bóng mờ.
 
 ### Newsletter (form đăng ký)
 - Chữ: nhãn "Bản tin", tiêu đề "Nhận bài mới qua email", dek "Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.", 3 gạch đầu dòng: "Ý chính, ví dụ và cách áp dụng" · "Đọc trong khoảng 10 phút" · "Hủy đăng ký bất cứ lúc nào".
-- Form: tiêu đề "Đăng ký nhận bài"; trường **Họ tên**, **Số điện thoại**, **Email** (Email chiếm cả hàng); nút chính "Đăng ký" rộng hết khung; dòng nhỏ "Chỉ gửi bài mới, không quảng cáo."
+- Form: tiêu đề "Đăng ký nhận bài"; trường **Họ tên**, **Số điện thoại** (**nhãn nổi**: nằm trong ô như placeholder, khi focus hoặc đã nhập thì thu nhỏ bay lên đè viền trên; nhãn luôn một dòng; "Tùy chọn" là chữ riêng hiện cùng hàng nhãn, ở mép phải viền trên, khi ô nổi nhãn), **Email** (chiếm cả hàng), mỗi ô có icon đầu ô; nút chính "Đăng ký" rộng hết khung; dòng nhỏ "Chỉ gửi bài mới, không quảng cáo."
+- Tương tác (đã duyệt, xem `docs/design-system/EXTENSIONS.md`): hover đổi viền / nền ô; focus: icon đổi màu + gạch nhấn chạy; lỗi lắc một lần; thành công: dấu tích được vẽ; vòng trang trí trôi theo con trỏ.
 - Có phần trang trí (`deco`).
 - 375: chữ rồi form, mỗi ô một hàng · 768: Họ tên và Số điện thoại cùng một hàng · 1024+: chữ trái, form phải.
 - Dải nền: `paper` (Design System cho phép `paper-sunk` hoặc `inverse`); khối bo `radius-lg`.
 - Lỗi: biểu tượng + chữ giải thích cách sửa + viền dày (Design System); không báo lỗi chỉ bằng màu.
 
 ### Footer (`SiteFooter`)
-- Hàng 1: Logo · menu (Trang chủ, Blog) · 7 icon mạng xã hội (YouTube, TikTok, Facebook, Instagram, LinkedIn, X, Zalo).
+- Hàng 1: Logo · menu (Trang chủ, Book, Blog) · 7 icon mạng xã hội (YouTube, TikTok, Facebook, Instagram, LinkedIn, X, Zalo).
 - Hàng 2: "© 2026 Logo. Ghi chép kiến thức từ sách." · Điều khoản · Chính sách.
 - 375: xếp dọc (logo, menu, mạng xã hội, pháp lý) · 768+: logo trái · menu giữa · 7 icon phải.
+- Icon mạng xã hội: chip tròn 44px, icon 24px (chi tiết: `trang-chu/README.md`).
 - 7 icon x 44px + 6 khe x 8px = 356px, lớn hơn bề rộng khả dụng ở 375px (327px sau lề 24px): phải xuống 2 hàng hoặc cuộn ngang; Lộc chốt khi dựng.
 - Dải nền `paper-raised`.
 
