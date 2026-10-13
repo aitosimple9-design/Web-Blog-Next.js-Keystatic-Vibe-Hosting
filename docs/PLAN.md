@@ -1,0 +1,153 @@
+# Kế hoạch — LỘC_WEBSITE BLOG
+
+File dùng chung cho 2 repo. Mỗi repo tự đánh dấu tiến độ của mình.
+- `[A]` chỉ áp dụng cho `web_blog` (server + Keystatic)
+- `[B]` chỉ áp dụng cho `web_blog_static` (xuất tĩnh + Sveltia)
+- Không ghi gì = áp dụng cho cả hai
+
+Claude cập nhật checkbox trong chính PR hoàn thành việc đó. Mỗi giai đoạn chỉ bắt đầu khi giai đoạn trước đã xong.
+
+---
+
+## Mục tiêu
+Blog kiến thức nâng cao từ sách, làm trang đích cho traffic quảng cáo:
+- Tải nhanh, SEO chuẩn, giữ chân người đọc ngay màn hình đầu
+- Giao diện chuyên nghiệp, khác biệt so với các blog hiện có
+- Dựng hoàn chỉnh trên máy trước; chỉ trả tiền tên miền + hosting khi deploy
+- So sánh 2 phương án A và B, sau đó chọn 1 để vận hành chính thức
+
+Phạm vi trang (3 trang), cả ba phải được thiết kế UI/UX tối ưu để thu hút người đọc:
+1. **Trang chủ**
+2. **Trang Blog** (danh sách bài)
+3. **Trang chi tiết nội dung** (bài viết) — có **form đăng ký**
+
+Form đăng ký (`Newsletter`: Họ tên, Số điện thoại, Email) làm thành **component tái sử dụng** — một nơi định nghĩa, dùng ở cả 3 trang theo layout đã duyệt.
+
+Layout từng trang (wireframe + spec) nằm ở `docs/layout/` (mỗi trang một thư mục con: `chi-tiet-bai/`, `blog/`, `trang-chu/`). Thứ tự ưu tiên: Chi tiết bài → Blog → Trang chủ.
+
+## Quyết định đang chờ (Claude KHÔNG tự chọn)
+| # | Quyết định | Đề xuất | Cần trước giai đoạn |
+|---|---|---|---|
+| Q1 | Hệ điều hành máy làm việc (Windows / macOS) | **Windows** (chốt 2026-10-06) | 0 |
+| Q2 | TypeScript hay JavaScript | TypeScript | 1 |
+| Q3 | Tailwind hay CSS Modules | **Tailwind CSS, bản mới nhất** (chốt 2026-10-06; kiểm tra số phiên bản lúc cài) | 1 |
+| Q4 | npm hay pnpm | npm | 1 |
+| Q5 | Phiên bản Next.js (A: kiểm tra lỗi Keystatic GitHub mode trên Next.js 16) | — | 1 |
+| Q6 | Thư viện đọc frontmatter / render Markdown | **Dùng cả 2** (đọc frontmatter + render Markdown); tên thư viện cụ thể: hỏi trước khi cài ở GĐ2 (chốt 2026-10-06) | 2 |
+| Q7 | Tên thật của 3 danh mục | **Làm demo trước**; danh mục nằm ở một chỗ cấu hình, sửa / thêm được khi cần (chốt 2026-10-06). Lưu ý: wireframe mẫu dùng 5 chủ đề, CLAUDE.md mục 5 còn ghi 3 → đồng bộ khi dựng (đổi cấu trúc bài ⇒ hỏi, đồng bộ sang dự án B) | 2 |
+| Q8 | Font dự phòng hiển thị đủ dấu tiếng Việt | **Theo Design System** trong `docs/design-system/` (Blog Book Mono: Source Serif 4 + Be Vietnam Pro, subset `vietnamese`) (chốt 2026-10-06) | 3 |
+| Q9 | Nhà cung cấp hosting [A] / thiết lập Cloudflare [B] | — | 8 |
+| Q10 | Tên miền | — | 8 |
+| Q11 | Form đăng ký (Họ tên + Số điện thoại + Email) gửi đi đâu, lưu ở đâu; trường nào bắt buộc; câu đồng ý dữ liệu cá nhân | — | 3 (giao diện) / 4 (kết nối) |
+| Q12 | Ô tìm kiếm trên thanh đầu trang: làm chức năng ngay hay chỉ dựng giao diện (PLAN cũ xếp tìm kiếm vào sau ra mắt) | — | 3 |
+| Q13 | Blog: URL từng chủ đề / từng trang; số bài mỗi trang cố định (đề xuất 6) hay đổi 2 / 4 / 6 theo màn hình; có tab "Tất cả" không | — | 4 |
+| Q14 | Tên blog, logo, link 7 mạng xã hội, trang Điều khoản / Chính sách; 7 icon x 44px không vừa hàng ở 375px (xuống 2 hàng hay cuộn) | — | 3 |
+
+Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ngày, và cập nhật mục "Stack" trong CLAUDE.md.
+
+---
+
+## Giai đoạn 0 — Nền móng repo
+- [x] Trả lời Q1 (Windows)
+- [x] Chép layout 3 trang vào `docs/layout/` (wireframe + spec, mỗi trang một thư mục)
+- [x] Chép Design System "Blog Book Mono" vào `docs/design-system/` (`README.md`, `DESIGN-SYSTEM.md`, `tokens.json`)
+- [x] Thêm `docs/WORKFLOW.md`, `docs/PLAN.md`, `docs/claude-log.md` (rỗng)
+- [x] Thêm `.claude/settings.json` (luật chặn quyền + hook)
+- [x] Thêm `.github/ISSUE_TEMPLATE/task.md` và `.github/pull_request_template.md`
+- [ ] Tạo nhãn theo Phụ lục C của WORKFLOW.md
+- [ ] (Mình làm) Bật Ruleset bảo vệ `main` nếu tài khoản hỗ trợ
+- [x] Kiểm tra `/mcp`: GitHub và Playwright đều `connected`
+- [ ] [B] Tạo repo `web_blog_static` và thêm vào GitHub token
+
+**Xong khi:** `/memory` hiển thị CLAUDE.md, `/mcp` kết nối đủ, có Issue mẫu đầu tiên.
+
+## Giai đoạn 1 — Khởi tạo Next.js
+- [ ] Chốt Q2 → Q5
+- [ ] Tạo project bằng `create-next-app` trong repo hiện tại (không tạo thư mục con)
+- [ ] Cấu trúc thư mục đúng mục 3 CLAUDE.md
+- [ ] [B] `output: 'export'`, `images: { unoptimized: true }`
+- [ ] `npm run dev`, `npm run lint`, `npm run build` đều chạy được
+- [ ] `.gitignore` có `.env*`, `node_modules`, `.next`, `out`
+
+**Xong khi:** trang mặc định chạy, build không lỗi, PR đã merge.
+
+## Giai đoạn 2 — Lớp nội dung
+- [ ] Chốt Q6, Q7
+- [ ] `src/lib/posts.ts`: lấy danh sách bài, lấy 1 bài theo slug, lọc theo danh mục, bỏ bài `draft: true`
+- [ ] Kiểm tra dữ liệu: thiếu trường bắt buộc → build báo lỗi rõ ràng (không im lặng bỏ qua)
+- [ ] 3 bài mẫu, mỗi danh mục 1 bài, dùng chung cho A và B
+- [ ] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local
+- [ ] [B] `public/admin/index.html` + `config.yml` khớp mục 5 CLAUDE.md
+- [ ] Thử: sửa bài qua CMS trên máy → file `.md` thay đổi đúng định dạng
+
+**Xong khi:** tạo / sửa bài qua CMS được, `posts.ts` đọc được cả 3 bài mẫu.
+
+## Giai đoạn 3 — Design system trong code
+- [x] Chốt Q8 (theo Design System)
+- [ ] Token màu, chữ, khoảng cách, bo góc lấy từ `docs/design-system/tokens.json` (CSS variables), ánh xạ vào theme Tailwind
+- [ ] Hai theme Giấy / Đêm: nút chuyển theme, nhớ lựa chọn, không nháy sáng khi tải
+- [ ] Layout gốc: global nav, footer
+- [ ] Component cơ bản: nút chính, nút phụ, card bài viết, nhãn danh mục
+- [ ] Component `Newsletter` (form đăng ký) tái sử dụng được, đủ trạng thái (mặc định, lỗi, thành công)
+- [ ] Component dùng chung theo `docs/layout/README.md`: `SiteHeader` (có tìm kiếm, nút theme, ☰), `SiteFooter` (7 icon mạng xã hội), `Slider` (chấm + nút ‹ ›), `SocialIcons`, `SearchBox`
+- [ ] Component riêng từng trang (làm khi dựng trang đó): xem mục "Component cần dựng" trong spec của trang
+- [ ] `design-reviewer` duyệt bộ component
+
+**Xong khi:** có 1 trang demo hiển thị đủ component, đạt ở 375 / 414 / 768 / 1024 / 1440px.
+
+## Giai đoạn 4 — Các trang
+Layout đã duyệt nằm ở `docs/layout/<trang>/README.md`. Làm theo thứ tự ưu tiên (mỗi trang một Issue):
+- [ ] Trang chi tiết bài — `docs/layout/chi-tiet-bai/` (ưu tiên 1; đích của quảng cáo; 1 layout cho mọi chủ đề, có `Newsletter`)
+- [ ] Trang Blog — `docs/layout/blog/` (Hero theo chủ đề, danh sách, phân trang; cần chốt Q13 trước)
+  - [B] lọc phía trình duyệt hoặc route tĩnh riêng cho từng chủ đề, không dùng `searchParams` phía server
+- [ ] Trang chủ — `docs/layout/trang-chu/` (trang đích: hiểu ngay blog nói về gì, 1 CTA chính "Đọc bài mới nhất")
+- [ ] Trang 404 (ngoài 3 trang chính, làm sau cùng)
+
+Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `design-reviewer`.
+
+## Giai đoạn 5 — SEO
+- [ ] `metadata` / `generateMetadata` cho mọi trang
+- [ ] Open Graph + ảnh chia sẻ mặc định
+- [ ] `sitemap.ts`, `robots.ts` (bỏ bài nháp)
+- [ ] Dữ liệu có cấu trúc (JSON-LD) cho bài viết
+- [ ] [B] sitemap và robots được sinh thành file tĩnh trong `out/`
+
+**Xong khi:** xem nguồn trang có đủ thẻ meta, `/sitemap.xml` liệt kê đúng bài.
+
+## Giai đoạn 6 — Chất lượng
+- [ ] Lighthouse trên trang chủ và 1 trang bài (bản build): Performance, Accessibility, SEO, Best Practices ≥ 90
+- [ ] Kiểm tra bàn phím và trình đọc màn hình theo skill `frontend-a11y`
+- [ ] Ảnh có kích thước đúng, không làm nhảy bố cục
+- [ ] (Mình làm) Thêm CI chạy lint + build cho mỗi PR — Claude soạn file workflow, mình commit
+
+**Xong khi:** đạt ngưỡng Lighthouse và CI xanh.
+
+## Giai đoạn 7 — So sánh A và B
+- [ ] Ghi vào `docs/so-sanh-A-B.md`:
+  - Thời gian làm từng giai đoạn
+  - Số lỗi trong `claude-log.md`
+  - Trải nghiệm viết bài qua CMS
+  - Điểm Lighthouse
+  - Chi phí vận hành dự kiến mỗi tháng
+- [ ] (Mình chốt) Chọn A hoặc B để vận hành chính thức
+
+## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
+- [ ] Chốt Q9, Q10
+- [ ] [A] Keystatic chuyển sang GitHub mode (GitHub App/OAuth + biến môi trường)
+- [ ] [A] Deploy lên hosting Node.js đã chọn
+- [ ] [B] Deploy lên Cloudflare + Worker `sveltia-cms-auth` + GitHub OAuth App
+- [ ] Gắn tên miền, HTTPS
+- [ ] Gửi sitemap lên Google Search Console
+- [ ] Thử viết 1 bài trên web thật qua CMS → web tự cập nhật
+
+Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **mình thao tác** trên hosting, DNS, secret.
+
+---
+
+## Lộ trình sau khi ra mắt (chưa làm — mỗi mục cần Issue và quyết định riêng)
+- Form đăng ký nhận bài mới qua email
+- Tìm kiếm bài viết
+- Theo dõi chuyển đổi từ quảng cáo (pixel / analytics)
+- Bình luận
+- Nâng cấp backend lên WordPress Headless — chỉ khi cần thành viên, nhiều người viết hoặc bán hàng.
+  Nhờ `src/lib/posts.ts` là nơi duy nhất đọc bài, việc chuyển chủ yếu là viết lại file này và nhập bài vào WordPress.
