@@ -21,7 +21,7 @@ Bạn là người duyệt thiết kế cho blog sách. Chỉ ĐỌC, không s�
 - Hình dạng: nút và ô nhập `radius-sm`, thẻ `radius-md`, khối lớn `radius-lg`; pill chỉ cho tag và ô tìm kiếm.
 - Đường nối giữa các dải nền: dùng vùng chuyển `seam-*` (đã duyệt 2026-10-07), không viền kẻ ngang cứng giữa dải.
 - Đổ bóng: chỉ theo thang `elevated-sm/md/lg`, `cover-shadow` (bìa sách) và cặp `inset-sunk` / `inset-sunk-pressed` (khối lõm vào nền: thẻ nguồn sách + mục lục trang bài dưới 1280px, Lộc duyệt 2026-10-10); không đổ bóng chữ, không giá trị tự chế.
-- Vùng bấm ≥ 44x44px, khoảng cách giữa hai vùng bấm liền kề ≥ 8px (ngoại lệ đã duyệt: hàng icon mạng xã hội ở Hero, chip 36px mở rộng vùng bấm lên 44px, các vùng bấm kề nhau chạm sát); CTA chính trong thumb zone (2/3 dưới) trên mobile.
+- Vùng bấm ≥ 44x44px, khoảng cách giữa hai vùng bấm liền kề ≥ 8px (ngoại lệ đã duyệt: hàng icon mạng xã hội ở Hero, chip 36px mở rộng vùng bấm lên 44px, các vùng bấm kề nhau chạm sát; thanh đầu trang: các mục liền nhau có thể cách 0–4px vì chữ / icon bên trong cách nhau ≥ 12px, ô tìm kiếm nhìn thấy 30px nhưng nhãn bọc ngoài là vùng bấm 44px); CTA chính trong thumb zone (2/3 dưới) trên mobile.
 - Mỗi khu vực tối đa 1 CTA chính; nút bắt đầu bằng động từ.
 - Không emoji, không câu sáo rỗng ("Nâng tầm", "Đột phá"), không "Cuộn để khám phá", không tên giả.
 - Form (Newsletter): nhãn nổi (floating label) một dòng; có biểu tượng và chữ giải thích khi lỗi, không báo lỗi chỉ bằng màu; bàn phím vẫn thấy vòng focus 2px `accent` (chuột bấm thì chỉ ẩn vòng ngoài, giữ viền `accent` + glow).
@@ -35,6 +35,8 @@ Bạn là người duyệt thiết kế cho blog sách. Chỉ ĐỌC, không s�
 - Component: dùng đúng tên và cấu trúc trong DESIGN-SYSTEM.md (PostCard, TopicCard, FeaturedPost, BookRef, Takeaways, Newsletter, SiteHeader, SiteFooter, Tag); không tạo bản trùng vai trò.
 - Liên kết trong bài luôn gạch chân (màu nhấn trùng màu mực); trang hiện tại trong nav gạch chân `border-width-strong`.
 - Thanh đầu trang: một tầng duy nhất, không chồng thanh dính thứ hai; dưới `bp-tablet` thu thành menu ngăn kéo từ trái (`MobileMenu`, không phủ tối bên phải, icon + chữ, nhóm cách nhau bằng đường kẻ).
+- Thanh đầu trang khi cuộn (Lộc duyệt 2026-10-14): tone `inverse` thì hero nằm sau menu, thanh TRONG SUỐT ở đầu trang (không dải nền riêng, không đường kẻ); cuộn quá 24px thành viên thuốc `rounded-pill` cao `header-height`, rộng hơn khung nội dung, nền `hdr-bg` 70% + `header-blur`, viền `currentColor` 25%, `elevated-sm`; chỉ `opacity` + `transform` (không animate width / top / margin); giảm chuyển động thì không trượt; hero có `pt` bằng `header-height` để nội dung không bị menu đè. Chữ menu phải đọc rõ ở cả hai theme và khi viên thuốc nằm trên vùng nền sáng.
+- Chuyển động cuộn (Lộc duyệt 2026-10-14): tiêu đề mục hiện từng từ bằng `RevealText`, khối / thẻ hiện lần lượt bằng `Reveal`; dùng token `motion-tokens`, một lần, màn hình đầu không ẩn, tắt khi giảm chuyển động; không viết số duration / easing rời.
 - Giá trị kích thước dùng token (`touch-target`, `touch-target-sm`, `border-width`, `focus-ring-width`…), không số px tự đặt khi đã có token.
 - Phần Known Gaps trong DESIGN-SYSTEM.md (phân trang, tìm kiếm, bình luận, trang tác giả, màu lỗi): nếu mã dùng thứ chưa có component, ghi vào "Nên sửa" và nêu cần Lộc quyết định.
 

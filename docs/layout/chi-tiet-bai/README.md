@@ -7,7 +7,7 @@ Một layout cho mọi chủ đề (không còn 3 layout theo danh mục).
 > (2) nền thẻ **Bài liên quan** là hình chữ nhật DỌC 3:4 bo góc (bố cục bên trong giữ như wireframe). Spec dưới đây là bản ĐANG ÁP DỤNG; khi lệch với `Main.dc.html` thì theo spec này.
 
 ## Thứ tự khối (từ trên xuống)
-1. **Nav** — dải riêng, dính trên cùng
+1. **Nav** — dính trên cùng, tone tối `inverse`, TRONG SUỐT ở đầu trang: ảnh hero kéo lên nằm sau menu (hero cộng thêm `header-height` vào chiều cao và đệm trên); cuộn xuống thành viên thuốc (2026-10-14)
 2. **Hero** — ảnh bìa bài **tràn hết bề ngang** (cao tối thiểu `clamp(560px, 52vw, 680px)`), trôi chậm hơn nội dung khi cuộn (thị sai),
    ảnh "bay" mượt từ thẻ bài sang đây khi bấm (View Transition). **Cập nhật 2026-10-07 (Lộc yêu cầu):** nhãn chủ đề, tiêu đề `h1` serif (hiện từng chữ), dek, meta "03 tháng 10, 2026 · 8 phút đọc" nằm
    **chính giữa trên ảnh** (căn giữa ngang và dọc), KHÔNG có khối nền riêng bên dưới. Ảnh phủ lớp `inverse` 62% (màu phẳng) để chữ `on-inverse` đọc rõ (ngoại lệ chữ trên ảnh thứ bảy).
