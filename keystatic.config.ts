@@ -5,8 +5,12 @@ import { collection, config, fields } from "@keystatic/core";
 import { topics } from "@/config/topics";
 
 export default config({
-  // Giai đoạn hiện tại chỉ dùng local. Chuyển sang { kind: 'github', repo } là việc deploy (PR riêng).
-  storage: { kind: "local" },
+  // Chọn chế độ lưu bằng NEXT_PUBLIC_KEYSTATIC_STORAGE ("github" | "local", mặc định local).
+  // Phải có tiền tố NEXT_PUBLIC_ vì trang /keystatic chạy ở trình duyệt, cần cùng giá trị với server.
+  storage:
+    process.env.NEXT_PUBLIC_KEYSTATIC_STORAGE === "github"
+      ? { kind: "github", repo: "aitosimple9-design/Web-Blog-Next.js-Keystatic-Vibe-Hosting" }
+      : { kind: "local" },
   ui: { brand: { name: "Blog sách" } },
   collections: {
     posts: collection({
