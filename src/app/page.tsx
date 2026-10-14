@@ -16,6 +16,7 @@ import { PrincipleCards } from "@/components/about/PrincipleCards";
 import { BookShelf } from "@/components/about/BookShelf";
 import { PostCard } from "@/components/blog/PostCard";
 import { Reveal } from "@/components/ui/Reveal";
+import { RevealText } from "@/components/ui/RevealText";
 import { CountUp } from "@/components/ui/Motion";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 
@@ -43,7 +44,7 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }} />
 
       <section
-        className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse text-on-inverse"
+        className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse pt-(--header-height) text-on-inverse"
         style={brushStyle}
         aria-label="Giới thiệu"
       >
@@ -82,7 +83,7 @@ export default function HomePage() {
         <div className="wrap">
           <Reveal className="flex flex-wrap items-end justify-between gap-x-s5 gap-y-s3">
             <h2 id="featured-title" className="type-display-lg text-balance">
-              Bài tiêu biểu
+              <RevealText text="Bài tiêu biểu" />
             </h2>
             <Link href="/blog" className="type-label tap inline-flex items-center gap-s2 text-accent underline underline-offset-(--underline-offset)">
               Xem tất cả bài viết
@@ -107,7 +108,7 @@ export default function HomePage() {
             Kết nối
           </p>
           <h2 id="connect-title" className="type-display-lg mt-s3 text-balance">
-            Kết nối với mình
+            <RevealText text="Kết nối với mình" />
           </h2>
           <p className="type-ui-body mx-auto mt-s4 max-w-lg text-pretty text-ink-faint">
             Mình đăng ghi chép mới mỗi tuần. Theo dõi mình ở nền tảng bạn hay dùng, hoặc nhận bài thẳng qua email ngay bên dưới.

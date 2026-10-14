@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { profile, story } from "@/config/profile";
 import { Reveal } from "@/components/ui/Reveal";
+import { RevealText } from "@/components/ui/RevealText";
 import { ScrollParallax } from "@/components/ui/Motion";
 
 export function StorySection() {
@@ -15,7 +16,7 @@ export function StorySection() {
             Câu chuyện
           </p>
           <h2 id="story-title" className="type-display-lg mt-s3 text-balance tablet:text-center desktop:text-left">
-            {story.title}
+            <RevealText text={story.title} />
           </h2>
         </Reveal>
 

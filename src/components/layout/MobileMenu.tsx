@@ -78,7 +78,7 @@ export function MobileMenu({ id, open, pathname }: { id: string; open: boolean; 
     <div
       id={id}
       inert={!open}
-      className={`absolute top-full left-0 h-[calc(100dvh-var(--header-height))] w-[70vw] overflow-y-auto overscroll-contain bg-(--hdr-bg) shadow-elevated-md transition-[transform,visibility] duration-(--motion-normal) ease-(--ease-smooth) motion-reduce:transition-none tablet:hidden ${
+      className={`absolute top-full left-0 h-[calc(100dvh-var(--header-height))] w-[70vw] group-data-[scrolled=true]/hdr:top-[calc(100%+var(--space-3)+var(--space-4))] group-data-[scrolled=true]/hdr:h-[calc(100dvh-var(--header-height)-var(--space-3)-var(--space-4))] overflow-y-auto overscroll-contain bg-(--hdr-bg) shadow-elevated-md transition-[transform,visibility] duration-(--motion-normal) ease-(--ease-smooth) motion-reduce:transition-none tablet:hidden ${
         open ? "visible translate-x-0" : "invisible -translate-x-full"
       }`}
     >

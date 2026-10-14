@@ -72,14 +72,14 @@ export default async function ArticlePage({ params }: Props) {
   };
 
   return (
-    <PageShell tone="paper">
+    <PageShell tone="inverse">
       <ScrollProgress />
       <article>
         {/* HERO: ảnh tràn hết bề ngang, chủ đề / tiêu đề / mô tả / ngày nằm GIỮA ảnh (không có nền riêng bên dưới);
             lớp phủ `inverse` 55% (màu phẳng) giữ chữ dễ đọc; đáy cắt bằng mask nét cọ */}
         <section aria-label="Đầu bài">
           <div
-            className="on-inverse brush-bottom relative isolate min-h-[clamp(560px,52vw,680px)] w-full overflow-hidden bg-inverse text-on-inverse"
+            className="on-inverse brush-bottom relative isolate min-h-[calc(clamp(560px,52vw,680px)+var(--header-height))] w-full overflow-hidden bg-inverse text-on-inverse"
             style={brushStyle}
           >
             <div className="absolute inset-0 -z-20">
@@ -96,7 +96,7 @@ export default async function ArticlePage({ params }: Props) {
               />
             </div>
             <div aria-hidden className="absolute inset-0 -z-10 bg-inverse/62" />
-            <div className="wrap flex min-h-[inherit] flex-col items-center justify-center pt-s8 pb-[calc(var(--brush-h)+var(--space-9))]">
+            <div className="wrap flex min-h-[inherit] flex-col items-center justify-center pt-[calc(var(--header-height)+var(--space-8))] pb-[calc(var(--brush-h)+var(--space-9))]">
               <ArticleHeader post={post} />
               <Breadcrumb
                 center

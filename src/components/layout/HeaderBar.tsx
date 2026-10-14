@@ -1,6 +1,7 @@
 "use client";
 
 // Thanh đầu trang (SiteHeader): dính trên cùng, nền mờ, MỘT tầng duy nhất.
+// Cuộn quá SCROLL_THRESHOLD: thanh phẳng mờ đi, "viên thuốc" bo tròn nổi lên (chỉ opacity + transform, hai lớp nền chồng nhau).
 // <768px: ☰ + Logo trái · tìm kiếm + ☾ phải, ☰ mở ngăn kéo menu (MobileMenu) · 768px+: menu căn giữa, ☰ ẩn · 1024px+: ô tìm kiếm mở rộng.
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +13,17 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBox, type SearchItem } from "@/components/layout/SearchBox";
 
 export type HeaderTone = "paper" | "sunk" | "inverse";
+
+// Cuộn xuống quá ngưỡng này (px) thì thanh đầu trang chuyển sang dạng viên thuốc
+const SCROLL_THRESHOLD = 24;
+
+// Kính mờ dùng chung cho hai lớp nền (token header-*)
+const glass =
+  "bg-[color-mix(in_srgb,var(--hdr-bg)_var(--header-backdrop-opacity),transparent)] backdrop-blur-(--header-blur) backdrop-saturate-(--header-backdrop-saturate)";
+
+// Viên thuốc trong suốt hơn thanh phẳng: nền chỉ 70% (nội dung phía sau lờ mờ hiện qua lớp kính), vẫn làm mờ bằng token header-blur
+const pillGlass =
+  "bg-[color-mix(in_srgb,var(--hdr-bg)_70%,transparent)] backdrop-blur-(--header-blur) backdrop-saturate-(--header-backdrop-saturate)";
 
 const tones: Record<HeaderTone, { bg: string; text: string; border: string }> = {
   paper: { bg: "var(--paper)", text: "text-ink", border: "border-b-(length:--border-width) border-rule" },
@@ -35,10 +47,21 @@ function Logo() {
 export function HeaderBar({ tone, searchIndex }: { tone: HeaderTone; searchIndex: SearchItem[] }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const panelId = useId();
   const root = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const t = tones[tone];
+  // Trang có dải đầu trang tối (inverse): hero kéo lên nằm SAU menu, thanh menu trong suốt nên chìm vào nền hero.
+  const overlay = tone === "inverse";
+
+  // Theo dõi vị trí cuộn; chỉ đổi state khi vượt ngưỡng nên không vẽ lại liên tục
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > SCROLL_THRESHOLD);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   // Đóng menu khi đổi trang, khi bấm ra ngoài hoặc nhấn Esc
   const [lastPath, setLastPath] = useState(pathname);
@@ -72,9 +95,23 @@ export function HeaderBar({ tone, searchIndex }: { tone: HeaderTone; searchIndex
     <header
       ref={root}
       style={{ "--hdr-bg": t.bg } as React.CSSProperties}
-      className={`sticky top-0 z-50 ${t.text} ${t.border} bg-[color-mix(in_srgb,var(--hdr-bg)_var(--header-backdrop-opacity),transparent)] backdrop-blur-(--header-blur) backdrop-saturate-(--header-backdrop-saturate)`}
+      data-scrolled={scrolled}
+      className={`group/hdr sticky top-0 z-50 ${t.text} ${overlay ? "-mb-(--header-height)" : ""}`}
     >
-      <div className="wrap relative grid h-(--header-height) grid-cols-[1fr_auto] items-center gap-s2 tablet:grid-cols-[1fr_auto_1fr]">
+      {/* Lớp 1: thanh phẳng toàn bề ngang (đầu trang) — mờ đi khi cuộn. Tông tối: không vẽ, để hero lộ ra phía sau */}
+      {!overlay && (
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute inset-0 -z-10 ${t.border} ${glass} transition-opacity duration-(--motion-normal) ease-(--ease-smooth) group-data-[scrolled=true]/hdr:opacity-0`}
+        />
+      )}
+      {/* Cuộn xuống: cả hàng nội dung + viên thuốc hạ xuống space-3 (khoảng nổi 12px so với mép trên, viên thuốc cao bằng thanh menu) */}
+      <div className="wrap relative grid h-(--header-height) grid-cols-[1fr_auto] items-center gap-s2 transition-transform duration-(--motion-normal) ease-(--ease-smooth) group-data-[scrolled=true]/hdr:translate-y-s3 motion-reduce:transition-none tablet:grid-cols-[1fr_auto_1fr]">
+        {/* Lớp 2: viên thuốc bo tròn, nổi bằng elevated-sm — hiện lên và hạ nhẹ vào chỗ khi cuộn */}
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute -inset-x-s3 inset-y-0 tablet:-inset-x-s5 -z-10 rounded-pill border-(length:--border-width) border-current/25 opacity-0 shadow-elevated-sm -translate-y-s1 ${pillGlass} transition-[opacity,transform] duration-(--motion-normal) ease-(--ease-smooth) group-data-[scrolled=true]/hdr:translate-y-0 group-data-[scrolled=true]/hdr:opacity-100 motion-reduce:translate-y-0`}
+        />
         <div className="flex items-center gap-s2 justify-self-start">
           <button
             ref={menuButton}
