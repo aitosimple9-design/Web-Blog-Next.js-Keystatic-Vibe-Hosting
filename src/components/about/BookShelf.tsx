@@ -5,6 +5,7 @@ import { shelf } from "@/config/profile";
 import { topicBySlug } from "@/config/topics";
 import { brushStyle } from "@/lib/brush";
 import { Reveal } from "@/components/ui/Reveal";
+import { RevealText } from "@/components/ui/RevealText";
 import { Slider } from "@/components/ui/Slider";
 import { BookCover } from "@/components/ui/Media";
 import { ArrowRightIcon } from "@/components/ui/Icon";
@@ -38,7 +39,7 @@ export function BookShelf() {
       <div className="wrap">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 id="shelf-title" className="type-display-lg text-balance">
-            {shelf.title}
+            <RevealText text={shelf.title} />
           </h2>
           <p className="type-ui-body mx-auto mt-s4 max-w-lg text-pretty text-on-inverse-soft">{shelf.dek}</p>
         </Reveal>

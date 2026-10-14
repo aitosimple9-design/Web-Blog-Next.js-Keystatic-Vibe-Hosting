@@ -4,6 +4,7 @@
 // chỉ phần nằm dưới màn hình đầu mới được ẩn rồi hiện lại. Tắt hoàn toàn khi bật "giảm chuyển động".
 import { animate } from "motion/react";
 import { useEffect, useRef, type ReactNode } from "react";
+import { motionTokens } from "@/lib/motion-tokens";
 
 export function Reveal({
   children,
@@ -27,7 +28,7 @@ export function Reveal({
     if (rect.top < window.innerHeight * 0.92) return;
 
     el.style.opacity = "0";
-    el.style.transform = "translateY(14px)";
+    el.style.transform = `translateY(${motionTokens.distance.lg}px)`;
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -36,7 +37,7 @@ export function Reveal({
           animate(
             el,
             { opacity: 1, transform: "translateY(0px)" },
-            { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] },
+            { duration: motionTokens.duration.slow, delay, ease: motionTokens.easing.smooth },
           ).then(() => {
             el.style.opacity = "";
             el.style.transform = "";

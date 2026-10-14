@@ -1,5 +1,6 @@
 // Khung trang: SiteHeader (đúng tông dải nền đầu trang) + nội dung + SiteFooter.
-// Header đặt NGOÀI các dải để dính (sticky) suốt trang; màu nền header trùng dải đầu trang nên liền mạch.
+// Header đặt NGOÀI các dải để dính (sticky) suốt trang. Tone `inverse`: hero kéo lên nằm sau menu, thanh trong suốt ở đầu trang
+// (mỗi hero chừa `pt` bằng `header-height`); các tone khác vẽ thanh phẳng. Cuộn xuống thì thành viên thuốc (xem HeaderBar).
 import { getAllPosts } from "@/lib/posts";
 import { topicBySlug } from "@/config/topics";
 import { HeaderBar, type HeaderTone } from "@/components/layout/HeaderBar";

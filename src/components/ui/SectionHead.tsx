@@ -1,6 +1,7 @@
 // Tiêu đề mục căn giữa: tiêu đề, dek, rồi đường kẻ ngang có họa tiết hình thoi ở giữa (cùng ngôn ngữ với dải chữ trang chủ).
 // Họa tiết chỉ trang trí (aria-hidden), chỉ dùng token màu; hai đường kẻ mở rộng ra hai bên khi mục vào màn hình.
 import { Reveal } from "@/components/ui/Reveal";
+import { RevealText } from "@/components/ui/RevealText";
 
 /** `left`: họa tiết ở đầu trái, đường kẻ chạy hết bề ngang (dùng khi tiêu đề căn trái, vd. trang Blog) */
 export function Ornament({ align = "center" }: { align?: "center" | "left" }) {
@@ -76,14 +77,19 @@ export function SectionHead({
   dek: string;
 }) {
   return (
-    <Reveal className="mx-auto max-w-2xl text-center">
+    // Hiện theo thứ tự: tiêu đề (từng từ) → dòng mô tả → họa tiết; không bọc cả khối để tránh hai chuyển động chồng nhau
+    <div className="mx-auto max-w-2xl text-center">
       <h2 id={id} className="type-display-lg text-balance">
-        {title}
+        <RevealText text={title} />
       </h2>
-      <p className="type-ui-body mx-auto mt-s4 max-w-lg text-pretty text-ink-faint">
-        {dek}
-      </p>
-      <Ornament />
-    </Reveal>
+      <Reveal delay={0.3}>
+        <p className="type-ui-body mx-auto mt-s4 max-w-lg text-pretty text-ink-faint">
+          {dek}
+        </p>
+      </Reveal>
+      <Reveal delay={0.45}>
+        <Ornament />
+      </Reveal>
+    </div>
   );
 }

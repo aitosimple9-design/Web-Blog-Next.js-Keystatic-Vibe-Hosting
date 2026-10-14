@@ -31,9 +31,13 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 
 ### Nav (`SiteHeader`)
 - Logo (nút, có dấu hiệu `mark`) · menu: Trang chủ, Book, Blog (trang hiện tại có trạng thái `on`) · tìm kiếm · nút đổi theme (☾) · ☰ (chỉ dưới 768).
-- Nằm trong dải nền đầu trang của từng trang (Trang chủ: `paper-sunk` cùng Hero; Blog: dải tối cùng Hero; Chi tiết bài: dải riêng).
+- Dính trên cùng. Trang có hero tối (Trang chủ `/`, `/book`, Blog, Chi tiết bài; tone `inverse`): hero kéo lên nằm SAU menu, thanh menu TRONG SUỐT ở đầu trang nên hòa vào hero (không dải nền riêng, cập nhật 2026-10-14). Trang không có hero tối (404) giữ thanh phẳng nền `paper` + viền dưới.
 - Mọi nút ≥ 44x44px, cách nhau ≥ 8px; nút icon có `aria-label` ("Tìm kiếm", "Đổi theme", "Menu").
+- Cuộn quá 24px (cập nhật 2026-10-14): thanh thành VIÊN THUỐC bo tròn, cao 48px, rộng hơn khung nội dung 24px mỗi bên (dưới 768px chỉ 12px để không chạm mép màn hình), cách mép trên 12px, nền 70% + làm mờ, viền mảnh, bóng `elevated-sm`; hai lớp nền mờ qua lại (chỉ `opacity` + `transform`), giảm chuyển động thì chỉ bỏ phần trượt. Menu ngăn kéo điện thoại hạ theo, cách viên thuốc 16px.
 - Menu ngăn kéo dưới 768px (`MobileMenu`, cập nhật 2026-10-10): trượt từ trái, rộng 70% màn hình (tỉ lệ 70 / 30, bên phải 30% còn thấy nội dung), KHÔNG phủ tối phần bên phải (vẫn thấy nội dung); bấm ra ngoài, Esc hoặc ☰ để đóng. Mỗi mục có icon + chữ cao 44px; các nhóm cách nhau bằng đường kẻ ngang tự vẽ; mục có danh sách con (Blog → các chủ đề, có đường dọc bên trái nối từ icon mục cha) thu gọn sẵn, bấm mới xổ, đóng menu thì thu lại. Dữ liệu từ `navGroups` trong `src/config/site.ts`: thêm trang = thêm 1 dòng vào nhóm (hoặc thêm nhóm mới), icon tra ở `NavIcon.tsx`.
+
+### Chuyển động khi cuộn (2026-10-14)
+- Tiêu đề mục hiện TỪNG TỪ khi cuộn tới (`RevealText`); khối và thẻ hiện lần lượt (`Reveal`, `delay` theo thứ tự). Màn hình đầu không ẩn; không JS vẫn hiện đủ; tắt khi giảm chuyển động. Chi tiết ở `docs/design-system/EXTENSIONS.md`.
 
 ### Nút chính (mọi trang)
 - Gradient `gradient-primary` (accent → accent-warm), viền sáng trong 1px, vệt sáng quét + nổi `elevated-md` khi hover (chỉ chuột, tắt khi giảm chuyển động). Khối form / thẻ dùng `surface-raised`; ô nhập `field-premium` có icon. Đã duyệt 2026-10-07, xem `docs/design-system/EXTENSIONS.md`. Nút phụ giữ nền quét phẳng.

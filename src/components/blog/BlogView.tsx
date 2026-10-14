@@ -17,6 +17,7 @@ import { TopicHero } from "@/components/blog/TopicHero";
 import { PostCard } from "@/components/blog/PostCard";
 import { Pagination } from "@/components/blog/Pagination";
 import { Reveal } from "@/components/ui/Reveal";
+import { RevealText } from "@/components/ui/RevealText";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Ornament } from "@/components/ui/SectionHead";
 import type { Metadata } from "next";
@@ -69,7 +70,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
           className="anim-page -z-20 object-cover grayscale-[40%]"
         />
         <div aria-hidden className="absolute inset-0 -z-10 bg-inverse/80" />
-        <div className="wrap relative pt-s4 tablet:pt-s5">
+        <div className="wrap relative pt-[calc(var(--header-height)+var(--space-4))] tablet:pt-[calc(var(--header-height)+var(--space-5))]">
           {/* Tiêu đề "Blog" và dòng giới thiệu ẩn khỏi mắt nhìn (vẫn có cho trình đọc màn hình và SEO) */}
           <h1 className="sr-only">Blog</h1>
           <p className="sr-only">
@@ -111,7 +112,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
           <div className="mb-s6">
             <div className="flex flex-wrap items-center justify-between gap-x-s5 gap-y-s3">
               <h2 id="post-list-title" className="type-display-lg text-balance">
-                Bài viết trong {topic.name}
+                <RevealText text={`Bài viết trong ${topic.name}`} />
               </h2>
               <p className="type-caption inline-flex shrink-0 items-baseline gap-1 rounded-pill border-(length:--border-width) border-rule-strong bg-accent-soft px-s4 py-s1 text-accent-soft-ink">
                 <span className="type-ui-strong tabular-nums">
