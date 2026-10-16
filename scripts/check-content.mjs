@@ -201,6 +201,29 @@ for (const p of posts) {
   }
 }
 
+// ---------- Trang chủ (content/pages/trang-chu.json): ảnh còn file, tủ sách trỏ tới sách / chủ đề còn tồn tại ----------
+{
+  const where = "content/pages/trang-chu.json";
+  const home = readJson(where);
+  if (existsSync(resolve(root, where)) && !home) err(where, "không đọc được (JSON hỏng)");
+  if (home) {
+    for (const k of ["portrait", "storyImage"]) {
+      if (str(home[k]) && !publicFile(home[k])) err(where, `file ảnh không tồn tại (${k}): ${home[k]}`);
+    }
+    const bookSlugs = new Set(files("content/books", ".json").map((f) => f.slice(0, -5)));
+    for (const [i, b] of (Array.isArray(home.shelf?.books) ? home.shelf.books : []).entries()) {
+      if (!b?.book) err(where, `tủ sách mục ${i + 1}: chưa chọn sách`);
+      else if (!bookSlugs.has(b.book)) err(where, `tủ sách mục ${i + 1}: sách "${b.book}" không còn trong mục Sách`);
+      if (b?.topic && !topicSlugs.has(b.topic)) warn(where, `tủ sách mục ${i + 1}: chủ đề "${b.topic}" không còn, bìa sẽ không bấm được`);
+    }
+    for (const k of ["name", "positioning"]) {
+      if (/\[mẫu\]/.test(str(home[k]))) warn(where, `"${k}" vẫn là chữ [mẫu]`);
+    }
+    const sample = JSON.stringify(home).match(/\[mẫu\]/g)?.length ?? 0;
+    if (sample) infos.push(`${where}: còn ${sample} chỗ chữ [mẫu] cần thay bằng nội dung thật trước khi chạy quảng cáo`);
+  }
+}
+
 // ---------- ảnh mồ côi (quy tắc dùng chung ở src/lib/content-cleanup.ts) ----------
 try {
   const { findOrphanImages } = await import("../src/lib/content-cleanup.ts");

@@ -1,10 +1,11 @@
 // Khối "Cách mình đọc": 4 thẻ nguyên tắc đánh số (cùng ngôn ngữ với mục lục trang bài).
 // 375: 1 cột · 768: lưới 2x2 · 1024+: 4 thẻ một hàng. Thẻ nhấc lên khi rê chuột (chỉ trên thiết bị có chuột).
-import { principles } from "@/config/profile";
+import { getHomePage } from "@/lib/pages";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 
 export function PrincipleCards() {
+  const { principles } = getHomePage();
   return (
     <section aria-labelledby="principles-title" className="bg-paper-sunk py-s8 text-ink tablet:py-s9">
       <div className="wrap">

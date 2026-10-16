@@ -17,11 +17,24 @@ export const IMAGE_RULES = [
   { contentDir: "content/books/", ext: ".json", imageDir: "public/images/covers" },
 ] as const;
 
-/** Ảnh của các singleton ở "Cài đặt" (ảnh chia sẻ, logo...): file nằm phẳng trong thư mục, được nhắc tới trong bất kỳ content/settings/*.json */
-export const SINGLETON_IMAGE_RULE = { contentDir: "content/settings", ext: ".json", imageDir: "public/images/site" } as const;
+/**
+ * Ảnh của các singleton: file nằm phẳng trong thư mục ảnh, được nhắc tới trong BẤT KỲ file .json nào của `contentDir`.
+ *  - "Cài đặt" (ảnh chia sẻ, logo...): content/settings → public/images/site
+ *  - "Trang" (chân dung, ảnh Câu chuyện...): content/pages → public/images/profile
+ */
+export const SINGLETON_IMAGE_RULES = [
+  { contentDir: "content/settings", ext: ".json", imageDir: "public/images/site" },
+  { contentDir: "content/pages", ext: ".json", imageDir: "public/images/profile" },
+] as const;
+
+/**
+ * Ảnh MẶC ĐỊNH mà mã dùng khi ô ảnh trong admin để trống (src/config/profile.ts). Không file .json nào nhắc tới chúng nên nếu không bảo vệ,
+ * gỡ ảnh trong admin sẽ làm quét ảnh mồ côi xóa luôn ảnh mặc định → trang vỡ ảnh. tests/unit/admin-sync.test.ts bắt buộc khớp với profile.ts.
+ */
+export const PROTECTED_IMAGES: string[] = ["/images/profile/portrait-cutout.webp", "/images/profile/story.jpg"];
 
 /** Mọi thư mục ảnh mà trang quản trị ghi vào; mỗi `directory` của `fields.image` trong keystatic.config.ts phải nằm trong danh sách này */
-export const MANAGED_IMAGE_DIRS: string[] = [...IMAGE_RULES.map((r) => r.imageDir), SINGLETON_IMAGE_RULE.imageDir];
+export const MANAGED_IMAGE_DIRS: string[] = [...IMAGE_RULES.map((r) => r.imageDir), ...SINGLETON_IMAGE_RULES.map((r) => r.imageDir)];
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -82,7 +95,7 @@ const mentioned = (text: string, publicPath: string) => text.includes(publicPath
  * Tìm ảnh mồ côi:
  *  - thư mục ảnh theo slug mà bài / chủ đề / sách tương ứng không còn → cả thư mục;
  *  - file ảnh trong thư mục của một mục còn tồn tại nhưng nội dung của mục đó không nhắc tới (đã thay / gỡ ảnh);
- *  - file trong public/images/site mà không file content/settings/*.json nào nhắc tới.
+ *  - file trong thư mục ảnh của singleton (public/images/site, public/images/profile) mà không file .json nào của thư mục nội dung tương ứng nhắc tới.
  * An toàn: một file chỉ bị coi là mồ côi khi đường dẫn công khai của nó không xuất hiện trong nội dung chủ.
  */
 export function findOrphanImages(root = process.cwd()): OrphanImage[] {
@@ -104,14 +117,16 @@ export function findOrphanImages(root = process.cwd()): OrphanImage[] {
       }
     }
   }
-  const settingsText = listDir(path.resolve(root, SINGLETON_IMAGE_RULE.contentDir))
-    .filter((f) => f.isFile() && f.name.endsWith(SINGLETON_IMAGE_RULE.ext))
-    .map((f) => readText(path.resolve(root, SINGLETON_IMAGE_RULE.contentDir, f.name)) ?? "")
-    .join("\n");
-  const siteBase = SINGLETON_IMAGE_RULE.imageDir.replace(/^public/, "");
-  for (const f of listDir(path.resolve(root, SINGLETON_IMAGE_RULE.imageDir))) {
-    if (f.isFile() && !mentioned(settingsText, `${siteBase}/${f.name}`)) {
-      out.push({ path: `${SINGLETON_IMAGE_RULE.imageDir}/${f.name}`, kind: "file" });
+  for (const r of SINGLETON_IMAGE_RULES) {
+    const jsonText = listDir(path.resolve(root, r.contentDir))
+      .filter((f) => f.isFile() && f.name.endsWith(r.ext))
+      .map((f) => readText(path.resolve(root, r.contentDir, f.name)) ?? "")
+      .join("\n");
+    const base = r.imageDir.replace(/^public/, "");
+    for (const f of listDir(path.resolve(root, r.imageDir))) {
+      if (f.isFile() && !PROTECTED_IMAGES.includes(`${base}/${f.name}`) && !mentioned(jsonText, `${base}/${f.name}`)) {
+        out.push({ path: `${r.imageDir}/${f.name}`, kind: "file" });
+      }
     }
   }
   return out;
@@ -122,4 +137,45 @@ export async function removeOrphanImages(root = process.cwd()): Promise<OrphanIm
   const orphans = findOrphanImages(root);
   await removeImageFolders(orphans.map((o) => o.path), root);
   return orphans;
+}
+
+/**
+ * Xóa sách / chủ đề trong admin thì Trang chủ không được giữ tham chiếu treo (Keystatic không tự gỡ relationship):
+ * mục tủ sách trỏ tới sách đã xóa bị gỡ; chủ đề đã xóa thì bỏ liên kết chủ đề của mục đó (bìa vẫn hiện, không bấm được).
+ * Trả về true nếu đã sửa file.
+ */
+export function removeHomeReferences(update: Update, root = process.cwd()): boolean {
+  const gone = { books: new Set<string>(), topics: new Set<string>() };
+  for (const d of update.deletions ?? []) {
+    const m = /^content\/(books|topics)\/([^/]+)\.json$/.exec(d.path.replace(/\\/g, "/"));
+    if (m && SLUG.test(m[2])) gone[m[1] as "books" | "topics"].add(m[2]);
+  }
+  if (gone.books.size === 0 && gone.topics.size === 0) return false;
+  const file = path.resolve(root, "content", "pages", "trang-chu.json");
+  const text = readText(file);
+  if (text === null) return false;
+  let data: { shelf?: { books?: { book?: string | null; topic?: string | null }[] } };
+  try {
+    data = JSON.parse(text);
+  } catch {
+    return false;
+  }
+  const books = data.shelf?.books;
+  if (!Array.isArray(books)) return false;
+  let changed = false;
+  const kept = books.filter((b) => {
+    const drop = typeof b?.book === "string" && gone.books.has(b.book);
+    if (drop) changed = true;
+    return !drop;
+  });
+  for (const b of kept) {
+    if (typeof b?.topic === "string" && gone.topics.has(b.topic)) {
+      b.topic = null;
+      changed = true;
+    }
+  }
+  if (!changed) return false;
+  data.shelf!.books = kept;
+  fsSync.writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
+  return true;
 }
