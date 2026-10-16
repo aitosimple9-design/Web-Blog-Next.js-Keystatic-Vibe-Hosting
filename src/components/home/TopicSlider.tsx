@@ -1,4 +1,5 @@
 // Thanh trượt chủ đề (dải paper). Thẻ tỉ lệ 3:4, ảnh nền, khung chữ nền đặc, nổi bằng elevated-*. 375: 1 thẻ lộ mép thẻ kế · 768: ~2,5 thẻ · 1024+: 4 thẻ nguyên vẹn, ‹ › xem thẻ thứ 5.
+import type { BookPageTexts } from "@/config/page-texts";
 import Image from "next/image";
 import Link from "next/link";
 import type { Topic } from "@/lib/topics";
@@ -61,18 +62,16 @@ function TopicCard({
 export function TopicSlider({
   topics,
   counts,
+  text,
 }: {
   topics: Topic[];
   counts: Record<string, number>;
+  text: BookPageTexts["topics"];
 }) {
   return (
     <section aria-labelledby="topics-title" className="bg-paper text-ink">
       <div className="wrap band-y">
-        <SectionHead
-          id="topics-title"
-          title="Chủ đề"
-          dek="Chọn một chủ đề để đọc các bài ghi chép liên quan. Vuốt ngang để xem thêm."
-        />
+        <SectionHead id="topics-title" title={text.title} dek={text.dek} />
         <div className="@container mt-s6">
           <Slider
             label="Danh sách chủ đề"

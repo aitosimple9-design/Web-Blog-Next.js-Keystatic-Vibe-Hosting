@@ -7,7 +7,16 @@ import { flushSync } from "react-dom";
 import type { Heading } from "@/lib/posts";
 import { ChevronDownIcon } from "@/components/ui/Icon";
 
-export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; variant?: "inline" | "sidebar" }) {
+export function TOC({
+  headings,
+  variant = "sidebar",
+  label = "Mục lục",
+}: {
+  headings: Heading[];
+  variant?: "inline" | "sidebar";
+  /** Nhãn "Mục lục" lấy từ Keystatic (Trang bài viết); nơi gọi (server) truyền vào */
+  label?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [instant, setInstant] = useState(false);
   const [active, setActive] = useState(headings[0]?.id ?? "");
@@ -116,7 +125,7 @@ export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; va
   // Dưới 1024px (variant "inline"): hàng "Mục lục ▾" nằm TRONG thẻ chung với nguồn sách (khung do page.tsx đặt), bấm xổ danh sách ngay trong thẻ.
   if (variant === "inline") {
     return (
-      <nav aria-label="Mục lục">
+      <nav aria-label={label}>
         <button
           type="button"
           aria-expanded={open}
@@ -125,7 +134,7 @@ export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; va
           className="type-button tap flex w-full items-center justify-between gap-s3 px-s4 text-ink"
         >
           <span className="inline-flex items-center gap-s3">
-            Mục lục
+            {label}
             <span className="type-caption rounded-pill bg-accent-soft px-s2 py-[2px] tabular-nums text-accent-soft-ink">
               {headings.length}
             </span>
@@ -151,7 +160,7 @@ export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; va
     // Từ 1024px chính <nav> là phần tử dính: khối cha của nó (ô lưới ở page.tsx) cao hết bài nên mới có chỗ để trượt.
     // Nếu đặt sticky vào phần tử con bên trong nav (cao đúng bằng nội dung) thì mục lục không bao giờ dính.
     <nav
-      aria-label="Mục lục"
+      aria-label={label}
       className="sticky top-[calc(var(--header-height)+var(--space-6))]"
     >
       {/* Mục lục dài hơn màn hình thì tự cuộn trong khối này.
@@ -162,7 +171,7 @@ export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; va
             aria-hidden
             className="block size-1.5 rotate-45 rounded-[1px] bg-accent-warm"
           />
-          Mục lục
+          {label}
           <span className="tabular-nums normal-case opacity-80">
             · {headings.length}
           </span>

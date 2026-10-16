@@ -1,0 +1,34 @@
+{
+  "title": "Book",
+  "description": "",
+  "hero": {
+    "titleLine1": "Điều đọng lại",
+    "titleLine2": "sau mỗi cuốn sách",
+    "dek": "Mỗi bài ghi chép một cuốn sách: ý chính, ví dụ và cách áp dụng.",
+    "ctaLabel": "Đọc bài mới nhất",
+    "followLabel": "Theo dõi",
+    "featuredEyebrow": "Bài nổi bật",
+    "featuredFallback": "Xem tất cả bài viết",
+    "statPosts": "Bài viết",
+    "statTopics": "Chủ đề",
+    "statBooks": "Cuốn sách",
+    "backdropWord": "Đọc"
+  },
+  "marquee": [
+    "Đọc",
+    "Ghi chép",
+    "Suy ngẫm",
+    "Áp dụng",
+    "Nhớ lâu"
+  ],
+  "topics": {
+    "title": "Chủ đề",
+    "dek": "Chọn một chủ đề để đọc các bài ghi chép liên quan. Vuốt ngang để xem thêm."
+  },
+  "latest": {
+    "title": "Bài viết mới nhất",
+    "dek": "Những bài ghi chép mới đăng gần đây.",
+    "totalLabel": "Bài viết đã đăng",
+    "allLabel": "Xem tất cả"
+  }
+}

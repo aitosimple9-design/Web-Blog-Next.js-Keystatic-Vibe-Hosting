@@ -43,3 +43,6 @@ Mockup: `Home.dc.html` (cùng thư mục). Route: `/book`. Từ 2026-10-11 Trang
 - Hero trên mobile: CTA có nằm trong thumb zone (2/3 dưới) khi tải trang? Thứ tự mockup đặt CTA sau ảnh, kiểm tra ở 375 và 414.
 - 7 icon: nút 44x44px cách nhau ≥ 8px (hàng 7 icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 sốở 375px: 7×44 + 6×8 = 356px, vượt chiều rộng khả dụng 327px của khung 375 có lề 24px ⇒ phải xuống 2 hàng hoặc cuộn; Lộc chốt).
 - Cả hai theme; 5 mốc + điểm giữa.
+
+
+> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/lib/pages.ts`); chữ mặc định ở `src/config/page-texts.ts`.

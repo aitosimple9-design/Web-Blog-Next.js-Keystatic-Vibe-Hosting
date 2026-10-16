@@ -1,0 +1,19 @@
+{
+  "heading": "Blog",
+  "intro": "Các bài ghi chép theo từng cuốn sách và chủ đề. Chọn một chủ đề để xem danh sách bài của chủ đề đó.",
+  "hero": {
+    "eyebrow": "Chủ đề",
+    "ctaLabel": "Đọc bài mới nhất",
+    "statPosts": "Bài viết",
+    "statBooks": "Cuốn sách",
+    "statMinutes": "Phút đọc TB"
+  },
+  "titleSuffix": "Blog",
+  "pageLabel": "trang {page}",
+  "breadcrumb": {
+    "home": "Trang chủ",
+    "blog": "Blog"
+  },
+  "listTitle": "Bài viết trong {topic}",
+  "emptyText": "Chủ đề này chưa có bài viết. Hãy quay lại sau nhé."
+}

@@ -4,6 +4,10 @@
 import { collection, config, fields, singleton } from "@keystatic/core";
 import { POST_FIELD_LABELS } from "@/lib/seo-fields";
 
+// Ô chữ ngắn: nhãn + giới hạn ký tự (+ nhiều dòng nếu cần). Dùng cho các singleton chữ ở nhóm "Trang".
+const t = (label: string, max: number, multiline = false) =>
+  fields.text({ label, multiline, validation: { length: { max } } });
+
 export default config({
   // Chọn chế độ lưu bằng NEXT_PUBLIC_KEYSTATIC_STORAGE ("github" | "local", mặc định local).
   // Phải có tiền tố NEXT_PUBLIC_ vì trang /keystatic chạy ở trình duyệt, cần cùng giá trị với server.
@@ -14,7 +18,7 @@ export default config({
   ui: {
     brand: { name: "Blog sách" },
     // Menu trái chia nhóm
-    navigation: { "Nội dung": ["posts", "topics", "books"], "Trang": ["homePage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
+    navigation: { "Nội dung": ["posts", "topics", "books"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
   },
   singletons: {
     // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
@@ -345,6 +349,109 @@ export default config({
           },
           { label: "Khối Kết nối (hàng icon mạng xã hội lấy ở Cài đặt site)" },
         ),
+      },
+    }),
+    // Trang Book (/book): chữ Hero, dải chữ chạy, tiêu đề các khối (đọc bởi getBookPage ở src/lib/pages.ts). Ô để trống thì dùng chữ mặc định.
+    bookPage: singleton({
+      label: "Trang Book",
+      path: "content/pages/book",
+      format: "json",
+      schema: {
+        title: t("Tiêu đề tab trình duyệt (hiện thành: <tiêu đề> — <tên site>; mặc định: Book)", 40),
+        description: t("Mô tả trang khi chia sẻ (≤ 160 ký tự; để trống = dùng mô tả của Cài đặt site)", 160, true),
+        hero: fields.object(
+          {
+            titleLine1: t("Tiêu đề lớn, dòng 1 (mặc định: Điều đọng lại)", 40),
+            titleLine2: t("Tiêu đề lớn, dòng 2 (mặc định: sau mỗi cuốn sách)", 40),
+            dek: t("Dòng mô tả dưới tiêu đề", 160, true),
+            ctaLabel: t("Chữ nút chính (mặc định: Đọc bài mới nhất)", 30),
+            followLabel: t("Chữ phía trên hàng icon mạng xã hội (mặc định: Theo dõi)", 30),
+            featuredEyebrow: t("Nhãn thẻ bài nổi bật (mặc định: Bài nổi bật)", 30),
+            featuredFallback: t("Chữ thẻ khi chưa có bài nào (mặc định: Xem tất cả bài viết)", 50),
+            statPosts: t("Nhãn số bài viết (mặc định: Bài viết)", 20),
+            statTopics: t("Nhãn số chủ đề (mặc định: Chủ đề)", 20),
+            statBooks: t("Nhãn số cuốn sách (mặc định: Cuốn sách)", 20),
+            backdropWord: t("Chữ khổng lồ nét viền làm họa tiết nền Hero (nên ngắn, ≤ 6 ký tự; mặc định: Đọc)", 6),
+          },
+          { label: "Hero đầu trang" },
+        ),
+        marquee: fields.array(fields.text({ label: "Từ", validation: { isRequired: true, length: { max: 24 } } }), {
+          label: "Dải chữ chạy dưới Hero (tối đa 8 từ; để trống = dùng 5 từ mặc định)",
+          itemLabel: (p) => p.value,
+          validation: { length: { max: 8 } },
+        }),
+        topics: fields.object(
+          {
+            title: t("Tiêu đề khối (mặc định: Chủ đề)", 60),
+            dek: t("Mô tả dưới tiêu đề", 200, true),
+          },
+          { label: "Khối Chủ đề (danh sách chủ đề tự lấy từ mục Chủ đề)" },
+        ),
+        latest: fields.object(
+          {
+            title: t("Tiêu đề khối (mặc định: Bài viết mới nhất)", 60),
+            dek: t("Mô tả dưới tiêu đề", 200, true),
+            totalLabel: t("Nhãn dưới tổng số bài (mặc định: Bài viết đã đăng)", 40),
+            allLabel: t("Chữ nút xem tất cả (mặc định: Xem tất cả)", 30),
+          },
+          { label: "Khối Bài viết mới nhất (bài tự lấy từ mục Bài viết)" },
+        ),
+      },
+    }),
+    // Trang Blog (/blog và từng chủ đề): chữ giới thiệu, nhãn Hero chủ đề, tiêu đề danh sách (đọc bởi getBlogPage).
+    blogPage: singleton({
+      label: "Trang Blog",
+      path: "content/pages/blog",
+      format: "json",
+      schema: {
+        heading: t("Tiêu đề trang cho trình đọc màn hình và công cụ tìm kiếm (không hiện ra mắt nhìn; mặc định: Blog)", 40),
+        intro: t("Đoạn giới thiệu cho trình đọc màn hình và công cụ tìm kiếm (không hiện ra mắt nhìn)", 240, true),
+        hero: fields.object(
+          {
+            eyebrow: t("Nhãn nhỏ phía trên tên chủ đề (mặc định: Chủ đề)", 30),
+            ctaLabel: t("Chữ nút chính (mặc định: Đọc bài mới nhất)", 30),
+            statPosts: t("Nhãn số bài viết (mặc định: Bài viết)", 20),
+            statBooks: t("Nhãn số cuốn sách (mặc định: Cuốn sách)", 20),
+            statMinutes: t("Nhãn số phút đọc trung bình (mặc định: Phút đọc TB)", 24),
+          },
+          { label: "Hero của chủ đề" },
+        ),
+        titleSuffix: t("Hậu tố tiêu đề tab của trang chủ đề: <tên chủ đề> — <hậu tố> (mặc định: Blog)", 30),
+        pageLabel: t("Nhãn tiêu đề tab khi sang trang 2, 3... (dùng {page} cho số trang; mặc định: trang {page})", 30),
+        breadcrumb: fields.object(
+          {
+            home: t("Nhãn mục đầu (mặc định: Trang chủ)", 30),
+            blog: t("Nhãn mục Blog (mặc định: Blog)", 30),
+          },
+          { label: "Đường dẫn (breadcrumb) ở trang Blog và trang bài" },
+        ),
+        listTitle: t("Tiêu đề danh sách bài (dùng {topic} để điền tên chủ đề; mặc định: Bài viết trong {topic})", 80),
+        emptyText: t("Chữ khi chủ đề chưa có bài viết nào", 160, true),
+      },
+    }),
+    // Trang bài viết (/bai-viet/<slug>): nhãn các khối quanh bài (đọc bởi getArticlePage).
+    articlePage: singleton({
+      label: "Trang bài viết",
+      path: "content/pages/bai-viet",
+      format: "json",
+      schema: {
+        sourceLabel: t("Nhãn khối nguồn sách (mặc định: Bài viết dựa trên)", 40),
+        relatedTitle: t("Tiêu đề khối bài liên quan (mặc định: Bài liên quan.)", 40),
+        relatedDek: t("Dòng phụ cạnh tiêu đề bài liên quan (mặc định: Đọc tiếp những bài cùng chủ đề.)", 80),
+        tocLabel: t("Nhãn mục lục (mặc định: Mục lục)", 24),
+      },
+    }),
+    // Trang 404 (đường dẫn không tồn tại): toàn bộ chữ (đọc bởi getNotFoundPage).
+    notFoundPage: singleton({
+      label: "Trang 404",
+      path: "content/pages/404",
+      format: "json",
+      schema: {
+        eyebrow: t("Dòng nhỏ (mặc định: Lỗi 404)", 30),
+        title: t("Tiêu đề (mặc định: Không tìm thấy trang này)", 60),
+        text: t("Đoạn mô tả", 240, true),
+        homeLabel: t("Chữ nút về Trang chủ (mặc định: Về Trang chủ)", 30),
+        blogLabel: t("Chữ nút xem Blog (mặc định: Xem Blog)", 30),
       },
     }),
   },

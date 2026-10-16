@@ -54,3 +54,6 @@ Bài liên quan: cùng `category`, trừ bài hiện tại, bỏ `draft: true`. 
 - CTA chính của trang là nút "Đăng ký" trong Newsletter; không thêm CTA chính thứ hai.
 - Hero + khối tiêu đề: tương phản đạt ở cả hai theme (khối tiêu đề nền đặc nên chữ không phụ thuộc ảnh).
 - Cả hai theme Giấy và Đêm; 5 mốc test + các điểm giữa (ví dụ 600, 900, 1200px).
+
+
+> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/lib/pages.ts`); chữ mặc định ở `src/config/page-texts.ts`.

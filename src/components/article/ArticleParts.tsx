@@ -5,6 +5,7 @@ import { formatDateLong, formatReadTime } from "@/lib/format";
 import type { PostMeta } from "@/lib/posts";
 import Image from "next/image";
 import { getBookCover } from "@/lib/books";
+import { getArticlePage } from "@/lib/pages";
 import { CoverArt } from "@/components/ui/CoverArt";
 import { BookCover } from "@/components/ui/Media";
 
@@ -80,12 +81,13 @@ export function SourceBox({
   variant?: "card" | "strip";
 }) {
   const cover = getBookCover(book);
+  const { sourceLabel } = getArticlePage();
   if (variant === "strip") {
     return (
       <aside aria-label="Nguồn sách" className={`flex items-center gap-s4 ${className}`}>
         <BookCover src={cover} seed={book} className="w-14! tablet:w-16!" />
         <div className="min-w-0">
-          <p className="type-eyebrow uppercase text-ink-faint">Bài viết dựa trên</p>
+          <p className="type-eyebrow uppercase text-ink-faint">{sourceLabel}</p>
           <p className="type-title mt-s1 text-balance text-ink">{book}</p>
           <p className="type-caption mt-s1 text-ink-soft">{author}</p>
         </div>
@@ -116,7 +118,7 @@ export function SourceBox({
       </div>
       <div aria-hidden className="absolute inset-0 -z-10 bg-inverse/45" />
       <p className="type-caption absolute top-s4 left-s4 inline-flex w-fit rounded-pill border-(length:--border-width) border-on-inverse-soft/60 bg-on-inverse/15 px-s3 py-1 whitespace-nowrap text-on-inverse">
-        Bài viết dựa trên
+        {sourceLabel}
       </p>
       <div className="min-w-0">
         <p

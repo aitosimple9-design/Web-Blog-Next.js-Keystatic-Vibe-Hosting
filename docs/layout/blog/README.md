@@ -38,3 +38,6 @@ Cùng khuôn với thẻ chủ đề Trang chủ: thẻ dọc 3:4, ảnh bài tr
 - Menu chủ đề dùng được bằng bàn phím; mục đang chọn không chỉ khác màu (gạch/vạch + `aria-pressed`).
 - Khối sáng gối lên dải tối: kiểm tra tương phản ở cả hai theme Giấy và Đêm (dải `inverse` ở theme Đêm khác theme Giấy).
 - Thumb zone: PostCard và Pagination nằm trong 2/3 dưới màn hình khi cuộn.
+
+
+> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/lib/pages.ts`); chữ mặc định ở `src/config/page-texts.ts`.

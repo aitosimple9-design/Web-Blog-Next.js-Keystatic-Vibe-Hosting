@@ -6,7 +6,7 @@
 // Chuyển động: chỉ transform, trôi nhẹ theo thanh cuộn (chữ đi lên, vòng tròn đi xuống), tắt khi giảm chuyển động, không vòng lặp.
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
-export function HeroBackdrop() {
+export function HeroBackdrop({ word = "Đọc" }: { word?: string }) {
   const reduce = useReducedMotion();
   const { scrollY } = useScroll();
   const wordY = useTransform(scrollY, [0, 700], [0, -60]);
@@ -39,7 +39,7 @@ export function HeroBackdrop() {
             vectorEffect="non-scaling-stroke"
             style={{ fontFamily: "var(--font-serif-stack)" }}
           >
-            Đọc
+            {word}
           </text>
         </svg>
       </motion.div>

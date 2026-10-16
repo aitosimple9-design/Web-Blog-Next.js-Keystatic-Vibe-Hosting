@@ -7,10 +7,21 @@ import path from "node:path";
 import { cache } from "react";
 import { imageSize } from "image-size";
 import { profile, story, principles, shelf, home } from "@/config/profile";
+import {
+  articleDefaults,
+  blogDefaults,
+  bookDefaults,
+  notFoundDefaults,
+  type ArticlePageTexts,
+  type BlogPageTexts,
+  type BookPageTexts,
+  type NotFoundPageTexts,
+} from "@/config/page-texts";
 
 const DIR = path.join(process.cwd(), "content", "pages");
 
 export const STORY_PARAGRAPHS_MAX = 8;
+export const MARQUEE_WORDS_MAX = 8;
 export const PRINCIPLES_MAX = 4;
 export const SHELF_BOOKS_MAX = 12;
 /** Vị trí cắt ảnh Câu chuyện khi khung cắt bớt ảnh (giá trị CSS object-position) */
@@ -166,3 +177,29 @@ export const getHomePage = cache((): HomePage => {
     },
   };
 });
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Các trang con (Book, Blog, Trang bài, 404): chữ lấy từ content/pages/<trang>.json, ô thiếu hoặc để trống thì dùng mặc định ở src/config/page-texts.ts.
+// ---------------------------------------------------------------------------------------------------------------------
+
+// Trộn chữ của admin vào bản mặc định: chuỗi → chuỗi không rỗng; danh sách chữ → danh sách không rỗng; nhóm → đệ quy
+function pick<T>(defaults: T, raw: unknown): T {
+  if (typeof defaults === "string") return (text(raw) ?? defaults) as T;
+  if (Array.isArray(defaults)) {
+    const list = Array.isArray(raw) ? raw.flatMap((v) => (typeof v === "string" && text(v) ? [v.trim()] : [])) : [];
+    return (list.length > 0 ? list : defaults) as T;
+  }
+  if (isObj(defaults)) {
+    const r = obj(raw);
+    return Object.fromEntries(Object.entries(defaults).map(([k, d]) => [k, pick(d, r[k])])) as T;
+  }
+  return defaults;
+}
+
+export const getBookPage = cache((): BookPageTexts => {
+  const t = pick(bookDefaults, readJson("book"));
+  return { ...t, marquee: t.marquee.slice(0, MARQUEE_WORDS_MAX) };
+});
+export const getBlogPage = cache((): BlogPageTexts => pick(blogDefaults, readJson("blog")));
+export const getArticlePage = cache((): ArticlePageTexts => pick(articleDefaults, readJson("bai-viet")));
+export const getNotFoundPage = cache((): NotFoundPageTexts => pick(notFoundDefaults, readJson("404")));

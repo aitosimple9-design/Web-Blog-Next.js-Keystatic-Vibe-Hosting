@@ -6,6 +6,7 @@ import { topicBySlug } from "@/lib/topics";
 import type { PostMeta } from "@/lib/posts";
 import { Ornament } from "@/components/ui/SectionHead";
 import { Slider } from "@/components/ui/Slider";
+import { getArticlePage } from "@/lib/pages";
 import { BookCover, PostImage } from "@/components/ui/Media";
 
 function RelatedCard({ post }: { post: PostMeta }) {
@@ -55,6 +56,7 @@ function RelatedCard({ post }: { post: PostMeta }) {
 }
 
 export function RelatedSlider({ posts }: { posts: PostMeta[] }) {
+  const { relatedTitle, relatedDek } = getArticlePage();
   if (!posts.length) return null;
   return (
     <section aria-labelledby="related-title" className="seam-both bg-paper-sunk text-ink">
@@ -64,9 +66,9 @@ export function RelatedSlider({ posts }: { posts: PostMeta[] }) {
             id="related-title"
             className="type-display-lg tablet:whitespace-nowrap"
           >
-            Bài liên quan.{" "}
+            {relatedTitle}{" "}
             <span className="type-display-md font-normal text-ink-soft">
-              Đọc tiếp những bài cùng chủ đề.
+              {relatedDek}
             </span>
           </h2>
           <Ornament align="left" />
