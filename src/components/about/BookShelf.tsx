@@ -13,17 +13,26 @@ import { ArrowRightIcon } from "@/components/ui/Icon";
 export function BookShelf() {
   const items = shelf.books.map((b) => {
     const topic = topicBySlug(b.topic);
+    // Chủ đề của sách này không (còn) có trong content/topics: hiện bìa + tên nhưng KHÔNG làm liên kết, tránh dẫn tới trang 404 và nhãn trống
+    if (!topic) {
+      return (
+        <div key={b.title}>
+          <BookCover fluid title={b.title} seed={b.title} />
+          <p className="type-label mt-s3 line-clamp-2">{b.title}</p>
+        </div>
+      );
+    }
     return (
       <Link
         key={b.title}
         href={`/blog/${b.topic}`}
         className="group lift block no-underline"
-        aria-label={`${b.title}, xem bài cùng chủ đề ${topic?.name ?? ""}`}
+        aria-label={`${b.title}, xem bài cùng chủ đề ${topic.name}`}
       >
         <BookCover fluid title={b.title} seed={b.title} />
         <p className="type-label mt-s3 line-clamp-2">{b.title}</p>
         <p className="type-caption mt-s1 inline-flex items-center gap-s1 text-on-inverse-soft">
-          {topic?.name}
+          {topic.name}
           <ArrowRightIcon size={14} className="transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:translate-x-1" />
         </p>
       </Link>

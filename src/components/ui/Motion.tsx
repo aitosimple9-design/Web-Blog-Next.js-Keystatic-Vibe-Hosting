@@ -187,7 +187,8 @@ export function ScrollParallax({
   const y = useTransform(scrollYProgress, [0, 1], [`-${amount}%`, `${amount}%`]);
   return (
     <div ref={ref} className={`overflow-hidden ${className}`}>
-      <motion.div className="size-full scale-[1.16]" style={reduce ? undefined : { y }}>
+      {/* `relative`: ảnh `fill` (absolute) bên trong cần cha có position, nếu không Next cảnh báo "parent element with invalid position" */}
+      <motion.div className="relative size-full scale-[1.16]" style={reduce ? undefined : { y }}>
         {children}
       </motion.div>
     </div>
