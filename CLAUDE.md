@@ -186,6 +186,11 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 
 ## 9. Công cụ
 - **Subagents:** `design-reviewer`, `ui-tester` (Playwright), `content-editor`, `admin-sync-reviewer` (kiểm tra nguyên tắc đồng bộ admin, mục 8); dùng `Explore` khi cần đọc nhiều file.
+- **Khi nào gọi subagent (tiết kiệm token, Lộc yêu cầu 2026-10-16):**
+  - `ui-tester` và `design-reviewer`: CHỈ khi thay đổi làm đổi DIỆN MẠO NHÌN THẤY của trang công khai (CSS, bố cục, markup, component mới, ảnh / màu / cỡ chữ). KHÔNG gọi khi chỉ đổi nguồn dữ liệu (đọc chữ / ảnh từ Keystatic), trang quản trị, script, test, tài liệu. Trang đã được `ui-tester` kiểm tra mà không đổi diện mạo thì KHÔNG chạy lại. Muốn chứng minh "mặc định giống hệt trước" thì so HTML trước / sau (`npm run build`, `curl` trang) hoặc dùng test, không chụp màn hình.
+  - Khi buộc phải gọi `ui-tester`: MỘT lượt, chỉ các trang bị đổi, 3 mốc đại diện (375, 768, 1440px) và 1 theme; chỉ mở rộng 5 mốc × 2 theme khi đổi bố cục lớn hoặc component dùng chung. Giao đúng trang, không "quét cả site".
+  - `admin-sync-reviewer`: CHỈ khi thêm / đổi cấu trúc admin (collection, singleton, ô ảnh, luật dọn ảnh) hoặc thêm nội dung mới hiển thị trên web. Không gọi cho thay đổi giao diện thuần, sửa bài, tài liệu. Test `tests/unit/admin-sync.test.ts` chạy ở CI đã chặn phần lớn lỗi.
+  - Không chạy hai agent cho cùng một việc; sửa lỗi nhỏ đã biết thì tự chạy `lint` / `test` / `build` rồi xác nhận, không gọi lại agent. Agent tập trung vào việc thiết kế / kiểm tra có giá trị, không lặp lại việc đã làm.
 - **Skills thiết kế:** `frontend-design-direction` (trước khi dựng trang mới), `make-interfaces-feel-better`,
   `frontend-a11y` (form, modal, menu), `motion-system` (khi thêm animation).
 - **Plugin:** `feature-dev` cho tính năng lớn; `code-review` trước khi mở PR; `commit-commands` cho commit/PR.
@@ -203,11 +208,11 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 
 ## 11. Định nghĩa "xong" — kiểm tra trước khi mở PR
 - [ ] `npm run lint` và `npm run build` không lỗi
-- [ ] `ui-tester`: không vỡ giao diện ở 375 / 414 / 768 / 1024 / 1440px
+- [ ] Chỉ khi ĐỔI diện mạo nhìn thấy: `ui-tester` không vỡ giao diện (3 mốc đại diện; 5 mốc khi đổi bố cục lớn). Thay đổi chỉ đổi nguồn dữ liệu / admin: bỏ qua mục này
 - [ ] Vùng bấm ≥ 44x44px, cách nhau ≥ 8px; CTA chính nằm trong thumb zone trên mobile
-- [ ] `design-reviewer`: không còn lỗi mức "phải sửa"
+- [ ] Chỉ khi ĐỔI diện mạo nhìn thấy: `design-reviewer` không còn lỗi mức "phải sửa"
 - [ ] Trang mới có đủ SEO ở mục 7
-- [ ] Nếu đụng admin / `content/` / `public/images/`: `admin-sync-reviewer` không còn vi phạm; xóa / thay ảnh trong admin đã thử thật (mục 8)
+- [ ] Nếu đổi CẤU TRÚC admin (collection / singleton / ô ảnh / luật dọn ảnh): `admin-sync-reviewer` không còn vi phạm; xóa / thay ảnh trong admin đã thử thật (mục 8)
 - [ ] Đã cập nhật checkbox trong `docs/PLAN.md`
 - [ ] Đã nói rõ: thay đổi gì, ở file nào, cách tự kiểm tra
 

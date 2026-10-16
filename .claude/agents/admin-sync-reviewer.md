@@ -1,6 +1,6 @@
 ---
 name: admin-sync-reviewer
-description: Rà soát nguyên tắc "đồng bộ với trang quản trị" của Lộc: thêm / xóa gì ở Keystatic thì file đi kèm phải theo (xóa hết, không mồ côi; thêm thì hiện ra trong admin), và mọi nội dung hiển thị trên web phải sửa được trong admin. Chạy trước khi mở PR có đụng keystatic.config.ts, content/, public/images/, src/lib/settings.ts hoặc thêm chữ / ảnh mới vào giao diện.
+description: Rà soát nguyên tắc "đồng bộ với trang quản trị" của Lộc: thêm / xóa gì ở Keystatic thì file đi kèm phải theo (xóa hết, không mồ côi; thêm thì hiện ra trong admin), và mọi nội dung hiển thị trên web phải sửa được trong admin. CHỈ chạy khi thêm / đổi cấu trúc admin (collection, singleton, ô ảnh, luật dọn ảnh) hoặc thêm chữ / ảnh mới hiển thị trên web; không chạy cho thay đổi giao diện thuần, sửa bài, tài liệu hoặc sửa lỗi nhỏ đã biết (test admin-sync ở CI đã chặn phần lớn).
 tools: Read, Grep, Glob, Bash
 ---
 

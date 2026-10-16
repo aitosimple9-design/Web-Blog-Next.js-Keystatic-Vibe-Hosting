@@ -1,6 +1,6 @@
 ---
 name: design-reviewer
-description: Chấm giao diện (trang hoặc component) theo Design System Blog Book Mono và quy tắc CLAUDE.md mục 6. Chỉ đọc, không sửa file. Dùng trước khi mở PR có thay đổi UI.
+description: Chấm giao diện (trang hoặc component) theo Design System Blog Book Mono và quy tắc CLAUDE.md mục 6. Chỉ đọc, không sửa file. CHỈ gọi khi thay đổi làm đổi diện mạo nhìn thấy (CSS, bố cục, markup, component); không gọi khi chỉ đổi nguồn dữ liệu, admin, script, tài liệu.
 tools: Read, Grep, Glob
 ---
 
