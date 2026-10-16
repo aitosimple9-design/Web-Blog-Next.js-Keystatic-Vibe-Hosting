@@ -73,7 +73,7 @@ export function TopicHero({
           <p className="type-eyebrow uppercase text-on-inverse-soft">Chủ đề</p>
           <p className="type-caption text-on-inverse-soft">{topics.length} mục</p>
         </div>
-        <ol>
+        <ol className="flex flex-col gap-s2">
           {topics.map((t, i) => {
             const active = t.slug === topic.slug;
             return (

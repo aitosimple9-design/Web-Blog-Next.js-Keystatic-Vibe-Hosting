@@ -69,7 +69,8 @@ export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; va
         className="absolute top-[19px] bottom-[19px] left-[3px] w-px origin-top bg-accent transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-reduce:transition-none"
         style={{ transform: `scaleY(${progress})` }}
       />
-      <ol className="flex flex-col">
+      {/* gap-s2: các mục cao ≥ 44px phải cách nhau ≥ 8px (CLAUDE.md mục 6) */}
+      <ol className="flex flex-col gap-s2">
         {headings.map((h, i) => {
           const on = h.id === active;
           const passed = i <= activeIndex;
@@ -139,7 +140,7 @@ export function TOC({ headings, variant = "sidebar" }: { headings: Heading[]; va
           className={`grid motion-reduce:transition-none ${instant ? "transition-none" : "transition-[grid-template-rows] duration-200"} ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
         >
           <div className="overflow-hidden">
-            <div className="px-s4 pt-s1 pb-s3">{list}</div>
+            <div className="px-s4 pt-s2 pb-s3">{list}</div>
           </div>
         </div>
       </nav>

@@ -56,7 +56,7 @@ export function TopicMenu({ topics, current }: { topics: Topic[]; current: strin
         <ul className="overflow-hidden">
           <li className="pt-s2" aria-hidden />
           {topics.map((t) => (
-            <li key={t.slug} className="mb-1">
+            <li key={t.slug} className="mb-s2">
               <Link
                 href={`/blog/${t.slug}`}
                 aria-current={t.slug === current ? "page" : undefined}
