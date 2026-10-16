@@ -3,6 +3,7 @@
 // (mỗi hero chừa `pt` bằng `header-height`); các tone khác vẽ thanh phẳng. Cuộn xuống thì thành viên thuốc (xem HeaderBar).
 import { getAllPosts } from "@/lib/posts";
 import { getNavGroups } from "@/lib/nav";
+import { getSiteSettings } from "@/lib/settings";
 import { topicBySlug } from "@/lib/topics";
 import { HeaderBar, type HeaderTone } from "@/components/layout/HeaderBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -20,7 +21,7 @@ export function PageShell({ tone = "paper", children }: { tone?: HeaderTone; chi
     // Một thẻ gốc duy nhất: nếu trả về 3 phần tử rời, Next.js sau khi chuyển trang gọi scrollIntoView trên cả
     // header / main / footer và trang bị cuộn xuống đáy (footer được cuộn tới trước).
     <div>
-      <HeaderBar tone={tone} searchIndex={searchIndex} navGroups={getNavGroups()} />
+      <HeaderBar tone={tone} searchIndex={searchIndex} navGroups={getNavGroups()} siteName={getSiteSettings().name} />
       <main id="main" tabIndex={-1} className="anim-page outline-none">
         {children}
       </main>

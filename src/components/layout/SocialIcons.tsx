@@ -1,15 +1,15 @@
-// 7 icon mạng xã hội. URL cấu hình ở src/config/site.ts (Q14; hiện là URL demo). Chưa có URL thì hiển thị mờ, chưa bấm được.
+// 7 icon mạng xã hội. URL cấu hình ở Cài đặt site (Keystatic); mặc định ở src/config/site.ts (Q14; URL demo). Chưa có URL thì hiển thị mờ, chưa bấm được.
 // Dạng chip tròn nổi; hover: nhấc lên, nền gradient hiện dần, icon phóng, nhãn tên nền tảng nổi phía trên.
 // Mặc định: mỗi chip 44px, hàng tự xuống dòng khi hết chỗ (chân trang).
 // `featured` (Hero): MỘT hàng duy nhất, icon được chọn nằm giữa, to nhất và luôn có nền gradient; 6 chip còn lại nhỏ 36px
 // (vùng bấm vẫn đủ 44px nhờ lớp mở rộng 4px mỗi phía, nên hai vùng bấm kề nhau chạm sát; khoảng cách giữa các vòng 8px).
 import type { SocialId } from "@/config/site";
-import { socialLinks } from "@/config/site";
+import { getSiteSettings } from "@/lib/settings";
 import { SocialIcon } from "@/components/ui/Icon";
 
 export function SocialIcons({
   className = "",
-  featured,
+  featured: wanted,
   onDark,
 }: {
   className?: string;
@@ -17,6 +17,9 @@ export function SocialIcons({
   /** Đặt trên dải nền tối (inverse): nút nổi bật đảo màu để không chìm vào nền */
   onDark?: boolean;
 }) {
+  const socialLinks = getSiteSettings().socials;
+  // Icon nổi bật không có trong danh sách của Cài đặt site thì lấy icon ở giữa hàng
+  const featured = wanted ? (socialLinks.find((l) => l.id === wanted) ?? socialLinks[Math.floor(socialLinks.length / 2)])?.id : undefined;
   // Đưa icon nổi bật vào vị trí chính giữa hàng
   const list = (() => {
     if (!featured) return socialLinks;

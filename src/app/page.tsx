@@ -5,6 +5,7 @@ import Link from "next/link";
 import { profile } from "@/config/profile";
 import { site } from "@/config/site";
 import { getAllPosts, getSiteStats } from "@/lib/posts";
+import { getSiteSettings } from "@/lib/settings";
 import { brushStyle } from "@/lib/brush";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
@@ -20,13 +21,15 @@ import { RevealText } from "@/components/ui/RevealText";
 import { CountUp } from "@/components/ui/Motion";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 
-const title = `${profile.name} — ${site.tagline}`;
-export const metadata: Metadata = {
-  title: { absolute: title },
-  description: profile.positioning,
-  alternates: { canonical: "/" },
-  openGraph: { title, description: profile.positioning, type: "profile", locale: site.locale, url: "/" },
-};
+export function generateMetadata(): Metadata {
+  const title = `${profile.name} — ${getSiteSettings().tagline}`;
+  return {
+    title: { absolute: title },
+    description: profile.positioning,
+    alternates: { canonical: "/" },
+    openGraph: { title, description: profile.positioning, type: "profile", locale: site.locale, url: "/" },
+  };
+}
 
 export default function HomePage() {
   const stats = getSiteStats();

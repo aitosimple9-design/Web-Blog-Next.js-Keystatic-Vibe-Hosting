@@ -6,7 +6,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { site, mainNav, type NavGroup } from "@/config/site";
+import { mainNav, type NavGroup } from "@/config/site";
 import { CloseIcon, MenuIcon } from "@/components/ui/Icon";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -31,15 +31,15 @@ const tones: Record<HeaderTone, { bg: string; text: string; border: string }> = 
   inverse: { bg: "var(--inverse)", text: "text-on-inverse on-inverse", border: "" },
 };
 
-function Logo() {
+function Logo({ name }: { name: string }) {
   return (
     <Link
       href="/"
       className="group tap inline-flex items-center gap-s2 rounded-sm no-underline"
-      aria-label={`${site.name} — về Trang chủ`}
+      aria-label={`${name} — về Trang chủ`}
     >
       <span aria-hidden className="block size-[22px] rounded-cover bg-current transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:rotate-90" />
-      <span className="font-serif text-(length:--logo-size) leading-none font-semibold">{site.name}</span>
+      <span className="font-serif text-(length:--logo-size) leading-none font-semibold">{name}</span>
     </Link>
   );
 }
@@ -48,10 +48,12 @@ export function HeaderBar({
   tone,
   searchIndex,
   navGroups,
+  siteName,
 }: {
   tone: HeaderTone;
   searchIndex: SearchItem[];
   navGroups: NavGroup[];
+  siteName: string;
 }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -132,7 +134,7 @@ export function HeaderBar({
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
-          <Logo />
+          <Logo name={siteName} />
         </div>
 
         <nav aria-label="Chính" className="hidden items-center gap-s1 tablet:flex">
