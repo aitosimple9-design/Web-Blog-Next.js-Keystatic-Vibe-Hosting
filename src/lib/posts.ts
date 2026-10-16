@@ -14,6 +14,7 @@ import rehypeStringify from "rehype-stringify";
 import type { Root, Element, Nodes } from "hast";
 import { topicBySlug, getTopics } from "@/lib/topics";
 import { readingMinutes } from "@/lib/format";
+import { scoreSeo } from "@/lib/seo-score";
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
 
@@ -167,6 +168,41 @@ export function getBookNamesBySlug(): Record<string, string> {
       const { data } = matter(fs.readFileSync(path.join(POSTS_DIR, file), "utf8"));
       const book = (data.source as { book?: unknown } | undefined)?.book;
       if (typeof book === "string" && book.trim()) out[file.replace(/\.md$/, "")] = book.trim();
+    } catch {
+      /* bỏ qua file lỗi */
+    }
+  }
+  return out;
+}
+
+/**
+ * Điểm SEO của MỌI bài (cả nháp / lên lịch), theo slug, chấm từ bản đã lưu. Chỉ cho cột "SEO" ở danh sách quản trị Keystatic
+ * (/api/diem-seo, cùng cổng với trang xem trước); đọc lỏng, file lỗi bị bỏ qua.
+ */
+export function getSeoScoresBySlug(): Record<string, { score: number; level: "good" | "warn" | "bad" }> {
+  const out: Record<string, { score: number; level: "good" | "warn" | "bad" }> = {};
+  if (!fs.existsSync(POSTS_DIR)) return out;
+  const text = (v: unknown) => (typeof v === "string" ? v : "");
+  const list = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
+  for (const file of fs.readdirSync(POSTS_DIR)) {
+    if (!file.endsWith(".md")) continue;
+    try {
+      const slug = file.replace(/\.md$/, "");
+      const { data, content } = matter(fs.readFileSync(path.join(POSTS_DIR, file), "utf8"));
+      const { score, level } = scoreSeo({
+        title: text(data.title),
+        seoTitle: text(data.seoTitle),
+        description: text(data.description),
+        slug,
+        focusKeyword: text(data.focusKeyword),
+        cover: text(data.cover),
+        coverAlt: text(data.coverAlt),
+        ogImage: text(data.ogImage),
+        tags: list(data.tags),
+        related: list(data.related),
+        body: content,
+      });
+      out[slug] = { score, level };
     } catch {
       /* bỏ qua file lỗi */
     }

@@ -106,7 +106,7 @@ export default config({
       previewUrl: "/xem-truoc/bai-viet/{slug}",
       format: { contentField: "content" },
       entryLayout: "content",
-      columns: ["title", "source", "category", "date", "status", "draft", "cover"] as never, // xem ghi chú về cột ở collection topics
+      columns: ["title", "source", "category", "date", "status", "draft", "focusKeyword", "cover"] as never, // xem ghi chú về cột ở collection topics
       schema: {
         // Bài hiện có khai báo `slug:` trong frontmatter (mục 5) mà Keystatic không cho khóa lạ → khai báo "bỏ qua".
         // Slug thật luôn là tên file (nhập ở ô Slug bên dưới).
