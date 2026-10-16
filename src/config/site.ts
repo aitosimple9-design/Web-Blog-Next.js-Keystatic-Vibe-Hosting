@@ -79,3 +79,26 @@ export const newsletterDefaults = {
   perks: ["Ý chính, ví dụ và cách áp dụng", "Đọc trong khoảng 10 phút", "Hủy đăng ký bất cứ lúc nào"],
   submitLabel: "Đăng ký",
 } as const;
+
+// Chữ của form đăng ký (nhãn ô, gợi ý, nút, ghi chú, lời cảm ơn, thông báo lỗi); ghi đè được ở Keystatic (Cài đặt → Newsletter → Nhãn và thông báo của form).
+// Lời cảm ơn dùng {name} và {email} làm chỗ điền tên và email người vừa đăng ký.
+export const newsletterFormDefaults = {
+  formTitle: "Đăng ký nhận bài",
+  nameLabel: "Họ tên",
+  namePlaceholder: "Nguyễn Văn A",
+  phoneLabel: "Số điện thoại",
+  phonePlaceholder: "09xx xxx xxx",
+  optionalTag: "Tùy chọn",
+  emailLabel: "Email",
+  emailPlaceholder: "ban@example.com",
+  sendingLabel: "Đang gửi…",
+  note: "Chỉ gửi bài mới, không quảng cáo.",
+  successTitle: "Đã nhận đăng ký",
+  successMessage: "Cảm ơn {name}. Bài mới sẽ được gửi tới {email}.",
+  resetLabel: "Đăng ký email khác",
+  errorNameRequired: "Nhập họ tên của bạn để chúng tôi biết cách xưng hô.",
+  errorEmailRequired: "Nhập email để nhận bài mới.",
+  errorEmailInvalid: "Email chưa đúng định dạng, ví dụ: ban@example.com.",
+  errorPhoneInvalid: "Số điện thoại chưa đúng, ví dụ: 0912 345 678. Bạn có thể bỏ trống ô này.",
+};
+export type NewsletterForm = typeof newsletterFormDefaults;

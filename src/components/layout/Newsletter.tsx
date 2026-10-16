@@ -11,22 +11,22 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import { AlertIcon, CheckIcon, MailIcon, PhoneIcon, UserIcon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { PointerLayer, PointerScene } from "@/components/ui/Motion";
-import { newsletterDefaults } from "@/config/site";
+import { newsletterDefaults, newsletterFormDefaults, type NewsletterForm } from "@/config/site";
 import type { NewsletterSettings } from "@/lib/settings";
 
 type Fields = { name: string; phone: string; email: string };
 type Errors = Partial<Record<keyof Fields, string>>;
 
 
-function validate(v: Fields): Errors {
+function validate(v: Fields, m: NewsletterForm): Errors {
   const e: Errors = {};
-  if (!v.name.trim()) e.name = "Nhập họ tên của bạn để chúng tôi biết cách xưng hô.";
-  if (!v.email.trim()) e.email = "Nhập email để nhận bài mới.";
+  if (!v.name.trim()) e.name = m.errorNameRequired;
+  if (!v.email.trim()) e.email = m.errorEmailRequired;
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim()))
-    e.email = "Email chưa đúng định dạng, ví dụ: ban@example.com.";
+    e.email = m.errorEmailInvalid;
   const phone = v.phone.replace(/[\s.\-()]/g, "");
   if (phone && !/^(\+?84|0)\d{9,10}$/.test(phone))
-    e.phone = "Số điện thoại chưa đúng, ví dụ: 0912 345 678. Bạn có thể bỏ trống ô này.";
+    e.phone = m.errorPhoneInvalid;
   return e;
 }
 
@@ -43,7 +43,11 @@ const icons: Record<keyof Fields, ReactNode> = {
 };
 
 // Chữ của form lấy từ Cài đặt → Newsletter: nơi gọi (server) truyền `settings={getNewsletterSettings()}`; không truyền thì dùng mặc định.
-const defaultSettings: NewsletterSettings = { ...newsletterDefaults, perks: [...newsletterDefaults.perks] };
+const defaultSettings: NewsletterSettings = {
+  ...newsletterDefaults,
+  perks: [...newsletterDefaults.perks],
+  form: newsletterFormDefaults,
+};
 
 export function Newsletter({
   className = "",
@@ -81,7 +85,7 @@ export function Newsletter({
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const errs = validate(values);
+    const errs = validate(values, settings.form);
     setErrors(errs);
     const first = (["name", "phone", "email"] as const).find((k) => errs[k]);
     if (first) {
@@ -138,7 +142,7 @@ export function Newsletter({
             <span
               className={`type-caption pointer-events-none absolute top-0 right-3 -translate-y-1/2 rounded-sm bg-paper-raised px-1 leading-none whitespace-nowrap text-ink-faint transition-opacity duration-200 ease-in-out group-focus-within/field:opacity-100 ${values[k] ? "opacity-100" : "opacity-0"}`}
             >
-              Tùy chọn
+              {settings.form.optionalTag}
             </span>
           ) : null}
           {/* Gạch nhấn chạy từ trái sang phải khi focus */}
@@ -207,9 +211,11 @@ export function Newsletter({
                     <CheckIcon size={26} />
                   </span>
                 </span>
-                <h3 className="type-display-sm mt-s4">Đã nhận đăng ký</h3>
+                <h3 className="type-display-sm mt-s4">{settings.form.successTitle}</h3>
                 <p className="type-ui-body mt-s2 text-ink-soft">
-                  Cảm ơn {values.name.trim() || "bạn"}. Bài mới sẽ được gửi tới {values.email.trim()}.
+                  {settings.form.successMessage
+                    .replace("{name}", values.name.trim() || "bạn")
+                    .replace("{email}", values.email.trim())}
                 </p>
                 {process.env.NODE_ENV !== "production" ? (
                   <p className="type-caption mt-s3 text-ink-faint">
@@ -224,31 +230,35 @@ export function Newsletter({
                     setStatus("idle");
                   }}
                 >
-                  Đăng ký email khác
+                  {settings.form.resetLabel}
                 </Button>
               </div>
             ) : (
               <form ref={formRef} onSubmit={onSubmit} noValidate aria-busy={status === "sending"}>
-                <p className="type-ui-strong mb-s4">Đăng ký nhận bài</p>
+                <p className="type-ui-strong mb-s4">{settings.form.formTitle}</p>
                 <div className="grid items-start gap-s4 tablet:grid-cols-2">
-                  {field("name", "Họ tên", { type: "text", autoComplete: "name", placeholder: "Nguyễn Văn A" })}
+                  {field("name", settings.form.nameLabel, {
+                    type: "text",
+                    autoComplete: "name",
+                    placeholder: settings.form.namePlaceholder,
+                  })}
                   {field(
                     "phone",
-                    "Số điện thoại",
-                    { type: "tel", autoComplete: "tel", inputMode: "tel", placeholder: "09xx xxx xxx" },
+                    settings.form.phoneLabel,
+                    { type: "tel", autoComplete: "tel", inputMode: "tel", placeholder: settings.form.phonePlaceholder },
                     { optional: true },
                   )}
                   {field(
                     "email",
-                    "Email",
-                    { type: "email", autoComplete: "email", inputMode: "email", placeholder: "ban@example.com" },
+                    settings.form.emailLabel,
+                    { type: "email", autoComplete: "email", inputMode: "email", placeholder: settings.form.emailPlaceholder },
                     { span: true },
                   )}
                 </div>
                 <Button type="submit" wide className="mt-s5" disabled={status === "sending"}>
-                  {status === "sending" ? "Đang gửi…" : settings.submitLabel}
+                  {status === "sending" ? settings.form.sendingLabel : settings.submitLabel}
                 </Button>
-                <p className="type-caption mt-s3 text-ink-faint">Chỉ gửi bài mới, không quảng cáo.</p>
+                <p className="type-caption mt-s3 text-ink-faint">{settings.form.note}</p>
               </form>
             )}
           </div>

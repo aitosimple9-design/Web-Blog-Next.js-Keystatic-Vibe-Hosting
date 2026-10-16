@@ -12,10 +12,12 @@ import {
   legalLinks,
   navGroups as defaultNavGroups,
   newsletterDefaults,
+  newsletterFormDefaults,
   POSTS_PER_PAGE,
   type NavGroup,
   type NavIconId,
   type NavLink,
+  type NewsletterForm,
   type SocialId,
 } from "@/config/site";
 
@@ -182,10 +184,13 @@ export type NewsletterSettings = {
   description: string;
   perks: string[];
   submitLabel: string;
+  /** Nhãn, gợi ý, ghi chú, lời cảm ơn, thông báo lỗi của form */
+  form: NewsletterForm;
 };
 
 export const getNewsletterSettings = cache((): NewsletterSettings => {
   const raw = readJson("newsletter");
+  const rawForm = isObj(raw.form) ? raw.form : {};
   const perks = Array.isArray(raw.perks)
     ? raw.perks.slice(0, PERKS_MAX).flatMap((p) => {
         const v = typeof p === "string" ? text(p) : isObj(p) ? text(p.text) : undefined;
@@ -198,5 +203,8 @@ export const getNewsletterSettings = cache((): NewsletterSettings => {
     description: text(raw.description) ?? newsletterDefaults.description,
     perks: perks.length > 0 ? perks : [...newsletterDefaults.perks],
     submitLabel: text(raw.submitLabel) ?? newsletterDefaults.submitLabel,
+    form: Object.fromEntries(
+      Object.entries(newsletterFormDefaults).map(([k, d]) => [k, text(rawForm[k]) ?? d]),
+    ) as NewsletterForm,
   };
 });

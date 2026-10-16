@@ -45,7 +45,7 @@ content/topics/<slug>.json      ← chủ đề (tên, thứ tự, mô tả, ả
 content/books/<slug>.json       ← sách (tên + bìa); tên phải khớp `source.book` của bài; sửa trong Keystatic menu "Sách"
 content/settings/header.json    ← Header (ảnh logo, menu tối đa 6 mục, bật / tắt ô tìm kiếm và nút đổi theme); Keystatic singleton, đọc qua `getHeaderSettings()`
 content/settings/footer.json    ← Footer (liên kết tối đa 8, dòng bản quyền, bật / tắt mạng xã hội); đọc qua `getFooterSettings()`
-content/settings/newsletter.json ← chữ của form Newsletter (dòng nhỏ, tiêu đề, mô tả, lợi ích, nhãn nút); đọc qua `getNewsletterSettings()`; nơi gửi dữ liệu vẫn chờ Q11
+content/settings/newsletter.json ← MỌI chữ của form Newsletter (dòng nhỏ, tiêu đề, mô tả, lợi ích, nhãn nút, nhãn ô, gợi ý, ghi chú, lời cảm ơn có {name} / {email}, thông báo lỗi); đọc qua `getNewsletterSettings()`; nơi gửi dữ liệu vẫn chờ Q11
 content/settings/site.json      ← Cài đặt site (tên, khẩu hiệu, mô tả, ảnh chia sẻ, năm bản quyền, mạng xã hội, trang pháp lý, số bài mỗi trang); Keystatic singleton. Đọc qua `getSiteSettings()` (src/lib/settings.ts): ô thiếu / sai thì dùng mặc định ở src/config/site.ts. Logo, chân trang, icon mạng xã hội, metadata, phân trang Blog đều lấy từ đây (Lộc duyệt cấu trúc content/settings + content/pages 2026-10-16; content/pages/ làm ở PR 3-4)
 public/images/topics/<slug>/    ← ảnh nền chủ đề (Keystatic tự lưu khi tải ảnh lên)
 public/images/covers/<slug>/    ← bìa sách (SVG demo sinh bằng scripts/gen-demo-covers.mjs; bìa thật tải qua Keystatic)
