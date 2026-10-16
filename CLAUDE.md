@@ -64,7 +64,7 @@ src/lib/seo-fields.ts            ← nhãn các ô của form bài mà hộp đi
 src/app/xem-truoc/bai-viet/<slug>/ ← XEM TRƯỚC bài nháp / lên lịch (nút "Xem trước" của Keystatic); chỉ chạy ở máy soạn bài
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
 src/lib/rehype-image-size.ts    ← plugin rehype gắn width / height thật + loading="lazy" cho ảnh trong thân bài (posts.ts dùng khi dựng HTML)
-src/lib/topics.ts, books.ts, settings.ts, nav.ts, preview.ts, content-cleanup.ts ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
+src/lib/topics.ts, books.ts, settings.ts, nav.ts, preview.ts, content-cleanup.ts (luật dọn ảnh DUY NHẤT, xem mục 8) ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
 src/components/                 ← UI components (ui/, layout/, home/, blog/, article/)
 src/config/                     ← site.ts (tên blog, nav tĩnh, mạng xã hội); chủ đề và bìa sách đã chuyển sang content/topics, content/books
 src/styles/                     ← tokens.css (TỰ SINH từ docs/design-system/tokens.json bằng `npm run tokens`), prose.css
@@ -177,11 +177,12 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 - Giữ `keystatic.config.ts` khớp 100% với mục 5 (tên trường, kiểu dữ liệu, thư mục). Ngoại lệ duy nhất: Keystatic lấy `slug` từ TÊN FILE và không ghi `slug:` vào frontmatter nên `slug` khai báo `fields.ignored()`; `posts.ts` dùng tên file khi thiếu `slug:` (có thì phải trùng). Bài do Keystatic lưu có thể không có dòng `slug:`.
 - Xóa bài / chủ đề / sách trong chế độ local: `src/app/api/keystatic/[...params]/route.ts` + `src/lib/content-cleanup.ts` xóa luôn thư mục ảnh cùng slug (Keystatic tự nó để lại ảnh mồ côi). Chế độ GitHub không chen được vào lệnh xóa → chạy `npm run prune-images`.
 - Nút "Xem trước" trong form bài (`previewUrl` ở `keystatic.config.ts`) mở `/xem-truoc/bai-viet/<slug>`: giao diện thật của bản ĐÃ LƯU, gồm cả bài nháp và bài lên lịch (có thanh ghi chú ở đáy). Keystatic không xem được chữ đang gõ mà chưa Lưu. Trang này CHỈ chạy khi Keystatic ở chế độ local và không có biến `VERCEL` (`src/lib/preview.ts`), nếu không thì 404; không dựng sẵn, `noindex`, `robots.txt` chặn `/xem-truoc/`. Xem trước ở chế độ GitHub / production làm ở bước deploy (cần xác thực đăng nhập Keystatic trước khi cho xem nháp), việc deploy phải hỏi Lộc.
+- **NGUYÊN TẮC ĐỒNG BỘ VỚI TRANG QUẢN TRỊ (Lộc, 2026-10-16):** thêm hay xóa gì thì file đi kèm phải đồng bộ với Keystatic. Xóa trong admin → mọi file liên quan mất theo (file nội dung, thư mục ảnh theo slug, ảnh đã thay / gỡ, ảnh của singleton ở `public/images/site/`), không để ảnh mồ côi. Thêm → phải hiện ra và sửa được trong admin: KHÔNG để chữ, ảnh, liên kết, danh sách hiển thị trên web mà chỉ sửa được trong mã (việc đưa phần còn lại vào admin nằm ở kế hoạch 5 PR trong `docs/HANDOFF.md`). Luật dọn ảnh nằm MỘT nơi: `src/lib/content-cleanup.ts` (`IMAGE_RULES`, `SINGLETON_IMAGE_RULE`); route API, `npm run prune-images` và `npm run check-content` đều đọc từ đó. Thêm ô ảnh mới vào `keystatic.config.ts` (thư mục `directory` mới) hoặc collection / singleton mới thì PHẢI khai báo luật dọn ảnh và thêm vào `ui.navigation`; `tests/unit/admin-sync.test.ts` làm hỏng build nếu quên. Trước khi mở PR có đụng admin / `content/` / `public/images/`: chạy subagent `admin-sync-reviewer`.
 - Giai đoạn hiện tại chỉ dùng chế độ local. Chuyển sang GitHub mode là việc deploy → phải hỏi trước.
 - Không commit secret của Keystatic/GitHub; chỉ để trong biến môi trường.
 
 ## 9. Công cụ
-- **Subagents:** `design-reviewer`, `ui-tester` (Playwright), `content-editor`; dùng `Explore` khi cần đọc nhiều file.
+- **Subagents:** `design-reviewer`, `ui-tester` (Playwright), `content-editor`, `admin-sync-reviewer` (kiểm tra nguyên tắc đồng bộ admin, mục 8); dùng `Explore` khi cần đọc nhiều file.
 - **Skills thiết kế:** `frontend-design-direction` (trước khi dựng trang mới), `make-interfaces-feel-better`,
   `frontend-a11y` (form, modal, menu), `motion-system` (khi thêm animation).
 - **Plugin:** `feature-dev` cho tính năng lớn; `code-review` trước khi mở PR; `commit-commands` cho commit/PR.
@@ -203,6 +204,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 - [ ] Vùng bấm ≥ 44x44px, cách nhau ≥ 8px; CTA chính nằm trong thumb zone trên mobile
 - [ ] `design-reviewer`: không còn lỗi mức "phải sửa"
 - [ ] Trang mới có đủ SEO ở mục 7
+- [ ] Nếu đụng admin / `content/` / `public/images/`: `admin-sync-reviewer` không còn vi phạm; xóa / thay ảnh trong admin đã thử thật (mục 8)
 - [ ] Đã cập nhật checkbox trong `docs/PLAN.md`
 - [ ] Đã nói rõ: thay đổi gì, ở file nào, cách tự kiểm tra
 

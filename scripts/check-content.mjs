@@ -201,18 +201,14 @@ for (const p of posts) {
   }
 }
 
-// ---------- thư mục ảnh mồ côi ----------
-for (const r of [
-  { contentDir: "content/posts", ext: ".md", imageDir: "public/images/posts" },
-  { contentDir: "content/topics", ext: ".json", imageDir: "public/images/topics" },
-  { contentDir: "content/books", ext: ".json", imageDir: "public/images/covers" },
-]) {
-  const owners = new Set(files(r.contentDir, r.ext).map((f) => f.slice(0, -r.ext.length)));
-  const imgRoot = resolve(root, r.imageDir);
-  if (!existsSync(imgRoot)) continue;
-  for (const d of readdirSync(imgRoot, { withFileTypes: true })) {
-    if (d.isDirectory() && !owners.has(d.name)) warn(`${r.imageDir}/${d.name}`, "thư mục ảnh mồ côi (chạy npm run prune-images)");
+// ---------- ảnh mồ côi (quy tắc dùng chung ở src/lib/content-cleanup.ts) ----------
+try {
+  const { findOrphanImages } = await import("../src/lib/content-cleanup.ts");
+  for (const o of findOrphanImages(root)) {
+    warn(o.path, `${o.kind === "folder" ? "thư mục ảnh" : "file ảnh"} mồ côi, không còn thuộc nội dung nào (chạy npm run prune-images)`);
   }
+} catch {
+  infos.push("Không kiểm tra được ảnh mồ côi (cần Node >= 22.18 để đọc file .ts).");
 }
 
 // ---------- kết quả ----------
