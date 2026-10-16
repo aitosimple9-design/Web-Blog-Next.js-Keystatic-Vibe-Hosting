@@ -165,7 +165,7 @@ Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm S
 - [x] Bước 2 Hai trường mới `focusKeyword` (từ khóa chính) và `coverAlt` (alt ảnh bìa): `keystatic.config.ts`, `posts.ts`, CLAUDE.md mục 5 [sync: cần đồng bộ sang dự án B]; `coverAlt` dùng làm alt ảnh hero và ảnh chia sẻ
 - [x] Bước 3 Cột "Điểm SEO" ở danh sách Bài viết (điểm + chữ Tốt / Cần cải thiện / Chưa đạt, màu theo 2 theme của Keystatic; dựa trên bản đã lưu): `getSeoScoresBySlug` + `/api/diem-seo` + `KeystaticThumbnails.tsx`; mượn cột "Từ khóa chính" làm chỗ giữ chỗ (2026-10-16)
 - [x] Bước 4 Hộp điểm SEO trong form bài (nổi góc dưới, chấm cả nội dung chưa Lưu, liệt kê chưa đạt + cách sửa, chuyển trái / phải, nhớ trạng thái): `SeoPanel.tsx`, `seo-form-reader.ts`, `src/lib/seo-fields.ts` (nhãn dùng chung với config); tự báo khi không đọc được ô / lệch bản đã lưu; test trên giao diện thật: gõ từng ô, thẻ, bài liên quan, nội dung, gỡ ảnh, bài mới, 2 theme, màn hình hẹp, bài 6.400 từ (2026-10-16)
-- [ ] Bước 5 `npm run check-content` báo thêm cảnh báo SEO
+- [x] Bước 5 `npm run check-content` báo thêm cảnh báo SEO từng bài + điểm trung bình, cảnh báo ảnh trong bài trùng file với ảnh bìa (lỗi thật gặp khi thử: hai ảnh cùng tên `cover.jpg` ghi đè nhau); tự bỏ qua có thông báo nếu Node cũ không đọc được .ts (2026-10-16)
 - [ ] Thêm bước `npm run check-content` vào `.github/workflows/ci.yml` (Lộc tự commit, Claude không sửa được thư mục workflows)
 
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)

@@ -32,7 +32,7 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 - `npm run dev` — http://localhost:3000, quản trị bài: http://localhost:3000/keystatic
 - `npm run lint`
 - `npm run build` — PHẢI chạy không lỗi trước khi mở PR
-- `npm run check-content` — kiểm tra bài / chủ đề / sách / ảnh trước khi đăng: LỖI (thoát mã 1) như thiếu trường, chủ đề không tồn tại, file ảnh mất, bài liên quan sai; CẢNH BÁO như sách chưa có bìa, mô tả ngắn; THÔNG TIN bài lên lịch. Chạy trước khi mở PR có đổi nội dung
+- `npm run check-content` — kiểm tra bài / chủ đề / sách / ảnh trước khi đăng: LỖI (thoát mã 1) như thiếu trường, chủ đề không tồn tại, file ảnh mất, bài liên quan sai; CẢNH BÁO như sách chưa có bìa, mô tả ngắn; THÔNG TIN bài lên lịch; từ 2026-10-16 có thêm CẢNH BÁO điểm SEO của từng bài (mục chưa đạt, dùng `src/lib/seo-score.ts`, cần Node ≥ 22.18) và ảnh trong bài trùng file với ảnh bìa (Keystatic ghi đè hai ảnh cùng tên). Chạy trước khi mở PR có đổi nội dung
 - `npm run prune-images` — liệt kê thư mục ảnh MỒ CÔI (không còn bài / chủ đề / sách tương ứng); thêm `-- --delete` để xóa. Chỉ cần ở chế độ GitHub (chế độ local tự dọn khi xóa)
 - `npm run typecheck` — kiểm tra kiểu TypeScript; `npm run tokens` — sinh lại `src/styles/tokens.css` khi sửa `tokens.json`
 

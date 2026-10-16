@@ -62,4 +62,34 @@ describe("scripts/check-content.mjs", () => {
     expect(r.code).toBe(0);
     expect(r.out).toContain("LÊN LỊCH");
   });
+
+  it("cảnh báo ảnh trong bài dùng chung file với ảnh bìa (Keystatic ghi đè hai ảnh cùng tên)", () => {
+    const r = run({
+      ...topic,
+      "content/posts/bai-a.md": post("cover: /images/posts/bai-a/cover.jpg\n").replace("Nội dung.", "![Mô tả](/images/posts/bai-a/cover.jpg)"),
+      "public/images/posts/bai-a/cover.jpg": "x",
+    });
+    expect(r.code).toBe(0); // chỉ cảnh báo, không làm CI đỏ
+    expect(r.out).toContain("dùng chung file với ảnh bìa");
+  });
+
+  it("ảnh trong bài khác tên với ảnh bìa thì không cảnh báo, ảnh trong bài mất file thì lỗi", () => {
+    const ok = run({
+      ...topic,
+      "content/posts/bai-a.md": post("cover: /images/posts/bai-a/cover.jpg\n").replace("Nội dung.", "![Mô tả](/images/posts/bai-a/anh-trong-bai.jpg)"),
+      "public/images/posts/bai-a/cover.jpg": "x",
+      "public/images/posts/bai-a/anh-trong-bai.jpg": "y",
+    });
+    expect(ok.out).not.toContain("dùng chung file");
+    const missing = run({ ...topic, "content/posts/bai-a.md": post().replace("Nội dung.", "![Mô tả](/images/posts/bai-a/mat.jpg)") });
+    expect(missing.code).toBe(1);
+    expect(missing.out).toContain("ảnh trong nội dung không tồn tại");
+  });
+
+  it("chấm SEO: cảnh báo mục chưa đạt kèm điểm, không làm CI đỏ, có điểm trung bình ở mục thông tin", () => {
+    const r = run({ ...topic, "content/posts/bai-a.md": post() });
+    expect(r.code).toBe(0);
+    expect(r.out).toMatch(/SEO \d+\/100, chưa đạt:.*Độ dài bài/);
+    expect(r.out).toMatch(/Điểm SEO trung bình \d+\/100 \(1 bài\)/);
+  });
 });

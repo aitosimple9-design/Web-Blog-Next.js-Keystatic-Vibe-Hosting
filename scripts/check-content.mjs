@@ -9,6 +9,15 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 
+// Chấm SEO dùng chung với trang quản trị (src/lib/seo-score.ts, hàm thuần). Node đọc thẳng file .ts (Node >= 22.18 / 23.6);
+// bản Node cũ hơn không đọc được thì bỏ qua phần chấm SEO và báo rõ ở mục THÔNG TIN, không làm hỏng các kiểm tra khác.
+let scoreSeo = null;
+try {
+  ({ scoreSeo } = await import("../src/lib/seo-score.ts"));
+} catch {
+  /* xử lý ở dưới */
+}
+
 const argRoot = process.argv.indexOf("--root");
 const root =
   argRoot > -1 ? resolve(process.argv[argRoot + 1]) : resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -84,6 +93,7 @@ for (const f of files("content/books", ".json")) {
 // ---------- bài viết ----------
 const postFiles = files("content/posts", ".md");
 const posts = [];
+const seoScores = [];
 for (const f of postFiles) {
   const where = `content/posts/${f}`;
   let data, body;
@@ -128,7 +138,33 @@ for (const f of postFiles) {
 
   // ảnh chèn trong thân bài
   for (const m of body.matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)) {
-    if (m[1].startsWith("/") && !publicFile(m[1])) err(where, `ảnh trong nội dung không tồn tại: ${m[1]}`);
+    const src = m[1];
+    if (src.startsWith("/") && !publicFile(src)) err(where, `ảnh trong nội dung không tồn tại: ${src}`);
+    // Keystatic lưu ảnh của bài vào CÙNG thư mục theo tên file: hai ảnh cùng tên (vd. cùng là cover.jpg) ghi đè lên nhau, bài hiện hai lần cùng một ảnh
+    if (src === str(data.cover) || src === str(data.ogImage)) {
+      warn(where, `ảnh trong nội dung dùng chung file với ảnh bìa / ảnh chia sẻ (${src}): hai ảnh cùng tên bị ghi đè lên nhau. Đổi "File name" của ảnh trong bài (bấm vào ảnh, nút sửa)`);
+    }
+  }
+
+  // điểm SEO (chỉ cảnh báo, không bao giờ làm CI đỏ)
+  if (scoreSeo) {
+    const list = (v) => (Array.isArray(v) ? v.filter((x) => typeof x === "string") : []);
+    const r = scoreSeo({
+      title: str(data.title),
+      seoTitle: str(data.seoTitle),
+      description: str(data.description),
+      slug,
+      focusKeyword: str(data.focusKeyword),
+      cover: str(data.cover),
+      coverAlt: str(data.coverAlt),
+      ogImage: str(data.ogImage),
+      tags: list(data.tags),
+      related: list(data.related),
+      body,
+    });
+    seoScores.push(r.score);
+    const bad = r.checks.filter((c) => c.status === "bad").map((c) => `${c.label} (${c.detail})`);
+    if (bad.length > 0) warn(where, `SEO ${r.score}/100, chưa đạt: ${bad.join("; ")}`);
   }
 
   // trạng thái
@@ -141,6 +177,12 @@ for (const f of postFiles) {
   if (ISO.test(date) && date > todayVN && data.draft !== true && status !== "draft" && status !== "review") {
     infos.push(`${where}: LÊN LỊCH ngày ${date} (hiện sau lần deploy vào hoặc sau ngày đó)`);
   }
+}
+
+if (!scoreSeo) infos.push("Bỏ qua chấm điểm SEO: Node này không đọc được file .ts (cần Node >= 22.18)");
+else if (seoScores.length > 0) {
+  const avg = Math.round(seoScores.reduce((a, b) => a + b, 0) / seoScores.length);
+  infos.push(`Điểm SEO trung bình ${avg}/100 (${seoScores.length} bài); chi tiết từng bài ở trang quản trị`);
 }
 
 const slugs = new Set(posts.map((p) => p.slug));

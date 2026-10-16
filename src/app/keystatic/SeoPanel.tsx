@@ -6,6 +6,8 @@
 // - TỰ KIỂM TRA để hỏng thì báo rõ thay vì chấm sai trong im lặng:
 //     (1) ô nào của form không tìm thấy được → cảnh báo nêu tên ô;
 //     (2) khi mở một bài đã có, điểm trực tiếp phải khớp điểm của BẢN ĐÃ LƯU (/api/diem-seo?slug=) → lệch thì cảnh báo.
+// - z-index PHẢI là 0: danh sách thả xuống / hộp thoại của Keystatic được dựng vào <body> SAU hộp này và nằm trong lớp có hiệu ứng
+//   (ngữ cảnh xếp chồng tầng 0), nên hộp có z-index lớn hơn sẽ đè lên và chặn chuột vào các lựa chọn (đã gặp ở ô Chủ đề).
 // Chỉ hiện ở trang bài (tạo mới / sửa); chỉ chạy ở máy soạn bài (route API đã chặn ở production).
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
@@ -69,6 +71,7 @@ function Inner({ slug }: { slug: string | null }) {
   const [view, setView] = useState<View | null>(null);
   const [failed, setFailed] = useState(false);
   const [mismatch, setMismatch] = useState<string[] | null>(null);
+  const [dirtyUnknown, setDirtyUnknown] = useState(false); // không nhận ra nút "Reset changes": không biết form đã sửa chưa
   const [open, setOpen] = useState(readOpen); // Inner chỉ dựng sau khi đã ở trình duyệt nên đọc localStorage ngay được
   const [dark, setDark] = useState(false);
   const [side, setSide] = useState<Side>(readSide);
@@ -93,7 +96,12 @@ function Inner({ slug }: { slug: string | null }) {
     // sau khi tải lại trang; form đã khác bản lưu thì lệch là đúng, không phải lỗi đọc form nên bỏ qua.
     if (slug && !compared.current && !touched.current && read.missing.length === 0) {
       compared.current = true;
-      if (isFormDirty() === true) return;
+      const dirty = isFormDirty();
+      if (dirty === true) return;
+      if (dirty === null) {
+        console.warn('[SeoPanel] không tìm thấy nút "Reset changes" của Keystatic: không biết form đã sửa chưa, vẫn đối chiếu với bản đã lưu');
+        setDirtyUnknown(true);
+      }
       fetch(`/api/diem-seo?slug=${encodeURIComponent(slug)}`, { cache: "no-store" })
         .then((r) => (r.ok ? (r.json() as Promise<SeoResult>) : null))
         .then((saved) => {
@@ -174,7 +182,7 @@ function Inner({ slug }: { slug: string | null }) {
   };
 
   return createPortal(
-    <div {...{ [PANEL_ATTR]: "" }} style={{ position: "fixed", [side]: side === "left" ? 240 : 16, bottom: 64, zIndex: 40, maxWidth: "calc(100vw - 32px)" }}>
+    <div {...{ [PANEL_ATTR]: "" }} style={{ position: "fixed", [side]: side === "left" ? 240 : 16, bottom: 64, zIndex: 0, maxWidth: "calc(100vw - 32px)" }}>
       {open ? (
         <section
           role="region"
@@ -209,6 +217,12 @@ function Inner({ slug }: { slug: string | null }) {
           {missing.length > 0 && (
             <p role="status" style={notice(dark, pal.warn)}>
               Không đọc được ô: {missing.map((k) => POST_FIELD_NAMES[k]).join(", ")}. Điểm có thể thiếu chính xác; có thể Keystatic đã đổi giao diện.
+            </p>
+          )}
+          {dirtyUnknown && (
+            <p role="status" style={notice(dark, pal.warn)}>
+              Không nhận ra nút &quot;Reset changes&quot; của Keystatic (có thể đã đổi giao diện), nên không phân biệt được form đã có thay đổi chưa Lưu. Cảnh báo
+              &quot;lệch bản đã lưu&quot; nếu có chỉ đáng tin khi bạn vừa mở bài và chưa sửa gì.
             </p>
           )}
           {mismatch && (
