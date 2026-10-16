@@ -8,6 +8,7 @@
 // "Điểm SEO" và vẽ điểm (số + chữ Tốt / Cần cải thiện / Chưa đạt, không chỉ màu) lấy từ /api/diem-seo (src/lib/seo-score.ts).
 // Danh sách của Keystatic được "ảo hóa" (hàng được tái sử dụng khi cuộn / lọc) nên phải cập nhật lại mỗi khi DOM đổi.
 import { useEffect } from "react";
+import { SEO_LABEL, isDarkTheme, seoPalette, type SeoLevel } from "./ks-theme";
 
 const IMAGE_PATH = /^\/images\/\S+\.(?:jpe?g|png|webp|gif|svg|avif)$/i;
 const THUMB_ATTR = "data-ks-thumb";
@@ -17,20 +18,6 @@ const OBJECT_TEXT = "[object Object]";
 const BOOK_ATTR = "data-ks-book";
 const SEO_ATTR = "data-ks-seo";
 const SEO_HEADER = "Từ khóa chính"; // nhãn của ô chọn làm chỗ giữ chỗ (keystatic.config.ts, cột "focusKeyword")
-type SeoLevel = "good" | "warn" | "bad";
-const SEO_LABEL: Record<SeoLevel, string> = { good: "Tốt", warn: "Cần cải thiện", bad: "Chưa đạt" };
-// Màu chữ đủ tương phản (≥ 4,5:1) ở cả hai theme của Keystatic; chữ "Tốt / Cần cải thiện / Chưa đạt" đi kèm nên không chỉ dựa vào màu
-const SEO_COLOR = {
-  light: { good: "#1a7f37", warn: "#9a6700", bad: "#cf222e" },
-  dark: { good: "#56d364", warn: "#e3b341", bad: "#ff7b72" },
-} as const;
-
-// Keystatic có nút chuyển Light / Dark riêng (không theo trình duyệt) nên đo độ sáng của nền trang để biết đang ở theme nào
-function isDarkTheme() {
-  const m = /\d+/g;
-  const [r, g, b] = (getComputedStyle(document.body).backgroundColor.match(m) ?? ["255", "255", "255"]).map(Number);
-  return 0.299 * r + 0.587 * g + 0.114 * b < 128;
-}
 let books: Record<string, string> = {};
 let seo: Record<string, { score: number; level: SeoLevel }> = {};
 let lastFetch = 0;
@@ -71,7 +58,7 @@ function fillSeo() {
     }
   }
   if (!col) return;
-  const palette = SEO_COLOR[isDarkTheme() ? "dark" : "light"];
+  const palette = seoPalette(isDarkTheme());
   for (const row of document.querySelectorAll<HTMLElement>('main [role="row"]')) {
     const cell = row.querySelector<HTMLElement>(`:is([role="gridcell"], [role="rowheader"])[aria-colindex="${col}"]`);
     if (!cell) continue;

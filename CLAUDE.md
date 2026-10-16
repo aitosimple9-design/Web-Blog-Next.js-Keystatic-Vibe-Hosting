@@ -54,7 +54,9 @@ src/app/keystatic/              ← giao diện quản trị Keystatic
 src/app/api/keystatic/          ← API của Keystatic (có bọc dọn ảnh khi xóa, xem mục 8)
 src/app/keystatic/KeystaticThumbnails.tsx ← đổi đường dẫn ảnh ở các cột danh sách của Keystatic thành ảnh thu nhỏ, và "[object Object]" ở cột "Nguồn sách" thành tên sách, và vẽ cột "Điểm SEO" (chỉ đổi hiển thị ở trình duyệt)
 src/app/api/ten-sach/route.ts   ← trả {slug: tên sách} của mọi bài cho cột "Nguồn sách" ở danh sách quản trị; cùng cổng `src/lib/preview.ts` (chỉ máy soạn bài, còn lại 404)
-src/app/api/diem-seo/route.ts   ← trả {slug: {score, level}} cho cột "Điểm SEO"; cùng cổng; chấm bằng `src/lib/seo-score.ts` (hàm thuần, 20 tiêu chí, dùng chung cho danh sách / hộp điểm / check-content)
+src/app/api/diem-seo/route.ts   ← trả {slug: {score, level}} cho cột "Điểm SEO"; `?slug=` trả kết quả đầy đủ của bản đã lưu (hộp điểm tự đối chiếu); cùng cổng; chấm bằng `src/lib/seo-score.ts` (hàm thuần, 20 tiêu chí, dùng chung cho danh sách / hộp điểm / check-content)
+src/app/keystatic/SeoPanel.tsx + seo-form-reader.ts ← HỘP ĐIỂM SEO nổi trong form bài, chấm cả nội dung chưa Lưu; đọc form bằng tên truy cập + vai trò ARIA; tự báo khi không đọc được ô hoặc lệch bản đã lưu
+src/lib/seo-fields.ts            ← nhãn các ô của form bài mà hộp điểm đọc; keystatic.config.ts PHẢI dùng đúng các hằng số này (tests/unit/seo-fields.test.ts chặn lệch)
 src/app/xem-truoc/bai-viet/<slug>/ ← XEM TRƯỚC bài nháp / lên lịch (nút "Xem trước" của Keystatic); chỉ chạy ở máy soạn bài
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
 src/lib/topics.ts, books.ts, settings.ts, nav.ts, preview.ts, content-cleanup.ts ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)

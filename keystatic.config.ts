@@ -2,6 +2,7 @@
 // Bài lưu ở content/posts/<slug>.md (đuôi .md thuần, không .mdoc).
 // `slug` lấy từ TÊN FILE (Keystatic không ghi trường slug vào frontmatter); src/lib/posts.ts chấp nhận cả hai.
 import { collection, config, fields, singleton } from "@keystatic/core";
+import { POST_FIELD_LABELS } from "@/lib/seo-fields";
 
 export default config({
   // Chọn chế độ lưu bằng NEXT_PUBLIC_KEYSTATIC_STORAGE ("github" | "local", mặc định local).
@@ -112,11 +113,11 @@ export default config({
         // Slug thật luôn là tên file (nhập ở ô Slug bên dưới).
         slug: fields.ignored(),
         title: fields.slug({
-          name: { label: "Tiêu đề", validation: { isRequired: true } },
-          slug: { label: "Slug (tên file, chữ thường không dấu nối bằng '-')" },
+          name: { label: POST_FIELD_LABELS.title, validation: { isRequired: true } },
+          slug: { label: POST_FIELD_LABELS.slug },
         }),
         description: fields.text({
-          label: "Mô tả (≤ 160 ký tự, dùng cho meta description + Open Graph)",
+          label: POST_FIELD_LABELS.description,
           multiline: true,
           validation: { isRequired: true, length: { max: 160 } },
         }),
@@ -144,13 +145,13 @@ export default config({
         // Ô tải ảnh: file lưu ở public/images/posts/<slug>/<tên file>, và `cover` trong bài tự ghi đúng đường dẫn đó
         // (/images/posts/<slug>/<tên file>, khớp mục 5).
         cover: fields.image({
-          label: "Ảnh bìa",
+          label: POST_FIELD_LABELS.cover,
           description: "Tải ảnh lên; đường dẫn trong bài tự điền",
           directory: "public/images/posts",
           publicPath: "/images/posts/",
         }),
         coverAlt: fields.text({
-          label: "Mô tả ảnh bìa (alt)",
+          label: POST_FIELD_LABELS.coverAlt,
           description: "Một câu ngắn nói ảnh có gì; Google Hình ảnh và trình đọc màn hình dùng nó. Bỏ trống thì ảnh được coi là trang trí",
           validation: { length: { max: 125 } },
         }),
@@ -171,24 +172,24 @@ export default config({
           defaultValue: false,
         }),
         tags: fields.array(fields.text({ label: "Thẻ" }), {
-          label: "Thẻ (từ khóa của bài)",
+          label: POST_FIELD_LABELS.tags,
           itemLabel: (p) => p.value,
         }),
         focusKeyword: fields.text({
-          label: "Từ khóa chính (cụm người đọc gõ để tìm bài, 2-4 từ; dùng cho điểm SEO, không hiện ra ngoài)",
+          label: POST_FIELD_LABELS.focusKeyword,
           validation: { length: { max: 60 } },
         }),
         seoTitle: fields.text({
-          label: "Tiêu đề SEO riêng (≤ 60 ký tự; bỏ trống thì dùng Tiêu đề bài)",
+          label: POST_FIELD_LABELS.seoTitle,
           validation: { length: { max: 60 } },
         }),
         ogImage: fields.image({
-          label: "Ảnh chia sẻ riêng (Open Graph, nên 1200x630; bỏ trống thì dùng ảnh bìa)",
+          label: POST_FIELD_LABELS.ogImage,
           directory: "public/images/posts",
           publicPath: "/images/posts/",
         }),
         related: fields.multiRelationship({
-          label: "Bài liên quan (chọn tay; bỏ trống thì tự chọn theo chủ đề)",
+          label: POST_FIELD_LABELS.related,
           collection: "posts",
         }),
         notes: fields.text({
@@ -196,7 +197,7 @@ export default config({
           multiline: true,
         }),
         content: fields.markdoc({
-          label: "Nội dung",
+          label: POST_FIELD_LABELS.content,
           extension: "md",
           options: {
             heading: [2, 3],
