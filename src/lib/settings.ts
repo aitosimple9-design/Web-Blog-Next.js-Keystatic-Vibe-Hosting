@@ -5,9 +5,31 @@
 import fs from "node:fs";
 import path from "node:path";
 import { cache } from "react";
-import { site, socialLinks, legalLinks, POSTS_PER_PAGE, type SocialId } from "@/config/site";
+import { imageSize } from "image-size";
+import {
+  site,
+  socialLinks,
+  legalLinks,
+  navGroups as defaultNavGroups,
+  newsletterDefaults,
+  POSTS_PER_PAGE,
+  type NavGroup,
+  type NavIconId,
+  type NavLink,
+  type SocialId,
+} from "@/config/site";
 
-const FILE = path.join(process.cwd(), "content", "settings", "site.json");
+const DIR = path.join(process.cwd(), "content", "settings");
+
+// Đọc một file cài đặt (content/settings/<tên>.json); chưa có hoặc JSON hỏng → {}
+function readJson(name: string): Record<string, unknown> {
+  try {
+    const v: unknown = JSON.parse(fs.readFileSync(path.join(DIR, `${name}.json`), "utf8"));
+    return typeof v === "object" && v !== null ? (v as Record<string, unknown>) : {};
+  } catch {
+    return {};
+  }
+}
 
 export const POSTS_PER_PAGE_MIN = 3;
 export const POSTS_PER_PAGE_MAX = 12;
@@ -36,12 +58,7 @@ const href = (v: unknown) => {
 };
 
 export const getSiteSettings = cache((): SiteSettings => {
-  let raw: Record<string, unknown> = {};
-  try {
-    raw = JSON.parse(fs.readFileSync(FILE, "utf8")) as Record<string, unknown>;
-  } catch {
-    // chưa có file hoặc JSON hỏng → dùng mặc định
-  }
+  const raw = readJson("site");
 
   const description = text(raw.description);
 
@@ -73,5 +90,113 @@ export const getSiteSettings = cache((): SiteSettings => {
     socials: socials.length > 0 ? socials : socialLinks.map((l) => ({ ...l })),
     legalLinks: legal.length > 0 ? legal : legalLinks.map((l) => ({ ...l })),
     postsPerPage: int(raw.postsPerPage, POSTS_PER_PAGE_MIN, POSTS_PER_PAGE_MAX) ?? POSTS_PER_PAGE,
+  };
+});
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Header / Footer / Newsletter (Keystatic: nhóm "Cài đặt"). Mỗi hàm đọc an toàn: ô thiếu hoặc sai thì dùng mặc định.
+// ---------------------------------------------------------------------------------------------------------------------
+
+export const MENU_MAX = 6;
+export const FOOTER_LINKS_MAX = 8;
+export const PERKS_MAX = 5;
+const NAV_ICONS: NavIconId[] = ["home", "book", "blog"];
+
+export type LogoImage = { src: string; width: number; height: number };
+
+// Đọc kích thước thật của ảnh logo trong public/ (để next/image không nhảy bố cục); không đọc được thì bỏ ảnh, dùng logo chữ
+function readLogo(src: string | undefined): LogoImage | undefined {
+  if (!src || !src.startsWith("/")) return undefined;
+  try {
+    const { width, height } = imageSize(fs.readFileSync(path.join(process.cwd(), "public", src)));
+    return width && height ? { src, width, height } : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export type HeaderSettings = {
+  /** Ảnh logo; thiếu hoặc không đọc được thì dùng logo chữ */
+  logoImage?: LogoImage;
+  logoAlt: string;
+  /** Nhóm menu (mục con của "Blog" do src/lib/nav.ts thêm từ Chủ đề); mặc định lấy từ src/config/site.ts */
+  navGroups: NavGroup[];
+  showSearch: boolean;
+  showThemeToggle: boolean;
+};
+
+export const getHeaderSettings = cache((): HeaderSettings => {
+  const raw = readJson("header");
+
+  // Mỗi mục có cờ `newGroup` = bắt đầu nhóm mới (đường kẻ ngang ở menu điện thoại); mục đầu luôn mở nhóm đầu
+  const groups: NavGroup[] = [];
+  if (Array.isArray(raw.menu)) {
+    for (const m of raw.menu.slice(0, MENU_MAX)) {
+      if (!isObj(m)) continue;
+      const label = text(m.label);
+      const to = href(m.href);
+      if (!label || !to) continue;
+      const icon = NAV_ICONS.find((i) => i === m.icon) ?? "home";
+      if (groups.length === 0 || m.newGroup === true) groups.push({ id: `nhom-${groups.length + 1}`, items: [] });
+      groups[groups.length - 1].items.push({ label, href: to, icon });
+    }
+  }
+
+  return {
+    logoImage: readLogo(text(raw.logoImage)),
+    logoAlt: text(raw.logoAlt) ?? "",
+    navGroups: groups.length > 0 ? groups : defaultNavGroups,
+    showSearch: raw.showSearch !== false,
+    showThemeToggle: raw.showThemeToggle !== false,
+  };
+});
+
+export type FooterSettings = {
+  /** Liên kết ở chân trang; undefined = dùng các mục cấp trên của menu Header */
+  links?: NavLink[];
+  /** Dòng bản quyền tự viết; undefined = "© năm tên. khẩu hiệu." */
+  copyright?: string;
+  showSocials: boolean;
+};
+
+export const getFooterSettings = cache((): FooterSettings => {
+  const raw = readJson("footer");
+  const links = Array.isArray(raw.links)
+    ? raw.links.slice(0, FOOTER_LINKS_MAX).flatMap((l) => {
+        if (!isObj(l)) return [];
+        const label = text(l.label);
+        const to = href(l.href);
+        return label && to ? [{ label, href: to }] : [];
+      })
+    : [];
+  return {
+    links: links.length > 0 ? links : undefined,
+    copyright: text(raw.copyright),
+    showSocials: raw.showSocials !== false,
+  };
+});
+
+export type NewsletterSettings = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  perks: string[];
+  submitLabel: string;
+};
+
+export const getNewsletterSettings = cache((): NewsletterSettings => {
+  const raw = readJson("newsletter");
+  const perks = Array.isArray(raw.perks)
+    ? raw.perks.slice(0, PERKS_MAX).flatMap((p) => {
+        const v = typeof p === "string" ? text(p) : isObj(p) ? text(p.text) : undefined;
+        return v ? [v] : [];
+      })
+    : [];
+  return {
+    eyebrow: text(raw.eyebrow) ?? newsletterDefaults.eyebrow,
+    title: text(raw.title) ?? newsletterDefaults.title,
+    description: text(raw.description) ?? newsletterDefaults.description,
+    perks: perks.length > 0 ? perks : [...newsletterDefaults.perks],
+    submitLabel: text(raw.submitLabel) ?? newsletterDefaults.submitLabel,
   };
 });

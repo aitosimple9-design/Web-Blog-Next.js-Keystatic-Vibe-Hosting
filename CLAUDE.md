@@ -43,6 +43,9 @@ content/posts/<slug>.md         ← bài viết (nguồn dữ liệu duy nhất)
 public/images/posts/<slug>/     ← ảnh của từng bài
 content/topics/<slug>.json      ← chủ đề (tên, thứ tự, mô tả, ảnh nền); sửa trong Keystatic menu "Chủ đề"
 content/books/<slug>.json       ← sách (tên + bìa); tên phải khớp `source.book` của bài; sửa trong Keystatic menu "Sách"
+content/settings/header.json    ← Header (ảnh logo, menu tối đa 6 mục, bật / tắt ô tìm kiếm và nút đổi theme); Keystatic singleton, đọc qua `getHeaderSettings()`
+content/settings/footer.json    ← Footer (liên kết tối đa 8, dòng bản quyền, bật / tắt mạng xã hội); đọc qua `getFooterSettings()`
+content/settings/newsletter.json ← chữ của form Newsletter (dòng nhỏ, tiêu đề, mô tả, lợi ích, nhãn nút); đọc qua `getNewsletterSettings()`; nơi gửi dữ liệu vẫn chờ Q11
 content/settings/site.json      ← Cài đặt site (tên, khẩu hiệu, mô tả, ảnh chia sẻ, năm bản quyền, mạng xã hội, trang pháp lý, số bài mỗi trang); Keystatic singleton. Đọc qua `getSiteSettings()` (src/lib/settings.ts): ô thiếu / sai thì dùng mặc định ở src/config/site.ts. Logo, chân trang, icon mạng xã hội, metadata, phân trang Blog đều lấy từ đây (Lộc duyệt cấu trúc content/settings + content/pages 2026-10-16; content/pages/ làm ở PR 3-4)
 public/images/topics/<slug>/    ← ảnh nền chủ đề (Keystatic tự lưu khi tải ảnh lên)
 public/images/covers/<slug>/    ← bìa sách (SVG demo sinh bằng scripts/gen-demo-covers.mjs; bìa thật tải qua Keystatic)
@@ -130,7 +133,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
   - Có nút chuyển theme ở thanh đầu trang; mặc định theo `prefers-color-scheme`, nhớ lựa chọn của người đọc.
   - Đặt theme bằng script chạy trước khi vẽ trang (không nháy sáng).
   - Chỉ dùng token (`var(--ink)`, `var(--paper)`…), KHÔNG viết mã hex trong CSS; mọi component phải đẹp ở cả 2 theme.
-- Form đăng ký là component tái sử dụng DUY NHẤT (`Newsletter`: Họ tên, Số điện thoại, Email), có ở cả 3 trang; không viết bản thứ hai. Nơi gửi dữ liệu: chờ Q11, KHÔNG tự chọn.
+- Form đăng ký là component tái sử dụng DUY NHẤT (`Newsletter`: Họ tên, Số điện thoại, Email), có ở cả 3 trang; không viết bản thứ hai. Chữ của form lấy từ Keystatic (Cài đặt → Newsletter): nơi gọi (server) truyền `settings={getNewsletterSettings()}`. Nơi gửi dữ liệu: chờ Q11, KHÔNG tự chọn.
 - Tailwind (Q3): ánh xạ token của Design System vào theme Tailwind; không tự thêm màu ngoài token.
 - Chỉ có MỘT màu nhấn (`accent`; tông ấm `accent-warm` chỉ làm đầu gradient và họa tiết, không làm chữ hay nền phẳng); phong cách **premium** (Lộc duyệt 2026-10-07): gradient CHỈ cho nút chính / CTA và bề mặt khối nổi (token `gradient-primary*`, `gradient-surface`, pha từ `accent` + `accent-warm`; lớp `.btn-grad`, `.surface-raised` trong globals.css); đổ bóng nhiều lớp CHỈ theo thang `elevated-sm/md/lg` (+ `cover-shadow` cho bìa sách; + cặp `inset-sunk` / `inset-sunk-pressed` DUY NHẤT cho khối LÕM vào nền ở thẻ nguồn sách + mục lục trang bài dưới 1280px, Lộc duyệt 2026-10-10), không tự chế giá trị. KHÔNG gradient cho nền trang, chữ, ảnh bài (ngoại lệ DUY NHẤT: vùng chuyển mờ giữa các dải nền, lớp `seam-top` / `seam-bottom` / `seam-both`; đáy ảnh hero cắt bằng mask nét cọ `brush-bottom` thay cho bóng mờ, pha từ `paper` sang trong suốt; không dùng đường kẻ ngang cứng giữa các dải).
 - **Chuyển động và hình ảnh (Lộc mở rộng 2026-10-07, vẫn nằm trong bảng màu / bo góc / bóng của Design System):**

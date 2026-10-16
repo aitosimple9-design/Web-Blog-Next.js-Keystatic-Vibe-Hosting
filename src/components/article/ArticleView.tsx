@@ -4,7 +4,7 @@
 import { site } from "@/config/site";
 import { brushStyle } from "@/lib/brush";
 import { topicBySlug } from "@/lib/topics";
-import { getSiteSettings } from "@/lib/settings";
+import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
 import { getRelatedPosts, type Post } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
@@ -136,7 +136,7 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
       </article>
 
       <RelatedSlider posts={related} />
-      <Newsletter />
+      <Newsletter settings={getNewsletterSettings()} />
 
       {previewNote ? (
         // sticky (không dùng fixed): bài nằm trong <main> có transform nên fixed sẽ bị tính theo <main>, không theo cửa sổ

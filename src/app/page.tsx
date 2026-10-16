@@ -5,7 +5,7 @@ import Link from "next/link";
 import { profile } from "@/config/profile";
 import { site } from "@/config/site";
 import { getAllPosts, getSiteStats } from "@/lib/posts";
-import { getSiteSettings } from "@/lib/settings";
+import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
 import { brushStyle } from "@/lib/brush";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
@@ -121,7 +121,7 @@ export default function HomePage() {
       </section>
 
       <div id="dang-ky">
-        <Newsletter />
+        <Newsletter settings={getNewsletterSettings()} />
       </div>
     </PageShell>
   );

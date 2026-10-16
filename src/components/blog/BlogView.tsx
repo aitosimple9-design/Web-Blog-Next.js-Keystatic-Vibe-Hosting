@@ -2,7 +2,7 @@
 // URL (Q13, giả định): /blog/<chu-de> và /blog/<chu-de>/trang/<n>; 6 bài mỗi trang, lưới tự đổi số cột (1 / 2 / 3).
 import Image from "next/image";
 import { brushStyle } from "@/lib/brush";
-import { getSiteSettings } from "@/lib/settings";
+import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
 import { topicBySlug, getTopics } from "@/lib/topics";
 import {
   countByTopic,
@@ -149,7 +149,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
         </div>
       </section>
 
-      <Newsletter />
+      <Newsletter settings={getNewsletterSettings()} />
     </PageShell>
   );
 }

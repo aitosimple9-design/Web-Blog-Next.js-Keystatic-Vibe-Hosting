@@ -11,11 +11,12 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import { AlertIcon, CheckIcon, MailIcon, PhoneIcon, UserIcon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { PointerLayer, PointerScene } from "@/components/ui/Motion";
+import { newsletterDefaults } from "@/config/site";
+import type { NewsletterSettings } from "@/lib/settings";
 
 type Fields = { name: string; phone: string; email: string };
 type Errors = Partial<Record<keyof Fields, string>>;
 
-const perks = ["Ý chính, ví dụ và cách áp dụng", "Đọc trong khoảng 10 phút", "Hủy đăng ký bất cứ lúc nào"];
 
 function validate(v: Fields): Errors {
   const e: Errors = {};
@@ -41,7 +42,16 @@ const icons: Record<keyof Fields, ReactNode> = {
   email: <MailIcon size={18} />,
 };
 
-export function Newsletter({ className = "" }: { className?: string }) {
+// Chữ của form lấy từ Cài đặt → Newsletter: nơi gọi (server) truyền `settings={getNewsletterSettings()}`; không truyền thì dùng mặc định.
+const defaultSettings: NewsletterSettings = { ...newsletterDefaults, perks: [...newsletterDefaults.perks] };
+
+export function Newsletter({
+  className = "",
+  settings = defaultSettings,
+}: {
+  className?: string;
+  settings?: NewsletterSettings;
+}) {
   const uid = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const [values, setValues] = useState<Fields>({ name: "", phone: "", email: "" });
@@ -167,15 +177,15 @@ export function Newsletter({ className = "" }: { className?: string }) {
           </PointerLayer>
 
           <div className="relative">
-            <p className="type-eyebrow uppercase text-ink-soft">Bản tin</p>
+            <p className="type-eyebrow uppercase text-ink-soft">{settings.eyebrow}</p>
             <h2 id={`${uid}-title`} className="type-display-md mt-s2">
-              Nhận bài mới qua email
+              {settings.title}
             </h2>
             <p className="type-dek mt-s3 text-ink-soft">
-              Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.
+              {settings.description}
             </p>
             <ul className="mt-s5 grid gap-s3">
-              {perks.map((p) => (
+              {settings.perks.map((p) => (
                 <li
                   key={p}
                   className="group/perk type-ui-body flex items-center gap-s3 transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:hover:translate-x-1"
@@ -236,7 +246,7 @@ export function Newsletter({ className = "" }: { className?: string }) {
                   )}
                 </div>
                 <Button type="submit" wide className="mt-s5" disabled={status === "sending"}>
-                  {status === "sending" ? "Đang gửi…" : "Đăng ký"}
+                  {status === "sending" ? "Đang gửi…" : settings.submitLabel}
                 </Button>
                 <p className="type-caption mt-s3 text-ink-faint">Chỉ gửi bài mới, không quảng cáo.</p>
               </form>

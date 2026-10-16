@@ -70,3 +70,12 @@ export const socialLinks: { id: SocialId; label: string; href: string }[] = [
 
 // Q13: số bài mỗi trang ở trang Blog (cố định, lưới tự đổi số cột theo màn hình).
 export const POSTS_PER_PAGE = 6;
+
+// Chữ mặc định của form Newsletter; ghi đè được ở Keystatic (Cài đặt → Newsletter), đọc qua src/lib/settings.ts.
+export const newsletterDefaults = {
+  eyebrow: "Bản tin",
+  title: "Nhận bài mới qua email",
+  description: "Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.",
+  perks: ["Ý chính, ví dụ và cách áp dụng", "Đọc trong khoảng 10 phút", "Hủy đăng ký bất cứ lúc nào"],
+  submitLabel: "Đăng ký",
+} as const;
