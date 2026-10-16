@@ -53,7 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
+      {/* Tiện ích trình duyệt (Monica, Grammarly...) hay chèn thuộc tính vào <body> trước khi React gắn vào: bỏ qua cảnh báo hydration CHỈ cho chính thẻ này (không che lỗi của phần bên trong) */}
+      <body suppressHydrationWarning>
         <a href="#main" className="skip-link">
           Bỏ qua, đến nội dung chính
         </a>
