@@ -29,9 +29,13 @@ export type PostMeta = {
   updated?: string;
   source: { book: string; author: string };
   cover?: string;
+  /** Mô tả ảnh bìa (alt); thiếu thì ảnh bìa được coi là trang trí */
+  coverAlt?: string;
   /** Bài bị ẩn: tick "Ẩn bài này" (`draft: true`), hoặc Trạng thái là Nháp / Chờ duyệt */
   draft: boolean;
   tags: string[];
+  /** Từ khóa chính, chỉ để chấm điểm SEO ở trang quản trị; không bao giờ ra HTML hay metadata */
+  focusKeyword?: string;
   /** Tiêu đề SEO riêng (thẻ title); thiếu thì dùng `title` */
   seoTitle?: string;
   /** Ảnh chia sẻ riêng (Open Graph) */
@@ -109,8 +113,10 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
     updated,
     source: { book: str(file, source, "book"), author: str(file, source, "author") },
     cover,
+    coverAlt: opt("coverAlt"),
     draft: data.draft === true || hiddenByStatus,
     tags: list("tags"),
+    focusKeyword: opt("focusKeyword"),
     seoTitle: opt("seoTitle"),
     ogImage: opt("ogImage"),
     related: list("related"),

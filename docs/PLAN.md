@@ -159,6 +159,15 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
 - [ ] Trước khi mở PR: `ui-tester` (375/414/768/1024/1440, 2 theme) + `design-reviewer`, tạo Issue, test tay iOS + Android
 - [ ] Hồ sơ / Trang chủ trong Keystatic: hỏi lại Lộc khi tới
 
+## Kiểm tra SEO trong trang quản trị (nhánh `feat/seo-checker`, chưa có Issue)
+Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm SEO trong form bài (chấm cả lúc đang gõ), bộ tiêu chí theo Google / Yoast / Rank Math (không có phần đọc hiểu tiếng Anh).
+- [x] Bước 1 Lõi chấm điểm `src/lib/seo-score.ts` (20 tiêu chí, điểm 0-100, hàm thuần) + 29 test
+- [x] Bước 2 Hai trường mới `focusKeyword` (từ khóa chính) và `coverAlt` (alt ảnh bìa): `keystatic.config.ts`, `posts.ts`, CLAUDE.md mục 5 [sync: cần đồng bộ sang dự án B]; `coverAlt` dùng làm alt ảnh hero và ảnh chia sẻ
+- [ ] Bước 3 Cột "SEO" ở danh sách Bài viết (điểm + màu, dựa trên bản đã lưu)
+- [ ] Bước 4 Hộp điểm SEO trong form bài (liệt kê đạt / chưa đạt + cách sửa, cập nhật khi gõ); test kỹ trên giao diện thật
+- [ ] Bước 5 `npm run check-content` báo thêm cảnh báo SEO
+- [ ] Thêm bước `npm run check-content` vào `.github/workflows/ci.yml` (Lộc tự commit, Claude không sửa được thư mục workflows)
+
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
 - [ ] Chốt Q9, Q10
 - [ ] [A] Keystatic chuyển sang GitHub mode (GitHub App/OAuth + biến môi trường). Next 16 dev cần `allowedDevOrigins: ["127.0.0.1"]` (đã thêm, Thinkmill/keystatic#1549); chờ Lộc chọn GitHub App hay OAuth

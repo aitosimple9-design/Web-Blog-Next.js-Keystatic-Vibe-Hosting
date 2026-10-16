@@ -132,6 +132,19 @@ describe("trường mới của bài (tùy chọn)", () => {
     expect(p.related).toEqual([]);
     expect(p.seoTitle).toBeUndefined();
     expect(p.ogImage).toBeUndefined();
+    expect(p.focusKeyword).toBeUndefined();
+    expect(p.coverAlt).toBeUndefined();
+  });
+
+  it("đọc từ khóa chính và mô tả ảnh bìa; từ khóa chính không lọt vào HTML", async () => {
+    const m = await loadWithContent({
+      "bai-a.md": post({ focusKeyword: '"đọc sách chậm"', coverAlt: '"Cuốn sổ mở trên bàn"' }),
+    });
+    const a = m.getAllPosts()[0];
+    expect(a.focusKeyword).toBe("đọc sách chậm");
+    expect(a.coverAlt).toBe("Cuốn sổ mở trên bàn");
+    const full = await m.getPost("bai-a");
+    expect(full!.html).not.toContain("đọc sách chậm");
   });
 
   it("Trạng thái Nháp / Chờ duyệt ẩn bài, Đã đăng thì hiện", async () => {

@@ -63,7 +63,7 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
             <div className="absolute inset-0 -z-20">
               <PostImage
                 src={post.cover}
-                alt=""
+                alt={post.coverAlt ?? ""}
                 seed={post.slug}
                 fill
                 rounded={false}

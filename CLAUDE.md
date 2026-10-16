@@ -108,6 +108,9 @@ ogImage: /images/posts/tieu-de-bai/og.jpg  # ảnh chia sẻ riêng; thiếu th�
 related: [slug-bai-khac]             # bài liên quan chọn tay (đứng đầu mục Bài liên quan)
 notes: "Ghi chú nội bộ"              # KHÔNG bao giờ hiển thị / vào HTML / metadata
 updated: 2026-10-10                  # ngày sửa gần nhất (tùy chọn) → dateModified ở JSON-LD; thiếu thì dùng `date`
+# --- Trường tùy chọn thêm 2026-10-16 (điểm SEO) [sync: cần đồng bộ sang dự án B]; thiếu thì bài vẫn hợp lệ, chỉ bị trừ điểm SEO ---
+focusKeyword: "đọc sách chậm"        # từ khóa chính (2-4 từ); chỉ để chấm điểm SEO ở trang quản trị, KHÔNG hiện ra HTML / metadata
+coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký tự → alt của ảnh hero và ảnh chia sẻ; thiếu thì ảnh bìa là trang trí (alt rỗng)
 ---
 ```
 - `category` là tên file trong `content/topics/` (Keystatic: menu "Chủ đề"). Nó quyết định chủ đề của bài (nhãn, Hero chủ đề và danh sách ở trang Blog, bài liên quan). Trang chi tiết dùng 1 layout chung (`docs/layout/chi-tiet-bai/`). Mục 5 dùng chung với dự án B: cần đồng bộ sang B (nhãn `sync`).

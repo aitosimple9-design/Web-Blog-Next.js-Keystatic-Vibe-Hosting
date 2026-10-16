@@ -149,6 +149,11 @@ export default config({
           directory: "public/images/posts",
           publicPath: "/images/posts/",
         }),
+        coverAlt: fields.text({
+          label: "Mô tả ảnh bìa (alt)",
+          description: "Một câu ngắn nói ảnh có gì; Google Hình ảnh và trình đọc màn hình dùng nó. Bỏ trống thì ảnh được coi là trang trí",
+          validation: { length: { max: 125 } },
+        }),
         status: fields.select({
           label: "Trạng thái",
           description:
@@ -168,6 +173,10 @@ export default config({
         tags: fields.array(fields.text({ label: "Thẻ" }), {
           label: "Thẻ (từ khóa của bài)",
           itemLabel: (p) => p.value,
+        }),
+        focusKeyword: fields.text({
+          label: "Từ khóa chính (cụm người đọc gõ để tìm bài, 2-4 từ; dùng cho điểm SEO, không hiện ra ngoài)",
+          validation: { length: { max: 60 } },
         }),
         seoTitle: fields.text({
           label: "Tiêu đề SEO riêng (≤ 60 ký tự; bỏ trống thì dùng Tiêu đề bài)",
