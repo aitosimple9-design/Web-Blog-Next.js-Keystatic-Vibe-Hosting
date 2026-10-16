@@ -7,7 +7,7 @@ date: 2026-07-19
 source:
   book: "Sách mẫu 6"
   author: "Tác giả mẫu 4"
-cover: /images/stock/vintage-book-sofa.jpg
+cover: /images/posts/demo-20-viet-moi-ngay/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

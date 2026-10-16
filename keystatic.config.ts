@@ -10,44 +10,43 @@ export default config({
     process.env.NEXT_PUBLIC_KEYSTATIC_STORAGE === "github"
       ? { kind: "github", repo: "aitosimple9-design/Web-Blog-Next.js-Keystatic-Vibe-Hosting" }
       : { kind: "local" },
-  ui: { brand: { name: "Blog sách" } },
-  collections: {
-    posts: collection({
-      label: "Bài viết",
-      path: "content/posts/*",
-      slugField: "title",
-      format: { contentField: "content" },
-      entryLayout: "content",
-      columns: ["title", "source", "category", "date", "status", "draft", "cover"] as never, // xem ghi chú về cột ở collection topics
+  ui: {
+    brand: { name: "Blog sách" },
+    // Menu trái chia nhóm
+    navigation: { "Nội dung": ["posts", "topics", "books"], "Cài đặt": ["siteSettings"] },
+  },
+  singletons: {
+    // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
+    siteSettings: singleton({
+      label: "Cài đặt site",
+      path: "content/settings/site",
+      format: "json",
       schema: {
-        // Bài hiện có khai báo `slug:` trong frontmatter (mục 5) mà Keystatic không cho khóa lạ → khai báo "bỏ qua".
-        // Slug thật luôn là tên file (nhập ở ô Slug bên dưới).
-        slug: fields.ignored(),
-        title: fields.slug({
-          name: { label: "Tiêu đề", validation: { isRequired: true } },
-          slug: { label: "Slug (tên file, chữ thường không dấu nối bằng '-')" },
+        siteName: fields.text({
+          label: "Tên site (hiện ở tiêu đề tab trình duyệt và khi chia sẻ link)",
+          validation: { length: { max: 60 } },
         }),
         description: fields.text({
-          label: "Mô tả (≤ 160 ký tự, dùng cho meta description + Open Graph)",
+          label: "Mô tả mặc định (≤ 160 ký tự, dùng khi trang không có mô tả riêng)",
           multiline: true,
-          validation: { isRequired: true, length: { max: 160 } },
+          validation: { length: { max: 160 } },
         }),
-        // Giá trị lưu là slug chủ đề (tên file trong content/topics), vẫn là `category: chu-de-1` như mục 5.
-        category: fields.relationship({
-          label: "Chủ đề",
-          collection: "topics",
-          validation: { isRequired: true },
+        ogImage: fields.image({
+          label: "Ảnh chia sẻ mặc định (Open Graph, nên 1200x630)",
+          directory: "public/images/site",
+          publicPath: "/images/site/",
         }),
-        date: fields.date({
-          label: "Ngày đăng",
-          validation: { isRequired: true },
-          defaultValue: { kind: "today" },
-        }),
-        source: fields.object(
-          {
-            book: fields.text({ label: "Tên sách", validation: { isRequired: true } }),
-            author: fields.text({ label: "Tác giả", validation: { isRequired: true } }),
-          },
+        socials: fields.array(
+          fields.object({
+            name: fields.text({ label: "Tên mạng xã hội", validation: { isRequired: true } }),
+            url: fields.url({ label: "Địa chỉ (URL)", validation: { isRequired: true } }),
+          }),
+          { label: "Liên kết mạng xã hội", itemLabel: (p) => p.fields.name.value },
+        ),
+      },
+    }),
+  },
+  collections: {
     topics: collection({
       label: "Chủ đề",
       path: "content/topics/*",
@@ -99,14 +98,93 @@ export default config({
         }),
       },
     }),
+    posts: collection({
+      label: "Bài viết",
+      path: "content/posts/*",
+      slugField: "title",
+      // Nút "Xem trước" trong form bài: mở bản ĐÃ LƯU với giao diện thật, cả bài nháp / lên lịch (chỉ chạy trên máy soạn bài, xem src/lib/preview.ts)
+      previewUrl: "/xem-truoc/bai-viet/{slug}",
+      format: { contentField: "content" },
+      entryLayout: "content",
+      columns: ["title", "source", "category", "date", "status", "draft", "cover"] as never, // xem ghi chú về cột ở collection topics
+      schema: {
+        // Bài hiện có khai báo `slug:` trong frontmatter (mục 5) mà Keystatic không cho khóa lạ → khai báo "bỏ qua".
+        // Slug thật luôn là tên file (nhập ở ô Slug bên dưới).
+        slug: fields.ignored(),
+        title: fields.slug({
+          name: { label: "Tiêu đề", validation: { isRequired: true } },
+          slug: { label: "Slug (tên file, chữ thường không dấu nối bằng '-')" },
+        }),
+        description: fields.text({
+          label: "Mô tả (≤ 160 ký tự, dùng cho meta description + Open Graph)",
+          multiline: true,
+          validation: { isRequired: true, length: { max: 160 } },
+        }),
+        // Giá trị lưu là slug chủ đề (tên file trong content/topics), vẫn là `category: chu-de-1` như mục 5.
+        category: fields.relationship({
+          label: "Chủ đề",
+          collection: "topics",
+          validation: { isRequired: true },
+        }),
+        date: fields.date({
+          label: "Ngày đăng",
+          validation: { isRequired: true },
+          defaultValue: { kind: "today" },
+        }),
+        updated: fields.date({
+          label: "Ngày sửa gần nhất (tùy chọn; hiện cho Google ở dateModified, bỏ trống thì dùng Ngày đăng)",
+        }),
+        source: fields.object(
+          {
+            book: fields.text({ label: "Tên sách", validation: { isRequired: true } }),
+            author: fields.text({ label: "Tác giả", validation: { isRequired: true } }),
+          },
           { label: "Nguồn sách" },
         ),
-        cover: fields.text({
-          label: "Ảnh bìa (đường dẫn, ví dụ /images/posts/<slug>/cover.jpg)",
+        // Ô tải ảnh: file lưu ở public/images/posts/<slug>/<tên file>, và `cover` trong bài tự ghi đúng đường dẫn đó
+        // (/images/posts/<slug>/<tên file>, khớp mục 5).
+        cover: fields.image({
+          label: "Ảnh bìa",
+          description: "Tải ảnh lên; đường dẫn trong bài tự điền",
+          directory: "public/images/posts",
+          publicPath: "/images/posts/",
+        }),
+        status: fields.select({
+          label: "Trạng thái",
+          description:
+            "Nháp và Chờ duyệt: ẩn khỏi website. Đã đăng: hiện, trừ khi tick Ẩn bài này. Bài có ngày đăng ở tương lai là bài lên lịch.",
+          options: [
+            { label: "Nháp", value: "draft" },
+            { label: "Chờ duyệt", value: "review" },
+            { label: "Đã đăng", value: "published" },
+          ],
+          defaultValue: "published",
         }),
         draft: fields.checkbox({
-          label: "Bản nháp (ẩn khỏi trang và sitemap)",
+          label: "Ẩn bài này",
+          description: "Tick để ẩn bài ngay khỏi website và sitemap, bất kể Trạng thái (ô `draft` trong bài, dùng chung với dự án B)",
           defaultValue: false,
+        }),
+        tags: fields.array(fields.text({ label: "Thẻ" }), {
+          label: "Thẻ (từ khóa của bài)",
+          itemLabel: (p) => p.value,
+        }),
+        seoTitle: fields.text({
+          label: "Tiêu đề SEO riêng (≤ 60 ký tự; bỏ trống thì dùng Tiêu đề bài)",
+          validation: { length: { max: 60 } },
+        }),
+        ogImage: fields.image({
+          label: "Ảnh chia sẻ riêng (Open Graph, nên 1200x630; bỏ trống thì dùng ảnh bìa)",
+          directory: "public/images/posts",
+          publicPath: "/images/posts/",
+        }),
+        related: fields.multiRelationship({
+          label: "Bài liên quan (chọn tay; bỏ trống thì tự chọn theo chủ đề)",
+          collection: "posts",
+        }),
+        notes: fields.text({
+          label: "Ghi chú nội bộ (KHÔNG hiện trên website)",
+          multiline: true,
         }),
         content: fields.markdoc({
           label: "Nội dung",

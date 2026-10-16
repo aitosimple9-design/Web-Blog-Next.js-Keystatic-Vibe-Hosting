@@ -7,7 +7,7 @@ date: 2026-07-23
 source:
   book: "Sách mẫu 5"
   author: "Tác giả mẫu 3"
-cover: /images/stock/feather-pen.jpg
+cover: /images/posts/demo-19-van-dong-nhe/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
