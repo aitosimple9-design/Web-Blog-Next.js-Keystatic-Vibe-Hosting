@@ -9,7 +9,7 @@ import { SocialIcon } from "@/components/ui/Icon";
 
 export function SocialIcons({
   className = "",
-  featured,
+  featured: wanted,
   onDark,
 }: {
   className?: string;
@@ -18,6 +18,8 @@ export function SocialIcons({
   onDark?: boolean;
 }) {
   const socialLinks = getSiteSettings().socials;
+  // Icon nổi bật không có trong danh sách của Cài đặt site thì lấy icon ở giữa hàng
+  const featured = wanted ? (socialLinks.find((l) => l.id === wanted) ?? socialLinks[Math.floor(socialLinks.length / 2)])?.id : undefined;
   // Đưa icon nổi bật vào vị trí chính giữa hàng
   const list = (() => {
     if (!featured) return socialLinks;
