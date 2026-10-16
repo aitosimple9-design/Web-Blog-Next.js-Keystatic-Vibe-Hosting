@@ -306,7 +306,7 @@ Mỗi component là class HTML thuần trong `components/bundle.css`; cấu trú
 - Trên dải tối, chữ và viền nút phụ chuyển sang `on-inverse`.
 
 ### Cards & Containers
-- **BookCover**: có ảnh bìa (truyền vào, hoặc bìa demo tra theo tên sách trong `src/config/covers.ts`) thì hiển thị ảnh, không thì dùng hình sinh tự động. Bìa demo 7 cuốn "Sách mẫu 1 đến 7" vẽ bằng SVG, tông `ink` / `paper` / `accent-warm` / cát, có tên sách, tác giả và nhãn "BẢN DEMO".
+- **BookCover**: có ảnh bìa (truyền vào, hoặc bìa demo tra theo tên sách trong `content/books/*.json`) thì hiển thị ảnh, không thì dùng hình sinh tự động. Bìa demo 7 cuốn "Sách mẫu 1 đến 7" vẽ bằng SVG, tông `ink` / `paper` / `accent-warm` / cát, có tên sách, tác giả và nhãn "BẢN DEMO".
 - **BookCover** (`{component.book-cover}`): tỉ lệ `cover-ratio`, bo `radius-cover`, `cover-shadow`; bốn cỡ `cover-size-sm`, `cover-size-md`, `cover-size-lg`, `cover-size-xl`. Chưa có ảnh thì dùng ô giữ chỗ `book-cover-ph` (nền `accent`, `is-ink`, `is-strong`, `is-paper`).
 - **BookCard** (`{component.book-card}`): bìa, tên sách (`title`), tác giả, đánh giá, tag chủ đề; tối đa `book-card-max`.
 - **PostCard biến thể `tile`** (ô lưới "Bài viết mới nhất", thêm 2026-10-07): ô lưới bento: vùng ảnh kéo xuống phủ cả nhãn, tiêu đề, ngày (phủ `inverse` 65%, chữ `on-inverse` nằm thẳng trên ảnh), `radius-md`, `elevated-md`, hover `elevated-lg`; nhãn chủ đề là huy hiệu pill trong mờ (cùng kiểu huy hiệu số bài của `TopicCard`: viền `on-inverse-soft` 60%, nền `on-inverse` 15%), nhãn / tiêu đề / ngày cách nhau `space-4`, giãn dòng tiêu đề 1,5, đệm trong `space-5`. Bento gốc nhưng hàng lưới cao hơn (320px mobile / 340px tablet; desktop hai hàng cố định 300px, ô cao 620px, ô thường 262x300px). Đã thử bản thẻ bao (không chọn).

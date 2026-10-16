@@ -90,7 +90,7 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [x] Component cơ bản: nút chính, nút phụ, card bài viết, nhãn danh mục
 - [x] Nâng cấp premium (2026-10-07): token `accent-warm`, `gradient-*`, `elevated-*`, `input-icon-*`; nút, ô nhập, thẻ, khối form, ảnh bài
 - [x] Ảnh nền thẻ chủ đề 3:4 + Hero Blog theo chủ đề, nhãn nổi trong form, ô nhập glow / focus-visible, dải chữ tự trôi, icon mạng xã hội chip + URL demo, `SectionHead` căn giữa (2026-10-07)
-- [x] Bìa sách demo SVG 7 cuốn + `src/config/covers.ts` (2026-10-07)
+- [x] Bìa sách demo SVG 7 cuốn + `content/books/*.json` (trước là `src/config/covers.ts`, chuyển sang Keystatic 2026-10-15)
 - [x] Breadcrumb ở trang Blog, ẩn tiêu đề "Blog"; breadcrumb viên nổi giữa đường giao ảnh hero / khối trắng ở trang bài; tiêu đề "Bài liên quan" nổi bật (2026-10-07)
 - [x] Đường nối mềm giữa các dải nền, bỏ viền kẻ dải chữ (2026-10-07)
 - [x] Trang chủ mới (thương hiệu cá nhân, `/`): Hero trung tâm (chân dung xóa phông, tên khổng lồ sau người, cánh cửa mở đầu trang, thẻ kính mờ), Câu chuyện, Cách mình đọc, Con số, Tủ sách, Bài tiêu biểu, Kết nối; Trang chủ cũ chuyển sang `/book`; menu Trang chủ · Book · Blog; nội dung mẫu ở `src/config/profile.ts` (2026-10-11)
@@ -113,7 +113,7 @@ Layout đã duyệt nằm ở `docs/layout/<trang>/README.md`. Làm theo thứ t
 - [x] Hiệu ứng hover + animation + ảnh cho hero và thẻ (2026-10-07): xem CLAUDE.md mục 6 "Chuyển động và hình ảnh"
 - [x] (2026-10-14, nhánh `feat/header-scroll-motion`, chờ kiểm tra 5 mốc + `design-reviewer`) Thanh đầu trang viên thuốc khi cuộn, hero kéo lên sau menu (menu trong suốt ở đầu trang), chữ hiện từng từ + khối hiện lần lượt khi cuộn (`RevealText`, `Reveal`): xem CLAUDE.md mục 6 và `docs/design-system/EXTENSIONS.md`
 - [x] (2026-10-07, đợt 2) Hero trang bài full-width; nền thẻ bài liên quan chữ nhật dọc 3:4 bo góc (bố cục giữ wireframe); form đăng ký sửa nhãn một dòng + tương tác; ghi vào `docs/design-system/EXTENSIONS.md`
-- [x] Ảnh minh họa demo: 12 ảnh Wikimedia Commons (CC0 / phạm vi công cộng / CC BY) trong `public/images/stock/`, nguồn ở `public/images/CREDITS.md`; ảnh CC BY phải ghi công trên web thật (Lộc duyệt ảnh, thay bằng ảnh riêng khi có)
+- [x] Ảnh minh họa demo: 12 ảnh Wikimedia Commons (CC0 / phạm vi công cộng / CC BY) (thư mục `stock/` đã xóa 2026-10-15, ảnh nằm ở `posts/<slug>/`, `topics/<slug>/`, `profile/`), nguồn ở `public/images/CREDITS.md`; ảnh CC BY phải ghi công trên web thật (Lộc duyệt ảnh, thay bằng ảnh riêng khi có)
 
 Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `design-reviewer`.
 
@@ -142,6 +142,22 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
   - Điểm Lighthouse
   - Chi phí vận hành dự kiến mỗi tháng
 - [ ] (Mình chốt) Chọn A hoặc B để vận hành chính thức
+
+## Nâng cấp quản trị Keystatic (nhánh `feat/keystatic-admin-upgrade`, chưa có Issue)
+- [x] B1 Cột danh sách + menu trái chia nhóm (2026-10-15)
+- [x] B2 Singleton "Cài đặt site" làm giá trị dự phòng cho metadata (2026-10-15)
+- [x] B2b Chủ đề và Sách chuyển từ `src/config` sang `content/topics`, `content/books` (2026-10-15)
+- [x] B3 Trường mới của bài (ảnh bìa tải lên, Trạng thái, thẻ, SEO title, ảnh OG, bài liên quan, ghi chú) [sync sang B] (2026-10-15)
+- [x] Xóa bài / chủ đề / sách tự xóa thư mục ảnh (local); `npm run prune-images` cho chế độ GitHub (2026-10-15)
+- [x] B4 `isPublished(post, now)` (giờ Asia/Ho_Chi_Minh): bài ngày tương lai ẩn ở danh sách, trang bài, liên quan, tìm kiếm, sitemap; hẹn giờ đăng = Redeploy tay (2026-10-15)
+- [x] B5 `npm run check-content` (lỗi / cảnh báo / thông tin) + JSON-LD `image`/`dateModified`, thêm trường tùy chọn `updated` [sync sang B] (2026-10-15)
+- [x] B6 Nút "Xem trước" (`/xem-truoc/bai-viet/<slug>`, bản đã lưu, gồm nháp / lên lịch; chỉ chạy ở chế độ local, không trên Vercel). Xem trước ở GitHub mode / production: làm ở GĐ8 (cần xác thực) (2026-10-15)
+- [x] B7 Kiểm tra cuối: typecheck, lint, 45 test, check-content, prune-images, build 35 trang đều đạt (2026-10-15)
+- [x] Danh sách trong Keystatic có thêm cột: Bài (Tiêu đề, Chủ đề, Ngày đăng, Trạng thái, Ẩn bài này, Ảnh bìa), Chủ đề (Tên, Thứ tự, Mô tả, Ảnh nền), Sách (Tên, Ảnh sách); ô tick `draft` đổi nhãn thành "Ẩn bài này" (giữ nguyên hai ô Trạng thái và Ẩn bài này) (2026-10-16)
+- [x] Cột ảnh trong danh sách Keystatic hiện ảnh thu nhỏ thay vì đường dẫn (`KeystaticThumbnails.tsx`, thay ở trình duyệt, không đổi dữ liệu) (2026-10-16)
+- [x] Cột "Nguồn sách" ở danh sách Bài viết hiện tên sách (Keystatic không đọc được khối lồng `source.book`): `KeystaticThumbnails.tsx` thay "[object Object]" bằng tên lấy từ `/api/ten-sach` (`getBookNamesBySlug` trong `posts.ts`; cùng cổng `preview.ts`), không đổi dữ liệu (2026-10-16)
+- [ ] Trước khi mở PR: `ui-tester` (375/414/768/1024/1440, 2 theme) + `design-reviewer`, tạo Issue, test tay iOS + Android
+- [ ] Hồ sơ / Trang chủ trong Keystatic: hỏi lại Lộc khi tới
 
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
 - [ ] Chốt Q9, Q10
