@@ -23,6 +23,7 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
   - `next.config.ts` KHÔNG bật `cacheComponents` (chưa chắc tương thích Keystatic); xem lại ở GĐ2
   - CSS: Tailwind CSS bản mới nhất (Q3)
   - Đọc bài: dùng cả thư viện đọc frontmatter và thư viện render Markdown (Q6); chọn cụ thể + hỏi trước khi cài
+  - Kích thước ảnh trong thân bài: thư viện `image-size` (Lộc duyệt cài 2026-10-16; MIT, không phụ thuộc phụ) đọc width / height thật lúc dựng HTML để hết nhảy bố cục (CLS), qua plugin `src/lib/rehype-image-size.ts`
   - Danh mục: demo trước, đặt ở một nơi cấu hình để sửa / thêm được (Q7)
   - Font / design: theo Design System trong `docs/design-system/` (Q8)
 - Chưa chốt: xem bảng "Quyết định đang chờ" trong `docs/PLAN.md`. KHÔNG tự chọn; hỏi khi tới giai đoạn cần.
@@ -59,6 +60,7 @@ src/app/keystatic/SeoPanel.tsx + seo-form-reader.ts ← HỘP ĐIỂM SEO nổi 
 src/lib/seo-fields.ts            ← nhãn các ô của form bài mà hộp điểm đọc; keystatic.config.ts PHẢI dùng đúng các hằng số này (tests/unit/seo-fields.test.ts chặn lệch)
 src/app/xem-truoc/bai-viet/<slug>/ ← XEM TRƯỚC bài nháp / lên lịch (nút "Xem trước" của Keystatic); chỉ chạy ở máy soạn bài
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
+src/lib/rehype-image-size.ts    ← plugin rehype gắn width / height thật + loading="lazy" cho ảnh trong thân bài (posts.ts dùng khi dựng HTML)
 src/lib/topics.ts, books.ts, settings.ts, nav.ts, preview.ts, content-cleanup.ts ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
 src/components/                 ← UI components (ui/, layout/, home/, blog/, article/)
 src/config/                     ← site.ts (tên blog, nav tĩnh, mạng xã hội); chủ đề và bìa sách đã chuyển sang content/topics, content/books

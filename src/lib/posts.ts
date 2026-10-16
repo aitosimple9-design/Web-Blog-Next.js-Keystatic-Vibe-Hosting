@@ -11,6 +11,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
+import { rehypeImageSize } from "@/lib/rehype-image-size";
 import type { Root, Element, Nodes } from "hast";
 import { topicBySlug, getTopics } from "@/lib/topics";
 import { readingMinutes } from "@/lib/format";
@@ -260,7 +261,12 @@ function collectH2(tree: Root): Heading[] {
 
 async function render(body: string): Promise<{ html: string; headings: Heading[] }> {
   // Không bật allowDangerousHtml: HTML thô trong Markdown bị bỏ → an toàn khi dùng dangerouslySetInnerHTML.
-  const processor = unified().use(remarkParse).use(remarkRehype).use(rehypeSlug).use(rehypeStringify);
+  const processor = unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeSlug)
+    .use(rehypeImageSize, { publicDir: path.join(process.cwd(), "public") }) // width / height thật cho ảnh trong bài: hết nhảy bố cục (CLS)
+    .use(rehypeStringify);
   const tree = (await processor.run(processor.parse(body))) as Root;
   return { html: processor.stringify(tree), headings: collectH2(tree) };
 }
