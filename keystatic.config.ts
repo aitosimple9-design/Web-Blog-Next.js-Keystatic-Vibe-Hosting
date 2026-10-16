@@ -14,7 +14,7 @@ export default config({
   ui: {
     brand: { name: "Blog sách" },
     // Menu trái chia nhóm
-    navigation: { "Nội dung": ["posts", "topics", "books"], "Cài đặt": ["siteSettings"] },
+    navigation: { "Nội dung": ["posts", "topics", "books"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
   },
   singletons: {
     // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
@@ -83,6 +83,134 @@ export default config({
           label: "Số bài mỗi trang ở trang Blog (3 đến 12; để trống = 6)",
           validation: { min: 3, max: 12 },
         }),
+      },
+    }),
+    // Header: logo, menu, bật / tắt ô tìm kiếm và nút đổi theme (đọc bởi getHeaderSettings ở src/lib/settings.ts). Mục con của "Blog" tự lấy từ Chủ đề.
+    headerSettings: singleton({
+      label: "Header",
+      path: "content/settings/header",
+      format: "json",
+      schema: {
+        logoImage: fields.image({
+          label: "Ảnh logo (để trống = dùng logo chữ là Tên site)",
+          description: "Hiển thị cao bằng chữ logo. Nên dùng ảnh PNG / SVG nền trong suốt.",
+          directory: "public/images/site",
+          publicPath: "/images/site/",
+        }),
+        logoAlt: fields.text({
+          label: "Mô tả ảnh logo (đọc cho người dùng trình đọc màn hình)",
+          validation: { length: { max: 80 } },
+        }),
+        menu: fields.array(
+          fields.object({
+            label: fields.text({ label: "Tên mục", validation: { isRequired: true, length: { max: 24 } } }),
+            href: fields.text({
+              label: "Địa chỉ (đường dẫn như /book hoặc https://…)",
+              validation: { isRequired: true },
+            }),
+            icon: fields.select({
+              label: "Icon (hiện ở menu điện thoại)",
+              options: [
+                { label: "Trang chủ", value: "home" },
+                { label: "Sách", value: "book" },
+                { label: "Blog", value: "blog" },
+              ],
+              defaultValue: "home",
+            }),
+            newGroup: fields.checkbox({
+              label: "Bắt đầu nhóm mới ở menu điện thoại (kẻ ngang phía trên mục này)",
+              defaultValue: false,
+            }),
+          }),
+          {
+            label: "Menu (tối đa 6 mục; để trống = dùng menu mặc định: Trang chủ · Book · Blog)",
+            description: "Mục /blog đầu tiên tự có danh sách Chủ đề làm mục con.",
+            itemLabel: (p) => p.fields.label.value,
+            validation: { length: { max: 6 } },
+          },
+        ),
+        showSearch: fields.checkbox({ label: "Hiện ô tìm kiếm", defaultValue: true }),
+        showThemeToggle: fields.checkbox({ label: "Hiện nút đổi giao diện Giấy / Đêm", defaultValue: true }),
+      },
+    }),
+    // Footer: liên kết, dòng bản quyền, bật / tắt mạng xã hội (đọc bởi getFooterSettings).
+    footerSettings: singleton({
+      label: "Footer",
+      path: "content/settings/footer",
+      format: "json",
+      schema: {
+        links: fields.array(
+          fields.object({
+            label: fields.text({ label: "Tên liên kết", validation: { isRequired: true, length: { max: 24 } } }),
+            href: fields.text({
+              label: "Địa chỉ (đường dẫn như /blog hoặc https://…)",
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: "Liên kết ở chân trang (tối đa 8; để trống = dùng các mục menu của Header)",
+            itemLabel: (p) => p.fields.label.value,
+            validation: { length: { max: 8 } },
+          },
+        ),
+        copyright: fields.text({
+          label: "Dòng bản quyền (để trống = © năm, tên site, khẩu hiệu lấy ở Cài đặt site)",
+          validation: { length: { max: 160 } },
+        }),
+        showSocials: fields.checkbox({ label: "Hiện hàng icon mạng xã hội", defaultValue: true }),
+      },
+    }),
+    // Newsletter: chữ của form đăng ký ở cả 4 trang (đọc bởi getNewsletterSettings). Nơi gửi dữ liệu chờ Q11, không cấu hình ở đây.
+    newsletterSettings: singleton({
+      label: "Newsletter",
+      path: "content/settings/newsletter",
+      format: "json",
+      schema: {
+        eyebrow: fields.text({ label: "Dòng nhỏ phía trên tiêu đề (mặc định: Bản tin)", validation: { length: { max: 30 } } }),
+        title: fields.text({
+          label: "Tiêu đề (mặc định: Nhận bài mới qua email)",
+          validation: { length: { max: 80 } },
+        }),
+        description: fields.text({
+          label: "Mô tả ngắn",
+          multiline: true,
+          validation: { length: { max: 200 } },
+        }),
+        perks: fields.array(fields.text({ label: "Lợi ích", validation: { isRequired: true, length: { max: 60 } } }), {
+          label: "Các gạch đầu dòng lợi ích (tối đa 5; để trống = dùng mặc định)",
+          itemLabel: (p) => p.value,
+          validation: { length: { max: 5 } },
+        }),
+        submitLabel: fields.text({
+          label: "Chữ trên nút gửi (mặc định: Đăng ký)",
+          validation: { length: { max: 20 } },
+        }),
+        form: fields.object(
+          {
+            formTitle: fields.text({ label: "Tiêu đề khung form (mặc định: Đăng ký nhận bài)", validation: { length: { max: 60 } } }),
+            nameLabel: fields.text({ label: "Nhãn ô Họ tên (mặc định: Họ tên)", validation: { length: { max: 30 } } }),
+            namePlaceholder: fields.text({ label: "Gợi ý trong ô Họ tên (mặc định: Nguyễn Văn A)", validation: { length: { max: 40 } } }),
+            phoneLabel: fields.text({ label: "Nhãn ô Số điện thoại (mặc định: Số điện thoại)", validation: { length: { max: 30 } } }),
+            phonePlaceholder: fields.text({ label: "Gợi ý trong ô Số điện thoại (mặc định: 09xx xxx xxx)", validation: { length: { max: 40 } } }),
+            optionalTag: fields.text({ label: "Chữ đánh dấu ô không bắt buộc (mặc định: Tùy chọn)", validation: { length: { max: 20 } } }),
+            emailLabel: fields.text({ label: "Nhãn ô Email (mặc định: Email)", validation: { length: { max: 30 } } }),
+            emailPlaceholder: fields.text({ label: "Gợi ý trong ô Email (mặc định: ban@example.com)", validation: { length: { max: 40 } } }),
+            sendingLabel: fields.text({ label: "Chữ trên nút khi đang gửi (mặc định: Đang gửi…)", validation: { length: { max: 30 } } }),
+            note: fields.text({ label: "Ghi chú dưới nút (mặc định: Chỉ gửi bài mới, không quảng cáo.)", validation: { length: { max: 100 } } }),
+            successTitle: fields.text({ label: "Tiêu đề sau khi đăng ký xong (mặc định: Đã nhận đăng ký)", validation: { length: { max: 60 } } }),
+            successMessage: fields.text({
+              label: "Lời cảm ơn sau khi đăng ký (dùng {name} và {email} để điền tên và email người đăng ký)",
+              multiline: true,
+              validation: { length: { max: 200 } },
+            }),
+            resetLabel: fields.text({ label: "Nút đăng ký email khác (mặc định: Đăng ký email khác)", validation: { length: { max: 40 } } }),
+            errorNameRequired: fields.text({ label: "Lỗi: chưa nhập Họ tên", validation: { length: { max: 160 } } }),
+            errorEmailRequired: fields.text({ label: "Lỗi: chưa nhập Email", validation: { length: { max: 160 } } }),
+            errorEmailInvalid: fields.text({ label: "Lỗi: Email sai định dạng", validation: { length: { max: 160 } } }),
+            errorPhoneInvalid: fields.text({ label: "Lỗi: Số điện thoại sai", validation: { length: { max: 160 } } }),
+          },
+          { label: "Nhãn và thông báo của form (để trống ô nào thì dùng chữ mặc định)" },
+        ),
       },
     }),
   },

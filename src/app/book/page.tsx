@@ -1,6 +1,6 @@
 // Trang Book (trước đây là Trang chủ): Hero tối, chủ đề, bài mới, Newsletter. Layout: docs/layout/book/README.md
 import type { Metadata } from "next";
-import { getSiteSettings } from "@/lib/settings";
+import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
 import { getTopics } from "@/lib/topics";
 import { countByTopic, getAllPosts, getSiteStats } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
@@ -47,7 +47,7 @@ export default function BookPage() {
       </div>
       <TopicSlider topics={getTopics()} counts={countByTopic()} />
       <LatestGrid posts={rest.slice(0, 4)} total={stats.posts} />
-      <Newsletter />
+      <Newsletter settings={getNewsletterSettings()} />
     </PageShell>
   );
 }

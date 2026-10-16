@@ -3,10 +3,12 @@
 // Thanh đầu trang (SiteHeader): dính trên cùng, nền mờ, MỘT tầng duy nhất.
 // Cuộn quá SCROLL_THRESHOLD: thanh phẳng mờ đi, "viên thuốc" bo tròn nổi lên (chỉ opacity + transform, hai lớp nền chồng nhau).
 // <768px: ☰ + Logo trái · tìm kiếm + ☾ phải, ☰ mở ngăn kéo menu (MobileMenu) · 768px+: menu căn giữa, ☰ ẩn · 1024px+: ô tìm kiếm mở rộng.
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { mainNav, type NavGroup } from "@/config/site";
+import type { NavGroup } from "@/config/site";
+import type { LogoImage } from "@/lib/settings";
 import { CloseIcon, MenuIcon } from "@/components/ui/Icon";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -31,15 +33,29 @@ const tones: Record<HeaderTone, { bg: string; text: string; border: string }> = 
   inverse: { bg: "var(--inverse)", text: "text-on-inverse on-inverse", border: "" },
 };
 
-function Logo({ name }: { name: string }) {
+// Logo: ảnh (Cài đặt → Header) nếu có, không thì ô vuông + tên site
+function Logo({ name, image, alt }: { name: string; image?: LogoImage; alt: string }) {
   return (
     <Link
       href="/"
       className="group tap inline-flex items-center gap-s2 rounded-sm no-underline"
       aria-label={`${name} — về Trang chủ`}
     >
-      <span aria-hidden className="block size-[22px] rounded-cover bg-current transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:rotate-90" />
-      <span className="font-serif text-(length:--logo-size) leading-none font-semibold">{name}</span>
+      {image ? (
+        <Image
+          src={image.src}
+          width={image.width}
+          height={image.height}
+          alt={alt}
+          priority
+          className="h-[calc(var(--logo-size)*1.5)] w-auto max-w-40 object-contain"
+        />
+      ) : (
+        <>
+          <span aria-hidden className="block size-[22px] rounded-cover bg-current transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:rotate-90" />
+          <span className="font-serif text-(length:--logo-size) leading-none font-semibold">{name}</span>
+        </>
+      )}
     </Link>
   );
 }
@@ -49,12 +65,22 @@ export function HeaderBar({
   searchIndex,
   navGroups,
   siteName,
+  logoImage,
+  logoAlt,
+  showSearch,
+  showThemeToggle,
 }: {
   tone: HeaderTone;
   searchIndex: SearchItem[];
   navGroups: NavGroup[];
   siteName: string;
+  logoImage?: LogoImage;
+  logoAlt: string;
+  showSearch: boolean;
+  showThemeToggle: boolean;
 }) {
+  // Menu ngang = các mục cấp trên của mọi nhóm
+  const mainNav = navGroups.flatMap((g) => g.items.map(({ label, href }) => ({ label, href })));
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -134,7 +160,7 @@ export function HeaderBar({
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
-          <Logo name={siteName} />
+          <Logo name={siteName} image={logoImage} alt={logoAlt} />
         </div>
 
         <nav aria-label="Chính" className="hidden items-center gap-s1 tablet:flex">
@@ -151,8 +177,8 @@ export function HeaderBar({
         </nav>
 
         <div className="col-start-2 flex items-center justify-self-end tablet:col-start-3">
-          <SearchBox index={searchIndex} />
-          <ThemeToggle />
+          {showSearch ? <SearchBox index={searchIndex} /> : null}
+          {showThemeToggle ? <ThemeToggle /> : null}
         </div>
       </div>
 
