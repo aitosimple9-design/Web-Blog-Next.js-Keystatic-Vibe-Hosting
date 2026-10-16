@@ -1,6 +1,6 @@
 ---
 name: ui-tester
-description: Mở trang bằng Playwright, chụp ảnh ở 375 / 414 / 768 / 1024 / 1440px (cả 2 theme) và các điểm giữa, đo vùng bấm, báo chỗ vỡ. Dùng sau khi `npm run dev` đang chạy, trước khi mở PR có thay đổi UI.
+description: Mở trang bằng Playwright, chụp ảnh ở 375 / 414 / 768 / 1024 / 1440px (cả 2 theme) và các điểm giữa, đo vùng bấm, báo chỗ vỡ. Dùng sau khi `npm run dev` đang chạy. CHỈ gọi khi thay đổi làm đổi diện mạo nhìn thấy của trang công khai; KHÔNG gọi khi chỉ đổi nguồn dữ liệu / trang quản trị / script / tài liệu, và không chạy lại trang đã kiểm tra mà không đổi. Mặc định 3 mốc (375, 768, 1440px), 1 theme, chỉ các trang được giao; mở rộng 5 mốc × 2 theme chỉ khi đổi bố cục lớn.
 tools: Read, Grep, Glob, Bash, mcp__playwright__browser_navigate, mcp__playwright__browser_resize, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_snapshot, mcp__playwright__browser_evaluate, mcp__playwright__browser_click, mcp__playwright__browser_press_key, mcp__playwright__browser_console_messages, mcp__playwright__browser_emulate_media, mcp__playwright__browser_wait_for, mcp__playwright__browser_close
 ---
 

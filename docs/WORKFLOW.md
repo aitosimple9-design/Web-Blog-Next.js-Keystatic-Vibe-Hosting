@@ -74,8 +74,8 @@ Tên nhánh: `<tiền tố>/<số issue>-<mô tả ngắn không dấu>`.
 ### Bước 5 — Tự kiểm tra (bắt buộc trước khi mở PR)
 1. `npm run lint` không lỗi
 2. `npm run build` không lỗi ([B]: tạo được thư mục `out/`)
-3. `ui-tester`: chụp các trang bị ảnh hưởng ở 375 / 414 / 768 / 1024 / 1440px
-4. `design-reviewer`: không còn lỗi mức "phải sửa"
+3. `ui-tester` (CHỈ khi đổi diện mạo nhìn thấy): chụp các trang bị ảnh hưởng, mặc định 375 / 768 / 1440px; bỏ qua khi chỉ đổi nguồn dữ liệu / admin
+4. `design-reviewer` (CHỈ khi đổi diện mạo nhìn thấy): không còn lỗi mức "phải sửa"
 5. Trang mới có đủ SEO theo CLAUDE.md
 6. Đạt checklist "Định nghĩa xong" trong CLAUDE.md
 
