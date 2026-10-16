@@ -49,6 +49,11 @@ jobs:
         if: steps.detect.outputs.has_app == 'true'
         run: npm test --if-present
 
+      # Kiểm tra nội dung (bài, chủ đề, sách, ảnh): LỖI làm CI đỏ, cảnh báo thì không. Thay cho bước kiểm tra khi Vercel build.
+      - name: Kiểm tra nội dung
+        if: steps.detect.outputs.has_app == 'true'
+        run: npm run check-content
+
       - name: Build
         if: steps.detect.outputs.has_app == 'true'
         run: npm run build
