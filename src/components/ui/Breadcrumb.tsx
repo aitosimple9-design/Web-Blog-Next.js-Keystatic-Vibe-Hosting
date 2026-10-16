@@ -55,14 +55,15 @@ export function Breadcrumb({
               {last || !c.href ? (
                 <span
                   aria-current={last ? "page" : undefined}
-                  className={`type-caption inline-flex max-w-[16rem] items-center truncate rounded-pill border-(length:--border-width) px-s3 py-1 tablet:max-w-sm ${t.current}`}
+                  className={`type-caption inline-flex max-w-[16rem] items-center rounded-pill border-(length:--border-width) px-s3 py-1 tablet:max-w-sm ${t.current}`}
                 >
-                  {c.label}
+                  {/* `truncate` phải nằm ở phần tử khối bên trong: trên chính `inline-flex` thì dấu "…" không có tác dụng, chữ bị cắt cứng giữa chữ */}
+                  <span className="min-w-0 truncate">{c.label}</span>
                 </span>
               ) : (
                 <Link
                   href={c.href}
-                  className={`type-caption group/crumb inline-flex min-h-11 items-center gap-s1 no-underline transition-colors duration-(--motion-fast) ${t.link}`}
+                  className={`type-caption group/crumb inline-flex min-h-11 min-w-11 items-center justify-center gap-s1 no-underline transition-colors duration-(--motion-fast) ${t.link}`}
                 >
                   {i === 0 ? <HomeIcon size={16} aria-hidden /> : null}
                   <span className="ul-grow">{c.label}</span>
