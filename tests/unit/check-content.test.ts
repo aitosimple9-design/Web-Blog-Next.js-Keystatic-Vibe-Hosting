@@ -92,4 +92,18 @@ describe("scripts/check-content.mjs", () => {
     expect(r.out).toMatch(/SEO \d+\/100, chưa đạt:.*Độ dài bài/);
     expect(r.out).toMatch(/Điểm SEO trung bình \d+\/100 \(1 bài\)/);
   });
+
+  it("Trang chủ: tủ sách trỏ tới sách đã xóa và ảnh mất là LỖI; còn chữ [mẫu] chỉ là thông tin", () => {
+    const home = (extra: object) => JSON.stringify({ name: "Tên", shelf: { books: [{ book: "sach-a", topic: "chu-de-1" }] }, ...extra });
+    const base = { ...topic, "content/posts/bai-a.md": post(), "content/books/sach-a.json": JSON.stringify({ name: "Sách X" }) };
+    const ok = run({ ...base, "content/pages/trang-chu.json": home({ story: { paragraphs: ["[mẫu] a"] } }) });
+    expect(ok.code).toBe(0);
+    expect(ok.out).toMatch(/còn 1 chỗ chữ \[mẫu\]/);
+    const noBook = run({ ...base, "content/pages/trang-chu.json": JSON.stringify({ shelf: { books: [{ book: "sach-da-xoa" }] } }) });
+    expect(noBook.code).toBe(1);
+    expect(noBook.out).toContain('sách "sach-da-xoa" không còn trong mục Sách');
+    const noImg = run({ ...base, "content/pages/trang-chu.json": home({ portrait: "/images/profile/mat.webp" }) });
+    expect(noImg.code).toBe(1);
+    expect(noImg.out).toContain("file ảnh không tồn tại (portrait)");
+  });
 });

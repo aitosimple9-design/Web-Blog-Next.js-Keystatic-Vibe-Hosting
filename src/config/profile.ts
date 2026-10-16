@@ -1,4 +1,5 @@
-// Hồ sơ cá nhân cho Trang chủ (thương hiệu cá nhân). NƠI DUY NHẤT sửa nội dung trang này.
+// Nội dung MẶC ĐỊNH của Trang chủ (thương hiệu cá nhân). Nội dung thật sửa ở Keystatic (menu Trang → Trang chủ, file content/pages/trang-chu.json);
+// src/lib/pages.ts đọc file đó và rơi về các giá trị dưới đây khi ô thiếu hoặc file chưa có.
 // Mọi chữ dưới đây là NỘI DUNG MẪU (đánh dấu [mẫu]) chờ Lộc thay bằng nội dung thật; chỉ tên hiển thị là thật.
 // Ảnh: tạm dùng ảnh minh họa trong public/images/profile (ghi nguồn ở public/images/CREDITS.md), thay bằng ảnh thật khi có.
 
@@ -48,3 +49,18 @@ export const shelf = {
     { title: "Sách mẫu 6", topic: "chu-de-5" },
   ],
 } as const;
+
+/** Các chữ còn lại của Trang chủ (trước đây viết cứng trong component); sửa ở Keystatic như phần trên */
+export const home = {
+  greeting: "Xin chào, mình là",
+  ctaLabel: "Đăng ký nhận bài",
+  followLabel: "Theo dõi mình",
+  statLabels: { posts: "Bài viết", books: "Cuốn sách", topics: "Chủ đề" },
+  storyEyebrow: "Câu chuyện",
+  featured: { title: "Bài tiêu biểu", linkLabel: "Xem tất cả bài viết" },
+  connect: {
+    eyebrow: "Kết nối",
+    title: "Kết nối với mình",
+    text: "Mình đăng ghi chép mới mỗi tuần. Theo dõi mình ở nền tảng bạn hay dùng, hoặc nhận bài thẳng qua email ngay bên dưới.",
+  },
+};

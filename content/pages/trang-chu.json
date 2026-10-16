@@ -1,0 +1,88 @@
+{
+  "name": "Trần Ngọc Hoàng Ni",
+  "positioning": "Mình ghi lại điều đọng lại sau mỗi cuốn sách.",
+  "greeting": "Xin chào, mình là",
+  "ctaLabel": "Đăng ký nhận bài",
+  "followLabel": "Theo dõi mình",
+  "portrait": "/images/profile/portrait-cutout.webp",
+  "portraitAlt": "Chân dung Trần Ngọc Hoàng Ni",
+  "statLabels": {
+    "posts": "Bài viết",
+    "books": "Cuốn sách",
+    "topics": "Chủ đề"
+  },
+  "story": {
+    "eyebrow": "Câu chuyện",
+    "title": "Vì sao mình đọc và viết",
+    "paragraphs": [
+      "[mẫu] Mình bắt đầu đọc nghiêm túc khi nhận ra mình đọc rất nhiều nhưng quên gần hết sau vài tuần.",
+      "[mẫu] Từ đó mình tập ghi lại từng cuốn sách bằng lời của mình: ý chính là gì, có ví dụ nào làm mình nhớ, và mình đã thử áp dụng ra sao.",
+      "[mẫu] Blog này là nơi mình giữ những ghi chép đó, để bạn đỡ phải đọc lại từ đầu và có thể bắt đầu thử ngay trong ngày.",
+      "[mẫu] Mình không viết để thay thế cuốn sách. Mình viết để bạn biết cuốn nào đáng bỏ thời gian đọc trọn vẹn."
+    ]
+  },
+  "storyImage": "/images/profile/story.jpg",
+  "storyImageAlt": "Cuốn sách cũ đặt trên ghế sofa",
+  "storyImagePosition": "50% 50%",
+  "principles": {
+    "title": "Cách mình đọc",
+    "dek": "Bốn nguyên tắc mình giữ khi ghi chép một cuốn sách.",
+    "items": [
+      {
+        "title": "Diễn giải bằng lời mới",
+        "text": "[mẫu] Không chép lại câu chữ của tác giả. Mình viết lại ý bằng cách nói của mình để chắc rằng mình đã hiểu."
+      },
+      {
+        "title": "Có ví dụ",
+        "text": "[mẫu] Mỗi ý chính đi kèm một ví dụ đời thường, để bạn hình dung được và thử được."
+      },
+      {
+        "title": "Ghi nguồn",
+        "text": "[mẫu] Mỗi bài đều ghi rõ tên sách và tác giả, để bạn tìm đọc bản gốc khi muốn đi sâu."
+      },
+      {
+        "title": "Thử rồi mới viết",
+        "text": "[mẫu] Mình chỉ kể cách áp dụng khi đã tự thử, và nói thật chỗ nào chưa hiệu quả."
+      }
+    ]
+  },
+  "shelf": {
+    "title": "Tủ sách của mình",
+    "dek": "Những cuốn sách ảnh hưởng đến mình nhiều nhất. Bấm vào bìa để đọc các bài cùng chủ đề.",
+    "books": [
+      {
+        "book": "sach-mau-1",
+        "topic": "chu-de-1"
+      },
+      {
+        "book": "sach-mau-2",
+        "topic": "chu-de-2"
+      },
+      {
+        "book": "sach-mau-3",
+        "topic": "chu-de-3"
+      },
+      {
+        "book": "sach-mau-4",
+        "topic": "chu-de-1"
+      },
+      {
+        "book": "sach-mau-5",
+        "topic": "chu-de-4"
+      },
+      {
+        "book": "sach-mau-6",
+        "topic": "chu-de-5"
+      }
+    ]
+  },
+  "featured": {
+    "title": "Bài tiêu biểu",
+    "linkLabel": "Xem tất cả bài viết"
+  },
+  "connect": {
+    "eyebrow": "Kết nối",
+    "title": "Kết nối với mình",
+    "text": "Mình đăng ghi chép mới mỗi tuần. Theo dõi mình ở nền tảng bạn hay dùng, hoặc nhận bài thẳng qua email ngay bên dưới."
+  }
+}

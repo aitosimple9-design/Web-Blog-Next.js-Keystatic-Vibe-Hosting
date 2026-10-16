@@ -1,6 +1,6 @@
 import { makeRouteHandler } from "@keystatic/next/route-handler";
 import config from "../../../../../keystatic.config";
-import { imageFoldersToRemove, removeImageFolders, removeOrphanImages } from "@/lib/content-cleanup";
+import { imageFoldersToRemove, removeHomeReferences, removeImageFolders, removeOrphanImages } from "@/lib/content-cleanup";
 
 const handler = makeRouteHandler({ config });
 
@@ -12,9 +12,10 @@ export const { GET } = handler;
 export async function POST(req: Request) {
   let folders: string[] = [];
   let sweep = false;
+  let update: Parameters<typeof removeHomeReferences>[0] = {};
   if (new URL(req.url).pathname.endsWith("/update")) {
     try {
-      const update = await req.clone().json();
+      update = await req.clone().json();
       folders = imageFoldersToRemove(update);
       sweep = true;
     } catch {
@@ -24,6 +25,7 @@ export async function POST(req: Request) {
   const res = await handler.POST(req);
   if (res.ok && sweep) {
     if (folders.length) await removeImageFolders(folders);
+    removeHomeReferences(update);
     await removeOrphanImages();
   }
   return res;

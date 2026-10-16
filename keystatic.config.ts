@@ -14,7 +14,7 @@ export default config({
   ui: {
     brand: { name: "Blog sách" },
     // Menu trái chia nhóm
-    navigation: { "Nội dung": ["posts", "topics", "books"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
+    navigation: { "Nội dung": ["posts", "topics", "books"], "Trang": ["homePage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
   },
   singletons: {
     // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
@@ -210,6 +210,140 @@ export default config({
             errorPhoneInvalid: fields.text({ label: "Lỗi: Số điện thoại sai", validation: { length: { max: 160 } } }),
           },
           { label: "Nhãn và thông báo của form (để trống ô nào thì dùng chữ mặc định)" },
+        ),
+      },
+    }),
+    // Trang chủ (/): toàn bộ chữ và ảnh của trang (đọc bởi getHomePage ở src/lib/pages.ts). Ô để trống thì dùng nội dung mẫu mặc định (src/config/profile.ts).
+    homePage: singleton({
+      label: "Trang chủ",
+      path: "content/pages/trang-chu",
+      format: "json",
+      schema: {
+        name: fields.text({
+          label: "Tên hiển thị (chữ khổng lồ ở đầu trang; cũng là tên trong thẻ chia sẻ)",
+          validation: { length: { max: 60 } },
+        }),
+        positioning: fields.text({
+          label: "Câu định vị dưới tên (cũng là mô tả khi chia sẻ, ≤ 160 ký tự)",
+          multiline: true,
+          validation: { length: { max: 160 } },
+        }),
+        greeting: fields.text({ label: "Lời chào phía trên tên (mặc định: Xin chào, mình là)", validation: { length: { max: 40 } } }),
+        ctaLabel: fields.text({ label: "Chữ nút chính ở đầu trang (mặc định: Đăng ký nhận bài)", validation: { length: { max: 30 } } }),
+        followLabel: fields.text({ label: "Chữ phía trên hàng icon mạng xã hội (mặc định: Theo dõi mình)", validation: { length: { max: 30 } } }),
+        portrait: fields.image({
+          label: "Ảnh chân dung (đã xóa phông: PNG / WebP nền trong suốt, người ngồi quay thẳng, tỉ lệ khoảng 0,97)",
+          directory: "public/images/profile",
+          publicPath: "/images/profile/",
+        }),
+        portraitAlt: fields.text({
+          label: "Mô tả ảnh chân dung (đọc cho người dùng trình đọc màn hình)",
+          validation: { length: { max: 125 } },
+        }),
+        statLabels: fields.object(
+          {
+            posts: fields.text({ label: "Nhãn số bài viết (mặc định: Bài viết)", validation: { length: { max: 20 } } }),
+            books: fields.text({ label: "Nhãn số cuốn sách (mặc định: Cuốn sách)", validation: { length: { max: 20 } } }),
+            topics: fields.text({ label: "Nhãn số chủ đề (mặc định: Chủ đề)", validation: { length: { max: 20 } } }),
+          },
+          { label: "Nhãn các con số (số liệu tự đếm từ bài, sách, chủ đề thật)" },
+        ),
+        story: fields.object(
+          {
+            eyebrow: fields.text({ label: "Dòng nhỏ phía trên tiêu đề (mặc định: Câu chuyện)", validation: { length: { max: 30 } } }),
+            title: fields.text({ label: "Tiêu đề khối Câu chuyện", validation: { length: { max: 80 } } }),
+            paragraphs: fields.array(
+              fields.text({ label: "Đoạn văn", multiline: true, validation: { isRequired: true, length: { max: 600 } } }),
+              {
+                label: "Các đoạn văn (tối đa 8; để trống = dùng đoạn mẫu)",
+                itemLabel: (p) => p.value.slice(0, 40),
+                validation: { length: { max: 8 } },
+              },
+            ),
+          },
+          { label: "Khối Câu chuyện" },
+        ),
+        storyImage: fields.image({
+          label: "Ảnh khối Câu chuyện",
+          directory: "public/images/profile",
+          publicPath: "/images/profile/",
+        }),
+        storyImageAlt: fields.text({
+          label: "Mô tả ảnh Câu chuyện (đọc cho người dùng trình đọc màn hình)",
+          validation: { length: { max: 125 } },
+        }),
+        storyImagePosition: fields.select({
+          label: "Phần ảnh Câu chuyện được giữ lại khi khung cắt bớt",
+          options: [
+            { label: "Giữa", value: "50% 50%" },
+            { label: "Phía trên", value: "50% 20%" },
+            { label: "Phía dưới", value: "50% 80%" },
+            { label: "Bên trái", value: "20% 50%" },
+            { label: "Bên phải", value: "80% 50%" },
+          ],
+          defaultValue: "50% 50%",
+        }),
+        principles: fields.object(
+          {
+            title: fields.text({ label: "Tiêu đề khối (mặc định: Cách mình đọc)", validation: { length: { max: 60 } } }),
+            dek: fields.text({ label: "Mô tả dưới tiêu đề", validation: { length: { max: 160 } } }),
+            items: fields.array(
+              fields.object({
+                title: fields.text({ label: "Tên nguyên tắc", validation: { isRequired: true, length: { max: 40 } } }),
+                text: fields.text({ label: "Mô tả", multiline: true, validation: { isRequired: true, length: { max: 240 } } }),
+              }),
+              {
+                label: "Các nguyên tắc (tối đa 4; để trống = dùng mẫu)",
+                itemLabel: (p) => p.fields.title.value,
+                validation: { length: { max: 4 } },
+              },
+            ),
+          },
+          { label: "Khối Cách mình đọc" },
+        ),
+        shelf: fields.object(
+          {
+            title: fields.text({ label: "Tiêu đề khối (mặc định: Tủ sách của mình)", validation: { length: { max: 60 } } }),
+            dek: fields.text({ label: "Mô tả dưới tiêu đề", validation: { length: { max: 200 } } }),
+            books: fields.array(
+              fields.object({
+                book: fields.relationship({
+                  label: "Sách (chọn từ mục Sách)",
+                  collection: "books",
+                  validation: { isRequired: true },
+                }),
+                topic: fields.relationship({
+                  label: "Chủ đề mở ra khi bấm vào bìa (chọn từ mục Chủ đề)",
+                  collection: "topics",
+                }),
+              }),
+              {
+                label: "Các cuốn trong tủ sách (tối đa 12; để TRỐNG = ẨN khối Tủ sách; xóa một sách ở mục Sách thì cuốn đó tự gỡ khỏi đây)",
+                itemLabel: (p) => p.fields.book.value ?? "(chưa chọn sách)",
+                validation: { length: { max: 12 } },
+              },
+            ),
+          },
+          { label: "Khối Tủ sách" },
+        ),
+        featured: fields.object(
+          {
+            title: fields.text({ label: "Tiêu đề khối (mặc định: Bài tiêu biểu)", validation: { length: { max: 60 } } }),
+            linkLabel: fields.text({ label: "Chữ liên kết (mặc định: Xem tất cả bài viết)", validation: { length: { max: 40 } } }),
+          },
+          { label: "Khối Bài tiêu biểu (3 bài mới nhất tự lấy từ mục Bài viết)" },
+        ),
+        connect: fields.object(
+          {
+            eyebrow: fields.text({ label: "Dòng nhỏ (mặc định: Kết nối)", validation: { length: { max: 30 } } }),
+            title: fields.text({ label: "Tiêu đề (mặc định: Kết nối với mình)", validation: { length: { max: 60 } } }),
+            text: fields.text({
+              label: "Đoạn mô tả (chú ý: đoạn mặc định có cam kết \"mỗi tuần\", hãy sửa cho đúng thực tế)",
+              multiline: true,
+              validation: { length: { max: 240 } },
+            }),
+          },
+          { label: "Khối Kết nối (hàng icon mạng xã hội lấy ở Cài đặt site)" },
         ),
       },
     }),

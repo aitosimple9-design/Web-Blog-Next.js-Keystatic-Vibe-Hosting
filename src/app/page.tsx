@@ -1,8 +1,8 @@
 // Trang chủ (thương hiệu cá nhân): Hero 3D, Câu chuyện, Cách mình đọc, Con số, Tủ sách, Bài tiêu biểu, Kết nối, Newsletter.
-// Layout: docs/layout/trang-chu/README.md. Nội dung chỉnh ở src/config/profile.ts. Trang Book (Trang chủ cũ) nằm ở /book.
+// Layout: docs/layout/trang-chu/README.md. Nội dung chỉnh ở Keystatic (Trang → Trang chủ); mặc định ở src/config/profile.ts. Trang Book (Trang chủ cũ) nằm ở /book.
 import type { Metadata } from "next";
 import Link from "next/link";
-import { profile } from "@/config/profile";
+import { getHomePage } from "@/lib/pages";
 import { site } from "@/config/site";
 import { getAllPosts, getSiteStats } from "@/lib/posts";
 import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
@@ -22,23 +22,26 @@ import { CountUp } from "@/components/ui/Motion";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 
 export function generateMetadata(): Metadata {
-  const title = `${profile.name} — ${getSiteSettings().tagline}`;
+  const h = getHomePage();
+  const title = `${h.name} — ${getSiteSettings().tagline}`;
   return {
     title: { absolute: title },
-    description: profile.positioning,
+    description: h.positioning,
     alternates: { canonical: "/" },
-    openGraph: { title, description: profile.positioning, type: "profile", locale: site.locale, url: "/" },
+    openGraph: { title, description: h.positioning, type: "profile", locale: site.locale, url: "/" },
   };
 }
 
 export default function HomePage() {
+  const h = getHomePage();
+  const hasShelf = h.shelf.books.length > 0; // tủ sách để trống trong admin thì ẩn khối
   const stats = getSiteStats();
   const featured = getAllPosts().slice(0, 3);
   const personLd = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: profile.name,
-    description: profile.positioning,
+    name: h.name,
+    description: h.positioning,
     url: site.url,
   };
 
@@ -62,9 +65,9 @@ export default function HomePage() {
       <section aria-label="Con số" className="bg-paper py-s7 text-ink tablet:py-s8">
         <dl className="wrap grid grid-cols-3 divide-x divide-rule text-center">
           {[
-            { value: stats.posts, suffix: "+", label: "Bài viết" },
-            { value: stats.books, suffix: "+", label: "Cuốn sách" },
-            { value: stats.topics, label: "Chủ đề" },
+            { value: stats.posts, suffix: "+", label: h.statLabels.posts },
+            { value: stats.books, suffix: "+", label: h.statLabels.books },
+            { value: stats.topics, label: h.statLabels.topics },
           ].map((s) => (
             <div key={s.label} className="px-s2">
               <dd className="type-display-lg tabular-nums">
@@ -81,15 +84,17 @@ export default function HomePage() {
       {/* Bài tiêu biểu: kéo lên dưới nét cọ của Tủ sách để nền paper-sunk tràn tới mép cọ */}
       <section
         aria-labelledby="featured-title"
-        className="relative -mt-[clamp(40px,5.5vw,64px)] bg-paper-sunk pt-[calc(clamp(40px,5.5vw,64px)+var(--space-8))] pb-s8 text-ink tablet:pb-s9"
+        className={`relative bg-paper-sunk pb-s8 text-ink tablet:pb-s9 ${
+          hasShelf ? "-mt-[clamp(40px,5.5vw,64px)] pt-[calc(clamp(40px,5.5vw,64px)+var(--space-8))]" : "pt-s8"
+        }`}
       >
         <div className="wrap">
           <Reveal className="flex flex-wrap items-end justify-between gap-x-s5 gap-y-s3">
             <h2 id="featured-title" className="type-display-lg text-balance">
-              <RevealText text="Bài tiêu biểu" />
+              <RevealText text={h.featured.title} />
             </h2>
             <Link href="/blog" className="type-label tap inline-flex items-center gap-s2 text-accent underline underline-offset-(--underline-offset)">
-              Xem tất cả bài viết
+              {h.featured.linkLabel}
               <ArrowRightIcon />
             </Link>
           </Reveal>
@@ -108,13 +113,13 @@ export default function HomePage() {
         <Reveal className="wrap mx-auto max-w-2xl">
           <p className="type-eyebrow flex items-center justify-center gap-s2 uppercase text-ink-faint">
             <span aria-hidden className="block size-1.5 rotate-45 rounded-[1px] bg-accent-warm" />
-            Kết nối
+            {h.connect.eyebrow}
           </p>
           <h2 id="connect-title" className="type-display-lg mt-s3 text-balance">
-            <RevealText text="Kết nối với mình" />
+            <RevealText text={h.connect.title} />
           </h2>
           <p className="type-ui-body mx-auto mt-s4 max-w-lg text-pretty text-ink-faint">
-            Mình đăng ghi chép mới mỗi tuần. Theo dõi mình ở nền tảng bạn hay dùng, hoặc nhận bài thẳng qua email ngay bên dưới.
+            {h.connect.text}
           </p>
           <SocialIcons className="mt-s5 justify-center" />
         </Reveal>

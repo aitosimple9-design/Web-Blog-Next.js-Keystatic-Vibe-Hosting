@@ -1,7 +1,7 @@
 // Tủ sách của mình: dải tối `inverse`, đáy nét cọ, thanh trượt bìa sách (mỗi bìa bấm sang chủ đề liên quan).
 // 375: ~2,3 bìa · 768: ~4,4 bìa · 1024+: 5 bìa, nút ‹ › trượt tới bìa thứ 6.
 import Link from "next/link";
-import { shelf } from "@/config/profile";
+import { getHomePage } from "@/lib/pages";
 import { topicBySlug } from "@/lib/topics";
 import { brushStyle } from "@/lib/brush";
 import { Reveal } from "@/components/ui/Reveal";
@@ -11,6 +11,8 @@ import { BookCover } from "@/components/ui/Media";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 
 export function BookShelf() {
+  const { shelf } = getHomePage();
+  if (shelf.books.length === 0) return null;
   const items = shelf.books.map((b) => {
     const topic = topicBySlug(b.topic);
     // Chủ đề của sách này không (còn) có trong content/topics: hiện bìa + tên nhưng KHÔNG làm liên kết, tránh dẫn tới trang 404 và nhãn trống

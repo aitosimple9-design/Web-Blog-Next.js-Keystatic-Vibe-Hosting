@@ -3,11 +3,14 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import keystaticConfig from "../../keystatic.config";
+import { profile } from "@/config/profile";
 import {
   IMAGE_RULES,
   MANAGED_IMAGE_DIRS,
-  SINGLETON_IMAGE_RULE,
+  PROTECTED_IMAGES,
+  SINGLETON_IMAGE_RULES,
   findOrphanImages,
+  removeHomeReferences,
   removeOrphanImages,
 } from "@/lib/content-cleanup";
 
@@ -33,7 +36,7 @@ describe("chốt chặn: trang quản trị luôn đồng bộ với file", () =
     for (const d of dirs) {
       expect(
         MANAGED_IMAGE_DIRS,
-        `Thư mục ảnh "${d}" chưa có luật dọn ảnh: thêm vào IMAGE_RULES (ảnh theo slug) hoặc SINGLETON_IMAGE_RULE (ảnh singleton) trong src/lib/content-cleanup.ts`,
+        `Thư mục ảnh "${d}" chưa có luật dọn ảnh: thêm vào IMAGE_RULES (ảnh theo slug) hoặc SINGLETON_IMAGE_RULES (ảnh singleton) trong src/lib/content-cleanup.ts`,
       ).toContain(d);
     }
   });
@@ -44,13 +47,24 @@ describe("chốt chặn: trang quản trị luôn đồng bộ với file", () =
       expect(collectionPaths.some((p) => p.startsWith(r.contentDir)), `${r.contentDir} không còn là collection nào`).toBe(true);
     }
     const singletonPaths = Object.values(singletons).map((s) => s.path as string);
-    expect(singletonPaths.some((p) => p?.startsWith(SINGLETON_IMAGE_RULE.contentDir))).toBe(true);
+    for (const r of SINGLETON_IMAGE_RULES) {
+      expect(singletonPaths.some((p) => p?.startsWith(`${r.contentDir}/`)), `${r.contentDir} không còn singleton nào`).toBe(true);
+    }
   });
 
-  it("singleton nằm trong content/settings (một nơi duy nhất để dọn ảnh và để tìm cài đặt)", () => {
+  it("singleton nằm ở một thư mục có luật dọn ảnh (content/settings hoặc content/pages)", () => {
+    const dirs = SINGLETON_IMAGE_RULES.map((r) => `${r.contentDir}/`);
     for (const [key, s] of Object.entries(singletons)) {
-      expect((s.path as string).startsWith("content/settings/"), `singleton "${key}" phải lưu ở content/settings/`).toBe(true);
+      expect(
+        dirs.some((d) => (s.path as string).startsWith(d)),
+        `singleton "${key}" phải lưu ở ${dirs.join(" hoặc ")} (hoặc thêm thư mục mới vào SINGLETON_IMAGE_RULES)`,
+      ).toBe(true);
     }
+  });
+
+  it("ảnh mặc định trong src/config/profile.ts nằm trong PROTECTED_IMAGES (không bị quét ảnh mồ côi xóa khi gỡ ảnh trong admin)", () => {
+    expect(PROTECTED_IMAGES).toContain(profile.portrait.src);
+    expect(PROTECTED_IMAGES).toContain(profile.storyImage.src);
   });
 
   it("script prune-images và check-content dùng chung luật ở content-cleanup.ts (không viết lại bản thứ hai)", () => {
@@ -103,6 +117,27 @@ describe("findOrphanImages / removeOrphanImages", () => {
     expect(fs.existsSync(path.join(root, "public/images/posts/bai-a/moi.jpg"))).toBe(true);
   });
 
+  it("ảnh của Trang chủ: ảnh còn dùng thì giữ, ảnh đã thay thì là mồ côi", async () => {
+    const root = make({
+      "content/pages/trang-chu.json": '{"portrait":"/images/profile/moi.webp"}',
+      "public/images/profile/moi.webp": "x",
+      "public/images/profile/cu.webp": "x",
+    });
+    expect(findOrphanImages(root)).toEqual([{ path: "public/images/profile/cu.webp", kind: "file" }]);
+    await removeOrphanImages(root);
+    expect(fs.existsSync(path.join(root, "public/images/profile/moi.webp"))).toBe(true);
+  });
+
+  it("gỡ ảnh Trang chủ: ảnh MẶC ĐỊNH của mã vẫn được giữ", () => {
+    const root = make({
+      "content/pages/trang-chu.json": "{}",
+      "public/images/profile/portrait-cutout.webp": "x",
+      "public/images/profile/story.jpg": "x",
+      "public/images/profile/khac.jpg": "x",
+    });
+    expect(findOrphanImages(root)).toEqual([{ path: "public/images/profile/khac.jpg", kind: "file" }]);
+  });
+
   it("gỡ logo / ảnh chia sẻ ở Cài đặt thì file trong public/images/site là mồ côi", async () => {
     const root = make({
       "content/settings/header.json": '{"menu":[]}',
@@ -121,5 +156,41 @@ describe("findOrphanImages / removeOrphanImages", () => {
       "public/images/posts/bai-a/ảnh đẹp.jpg": "x",
     });
     expect(findOrphanImages(root)).toEqual([]);
+  });
+});
+
+describe("xóa sách / chủ đề thì Trang chủ không giữ tham chiếu treo", () => {
+  const setup = (shelf: object) => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "home-"));
+    fs.mkdirSync(path.join(root, "content", "pages"), { recursive: true });
+    fs.writeFileSync(path.join(root, "content", "pages", "trang-chu.json"), JSON.stringify({ name: "A", shelf }));
+    return root;
+  };
+  const read = (root: string) => JSON.parse(fs.readFileSync(path.join(root, "content", "pages", "trang-chu.json"), "utf8"));
+
+  it("xóa sách → mục tủ sách trỏ tới sách đó bị gỡ, mục khác giữ nguyên", () => {
+    const root = setup({ title: "T", books: [{ book: "sach-a", topic: "cd-1" }, { book: "sach-b", topic: null }] });
+    expect(removeHomeReferences({ deletions: [{ path: "content/books/sach-a.json" }] }, root)).toBe(true);
+    expect(read(root).shelf.books).toEqual([{ book: "sach-b", topic: null }]);
+    expect(read(root).shelf.title).toBe("T");
+  });
+
+  it("xóa hết sách → danh sách rỗng (Trang chủ ẩn khối Tủ sách, không rơi về sách mẫu)", () => {
+    const root = setup({ books: [{ book: "sach-a", topic: null }] });
+    removeHomeReferences({ deletions: [{ path: "content/books/sach-a.json" }] }, root);
+    expect(read(root).shelf.books).toEqual([]);
+  });
+
+  it("xóa chủ đề → bỏ liên kết chủ đề của mục, vẫn giữ sách", () => {
+    const root = setup({ books: [{ book: "sach-a", topic: "cd-1" }, { book: "sach-b", topic: "cd-2" }] });
+    removeHomeReferences({ deletions: [{ path: "content/topics/cd-1.json" }] }, root);
+    expect(read(root).shelf.books).toEqual([{ book: "sach-a", topic: null }, { book: "sach-b", topic: "cd-2" }]);
+  });
+
+  it("không đụng file khi xóa mục không liên quan hoặc đường dẫn lạ", () => {
+    const root = setup({ books: [{ book: "sach-a", topic: null }] });
+    const before = fs.readFileSync(path.join(root, "content", "pages", "trang-chu.json"), "utf8");
+    expect(removeHomeReferences({ deletions: [{ path: "content/posts/x.md" }, { path: "content/books/../x.json" }] }, root)).toBe(false);
+    expect(fs.readFileSync(path.join(root, "content", "pages", "trang-chu.json"), "utf8")).toBe(before);
   });
 });
