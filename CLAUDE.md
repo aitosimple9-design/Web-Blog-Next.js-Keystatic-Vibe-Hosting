@@ -32,7 +32,7 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 - `npm run dev` — http://localhost:3000, quản trị bài: http://localhost:3000/keystatic
 - `npm run lint`
 - `npm run build` — PHẢI chạy không lỗi trước khi mở PR
-- `npm run check-content` — kiểm tra bài / chủ đề / sách / ảnh trước khi đăng: LỖI (thoát mã 1) như thiếu trường, chủ đề không tồn tại, file ảnh mất, bài liên quan sai; CẢNH BÁO như sách chưa có bìa, mô tả ngắn; THÔNG TIN bài lên lịch. Chạy trước khi mở PR có đổi nội dung
+- `npm run check-content` — kiểm tra bài / chủ đề / sách / ảnh trước khi đăng: LỖI (thoát mã 1) như thiếu trường, chủ đề không tồn tại, file ảnh mất, bài liên quan sai; CẢNH BÁO như sách chưa có bìa, mô tả ngắn; THÔNG TIN bài lên lịch; từ 2026-10-16 có thêm CẢNH BÁO điểm SEO của từng bài (mục chưa đạt, dùng `src/lib/seo-score.ts`, cần Node ≥ 22.18) và ảnh trong bài trùng file với ảnh bìa (Keystatic ghi đè hai ảnh cùng tên). Chạy trước khi mở PR có đổi nội dung
 - `npm run prune-images` — liệt kê thư mục ảnh MỒ CÔI (không còn bài / chủ đề / sách tương ứng); thêm `-- --delete` để xóa. Chỉ cần ở chế độ GitHub (chế độ local tự dọn khi xóa)
 - `npm run typecheck` — kiểm tra kiểu TypeScript; `npm run tokens` — sinh lại `src/styles/tokens.css` khi sửa `tokens.json`
 
@@ -52,8 +52,11 @@ keystatic.config.ts             ← collection "posts" theo đúng mục 5
 src/app/                        ← routes (App Router)
 src/app/keystatic/              ← giao diện quản trị Keystatic
 src/app/api/keystatic/          ← API của Keystatic (có bọc dọn ảnh khi xóa, xem mục 8)
-src/app/keystatic/KeystaticThumbnails.tsx ← đổi đường dẫn ảnh ở các cột danh sách của Keystatic thành ảnh thu nhỏ, và "[object Object]" ở cột "Nguồn sách" thành tên sách (chỉ đổi hiển thị ở trình duyệt)
+src/app/keystatic/KeystaticThumbnails.tsx ← đổi đường dẫn ảnh ở các cột danh sách của Keystatic thành ảnh thu nhỏ, và "[object Object]" ở cột "Nguồn sách" thành tên sách, và vẽ cột "Điểm SEO" (chỉ đổi hiển thị ở trình duyệt)
 src/app/api/ten-sach/route.ts   ← trả {slug: tên sách} của mọi bài cho cột "Nguồn sách" ở danh sách quản trị; cùng cổng `src/lib/preview.ts` (chỉ máy soạn bài, còn lại 404)
+src/app/api/diem-seo/route.ts   ← trả {slug: {score, level}} cho cột "Điểm SEO"; `?slug=` trả kết quả đầy đủ của bản đã lưu (hộp điểm tự đối chiếu); cùng cổng; chấm bằng `src/lib/seo-score.ts` (hàm thuần, 20 tiêu chí, dùng chung cho danh sách / hộp điểm / check-content)
+src/app/keystatic/SeoPanel.tsx + seo-form-reader.ts ← HỘP ĐIỂM SEO nổi trong form bài, chấm cả nội dung chưa Lưu; đọc form bằng tên truy cập + vai trò ARIA; tự báo khi không đọc được ô hoặc lệch bản đã lưu
+src/lib/seo-fields.ts            ← nhãn các ô của form bài mà hộp điểm đọc; keystatic.config.ts PHẢI dùng đúng các hằng số này (tests/unit/seo-fields.test.ts chặn lệch)
 src/app/xem-truoc/bai-viet/<slug>/ ← XEM TRƯỚC bài nháp / lên lịch (nút "Xem trước" của Keystatic); chỉ chạy ở máy soạn bài
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
 src/lib/topics.ts, books.ts, settings.ts, nav.ts, preview.ts, content-cleanup.ts ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
@@ -108,6 +111,9 @@ ogImage: /images/posts/tieu-de-bai/og.jpg  # ảnh chia sẻ riêng; thiếu th�
 related: [slug-bai-khac]             # bài liên quan chọn tay (đứng đầu mục Bài liên quan)
 notes: "Ghi chú nội bộ"              # KHÔNG bao giờ hiển thị / vào HTML / metadata
 updated: 2026-10-10                  # ngày sửa gần nhất (tùy chọn) → dateModified ở JSON-LD; thiếu thì dùng `date`
+# --- Trường tùy chọn thêm 2026-10-16 (điểm SEO) [sync: cần đồng bộ sang dự án B]; thiếu thì bài vẫn hợp lệ, chỉ bị trừ điểm SEO ---
+focusKeyword: "đọc sách chậm"        # từ khóa chính (2-4 từ); chỉ để chấm điểm SEO ở trang quản trị, KHÔNG hiện ra HTML / metadata
+coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký tự → alt của ảnh hero và ảnh chia sẻ; thiếu thì ảnh bìa là trang trí (alt rỗng)
 ---
 ```
 - `category` là tên file trong `content/topics/` (Keystatic: menu "Chủ đề"). Nó quyết định chủ đề của bài (nhãn, Hero chủ đề và danh sách ở trang Blog, bài liên quan). Trang chi tiết dùng 1 layout chung (`docs/layout/chi-tiet-bai/`). Mục 5 dùng chung với dự án B: cần đồng bộ sang B (nhãn `sync`).

@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // Thứ tự dự phòng: ảnh chia sẻ riêng → ảnh bìa → ảnh mặc định ở Cài đặt site
       images: (() => {
         const img = post.ogImage ?? post.cover ?? getSiteSettings().ogImage;
-        return img ? [{ url: img }] : undefined;
+        return img ? [{ url: img, alt: img === post.cover ? post.coverAlt : undefined }] : undefined;
       })(),
     },
   };

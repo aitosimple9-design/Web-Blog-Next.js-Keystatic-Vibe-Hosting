@@ -159,6 +159,15 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
 - [ ] Trước khi mở PR: `ui-tester` (375/414/768/1024/1440, 2 theme) + `design-reviewer`, tạo Issue, test tay iOS + Android
 - [ ] Hồ sơ / Trang chủ trong Keystatic: hỏi lại Lộc khi tới
 
+## Kiểm tra SEO trong trang quản trị (nhánh `feat/seo-checker`, chưa có Issue)
+Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm SEO trong form bài (chấm cả lúc đang gõ), bộ tiêu chí theo Google / Yoast / Rank Math (không có phần đọc hiểu tiếng Anh).
+- [x] Bước 1 Lõi chấm điểm `src/lib/seo-score.ts` (20 tiêu chí, điểm 0-100, hàm thuần) + 29 test
+- [x] Bước 2 Hai trường mới `focusKeyword` (từ khóa chính) và `coverAlt` (alt ảnh bìa): `keystatic.config.ts`, `posts.ts`, CLAUDE.md mục 5 [sync: cần đồng bộ sang dự án B]; `coverAlt` dùng làm alt ảnh hero và ảnh chia sẻ
+- [x] Bước 3 Cột "Điểm SEO" ở danh sách Bài viết (điểm + chữ Tốt / Cần cải thiện / Chưa đạt, màu theo 2 theme của Keystatic; dựa trên bản đã lưu): `getSeoScoresBySlug` + `/api/diem-seo` + `KeystaticThumbnails.tsx`; mượn cột "Từ khóa chính" làm chỗ giữ chỗ (2026-10-16)
+- [x] Bước 4 Hộp điểm SEO trong form bài (nổi góc dưới, chấm cả nội dung chưa Lưu, liệt kê chưa đạt + cách sửa, chuyển trái / phải, nhớ trạng thái): `SeoPanel.tsx`, `seo-form-reader.ts`, `src/lib/seo-fields.ts` (nhãn dùng chung với config); tự báo khi không đọc được ô / lệch bản đã lưu; test trên giao diện thật: gõ từng ô, thẻ, bài liên quan, nội dung, gỡ ảnh, bài mới, 2 theme, màn hình hẹp, bài 6.400 từ (2026-10-16)
+- [x] Bước 5 `npm run check-content` báo thêm cảnh báo SEO từng bài + điểm trung bình, cảnh báo ảnh trong bài trùng file với ảnh bìa (lỗi thật gặp khi thử: hai ảnh cùng tên `cover.jpg` ghi đè nhau); tự bỏ qua có thông báo nếu Node cũ không đọc được .ts (2026-10-16)
+- [ ] Thêm bước `npm run check-content` vào `.github/workflows/ci.yml` (Lộc tự commit, Claude không sửa được thư mục workflows)
+
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
 - [ ] Chốt Q9, Q10
 - [ ] [A] Keystatic chuyển sang GitHub mode (GitHub App/OAuth + biến môi trường). Next 16 dev cần `allowedDevOrigins: ["127.0.0.1"]` (đã thêm, Thinkmill/keystatic#1549); chờ Lộc chọn GitHub App hay OAuth

@@ -4,8 +4,11 @@
 // cột kiểu ảnh. Component này thay đường dẫn ảnh (/images/....jpg) trong ô bằng ảnh thu nhỏ.
 // Chỉ sửa HIỂN THỊ ở trình duyệt, không đụng dữ liệu. Chỉ chạy dưới /keystatic (gắn ở layout.tsx cùng thư mục).
 // Cột "Nguồn sách" của danh sách Bài viết: Keystatic không đọc được khối lồng nên ô hiện "[object Object]"; thay bằng tên sách lấy từ /api/ten-sach.
+// Cột "SEO" của danh sách Bài viết: Keystatic không có cột tính toán nên mượn cột "Từ khóa chính" làm chỗ giữ chỗ, đổi tiêu đề thành
+// "Điểm SEO" và vẽ điểm (số + chữ Tốt / Cần cải thiện / Chưa đạt, không chỉ màu) lấy từ /api/diem-seo (src/lib/seo-score.ts).
 // Danh sách của Keystatic được "ảo hóa" (hàng được tái sử dụng khi cuộn / lọc) nên phải cập nhật lại mỗi khi DOM đổi.
 import { useEffect } from "react";
+import { SEO_LABEL, isDarkTheme, seoPalette, type SeoLevel } from "./ks-theme";
 
 const IMAGE_PATH = /^\/images\/\S+\.(?:jpe?g|png|webp|gif|svg|avif)$/i;
 const THUMB_ATTR = "data-ks-thumb";
@@ -13,21 +16,72 @@ const HEIGHT = 32; // hàng danh sách cao 45px
 
 const OBJECT_TEXT = "[object Object]";
 const BOOK_ATTR = "data-ks-book";
+const SEO_ATTR = "data-ks-seo";
+const SEO_HEADER = "Từ khóa chính"; // nhãn của ô chọn làm chỗ giữ chỗ (keystatic.config.ts, cột "focusKeyword")
 let books: Record<string, string> = {};
+let seo: Record<string, { score: number; level: SeoLevel }> = {};
 let lastFetch = 0;
+const REFRESH_MS = 10000; // sau khi lưu bài, điểm cũ được tải lại ở lần danh sách vẽ tiếp theo
 
-function loadBooks() {
+function loadMaps() {
   if (Date.now() - lastFetch < 3000) return; // bài mới lưu chưa có trong bảng: tải lại, nhưng không dồn dập
   lastFetch = Date.now();
-  fetch("/api/ten-sach", { cache: "no-store" })
-    .then((r) => (r.ok ? r.json() : null))
-    .then((data: Record<string, string> | null) => {
-      if (data) {
-        books = data;
-        schedule?.();
+  const get = <T,>(url: string, set: (d: T) => void) =>
+    fetch(url, { cache: "no-store" })
+      .then((r) => (r.ok ? (r.json() as Promise<T>) : null))
+      .then((d) => {
+        if (d) {
+          set(d);
+          schedule?.();
+        }
+      })
+      .catch(() => {});
+  get<Record<string, string>>("/api/ten-sach", (d) => (books = d));
+  get<typeof seo>("/api/diem-seo", (d) => (seo = d));
+}
+
+// Cột "Điểm SEO": tìm cột theo tiêu đề, đổi tên, rồi vẽ điểm vào ô của từng hàng (ô nào cũng được tái sử dụng khi cuộn)
+function fillSeo() {
+  const header = [...document.querySelectorAll<HTMLElement>('main [role="columnheader"]')].find((h) =>
+    (h.textContent ?? "").trim().startsWith(SEO_HEADER),
+  );
+  const renamed = document.querySelector<HTMLElement>(`main [${SEO_ATTR}="header"]`)?.closest<HTMLElement>('[role="columnheader"]');
+  const head = header ?? renamed;
+  if (!head) return;
+  const col = head.getAttribute("aria-colindex");
+  if (header) {
+    for (const leaf of header.querySelectorAll<HTMLElement>("span, div")) {
+      if (leaf.children.length === 0 && (leaf.textContent ?? "").trim().startsWith(SEO_HEADER)) {
+        leaf.textContent = "Điểm SEO";
+        leaf.setAttribute(SEO_ATTR, "header");
       }
-    })
-    .catch(() => {});
+    }
+  }
+  if (!col) return;
+  const palette = seoPalette(isDarkTheme());
+  for (const row of document.querySelectorAll<HTMLElement>('main [role="row"]')) {
+    const cell = row.querySelector<HTMLElement>(`:is([role="gridcell"], [role="rowheader"])[aria-colindex="${col}"]`);
+    if (!cell) continue;
+    const slug = (row.getAttribute("data-key") ?? "").replace(/^key:/, "");
+    const entry = seo[slug];
+    let badge = cell.querySelector<HTMLElement>(`[${SEO_ATTR}="badge"]`);
+    if (!entry) {
+      badge?.remove();
+      for (const c of cell.children) (c as HTMLElement).style.removeProperty("display");
+      if (slug) loadMaps();
+      continue;
+    }
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.setAttribute(SEO_ATTR, "badge");
+      cell.appendChild(badge);
+    }
+    for (const c of cell.children) if (c !== badge) (c as HTMLElement).style.display = "none";
+    const text = `${entry.score} · ${SEO_LABEL[entry.level]}`;
+    if (badge.textContent !== text) badge.textContent = text;
+    badge.title = `Điểm SEO ${entry.score}/100. Mở bài để xem chi tiết từng tiêu chí.`;
+    badge.style.cssText = `display:inline-block;font-weight:600;font-size:13px;white-space:nowrap;color:${palette[entry.level]}`;
+  }
 }
 
 // Thay chữ "[object Object]" trong ô bằng tên sách của bài ở hàng đó (slug nằm ở một ô khác cùng hàng)
@@ -41,7 +95,7 @@ function fillBooks(row: HTMLElement) {
       leaf.textContent = books[slug];
       leaf.setAttribute(BOOK_ATTR, "");
     } else if (text === OBJECT_TEXT) {
-      loadBooks();
+      loadMaps();
     }
   }
 }
@@ -53,6 +107,8 @@ function restore(leaf: HTMLElement) {
 }
 
 function enhance() {
+  fillSeo();
+  if (Date.now() - lastFetch > REFRESH_MS && document.querySelector('main [role="row"]')) loadMaps();
   for (const row of document.querySelectorAll<HTMLElement>('main [role="row"]')) {
     fillBooks(row);
     // 1) ô đã có ảnh: giữ cho khớp với chữ hiện tại (ô được tái sử dụng khi cuộn / lọc)
@@ -108,10 +164,16 @@ export function KeystaticThumbnails() {
       if (external) schedule?.();
     });
     observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    // đổi theme Light / Dark của Keystatic chỉ đổi thuộc tính ở <html> / <body>: vẽ lại màu điểm SEO
+    const themeObserver = new MutationObserver(() => schedule?.());
+    for (const el of [document.documentElement, document.body]) {
+      themeObserver.observe(el, { attributes: true, attributeFilter: ["class", "data-theme", "style"] });
+    }
     schedule();
     return () => {
       schedule = null;
       observer.disconnect();
+      themeObserver.disconnect();
       cancelAnimationFrame(frame);
       // trả lại trang như cũ khi rời khỏi /keystatic
       for (const img of document.querySelectorAll<HTMLElement>(`img[${THUMB_ATTR}]`)) {

@@ -14,6 +14,7 @@ import rehypeStringify from "rehype-stringify";
 import type { Root, Element, Nodes } from "hast";
 import { topicBySlug, getTopics } from "@/lib/topics";
 import { readingMinutes } from "@/lib/format";
+import { scoreSeo, type SeoInput, type SeoResult } from "@/lib/seo-score";
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
 
@@ -29,9 +30,13 @@ export type PostMeta = {
   updated?: string;
   source: { book: string; author: string };
   cover?: string;
+  /** Mô tả ảnh bìa (alt); thiếu thì ảnh bìa được coi là trang trí */
+  coverAlt?: string;
   /** Bài bị ẩn: tick "Ẩn bài này" (`draft: true`), hoặc Trạng thái là Nháp / Chờ duyệt */
   draft: boolean;
   tags: string[];
+  /** Từ khóa chính, chỉ để chấm điểm SEO ở trang quản trị; không bao giờ ra HTML hay metadata */
+  focusKeyword?: string;
   /** Tiêu đề SEO riêng (thẻ title); thiếu thì dùng `title` */
   seoTitle?: string;
   /** Ảnh chia sẻ riêng (Open Graph) */
@@ -109,8 +114,10 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
     updated,
     source: { book: str(file, source, "book"), author: str(file, source, "author") },
     cover,
+    coverAlt: opt("coverAlt"),
     draft: data.draft === true || hiddenByStatus,
     tags: list("tags"),
+    focusKeyword: opt("focusKeyword"),
     seoTitle: opt("seoTitle"),
     ogImage: opt("ogImage"),
     related: list("related"),
@@ -166,6 +173,56 @@ export function getBookNamesBySlug(): Record<string, string> {
     }
   }
   return out;
+}
+
+/** Dữ liệu để chấm SEO của một file bài (đọc lỏng: thiếu trường thì để trống, không báo lỗi). Null nếu file không đọc được. */
+function seoInputOf(file: string): SeoInput | null {
+  try {
+    const text = (v: unknown) => (typeof v === "string" ? v : "");
+    const list = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
+    const { data, content } = matter(fs.readFileSync(path.join(POSTS_DIR, file), "utf8"));
+    return {
+      title: text(data.title),
+      seoTitle: text(data.seoTitle),
+      description: text(data.description),
+      slug: file.replace(/\.md$/, ""),
+      focusKeyword: text(data.focusKeyword),
+      cover: text(data.cover),
+      coverAlt: text(data.coverAlt),
+      ogImage: text(data.ogImage),
+      tags: list(data.tags),
+      related: list(data.related),
+      body: content,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Điểm SEO của MỌI bài (cả nháp / lên lịch), theo slug, chấm từ bản đã lưu. Chỉ cho cột "Điểm SEO" ở danh sách quản trị Keystatic
+ * (/api/diem-seo, cùng cổng với trang xem trước); file lỗi bị bỏ qua.
+ */
+export function getSeoScoresBySlug(): Record<string, { score: number; level: "good" | "warn" | "bad" }> {
+  const out: Record<string, { score: number; level: "good" | "warn" | "bad" }> = {};
+  if (!fs.existsSync(POSTS_DIR)) return out;
+  for (const file of fs.readdirSync(POSTS_DIR)) {
+    if (!file.endsWith(".md")) continue;
+    const input = seoInputOf(file);
+    if (!input) continue;
+    const { score, level } = scoreSeo(input);
+    out[input.slug] = { score, level };
+  }
+  return out;
+}
+
+/** Kết quả chấm đầy đủ của MỘT bài đã lưu, để hộp điểm SEO trong form đối chiếu với điểm chấm trực tiếp. Null nếu chưa có file. */
+export function getSeoResultBySlug(slug: string): SeoResult | null {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return null; // chặn đường dẫn lạ trước khi chạm vào file
+  const file = `${slug}.md`;
+  if (!fs.existsSync(path.join(POSTS_DIR, file))) return null;
+  const input = seoInputOf(file);
+  return input ? scoreSeo(input) : null;
 }
 
 /** Tất cả bài đã đăng (xem `isPublished`), mới nhất trước. */
