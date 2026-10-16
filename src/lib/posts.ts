@@ -12,7 +12,7 @@ import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import type { Root, Element, Nodes } from "hast";
-import { topicBySlug, topics } from "@/config/topics";
+import { topicBySlug, getTopics } from "@/lib/topics";
 import { readingMinutes } from "@/lib/format";
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
@@ -73,7 +73,7 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
   if (!topicBySlug(category)) {
     fail(
       file,
-      `category "${category}" chưa có trong src/config/topics.ts (hiện có: ${topics
+      `category "${category}" chưa có trong content/topics (hiện có: ${getTopics()
         .map((t) => t.slug)
         .join(", ")})`,
     );
@@ -174,14 +174,14 @@ export function getSiteStats() {
   const posts = getAllPosts();
   return {
     posts: posts.length,
-    topics: topics.length,
+    topics: getTopics().length,
     books: new Set(posts.map((p) => p.source.book)).size,
   };
 }
 
 export const countByTopic = (): Record<string, number> => {
   const counts: Record<string, number> = {};
-  for (const t of topics) counts[t.slug] = 0;
+  for (const t of getTopics()) counts[t.slug] = 0;
   for (const p of getAllPosts()) counts[p.category] = (counts[p.category] ?? 0) + 1;
   return counts;
 };

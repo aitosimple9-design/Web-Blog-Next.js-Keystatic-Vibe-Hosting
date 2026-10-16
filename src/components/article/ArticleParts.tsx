@@ -1,10 +1,10 @@
 // Các khối nhỏ của trang Chi tiết bài: ArticleHeader, SourceBox (= BookRef của Design System).
 import Link from "next/link";
-import { topicBySlug } from "@/config/topics";
+import { topicBySlug } from "@/lib/topics";
 import { formatDateLong, formatReadTime } from "@/lib/format";
 import type { PostMeta } from "@/lib/posts";
 import Image from "next/image";
-import { bookCovers } from "@/config/covers";
+import { getBookCover } from "@/lib/books";
 import { CoverArt } from "@/components/ui/CoverArt";
 import { BookCover } from "@/components/ui/Media";
 
@@ -79,7 +79,7 @@ export function SourceBox({
   compact?: boolean;
   variant?: "card" | "strip";
 }) {
-  const cover = bookCovers[book];
+  const cover = getBookCover(book);
   if (variant === "strip") {
     return (
       <aside aria-label="Nguồn sách" className={`flex items-center gap-s4 ${className}`}>

@@ -1,18 +1,28 @@
 "use client";
 
 // Menu ngăn kéo cho màn hình dưới 768px: trượt từ trái, chiếm 70% bề ngang (30% bên phải còn thấy nội dung), KHÔNG phủ tối phần bên phải
-// để người đọc vẫn thấy nội dung. Dữ liệu lấy từ `navGroups` (src/config/site.ts): thêm trang / nhóm ở đó là tự có mặt ở đây,
+// để người đọc vẫn thấy nội dung. Dữ liệu lấy từ `getNavGroups()` (src/lib/nav.ts: menu tĩnh ở src/config/site.ts + chủ đề từ content/topics): thêm trang / nhóm ở đó là tự có mặt ở đây,
 // đường kẻ ngang giữa các nhóm do component này tự vẽ. Mục có `children` thu gọn sẵn, bấm mới xổ ra.
 import Link from "next/link";
 import { useState } from "react";
-import { navGroups, type NavItem } from "@/config/site";
+import type { NavGroup, NavItem } from "@/config/site";
 import { ChevronDownIcon } from "@/components/ui/Icon";
 import { NavIcon } from "@/components/layout/NavIcon";
 
 const row =
   "type-ui-body tap flex w-full items-center gap-s3 rounded-sm px-s3 text-left no-underline transition-colors duration-(--motion-fast) hover:bg-current/10 aria-[current=page]:bg-current/10 aria-[current=page]:font-semibold";
 
-export function MobileMenu({ id, open, pathname }: { id: string; open: boolean; pathname: string }) {
+export function MobileMenu({
+  id,
+  open,
+  pathname,
+  groups,
+}: {
+  id: string;
+  open: boolean;
+  pathname: string;
+  groups: NavGroup[];
+}) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   // Đóng menu thì thu gọn mọi mục, lần mở sau luôn thu gọn sẵn
   const [wasOpen, setWasOpen] = useState(open);
@@ -83,7 +93,7 @@ export function MobileMenu({ id, open, pathname }: { id: string; open: boolean; 
       }`}
     >
       <nav aria-label="Menu" className="px-s3 py-s3">
-        {navGroups.map((g, i) => (
+        {groups.map((g, i) => (
           <ul
             key={g.id}
             className={i > 0 ? "mt-s3 border-t-(length:--border-width) border-current/20 pt-s3" : undefined}

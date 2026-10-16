@@ -1,12 +1,12 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import { topicBySlug, topics } from "@/config/topics";
+import { topicBySlug, getTopics } from "@/lib/topics";
 import { BlogView, blogMetadata, topicHref, totalPagesFor } from "@/components/blog/BlogView";
 
 type Props = { params: Promise<{ topic: string; page: string }> };
 
 export const dynamicParams = false;
 export const generateStaticParams = () =>
-  topics.flatMap((t) =>
+  getTopics().flatMap((t) =>
     Array.from({ length: totalPagesFor(t.slug) }, (_, i) => i + 1)
       .filter((n) => n > 1)
       .map((n) => ({ topic: t.slug, page: String(n) })),

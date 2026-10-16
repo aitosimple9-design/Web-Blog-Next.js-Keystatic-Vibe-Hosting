@@ -1,5 +1,4 @@
 // Cấu hình site. Các giá trị "giữ chỗ" chờ Lộc chốt ở PLAN.md (Q14): tên blog, logo, link mạng xã hội, trang pháp lý.
-import { topics } from "@/config/topics";
 
 export const site = {
   name: "Logo", // Q14: tên blog thật
@@ -36,7 +35,6 @@ export const navGroups: NavGroup[] = [
         label: "Blog",
         href: "/blog",
         icon: "blog",
-        children: topics.map((t) => ({ label: t.name, href: `/blog/${t.slug}` })),
       },
     ],
   },

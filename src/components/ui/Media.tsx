@@ -3,7 +3,7 @@
 // Luôn có tỉ lệ cố định để trang không nhảy khi ảnh tải. `transitionName` cho phép ảnh "bay" từ thẻ sang trang bài.
 import Image from "next/image";
 import { ViewTransition } from "react";
-import { bookCovers } from "@/config/covers";
+import { getBookCover } from "@/lib/books";
 import { CoverArt } from "@/components/ui/CoverArt";
 import { ScrollParallax } from "@/components/ui/Motion";
 
@@ -95,7 +95,7 @@ export function BookCover({
   tone?: "deep" | "ink" | "sunk";
 }) {
   // Có ảnh bìa (truyền vào hoặc bìa demo theo tên sách) thì dùng ảnh; không thì CoverArt sinh tự động
-  const cover = src ?? (title ? bookCovers[title] : undefined);
+  const cover = src ?? (getBookCover(title));
   return (
     <div
       className={`relative aspect-(--cover-ratio) shrink-0 overflow-hidden rounded-cover bg-paper-deep text-ink shadow-cover-shadow ${

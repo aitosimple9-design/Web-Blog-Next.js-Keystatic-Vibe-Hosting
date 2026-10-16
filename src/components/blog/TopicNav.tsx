@@ -5,7 +5,7 @@
 //  - TopicTabs (768–1023px): thanh tab viên tròn, căn giữa. Từ 1024px dùng danh sách dọc trong TopicHero.
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
-import type { Topic } from "@/config/topics";
+import type { Topic } from "@/lib/topics";
 import { ChevronDownIcon, MenuIcon } from "@/components/ui/Icon";
 
 export function TopicMenu({ topics, current }: { topics: Topic[]; current: string }) {

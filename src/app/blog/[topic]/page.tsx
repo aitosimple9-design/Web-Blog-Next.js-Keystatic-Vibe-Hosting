@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { topicBySlug, topics } from "@/config/topics";
+import { topicBySlug, getTopics } from "@/lib/topics";
 import { BlogView, blogMetadata } from "@/components/blog/BlogView";
 
 type Props = { params: Promise<{ topic: string }> };
 
 export const dynamicParams = false;
-export const generateStaticParams = () => topics.map((t) => ({ topic: t.slug }));
+export const generateStaticParams = () => getTopics().map((t) => ({ topic: t.slug }));
 
 export async function generateMetadata({ params }: Props) {
   const { topic } = await params;

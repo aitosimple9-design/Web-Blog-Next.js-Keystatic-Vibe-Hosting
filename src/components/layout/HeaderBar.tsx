@@ -6,7 +6,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { site, mainNav } from "@/config/site";
+import { site, mainNav, type NavGroup } from "@/config/site";
 import { CloseIcon, MenuIcon } from "@/components/ui/Icon";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -44,7 +44,15 @@ function Logo() {
   );
 }
 
-export function HeaderBar({ tone, searchIndex }: { tone: HeaderTone; searchIndex: SearchItem[] }) {
+export function HeaderBar({
+  tone,
+  searchIndex,
+  navGroups,
+}: {
+  tone: HeaderTone;
+  searchIndex: SearchItem[];
+  navGroups: NavGroup[];
+}) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -147,7 +155,7 @@ export function HeaderBar({ tone, searchIndex }: { tone: HeaderTone; searchIndex
       </div>
 
       {/* Menu ngăn kéo cho điện thoại (<768px): trượt từ trái, không phủ tối phần bên phải */}
-      <MobileMenu id={panelId} open={menuOpen} pathname={pathname} />
+      <MobileMenu id={panelId} open={menuOpen} pathname={pathname} groups={navGroups} />
     </header>
   );
 }

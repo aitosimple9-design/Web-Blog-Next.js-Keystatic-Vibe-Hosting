@@ -1,6 +1,6 @@
 // Hồ sơ cá nhân cho Trang chủ (thương hiệu cá nhân). NƠI DUY NHẤT sửa nội dung trang này.
 // Mọi chữ dưới đây là NỘI DUNG MẪU (đánh dấu [mẫu]) chờ Lộc thay bằng nội dung thật; chỉ tên hiển thị là thật.
-// Ảnh: tạm dùng ảnh minh họa trong public/images/stock (ghi nguồn ở public/images/CREDITS.md), thay bằng ảnh thật khi có.
+// Ảnh: tạm dùng ảnh minh họa trong public/images/profile (ghi nguồn ở public/images/CREDITS.md), thay bằng ảnh thật khi có.
 
 export const profile = {
   name: "Trần Ngọc Hoàng Ni",
@@ -9,7 +9,7 @@ export const profile = {
   /** Ảnh chân dung ĐÃ XÓA PHÔNG (PNG / WebP nền trong suốt, người ngồi quay thẳng, tỉ lệ ~ 0,97). Ảnh do Lộc cung cấp (đã tách nền, đầu căn giữa khung) */
   portrait: { src: "/images/profile/portrait-cutout.webp", alt: "Chân dung Trần Ngọc Hoàng Ni", width: 844, height: 866 },
   /** Ảnh thứ hai ở khối Câu chuyện */
-  storyImage: { src: "/images/stock/vintage-book-sofa.jpg", alt: "Cuốn sách cũ đặt trên ghế sofa", position: "50% 50%" },
+  storyImage: { src: "/images/profile/story.jpg", alt: "Cuốn sách cũ đặt trên ghế sofa", position: "50% 50%" },
 } as const;
 
 /** Khối Câu chuyện [mẫu]: 4 đoạn ngắn */
@@ -35,7 +35,7 @@ export const principles = {
   ],
 } as const;
 
-/** Khối Tủ sách [mẫu]: tên sách phải có trong src/config/covers.ts để hiện bìa; `topic` là slug chủ đề bấm tới */
+/** Khối Tủ sách [mẫu]: tên sách phải có trong content/books (Keystatic: Sách) để hiện bìa; `topic` là slug chủ đề bấm tới */
 export const shelf = {
   title: "Tủ sách của mình",
   dek: "Những cuốn sách ảnh hưởng đến mình nhiều nhất. Bấm vào bìa để đọc các bài cùng chủ đề.",

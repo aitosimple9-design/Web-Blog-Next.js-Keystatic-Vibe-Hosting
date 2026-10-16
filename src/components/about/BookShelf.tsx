@@ -2,7 +2,7 @@
 // 375: ~2,3 bìa · 768: ~4,4 bìa · 1024+: 5 bìa, nút ‹ › trượt tới bìa thứ 6.
 import Link from "next/link";
 import { shelf } from "@/config/profile";
-import { topicBySlug } from "@/config/topics";
+import { topicBySlug } from "@/lib/topics";
 import { brushStyle } from "@/lib/brush";
 import { Reveal } from "@/components/ui/Reveal";
 import { RevealText } from "@/components/ui/RevealText";

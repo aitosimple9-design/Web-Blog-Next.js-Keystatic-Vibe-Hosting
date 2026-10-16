@@ -2,7 +2,7 @@
 // 1024+: chữ + CTA trái, bìa giữa, danh sách chủ đề dọc bên phải, số liệu một hàng bên dưới.
 // Lưới 1fr | cột giữa | 1fr: hai cột bên BẰNG NHAU nên cụm bìa nằm chính giữa, khoảng cách hai bên đều.
 import Link from "next/link";
-import type { Topic } from "@/config/topics";
+import type { Topic } from "@/lib/topics";
 import { Button } from "@/components/ui/Button";
 import { BookCover } from "@/components/ui/Media";
 import { ArrowRightIcon } from "@/components/ui/Icon";
