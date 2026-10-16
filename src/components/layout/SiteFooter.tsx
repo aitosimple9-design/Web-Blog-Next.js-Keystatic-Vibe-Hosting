@@ -1,9 +1,11 @@
 // Chân trang (SiteFooter): nền paper-raised. 375: xếp dọc · 768+: logo trái · menu giữa · 7 icon phải.
 import Link from "next/link";
-import { site, mainNav, legalLinks } from "@/config/site";
+import { mainNav } from "@/config/site";
+import { getSiteSettings } from "@/lib/settings";
 import { SocialIcons } from "@/components/layout/SocialIcons";
 
 export function SiteFooter() {
+  const { name, tagline, year, legalLinks } = getSiteSettings();
   return (
     <footer className="seam-top bg-paper-raised text-ink">
       <div className="wrap pt-s8 pb-s6">
@@ -11,10 +13,10 @@ export function SiteFooter() {
           <Link
             href="/"
             className="tap inline-flex w-fit items-center gap-s2 rounded-sm no-underline"
-            aria-label={`${site.name} — về Trang chủ`}
+            aria-label={`${name} — về Trang chủ`}
           >
             <span aria-hidden className="block size-[22px] rounded-cover bg-current" />
-            <span className="font-serif text-(length:--logo-size) leading-none font-semibold">{site.name}</span>
+            <span className="font-serif text-(length:--logo-size) leading-none font-semibold">{name}</span>
           </Link>
 
           <nav aria-label="Chân trang">
@@ -34,7 +36,7 @@ export function SiteFooter() {
 
         <div className="mt-s6 flex flex-col gap-s3 border-t-(length:--border-width) border-rule pt-s5 tablet:flex-row tablet:items-center tablet:justify-between">
           <p className="type-caption text-ink-faint">
-            © {site.year} {site.name}. {site.tagline}.
+            © {year} {name}. {tagline}.
           </p>
           <ul className="type-caption flex gap-s2 text-ink-soft">
             {legalLinks.map((l) => (

@@ -1,7 +1,6 @@
 // Trang Chi tiết bài (ưu tiên số 1; đích của quảng cáo). Giao diện: src/components/article/ArticleView.tsx
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { site } from "@/config/site";
 import { getSiteSettings } from "@/lib/settings";
 import { getAllPosts, getPost } from "@/lib/posts";
 import { ArticleView } from "@/components/article/ArticleView";
@@ -24,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: url },
     openGraph: {
       type: "article",
-      title: `${post.seoTitle ?? post.title} | ${site.name}`,
+      title: `${post.seoTitle ?? post.title} | ${getSiteSettings().name}`,
       description: post.description,
       url,
       publishedTime: post.date,

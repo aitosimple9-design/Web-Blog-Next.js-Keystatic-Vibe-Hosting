@@ -19,12 +19,12 @@ const sans = Be_Vietnam_Pro({
   display: "swap",
 });
 
-// Tên / mô tả / ảnh OG lấy từ "Cài đặt site" (Keystatic); thiếu thì dùng giá trị trong src/config/site.ts.
+// Tên / khẩu hiệu / mô tả / ảnh OG lấy từ "Cài đặt site" (Keystatic); thiếu thì dùng giá trị trong src/config/site.ts.
 export function generateMetadata(): Metadata {
   const s = getSiteSettings();
   return {
     metadataBase: new URL(site.url),
-    title: { default: `${s.name} — ${site.tagline}`, template: `%s | ${s.name}` },
+    title: { default: `${s.name} — ${s.tagline}`, template: `%s | ${s.name}` },
     description: s.description,
     openGraph: {
       type: "website",

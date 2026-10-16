@@ -27,6 +27,10 @@ export default config({
           label: "Tên site (hiện ở tiêu đề tab trình duyệt và khi chia sẻ link)",
           validation: { length: { max: 60 } },
         }),
+        tagline: fields.text({
+          label: "Khẩu hiệu (hiện ở chân trang và sau tên site ở tiêu đề tab)",
+          validation: { length: { max: 80 } },
+        }),
         description: fields.text({
           label: "Mô tả mặc định (≤ 160 ký tự, dùng khi trang không có mô tả riêng)",
           multiline: true,
@@ -37,13 +41,48 @@ export default config({
           directory: "public/images/site",
           publicPath: "/images/site/",
         }),
+        copyrightYear: fields.integer({
+          label: "Năm bản quyền (để trống = năm hiện tại)",
+          validation: { min: 2000, max: 2100 },
+        }),
         socials: fields.array(
           fields.object({
-            name: fields.text({ label: "Tên mạng xã hội", validation: { isRequired: true } }),
+            platform: fields.select({
+              label: "Nền tảng",
+              options: [
+                { label: "YouTube", value: "youtube" },
+                { label: "TikTok", value: "tiktok" },
+                { label: "Facebook", value: "facebook" },
+                { label: "Instagram", value: "instagram" },
+                { label: "LinkedIn", value: "linkedin" },
+                { label: "X", value: "x" },
+                { label: "Zalo", value: "zalo" },
+              ],
+              defaultValue: "facebook",
+            }),
             url: fields.url({ label: "Địa chỉ (URL)", validation: { isRequired: true } }),
           }),
-          { label: "Liên kết mạng xã hội", itemLabel: (p) => p.fields.name.value },
+          {
+            label: "Liên kết mạng xã hội (để trống = dùng danh sách mặc định)",
+            itemLabel: (p) => p.fields.platform.value,
+          },
         ),
+        legalLinks: fields.array(
+          fields.object({
+            label: fields.text({ label: "Tên trang (ví dụ: Điều khoản)", validation: { isRequired: true } }),
+            href: fields.text({
+              label: "Địa chỉ (đường dẫn như /dieu-khoan hoặc https://…; để trống = chỉ hiện chữ)",
+            }),
+          }),
+          {
+            label: "Trang pháp lý ở chân trang (để trống = dùng mặc định)",
+            itemLabel: (p) => p.fields.label.value,
+          },
+        ),
+        postsPerPage: fields.integer({
+          label: "Số bài mỗi trang ở trang Blog (3 đến 12; để trống = 6)",
+          validation: { min: 3, max: 12 },
+        }),
       },
     }),
   },

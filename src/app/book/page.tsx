@@ -1,6 +1,6 @@
 // Trang Book (trước đây là Trang chủ): Hero tối, chủ đề, bài mới, Newsletter. Layout: docs/layout/book/README.md
 import type { Metadata } from "next";
-import { site } from "@/config/site";
+import { getSiteSettings } from "@/lib/settings";
 import { getTopics } from "@/lib/topics";
 import { countByTopic, getAllPosts, getSiteStats } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
@@ -12,11 +12,14 @@ import { TopicSlider } from "@/components/home/TopicSlider";
 import { LatestGrid } from "@/components/home/LatestGrid";
 import { ScrollMarquee } from "@/components/ui/Motion";
 
-export const metadata: Metadata = {
-  title: { absolute: `Book — ${site.name}` },
-  description: site.description,
-  alternates: { canonical: "/book" },
-};
+export function generateMetadata(): Metadata {
+  const s = getSiteSettings();
+  return {
+    title: { absolute: `Book — ${s.name}` },
+    description: s.description,
+    alternates: { canonical: "/book" },
+  };
+}
 
 export default function BookPage() {
   const posts = getAllPosts();

@@ -2,7 +2,7 @@
 // URL (Q13, giả định): /blog/<chu-de> và /blog/<chu-de>/trang/<n>; 6 bài mỗi trang, lưới tự đổi số cột (1 / 2 / 3).
 import Image from "next/image";
 import { brushStyle } from "@/lib/brush";
-import { POSTS_PER_PAGE, site } from "@/config/site";
+import { getSiteSettings } from "@/lib/settings";
 import { topicBySlug, getTopics } from "@/lib/topics";
 import {
   countByTopic,
@@ -26,7 +26,7 @@ export const topicHref = (slug: string, page = 1) =>
   page <= 1 ? `/blog/${slug}` : `/blog/${slug}/trang/${page}`;
 
 export const totalPagesFor = (slug: string) =>
-  Math.max(1, Math.ceil(getPostsByTopic(slug).length / POSTS_PER_PAGE));
+  Math.max(1, Math.ceil(getPostsByTopic(slug).length / getSiteSettings().postsPerPage));
 
 export function blogMetadata(slug: string, page: number): Metadata {
   const topic = topicBySlug(slug)!;
@@ -37,7 +37,7 @@ export function blogMetadata(slug: string, page: number): Metadata {
     description: topic.description,
     alternates: { canonical: topicHref(slug, page) },
     openGraph: {
-      title: `${title} | ${site.name}`,
+      title: `${title} | ${getSiteSettings().name}`,
       description: topic.description,
       type: "website",
     },
@@ -47,8 +47,9 @@ export function blogMetadata(slug: string, page: number): Metadata {
 export function BlogView({ slug, page }: { slug: string; page: number }) {
   const topic = topicBySlug(slug)!;
   const all = getPostsByTopic(slug);
-  const totalPages = Math.max(1, Math.ceil(all.length / POSTS_PER_PAGE));
-  const posts = all.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+  const perPage = getSiteSettings().postsPerPage;
+  const totalPages = Math.max(1, Math.ceil(all.length / perPage));
+  const posts = all.slice((page - 1) * perPage, page * perPage);
   const counts = countByTopic();
   const books = [...new Set(all.map((p) => p.source.book))].slice(0, 3);
 
