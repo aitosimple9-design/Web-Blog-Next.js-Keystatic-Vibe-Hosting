@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
+import type { BookPageTexts } from "@/config/page-texts";
 
 // Vị trí từng ô theo mốc (thứ tự DOM: t1, t2, t3, ô số liệu, t4)
 const slots = [
@@ -15,7 +16,7 @@ const slots = [
 ];
 const lastSlot = "desktop:col-start-4 desktop:row-start-2";
 
-export function LatestGrid({ posts, total }: { posts: PostMeta[]; total: number }) {
+export function LatestGrid({ posts, total, text }: { posts: PostMeta[]; total: number; text: BookPageTexts["latest"] }) {
   const [a, b, c, d] = posts;
   const tile = (p: PostMeta | undefined, cls: string, i: number) =>
     p ? (
@@ -27,7 +28,7 @@ export function LatestGrid({ posts, total }: { posts: PostMeta[]; total: number 
   return (
     <section aria-labelledby="latest-title" className="seam-both bg-paper-sunk text-ink">
       <div className="wrap band-y">
-        <SectionHead id="latest-title" title="Bài viết mới nhất" dek="Những bài ghi chép mới đăng gần đây." />
+        <SectionHead id="latest-title" title={text.title} dek={text.dek} />
 
         <div className="mt-s6 grid auto-rows-[320px] gap-s5 tablet:grid-cols-2 desktop:grid-cols-4 desktop:grid-rows-[repeat(2,300px)] tablet:auto-rows-[340px]">
           {tile(a, slots[0], 0)}
@@ -37,10 +38,10 @@ export function LatestGrid({ posts, total }: { posts: PostMeta[]; total: number 
           <div className="on-inverse flex flex-col justify-between rounded-md bg-inverse p-s5 text-on-inverse shadow-elevated-lg desktop:col-start-3 desktop:row-start-2">
             <div>
               <p className="type-display-lg tabular-nums">{total}+</p>
-              <p className="type-ui-body mt-s1 text-on-inverse-soft">Bài viết đã đăng</p>
+              <p className="type-ui-body mt-s1 text-on-inverse-soft">{text.totalLabel}</p>
             </div>
             <Button href="/blog" variant="on-inverse" className="self-start">
-              Xem tất cả
+              {text.allLabel}
               <ArrowRightIcon />
             </Button>
           </div>

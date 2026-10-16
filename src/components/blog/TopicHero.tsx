@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { BookCover } from "@/components/ui/Media";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 import { CountUp, PointerLayer, PointerScene } from "@/components/ui/Motion";
+import { getBlogPage } from "@/lib/pages";
 
 type Stat = { value: number; label: string };
 
@@ -25,19 +26,20 @@ export function TopicHero({
   books: string[];
   latestHref?: string;
 }) {
+  const { hero } = getBlogPage();
   const [b1, b2, b3] = [books[0], books[1] ?? books[0], books[2] ?? books[0]];
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s3 pb-s9 text-center desktop:grid-cols-[minmax(0,1fr)_minmax(0,clamp(18rem,32vw,24rem))_minmax(0,1fr)] desktop:items-start desktop:gap-x-s5 desktop:pt-s2 desktop:text-left">
       {/* Chữ + CTA */}
       <div className="anim-fade-rise mx-auto max-w-xl desktop:mx-0 desktop:max-w-none">
         <p className="type-eyebrow inline-block rounded-pill border-(length:--border-width) border-on-inverse-soft px-s4 py-s1 uppercase text-on-inverse-soft tablet:py-s2">
-          Chủ đề
+          {hero.eyebrow}
         </p>
         <h2 className="type-display-lg mt-s3 text-balance text-on-inverse">{topic.name}</h2>
         <p className="type-dek mt-s3 text-on-inverse-soft">{topic.description}</p>
         {latestHref ? (
           <Button href={latestHref} variant="on-inverse" className="mt-s5">
-            Đọc bài mới nhất
+            {hero.ctaLabel}
             <ArrowRightIcon />
           </Button>
         ) : null}
@@ -70,7 +72,7 @@ export function TopicHero({
       {/* Danh sách chủ đề dọc (từ 1024px) */}
       <nav aria-label="Chủ đề" className="hidden desktop:block">
         <div className="mb-s3 flex items-baseline justify-between border-b-(length:--border-width) border-on-inverse-soft/40 pb-s3">
-          <p className="type-eyebrow uppercase text-on-inverse-soft">Chủ đề</p>
+          <p className="type-eyebrow uppercase text-on-inverse-soft">{hero.eyebrow}</p>
           <p className="type-caption text-on-inverse-soft">{topics.length} mục</p>
         </div>
         <ol className="flex flex-col gap-s2">

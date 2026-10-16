@@ -5,6 +5,7 @@ import { site } from "@/config/site";
 import { brushStyle } from "@/lib/brush";
 import { topicBySlug } from "@/lib/topics";
 import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
+import { getArticlePage, getBlogPage } from "@/lib/pages";
 import { getRelatedPosts, type Post } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
@@ -24,6 +25,8 @@ const infoCard =
 /** `previewNote` có chữ = bản XEM TRƯỚC: hiện thanh ghi chú ở đáy màn hình và không xuất JSON-LD. */
 export function ArticleView({ post, previewNote }: { post: Post; previewNote?: string }) {
   const related = getRelatedPosts(post);
+  const { tocLabel } = getArticlePage();
+  const { breadcrumb } = getBlogPage();
   const topic = topicBySlug(post.category);
 
   const jsonLd = {
@@ -80,8 +83,8 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
                 center
                 className="absolute bottom-[calc(var(--brush-h)+var(--space-4))] left-1/2 w-max max-w-[calc(100%-32px)] -translate-x-1/2"
                 items={[
-                  { label: "Trang chủ", href: "/" },
-                  { label: "Blog", href: "/blog" },
+                  { label: breadcrumb.home, href: "/" },
+                  { label: breadcrumb.blog, href: "/blog" },
                   ...(topicBySlug(post.category)
                     ? [
                         {
@@ -102,13 +105,13 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
           <div className={`mx-auto w-full max-w-175 overflow-hidden desktop:hidden ${infoCard}`}>
             <SourceBox variant="strip" book={post.source.book} author={post.source.author} className="p-s4" />
             <div className="border-t-(length:--border-width) border-rule">
-              <TOC variant="inline" headings={post.headings} />
+              <TOC variant="inline" headings={post.headings} label={tocLabel} />
             </div>
           </div>
 
           {/* Từ 1024px: mục lục là cột dính bên trái */}
           <div className="hidden desktop:block">
-            <TOC headings={post.headings} />
+            <TOC headings={post.headings} label={tocLabel} />
           </div>
 
           <div className="min-w-0">

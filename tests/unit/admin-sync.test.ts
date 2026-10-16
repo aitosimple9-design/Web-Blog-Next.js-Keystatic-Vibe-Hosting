@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import keystaticConfig from "../../keystatic.config";
 import { profile } from "@/config/profile";
+import { articleDefaults, blogDefaults, bookDefaults, notFoundDefaults } from "@/config/page-texts";
 import {
   IMAGE_RULES,
   MANAGED_IMAGE_DIRS,
@@ -193,4 +194,31 @@ describe("xóa sách / chủ đề thì Trang chủ không giữ tham chiếu tr
     expect(removeHomeReferences({ deletions: [{ path: "content/posts/x.md" }, { path: "content/books/../x.json" }] }, root)).toBe(false);
     expect(fs.readFileSync(path.join(root, "content", "pages", "trang-chu.json"), "utf8")).toBe(before);
   });
+});
+
+// Nguyên tắc 2 (mọi chữ hiển thị trên web phải sửa được trong admin): mỗi khóa chữ mặc định của trang con phải có ô trong singleton tương ứng,
+// và mỗi ô trong singleton phải có chữ mặc định (không để ô "chết" không nối vào đâu).
+describe("chốt chặn: chữ của các trang con luôn có ô sửa trong admin", () => {
+  type AnyField = { kind?: string; fields?: Record<string, AnyField> };
+  const keysOfSchema = (schema: Record<string, AnyField>, prefix = ""): string[] =>
+    Object.entries(schema).flatMap(([k, f]) =>
+      f.kind === "object" && f.fields ? keysOfSchema(f.fields, `${prefix}${k}.`) : [`${prefix}${k}`],
+    );
+  const keysOfDefaults = (o: Record<string, unknown>, prefix = ""): string[] =>
+    Object.entries(o).flatMap(([k, v]) =>
+      v && typeof v === "object" && !Array.isArray(v) ? keysOfDefaults(v as Record<string, unknown>, `${prefix}${k}.`) : [`${prefix}${k}`],
+    );
+
+  const pairs: [string, Record<string, unknown>][] = [
+    ["bookPage", bookDefaults],
+    ["blogPage", blogDefaults],
+    ["articlePage", articleDefaults],
+    ["notFoundPage", notFoundDefaults],
+  ];
+  for (const [singleton, defaults] of pairs) {
+    it(`${singleton}: khóa chữ mặc định khớp đúng các ô trong admin`, () => {
+      const schema = (singletons as Record<string, { schema: Record<string, AnyField> }>)[singleton].schema;
+      expect(keysOfSchema(schema).sort()).toEqual(keysOfDefaults(defaults).sort());
+    });
+  }
 });

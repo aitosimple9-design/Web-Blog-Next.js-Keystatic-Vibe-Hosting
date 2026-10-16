@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { brushStyle } from "@/lib/brush";
 import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
+import { getBlogPage } from "@/lib/pages";
 import { topicBySlug, getTopics } from "@/lib/topics";
 import {
   countByTopic,
@@ -30,8 +31,11 @@ export const totalPagesFor = (slug: string) =>
 
 export function blogMetadata(slug: string, page: number): Metadata {
   const topic = topicBySlug(slug)!;
+  const bp = getBlogPage();
   const title =
-    page > 1 ? `${topic.name} — trang ${page}` : `${topic.name} — Blog`;
+    page > 1
+      ? `${topic.name} — ${bp.pageLabel.replace("{page}", String(page))}`
+      : `${topic.name} — ${bp.titleSuffix}`;
   return {
     title,
     description: topic.description,
@@ -45,6 +49,7 @@ export function blogMetadata(slug: string, page: number): Metadata {
 }
 
 export function BlogView({ slug, page }: { slug: string; page: number }) {
+  const bp = getBlogPage();
   const topic = topicBySlug(slug)!;
   const all = getPostsByTopic(slug);
   const perPage = getSiteSettings().postsPerPage;
@@ -73,15 +78,12 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
         <div aria-hidden className="absolute inset-0 -z-10 bg-inverse/80" />
         <div className="wrap relative pt-[calc(var(--header-height)+var(--space-4))] tablet:pt-[calc(var(--header-height)+var(--space-5))]">
           {/* Tiêu đề "Blog" và dòng giới thiệu ẩn khỏi mắt nhìn (vẫn có cho trình đọc màn hình và SEO) */}
-          <h1 className="sr-only">Blog</h1>
-          <p className="sr-only">
-            Các bài ghi chép theo từng cuốn sách và chủ đề. Chọn một chủ đề để
-            xem danh sách bài của chủ đề đó.
-          </p>
+          <h1 className="sr-only">{bp.heading}</h1>
+          <p className="sr-only">{bp.intro}</p>
           <Breadcrumb
             items={[
-              { label: "Trang chủ", href: "/" },
-              { label: "Blog", href: "/blog" },
+              { label: bp.breadcrumb.home, href: "/" },
+              { label: bp.breadcrumb.blog, href: "/blog" },
               { label: topic.name },
             ]}
           />
@@ -97,9 +99,9 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
             books={books.length ? books : ["Sách mẫu"]}
             latestHref={all[0] ? `/bai-viet/${all[0].slug}` : undefined}
             stats={[
-              { value: all.length, label: "Bài viết" },
-              { value: topicBookCount(slug), label: "Cuốn sách" },
-              { value: topicAvgMinutes(slug), label: "Phút đọc TB" },
+              { value: all.length, label: bp.hero.statPosts },
+              { value: topicBookCount(slug), label: bp.hero.statBooks },
+              { value: topicAvgMinutes(slug), label: bp.hero.statMinutes },
             ]}
           />
         </div>
@@ -113,7 +115,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
           <div className="mb-s6">
             <div className="flex flex-wrap items-center justify-between gap-x-s5 gap-y-s3">
               <h2 id="post-list-title" className="type-display-lg text-balance">
-                <RevealText text={`Bài viết trong ${topic.name}`} />
+                <RevealText text={bp.listTitle.replace("{topic}", topic.name)} />
               </h2>
               <p className="type-caption inline-flex shrink-0 items-baseline gap-1 rounded-pill border-(length:--border-width) border-rule-strong bg-accent-soft px-s4 py-s1 text-accent-soft-ink">
                 <span className="type-ui-strong tabular-nums">
@@ -137,7 +139,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
             </ul>
           ) : (
             <p className="type-ui-body py-s8 text-center text-ink-soft">
-              Chủ đề này chưa có bài viết. Hãy quay lại sau nhé.
+              {bp.emptyText}
             </p>
           )}
 

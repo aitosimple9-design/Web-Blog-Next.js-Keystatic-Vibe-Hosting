@@ -43,6 +43,7 @@ content/posts/<slug>.md         ← bài viết (nguồn dữ liệu duy nhất)
 public/images/posts/<slug>/     ← ảnh của từng bài
 content/topics/<slug>.json      ← chủ đề (tên, thứ tự, mô tả, ảnh nền); sửa trong Keystatic menu "Chủ đề"
 content/books/<slug>.json       ← sách (tên + bìa); tên phải khớp `source.book` của bài; sửa trong Keystatic menu "Sách"
+content/pages/book.json, blog.json, bai-viet.json, 404.json ← CHỮ của trang Book, Blog (+ Hero chủ đề), Trang bài (nhãn khối quanh bài), 404; Keystatic singleton nhóm "Trang"; đọc qua `getBookPage()` / `getBlogPage()` / `getArticlePage()` / `getNotFoundPage()` (src/lib/pages.ts); chữ mặc định ở `src/config/page-texts.ts`; ô để trống = dùng mặc định. Nhãn giao diện nhỏ (aria-label, "phút đọc", "Xem bài", "Đọc bài", phân trang, ô tìm kiếm) Lộc duyệt GIỮ trong mã
 content/pages/trang-chu.json     ← TRANG CHỦ `/` (tên, định vị, chân dung, Câu chuyện + ảnh, Cách mình đọc, Tủ sách chọn từ mục Sách / Chủ đề, Bài tiêu biểu, Kết nối, nhãn số liệu); Keystatic singleton nhóm "Trang"; đọc qua `getHomePage()` (src/lib/pages.ts), ô thiếu thì dùng nội dung mẫu ở src/config/profile.ts. Xóa sách / chủ đề thì route tự gỡ tham chiếu trong file này; tủ sách để trống = ẨN khối
 public/images/profile/          ← ảnh Trang chủ (chân dung, ảnh Câu chuyện) do Keystatic ghi; luật dọn ảnh ở content-cleanup.ts (ảnh mặc định trong PROTECTED_IMAGES được giữ)
 content/settings/header.json    ← Header (ảnh logo, menu tối đa 6 mục, bật / tắt ô tìm kiếm và nút đổi theme); Keystatic singleton, đọc qua `getHeaderSettings()`
@@ -66,7 +67,7 @@ src/lib/seo-fields.ts            ← nhãn các ô của form bài mà hộp đi
 src/app/xem-truoc/bai-viet/<slug>/ ← XEM TRƯỚC bài nháp / lên lịch (nút "Xem trước" của Keystatic); chỉ chạy ở máy soạn bài
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
 src/lib/rehype-image-size.ts    ← plugin rehype gắn width / height thật + loading="lazy" cho ảnh trong thân bài (posts.ts dùng khi dựng HTML)
-src/lib/topics.ts, books.ts, settings.ts, nav.ts, preview.ts, content-cleanup.ts (luật dọn ảnh DUY NHẤT, xem mục 8) ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
+src/lib/topics.ts, books.ts, settings.ts, pages.ts, nav.ts, preview.ts, content-cleanup.ts (luật dọn ảnh DUY NHẤT, xem mục 8) ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
 src/components/                 ← UI components (ui/, layout/, home/, blog/, article/)
 src/config/                     ← site.ts (tên blog, nav tĩnh, mạng xã hội); chủ đề và bìa sách đã chuyển sang content/topics, content/books
 src/styles/                     ← tokens.css (TỰ SINH từ docs/design-system/tokens.json bằng `npm run tokens`), prose.css
