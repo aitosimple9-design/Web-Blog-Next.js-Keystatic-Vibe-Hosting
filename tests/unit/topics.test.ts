@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { topicBySlug, topics } from "@/config/topics";
+import { getTopics, topicBySlug } from "@/lib/topics";
+
+const topics = getTopics();
 
 describe("topics", () => {
   it("slug duy nhất, chữ thường không dấu nối bằng '-'", () => {

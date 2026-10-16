@@ -7,7 +7,7 @@ date: 2026-10-03
 source:
   book: "Sách mẫu 1"
   author: "Tác giả mẫu 1"
-cover: /images/stock/journal-coffee.jpg
+cover: /images/posts/demo-01-doc-it-nho-lau/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

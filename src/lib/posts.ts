@@ -12,7 +12,7 @@ import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import type { Root, Element, Nodes } from "hast";
-import { topicBySlug, topics } from "@/config/topics";
+import { topicBySlug, getTopics } from "@/lib/topics";
 import { readingMinutes } from "@/lib/format";
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
@@ -25,11 +25,22 @@ export type PostMeta = {
   description: string;
   category: string;
   date: string; // YYYY-MM-DD
+  /** Ngày sửa gần nhất (YYYY-MM-DD, tùy chọn); dùng cho dateModified ở JSON-LD */
+  updated?: string;
   source: { book: string; author: string };
   cover?: string;
+  /** Bài bị ẩn: tick "Ẩn bài này" (`draft: true`), hoặc Trạng thái là Nháp / Chờ duyệt */
   draft: boolean;
+  tags: string[];
+  /** Tiêu đề SEO riêng (thẻ title); thiếu thì dùng `title` */
+  seoTitle?: string;
+  /** Ảnh chia sẻ riêng (Open Graph) */
+  ogImage?: string;
+  /** Slug các bài liên quan chọn tay */
+  related: string[];
   readingMinutes: number;
 };
+// Trường `notes` (ghi chú nội bộ) cố ý KHÔNG đọc: không bao giờ ra HTML, metadata hay JSON-LD.
 
 export type Post = PostMeta & { html: string; headings: Heading[] };
 
@@ -73,7 +84,7 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
   if (!topicBySlug(category)) {
     fail(
       file,
-      `category "${category}" chưa có trong src/config/topics.ts (hiện có: ${topics
+      `category "${category}" chưa có trong content/topics (hiện có: ${getTopics()
         .map((t) => t.slug)
         .join(", ")})`,
     );
@@ -82,7 +93,12 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
   if (!source || typeof source !== "object") {
     fail(file, 'thiếu khối bắt buộc "source" (book, author)');
   }
-  const cover = typeof data.cover === "string" && data.cover ? data.cover : undefined;
+  const opt = (k: string) => (typeof data[k] === "string" && (data[k] as string).trim() ? (data[k] as string).trim() : undefined);
+  const cover = opt("cover");
+  const list = (k: string) =>
+    Array.isArray(data[k]) ? (data[k] as unknown[]).filter((x): x is string => typeof x === "string" && x.trim() !== "") : [];
+  const updated = data.updated === undefined || data.updated === null || data.updated === "" ? undefined : toIsoDate(file, data.updated);
+  const hiddenByStatus = data.status === "draft" || data.status === "review";
 
   return {
     slug,
@@ -90,9 +106,14 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
     description,
     category,
     date: toIsoDate(file, data.date),
+    updated,
     source: { book: str(file, source, "book"), author: str(file, source, "author") },
     cover,
-    draft: data.draft === true,
+    draft: data.draft === true || hiddenByStatus,
+    tags: list("tags"),
+    seoTitle: opt("seoTitle"),
+    ogImage: opt("ogImage"),
+    related: list("related"),
     readingMinutes: readingMinutes(body.split(/\s+/).filter(Boolean).length),
   };
 }
@@ -114,11 +135,44 @@ function readAll(): { meta: PostMeta; body: string }[] {
 const byDateDesc = (a: PostMeta, b: PostMeta) =>
   b.date.localeCompare(a.date) || a.title.localeCompare(b.title, "vi");
 
-/** Tất cả bài đã đăng (bỏ `draft: true`), mới nhất trước. */
+// ---------- bài đã đăng: không phải nháp VÀ đã tới ngày đăng ----------
+
+const VN_TZ = "Asia/Ho_Chi_Minh";
+
+/** Ngày hôm nay (YYYY-MM-DD) theo giờ Việt Nam, không phụ thuộc múi giờ máy chủ. */
+export const todayInVietnam = (now: Date = new Date()): string =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: VN_TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+
+/**
+ * Bài được hiện ra ngoài khi: không là nháp (tick Ẩn bài này, hoặc Trạng thái Nháp / Chờ duyệt) VÀ ngày đăng <= hôm nay (giờ VN).
+ * Ngày đăng ở tương lai = bài LÊN LỊCH: ẩn ở danh sách, trang bài, bài liên quan, tìm kiếm, sitemap cho tới ngày đó.
+ * Trang được dựng sẵn lúc build nên bài lên lịch chỉ hiện ra sau lần dựng lại (deploy) vào hoặc sau ngày đăng.
+ */
+export const isPublished = (post: Pick<PostMeta, "draft" | "date">, now: Date = new Date()): boolean =>
+  !post.draft && post.date <= todayInVietnam(now);
+
+/** Tên sách của MỌI bài (cả nháp / lên lịch), theo slug. Chỉ cho cột "Nguồn sách" ở danh sách quản trị Keystatic; đọc lỏng, file lỗi bị bỏ qua. */
+export function getBookNamesBySlug(): Record<string, string> {
+  const out: Record<string, string> = {};
+  if (!fs.existsSync(POSTS_DIR)) return out;
+  for (const file of fs.readdirSync(POSTS_DIR)) {
+    if (!file.endsWith(".md")) continue;
+    try {
+      const { data } = matter(fs.readFileSync(path.join(POSTS_DIR, file), "utf8"));
+      const book = (data.source as { book?: unknown } | undefined)?.book;
+      if (typeof book === "string" && book.trim()) out[file.replace(/\.md$/, "")] = book.trim();
+    } catch {
+      /* bỏ qua file lỗi */
+    }
+  }
+  return out;
+}
+
+/** Tất cả bài đã đăng (xem `isPublished`), mới nhất trước. */
 export const getAllPosts = cache((): PostMeta[] =>
   readAll()
     .map((p) => p.meta)
-    .filter((m) => !m.draft)
+    .filter((m) => isPublished(m))
     .sort(byDateDesc),
 );
 
@@ -154,19 +208,36 @@ async function render(body: string): Promise<{ html: string; headings: Heading[]
   return { html: processor.stringify(tree), headings: collectH2(tree) };
 }
 
-/** Một bài đầy đủ (kèm HTML và mục lục). Trả về null nếu không có hoặc đang là bản nháp. */
+/** Một bài đầy đủ (kèm HTML và mục lục). Trả về null nếu không có, đang là bản nháp hoặc chưa tới ngày đăng. */
 export const getPost = cache(async (slug: string): Promise<Post | null> => {
-  const found = readAll().find((p) => p.meta.slug === slug && !p.meta.draft);
+  const found = readAll().find((p) => p.meta.slug === slug && isPublished(p.meta));
   if (!found) return null;
   return { ...found.meta, ...(await render(found.body)) };
 });
 
-/** Bài liên quan: cùng chủ đề, trừ bài hiện tại; thiếu thì bổ sung bài mới nhất chủ đề khác. */
+/** Trạng thái hiện của một bài: đã đăng / bản nháp (ẩn theo tick hoặc Trạng thái) / lên lịch (ngày đăng ở tương lai). */
+export type PostState = "published" | "draft" | "scheduled";
+export const getPostState = (post: Pick<PostMeta, "draft" | "date">, now: Date = new Date()): PostState =>
+  post.draft ? "draft" : post.date > todayInVietnam(now) ? "scheduled" : "published";
+
+/**
+ * Bài để XEM TRƯỚC trong trang quản trị: lấy cả bản nháp và bài lên lịch (khác `getPost`).
+ * CHỈ dùng ở route xem trước đã chặn truy cập (src/lib/preview.ts), không bao giờ dùng ở trang công khai.
+ */
+export async function getPostForPreview(slug: string): Promise<(Post & { state: PostState }) | null> {
+  const found = readAll().find((p) => p.meta.slug === slug);
+  if (!found) return null;
+  return { ...found.meta, ...(await render(found.body)), state: getPostState(found.meta) };
+}
+
+/** Bài liên quan: bài chọn tay (nếu còn đăng) trước, rồi cùng chủ đề, thiếu thì bổ sung bài mới nhất chủ đề khác. */
 export function getRelatedPosts(post: PostMeta, limit = 6): PostMeta[] {
   const all = getAllPosts().filter((p) => p.slug !== post.slug);
-  const same = all.filter((p) => p.category === post.category);
-  const rest = all.filter((p) => p.category !== post.category);
-  return [...same, ...rest].slice(0, limit);
+  const picked = post.related.flatMap((s) => all.filter((p) => p.slug === s));
+  const others = all.filter((p) => !post.related.includes(p.slug));
+  const same = others.filter((p) => p.category === post.category);
+  const rest = others.filter((p) => p.category !== post.category);
+  return [...picked, ...same, ...rest].slice(0, limit);
 }
 
 /** Số liệu cho Trang chủ (đếm từ nội dung, không viết cứng). */
@@ -174,14 +245,14 @@ export function getSiteStats() {
   const posts = getAllPosts();
   return {
     posts: posts.length,
-    topics: topics.length,
+    topics: getTopics().length,
     books: new Set(posts.map((p) => p.source.book)).size,
   };
 }
 
 export const countByTopic = (): Record<string, number> => {
   const counts: Record<string, number> = {};
-  for (const t of topics) counts[t.slug] = 0;
+  for (const t of getTopics()) counts[t.slug] = 0;
   for (const p of getAllPosts()) counts[p.category] = (counts[p.category] ?? 0) + 1;
   return counts;
 };

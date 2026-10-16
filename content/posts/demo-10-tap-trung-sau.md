@@ -7,7 +7,7 @@ date: 2026-08-28
 source:
   book: "Sách mẫu 3"
   author: "Tác giả mẫu 2"
-cover: /images/stock/reading-bed-window.jpg
+cover: /images/posts/demo-10-tap-trung-sau/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

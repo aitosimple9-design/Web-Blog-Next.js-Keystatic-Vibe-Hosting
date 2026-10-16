@@ -7,7 +7,7 @@ date: 2026-07-27
 source:
   book: "Sách mẫu 4"
   author: "Tác giả mẫu 2"
-cover: /images/stock/desk-notes.jpg
+cover: /images/posts/demo-18-giac-ngu/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

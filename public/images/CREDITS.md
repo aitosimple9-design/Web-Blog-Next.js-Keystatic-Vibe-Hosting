@@ -1,6 +1,7 @@
 # Nguồn ảnh minh họa (demo)
 
-Ảnh trong `public/images/stock/` lấy từ Wikimedia Commons, chỉ chọn ảnh có giấy phép cho phép dùng lại. Nén về rộng tối đa 1600px.
+Ảnh minh họa lấy từ Wikimedia Commons, chỉ chọn ảnh có giấy phép cho phép dùng lại. Nén về rộng tối đa 1600px. Thư mục gốc `public/images/stock/` đã xóa (2026-10-15): ảnh nay nằm ở `public/images/posts/<slug>/cover.jpg` (bìa bài demo), `public/images/topics/<slug>/` (ảnh chủ đề), `public/images/profile/story.jpg` (khối Câu chuyện). Cột "File" trong bảng dưới là TÊN GỐC của ảnh, giữ để tra tác giả.
+
 Ảnh giấy phép **CC BY** BẮT BUỘC ghi công tác giả (bảng dưới) khi đăng lên web thật — cần trang/dòng ghi nguồn ở chân trang (xem PLAN.md Q14, trang pháp lý). Đây là ảnh DEMO; thay bằng ảnh của chính Lộc khi có.
 
 | File | Tác giả | Giấy phép | Trang gốc |
@@ -18,8 +19,8 @@
 | `woman-reading-sofa.jpg` | Julia Spranger | CC BY 3.0 | https://commons.wikimedia.org/wiki/File:PediaPress_Book_Reading_2.jpg |
 | `reading-couch-window.jpg` | Shixart1985 | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Older_woman_reading_a_book_while_lying_on_a_couch_near_a_window_during_the_day.jpg |
 
-Ảnh chủ đề (`src/config/topics.ts`): chu-de-1 `books-lamps`, chu-de-2 `journal-coffee`, chu-de-3 `reading-room`, chu-de-4 `notes-laptop`, chu-de-5 `vintage-book-sofa`. `notes-laptop` và `vintage-book-sofa` là CC BY 2.0: phải ghi công khi đăng lên web thật.
+Ảnh chủ đề (`content/topics/*.json`; file ảnh ở `public/images/topics/<slug>/`): chu-de-1 `books-lamps`, chu-de-2 `journal-coffee`, chu-de-3 `reading-room`, chu-de-4 `notes-laptop`, chu-de-5 `vintage-book-sofa`. `notes-laptop` và `vintage-book-sofa` là CC BY 2.0: phải ghi công khi đăng lên web thật.
 
-Bìa sách demo (`public/images/covers/sach-mau-1..7.svg`) do dự án tự vẽ bằng `scripts/gen-demo-covers.mjs`, không có bản quyền bên thứ ba; thay bằng bìa thật khi có. Sách chưa có bìa trong `src/config/covers.ts` dùng hình học tự sinh (`CoverArt`).
+Bìa sách demo (`public/images/covers/sach-mau-N/sach-mau-N.svg`) do dự án tự vẽ bằng `scripts/gen-demo-covers.mjs`, không có bản quyền bên thứ ba; thay bằng bìa thật khi có. Sách chưa có bìa trong `content/books` dùng hình học tự sinh (`CoverArt`).
 
-Trang chủ cá nhân (`/`, `src/config/profile.ts`): chân dung Hero `profile/portrait-cutout.webp` là ảnh do chủ blog cung cấp (đã tách nền sẵn, cắt viền và căn đầu vào giữa khung, WebP 844x866). Ảnh khối Câu chuyện dùng `vintage-book-sofa.jpg` (CC BY 2.0, Shixart1985): phải ghi công khi đăng lên web thật.
+Trang chủ cá nhân (`/`, `src/config/profile.ts`): chân dung Hero `profile/portrait-cutout.webp` là ảnh do chủ blog cung cấp (đã tách nền sẵn, cắt viền và căn đầu vào giữa khung, WebP 844x866). Ảnh khối Câu chuyện là `profile/story.jpg`, bản của `vintage-book-sofa.jpg` (CC BY 2.0, Shixart1985): phải ghi công khi đăng lên web thật.

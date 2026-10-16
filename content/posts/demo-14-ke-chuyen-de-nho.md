@@ -7,7 +7,7 @@ date: 2026-08-12
 source:
   book: "Sách mẫu 7"
   author: "Tác giả mẫu 2"
-cover: /images/stock/notebook-wood.jpg
+cover: /images/posts/demo-14-ke-chuyen-de-nho/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

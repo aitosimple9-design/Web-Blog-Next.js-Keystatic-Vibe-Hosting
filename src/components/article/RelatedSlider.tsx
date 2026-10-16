@@ -2,7 +2,7 @@
 // (nhãn chủ đề, tiêu đề, bìa sách nhỏ, tóm tắt, thời gian đọc); nền là ảnh bài màu gốc phủ `inverse` 55%, không còn xen kẽ đen / trắng.
 // 375: 272px (lộ mép thẻ kế) · 768: 300px · 1024+: 320px · tràn ra mép phải màn hình.
 import Link from "next/link";
-import { topicBySlug } from "@/config/topics";
+import { topicBySlug } from "@/lib/topics";
 import type { PostMeta } from "@/lib/posts";
 import { Ornament } from "@/components/ui/SectionHead";
 import { Slider } from "@/components/ui/Slider";

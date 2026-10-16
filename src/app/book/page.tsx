@@ -1,7 +1,7 @@
 // Trang Book (trước đây là Trang chủ): Hero tối, chủ đề, bài mới, Newsletter. Layout: docs/layout/book/README.md
 import type { Metadata } from "next";
 import { site } from "@/config/site";
-import { topics } from "@/config/topics";
+import { getTopics } from "@/lib/topics";
 import { countByTopic, getAllPosts, getSiteStats } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
@@ -42,7 +42,7 @@ export default function BookPage() {
       <div className="bg-paper py-s4 text-ink-soft tablet:py-s5">
         <ScrollMarquee words={["Đọc", "Ghi chép", "Suy ngẫm", "Áp dụng", "Nhớ lâu"]} className="type-display-sm font-medium tracking-wide" />
       </div>
-      <TopicSlider topics={topics} counts={countByTopic()} />
+      <TopicSlider topics={getTopics()} counts={countByTopic()} />
       <LatestGrid posts={rest.slice(0, 4)} total={stats.posts} />
       <Newsletter />
     </PageShell>

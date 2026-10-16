@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
-import { topics } from "@/config/topics";
+import { getTopics } from "@/lib/topics";
 import { getAllPosts } from "@/lib/posts";
 
 // keystatic.config.ts phải khớp CLAUDE.md mục 5 và đọc được đúng các bài trong content/posts.
@@ -19,11 +19,16 @@ describe("keystatic.config.ts", () => {
     }
   });
 
-  it("danh mục lấy từ src/config/topics.ts", () => {
-    const category = keystaticConfig.collections!.posts.schema.category as unknown as {
-      options: { value: string }[];
-    };
-    expect(category.options.map((o) => o.value)).toEqual(topics.map((t) => t.slug));
+  it("ô Chủ đề của bài chọn từ collection topics (content/topics)", async () => {
+    expect(keystaticConfig.collections!.topics.path).toBe("content/topics/*");
+    const topicEntries = await reader.collections.topics.all();
+    expect(topicEntries.map((e) => e.slug).sort()).toEqual(getTopics().map((t) => t.slug).sort());
+  });
+
+  it("collection books đọc được và tên sách khớp bìa trong bài", async () => {
+    const books = await reader.collections.books.all();
+    expect(books.length).toBeGreaterThan(0);
+    for (const b of books) expect(b.entry.cover).toBeTruthy();
   });
 
   it("Keystatic đọc được mọi bài và khớp với posts.ts", async () => {

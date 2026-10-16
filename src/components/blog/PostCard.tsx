@@ -1,7 +1,7 @@
 // Thẻ bài. `card`: lưới Blog (ảnh 3:2, nhãn, tiêu đề, tóm tắt, chân thẻ). `tile`: ô lưới bento Trang chủ.
 // Bấm được CẢ thẻ nhưng chỉ có MỘT liên kết (tiêu đề kéo giãn phủ thẻ) để trình đọc màn hình không đọc lặp.
 import Link from "next/link";
-import { topicBySlug } from "@/config/topics";
+import { topicBySlug } from "@/lib/topics";
 import { formatDateLong, formatDateShort, formatReadTime } from "@/lib/format";
 import type { PostMeta } from "@/lib/posts";
 import { PostImage } from "@/components/ui/Media";

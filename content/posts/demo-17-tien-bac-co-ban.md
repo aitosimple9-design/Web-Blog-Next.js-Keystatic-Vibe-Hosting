@@ -7,7 +7,7 @@ date: 2026-07-31
 source:
   book: "Sách mẫu 3"
   author: "Tác giả mẫu 1"
-cover: /images/stock/notes-laptop.jpg
+cover: /images/posts/demo-17-tien-bac-co-ban/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

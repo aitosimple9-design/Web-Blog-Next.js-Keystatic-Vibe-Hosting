@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { brushStyle } from "@/lib/brush";
 import { POSTS_PER_PAGE, site } from "@/config/site";
-import { topicBySlug, topics } from "@/config/topics";
+import { topicBySlug, getTopics } from "@/lib/topics";
 import {
   countByTopic,
   getPostsByTopic,
@@ -85,13 +85,13 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
             ]}
           />
           <div className="mt-[28px] tablet:mt-[36px]">
-            <TopicMenu topics={topics} current={slug} />
-            <TopicTabs topics={topics} current={slug} />
+            <TopicMenu topics={getTopics()} current={slug} />
+            <TopicTabs topics={getTopics()} current={slug} />
           </div>
           <TopicHero
             key={slug}
             topic={topic}
-            topics={topics}
+            topics={getTopics()}
             counts={counts}
             books={books.length ? books : ["Sách mẫu"]}
             latestHref={all[0] ? `/bai-viet/${all[0].slug}` : undefined}

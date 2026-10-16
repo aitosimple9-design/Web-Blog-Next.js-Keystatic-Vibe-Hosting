@@ -7,7 +7,7 @@ date: 2026-09-01
 source:
   book: "Sách mẫu 2"
   author: "Tác giả mẫu 1"
-cover: /images/stock/yellow-book-couch.jpg
+cover: /images/posts/demo-09-thoi-quen-nho/cover.jpg
 draft: false
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.

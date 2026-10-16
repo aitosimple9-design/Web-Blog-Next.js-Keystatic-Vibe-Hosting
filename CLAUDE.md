@@ -32,23 +32,33 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 - `npm run dev` — http://localhost:3000, quản trị bài: http://localhost:3000/keystatic
 - `npm run lint`
 - `npm run build` — PHẢI chạy không lỗi trước khi mở PR
+- `npm run check-content` — kiểm tra bài / chủ đề / sách / ảnh trước khi đăng: LỖI (thoát mã 1) như thiếu trường, chủ đề không tồn tại, file ảnh mất, bài liên quan sai; CẢNH BÁO như sách chưa có bìa, mô tả ngắn; THÔNG TIN bài lên lịch. Chạy trước khi mở PR có đổi nội dung
+- `npm run prune-images` — liệt kê thư mục ảnh MỒ CÔI (không còn bài / chủ đề / sách tương ứng); thêm `-- --delete` để xóa. Chỉ cần ở chế độ GitHub (chế độ local tự dọn khi xóa)
 - `npm run typecheck` — kiểm tra kiểu TypeScript; `npm run tokens` — sinh lại `src/styles/tokens.css` khi sửa `tokens.json`
 
 ## 3. Cấu trúc thư mục (đổi cấu trúc = phải hỏi trước)
 ```
 content/posts/<slug>.md         ← bài viết (nguồn dữ liệu duy nhất)
 public/images/posts/<slug>/     ← ảnh của từng bài
-public/images/covers/           ← bìa sách demo (SVG, sinh bằng scripts/gen-demo-covers.mjs)
+content/topics/<slug>.json      ← chủ đề (tên, thứ tự, mô tả, ảnh nền); sửa trong Keystatic menu "Chủ đề"
+content/books/<slug>.json       ← sách (tên + bìa); tên phải khớp `source.book` của bài; sửa trong Keystatic menu "Sách"
+content/settings/site.json      ← Cài đặt site (tên, mô tả, ảnh chia sẻ, mạng xã hội); Keystatic singleton
+public/images/topics/<slug>/    ← ảnh nền chủ đề (Keystatic tự lưu khi tải ảnh lên)
+public/images/covers/<slug>/    ← bìa sách (SVG demo sinh bằng scripts/gen-demo-covers.mjs; bìa thật tải qua Keystatic)
 docs/                           ← WORKFLOW, PLAN, claude-log, HANDOFF (cục bộ, gitignore)
 docs/design-system/              ← Design System (README, DESIGN-SYSTEM, tokens.json) — Lộc quản lý
 docs/layout/                     ← layout từng trang (wireframe + spec), Lộc quản lý
 keystatic.config.ts             ← collection "posts" theo đúng mục 5
 src/app/                        ← routes (App Router)
 src/app/keystatic/              ← giao diện quản trị Keystatic
-src/app/api/keystatic/          ← API của Keystatic
+src/app/api/keystatic/          ← API của Keystatic (có bọc dọn ảnh khi xóa, xem mục 8)
+src/app/keystatic/KeystaticThumbnails.tsx ← đổi đường dẫn ảnh ở các cột danh sách của Keystatic thành ảnh thu nhỏ, và "[object Object]" ở cột "Nguồn sách" thành tên sách (chỉ đổi hiển thị ở trình duyệt)
+src/app/api/ten-sach/route.ts   ← trả {slug: tên sách} của mọi bài cho cột "Nguồn sách" ở danh sách quản trị; cùng cổng `src/lib/preview.ts` (chỉ máy soạn bài, còn lại 404)
+src/app/xem-truoc/bai-viet/<slug>/ ← XEM TRƯỚC bài nháp / lên lịch (nút "Xem trước" của Keystatic); chỉ chạy ở máy soạn bài
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
+src/lib/topics.ts, books.ts, settings.ts, nav.ts, preview.ts, content-cleanup.ts ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
 src/components/                 ← UI components (ui/, layout/, home/, blog/, article/)
-src/config/                     ← site.ts (tên blog, nav, mạng xã hội), topics.ts (danh mục: nơi DUY NHẤT sửa/thêm chủ đề), covers.ts (bìa sách demo theo tên sách)
+src/config/                     ← site.ts (tên blog, nav tĩnh, mạng xã hội); chủ đề và bìa sách đã chuyển sang content/topics, content/books
 src/styles/                     ← tokens.css (TỰ SINH từ docs/design-system/tokens.json bằng `npm run tokens`), prose.css
 scripts/                        ← build-tokens.mjs, seed-demo-posts.mjs (bài mẫu demo-*.md), gen-demo-covers.mjs (bìa sách demo)
 ```
@@ -84,15 +94,23 @@ title: "Tiêu đề bài"                 # bắt buộc
 slug: tieu-de-bai                    # bắt buộc, chữ thường, không dấu, nối bằng "-"
 description: "Mô tả ≤ 160 ký tự"     # bắt buộc, dùng cho meta description + Open Graph
 category: chu-de-1                   # bắt buộc, 1 trong 3 danh mục (tên thật: Q7 trong PLAN.md)
-date: 2026-10-05                     # bắt buộc, YYYY-MM-DD
+date: 2026-10-05                     # bắt buộc, YYYY-MM-DD; ở tương lai (giờ VN) = bài LÊN LỊCH, ẩn tới ngày đó (hiện sau lần deploy vào / sau ngày đăng)
 source:                              # bắt buộc
   book: "Tên sách"
   author: "Tác giả"
-cover: /images/posts/tieu-de-bai/cover.jpg   # không bắt buộc
+cover: /images/posts/tieu-de-bai/cover.jpg   # không bắt buộc; tải ảnh trong Keystatic thì ô này TỰ ghi đúng đường dẫn nơi ảnh được lưu
 draft: false                         # true = không hiển thị, không vào sitemap
+# --- Trường tùy chọn thêm 2026-10-15 [sync: cần đồng bộ sang dự án B]; thiếu thì bài vẫn hợp lệ ---
+status: published                    # draft | review | published; draft / review = ẩn như `draft: true`; thiếu = đã đăng
+tags: [doc-sach, ghi-nho]            # thẻ, đưa vào meta keywords
+seoTitle: "Tiêu đề SEO ≤ 60 ký tự"   # thẻ title riêng; thiếu thì dùng `title`
+ogImage: /images/posts/tieu-de-bai/og.jpg  # ảnh chia sẻ riêng; thiếu thì dùng ảnh bìa, rồi ảnh mặc định ở Cài đặt site
+related: [slug-bai-khac]             # bài liên quan chọn tay (đứng đầu mục Bài liên quan)
+notes: "Ghi chú nội bộ"              # KHÔNG bao giờ hiển thị / vào HTML / metadata
+updated: 2026-10-10                  # ngày sửa gần nhất (tùy chọn) → dateModified ở JSON-LD; thiếu thì dùng `date`
 ---
 ```
-- `category` quyết định chủ đề của bài (nhãn, Hero chủ đề và danh sách ở trang Blog, bài liên quan). Trang chi tiết dùng 1 layout chung (`docs/layout/chi-tiet-bai/`). Mục 5 dùng chung với dự án B: cần đồng bộ sang B (nhãn `sync`).
+- `category` là tên file trong `content/topics/` (Keystatic: menu "Chủ đề"). Nó quyết định chủ đề của bài (nhãn, Hero chủ đề và danh sách ở trang Blog, bài liên quan). Trang chi tiết dùng 1 layout chung (`docs/layout/chi-tiet-bai/`). Mục 5 dùng chung với dự án B: cần đồng bộ sang B (nhãn `sync`).
 - Nội dung: diễn giải bằng lời mới, có ví dụ và góc nhìn riêng, ghi nguồn. KHÔNG chép nguyên văn đoạn dài từ sách.
 
 ## 6. Thiết kế
@@ -108,7 +126,7 @@ draft: false                         # true = không hiển thị, không vào s
 - Tailwind (Q3): ánh xạ token của Design System vào theme Tailwind; không tự thêm màu ngoài token.
 - Chỉ có MỘT màu nhấn (`accent`; tông ấm `accent-warm` chỉ làm đầu gradient và họa tiết, không làm chữ hay nền phẳng); phong cách **premium** (Lộc duyệt 2026-10-07): gradient CHỈ cho nút chính / CTA và bề mặt khối nổi (token `gradient-primary*`, `gradient-surface`, pha từ `accent` + `accent-warm`; lớp `.btn-grad`, `.surface-raised` trong globals.css); đổ bóng nhiều lớp CHỈ theo thang `elevated-sm/md/lg` (+ `cover-shadow` cho bìa sách; + cặp `inset-sunk` / `inset-sunk-pressed` DUY NHẤT cho khối LÕM vào nền ở thẻ nguồn sách + mục lục trang bài dưới 1280px, Lộc duyệt 2026-10-10), không tự chế giá trị. KHÔNG gradient cho nền trang, chữ, ảnh bài (ngoại lệ DUY NHẤT: vùng chuyển mờ giữa các dải nền, lớp `seam-top` / `seam-bottom` / `seam-both`; đáy ảnh hero cắt bằng mask nét cọ `brush-bottom` thay cho bóng mờ, pha từ `paper` sang trong suốt; không dùng đường kẻ ngang cứng giữa các dải).
 - **Chuyển động và hình ảnh (Lộc mở rộng 2026-10-07, vẫn nằm trong bảng màu / bo góc / bóng của Design System):**
-  - Hero và thẻ phải có ảnh hoặc hiệu ứng, không để ô trống. Chưa có ảnh thật: dùng `CoverArt` (ảnh nghệ thuật sinh từ slug, đơn sắc, không gradient). Ảnh thật chỉ dùng ảnh có giấy phép cho phép, ghi nguồn ở `public/images/CREDITS.md`. Thẻ chủ đề Trang chủ tỉ lệ 3:4: ảnh theo chủ đề (`image` trong `src/config/topics.ts`) tràn cả thẻ phủ `inverse` 65%, chữ và nút nằm thẳng trên ảnh, không khung bó (ngoại lệ thứ hai cho chữ trên ảnh; ô "Bài viết mới nhất" cũng có vùng ảnh kéo xuống phủ cả chữ, giữ bento gốc; thẻ bài ở lưới Blog và thẻ bài liên quan cùng khuôn ảnh tràn + chữ trên ảnh); khối lớn (thẻ chủ đề, form Newsletter) lơ lửng bằng `elevated-lg`; Hero trang Blog có ảnh nền theo chủ đề phủ lớp `inverse` 80% (ngoại lệ cho chữ trên ảnh).
+  - Hero và thẻ phải có ảnh hoặc hiệu ứng, không để ô trống. Chưa có ảnh thật: dùng `CoverArt` (ảnh nghệ thuật sinh từ slug, đơn sắc, không gradient). Ảnh thật chỉ dùng ảnh có giấy phép cho phép, ghi nguồn ở `public/images/CREDITS.md`. Thẻ chủ đề Trang chủ tỉ lệ 3:4: ảnh theo chủ đề (`image` trong `content/topics/<slug>.json`) tràn cả thẻ phủ `inverse` 65%, chữ và nút nằm thẳng trên ảnh, không khung bó (ngoại lệ thứ hai cho chữ trên ảnh; ô "Bài viết mới nhất" cũng có vùng ảnh kéo xuống phủ cả chữ, giữ bento gốc; thẻ bài ở lưới Blog và thẻ bài liên quan cùng khuôn ảnh tràn + chữ trên ảnh); khối lớn (thẻ chủ đề, form Newsletter) lơ lửng bằng `elevated-lg`; Hero trang Blog có ảnh nền theo chủ đề phủ lớp `inverse` 80% (ngoại lệ cho chữ trên ảnh).
   - Được phép: hiện chữ từng từ, nổi lên khi vào trang (CSS: `anim-*` trong globals.css) và khi cuộn tới (`RevealText` cho tiêu đề mục, `Reveal` cho khối / thẻ, `src/components/ui/`; xem bullet cuộn bên dưới); hover (nhấc thẻ, phóng ảnh, nền nút quét, gạch chân chạy, mũi tên trượt); nghiêng / trôi lớp theo con trỏ; chạy theo thanh cuộn (dải chữ, thị sai, thanh tiến độ đọc); đếm số; chuyển trang bằng `<ViewTransition>` (ảnh bay từ thẻ sang trang bài).
   - **Thanh đầu trang khi cuộn và chuyển động cuộn (Lộc duyệt 2026-10-14):** trang có dải đầu tối (`/`, `/book`, `/blog`, trang bài; `HeaderBar` tone `inverse`): hero kéo lên nằm SAU menu (header `-mb-(--header-height)`, mỗi hero chừa `pt` bằng `header-height`), thanh menu TRONG SUỐT ở đầu trang nên hòa vào hero (không dải nền riêng, không đường kẻ). Cuộn quá 24px: thanh co thành VIÊN THUỐC `rounded-pill` cao `header-height` (48px), rộng hơn khung nội dung 24px mỗi bên (dưới 768px chỉ 12px để không chạm mép màn hình), cách mép trên 12px, nền `hdr-bg` 70% + `header-blur` (kính mờ trong suốt hơn thanh phẳng), viền `currentColor` 25%, bóng `elevated-sm`; hai lớp nền chồng nhau mờ qua lại bằng `opacity` + `transform` (không animate width / top / margin); giảm chuyển động thì không trượt. Trang không có hero tối (404, tone `paper` / `sunk`) giữ thanh phẳng có viền dưới và vẫn đổi sang viên thuốc khi cuộn. Tiêu đề mục (`SectionHead`, "Bài tiêu biểu", "Kết nối với mình", kệ sách, "Câu chuyện", "Bài viết trong …") hiện chữ TỪNG TỪ khi cuộn tới (`RevealText`: mặt nạ `word-mask`, một lần, bước 0.06s, tổng độ trễ ≤ 0.5s, mỗi từ chạy thêm 0.6s); khối / thẻ hiện lần lượt bằng `Reveal` (`delay` theo thứ tự, dịch `distance.lg`, `duration.slow`, `easing.smooth`); màn hình đầu không ẩn, không JS vẫn hiện đủ.
   - KHÔNG: vòng lặp vô hạn / tự chạy không dừng (NGOẠI LỆ duy nhất, Lộc duyệt 2026-10-07: dải chữ `ScrollMarquee` trôi chậm 60s, dừng khi rê chuột, tắt khi giảm chuyển động), animate width / height / top / left, thêm màu ngoài token, đổ bóng ngoài thang `elevated-*` (trừ `inset-sunk*` đã duyệt ở mục 6), gradient cho nền trang / chữ / ảnh.
@@ -141,10 +159,13 @@ draft: false                         # true = không hiển thị, không vào s
 ## 7. SEO — bắt buộc mỗi trang
 - `title`, meta `description`, Open Graph (Metadata API: `metadata` / `generateMetadata`)
 - URL dạng slug không dấu
+- JSON-LD `Article` của trang bài có `image` (tuyệt đối; thứ tự ảnh chia sẻ riêng → bìa → ảnh mặc định ở Cài đặt site), `datePublished`, `dateModified` (= `updated` hoặc `date`)
 - Toàn site: `src/app/sitemap.ts` + `src/app/robots.ts`; bài `draft: true` không vào sitemap
 
 ## 8. Riêng cho Keystatic
 - Giữ `keystatic.config.ts` khớp 100% với mục 5 (tên trường, kiểu dữ liệu, thư mục). Ngoại lệ duy nhất: Keystatic lấy `slug` từ TÊN FILE và không ghi `slug:` vào frontmatter nên `slug` khai báo `fields.ignored()`; `posts.ts` dùng tên file khi thiếu `slug:` (có thì phải trùng). Bài do Keystatic lưu có thể không có dòng `slug:`.
+- Xóa bài / chủ đề / sách trong chế độ local: `src/app/api/keystatic/[...params]/route.ts` + `src/lib/content-cleanup.ts` xóa luôn thư mục ảnh cùng slug (Keystatic tự nó để lại ảnh mồ côi). Chế độ GitHub không chen được vào lệnh xóa → chạy `npm run prune-images`.
+- Nút "Xem trước" trong form bài (`previewUrl` ở `keystatic.config.ts`) mở `/xem-truoc/bai-viet/<slug>`: giao diện thật của bản ĐÃ LƯU, gồm cả bài nháp và bài lên lịch (có thanh ghi chú ở đáy). Keystatic không xem được chữ đang gõ mà chưa Lưu. Trang này CHỈ chạy khi Keystatic ở chế độ local và không có biến `VERCEL` (`src/lib/preview.ts`), nếu không thì 404; không dựng sẵn, `noindex`, `robots.txt` chặn `/xem-truoc/`. Xem trước ở chế độ GitHub / production làm ở bước deploy (cần xác thực đăng nhập Keystatic trước khi cho xem nháp), việc deploy phải hỏi Lộc.
 - Giai đoạn hiện tại chỉ dùng chế độ local. Chuyển sang GitHub mode là việc deploy → phải hỏi trước.
 - Không commit secret của Keystatic/GitHub; chỉ để trong biến môi trường.
 

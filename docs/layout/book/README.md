@@ -31,7 +31,7 @@ Mockup: `Home.dc.html` (cùng thư mục). Route: `/book`. Từ 2026-10-11 Trang
 - Footer: 375 xếp dọc · 768+ logo · menu · icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 sốtrên một hàng.
 
 ## Component cần dựng
-`Hero` (+ `FeaturedPost`), `StatBlock`, `SocialIcons`, `SectionHead` (tiêu đề mục căn giữa + họa tiết), `ScrollMarquee` (dải chữ), `Slider` + `TopicCard` (thẻ dọc tỉ lệ 3:4 (tên · mô tả · nút cách đều nhau `space-4`): ảnh theo chủ đề từ `src/config/topics.ts` tràn cả thẻ, phủ `inverse` 65%; chip số thứ tự nền đặc góc trên; số bài là huy hiệu pill (viền mảnh, nền `on-inverse` 15%, số đậm); tên · số bài · mô tả · nút nằm thẳng trên ảnh ở đáy thẻ, không khung bó; lơ lửng `elevated-lg`, hover nhấc + ảnh phóng + lớp phủ nhạt đi), `LatestGrid` + `PostTile` + `StatTile`, `Newsletter`, `SiteHeader`, `SiteFooter`.
+`Hero` (+ `FeaturedPost`), `StatBlock`, `SocialIcons`, `SectionHead` (tiêu đề mục căn giữa + họa tiết), `ScrollMarquee` (dải chữ), `Slider` + `TopicCard` (thẻ dọc tỉ lệ 3:4 (tên · mô tả · nút cách đều nhau `space-4`): ảnh theo chủ đề từ `content/topics/*.json` tràn cả thẻ, phủ `inverse` 65%; chip số thứ tự nền đặc góc trên; số bài là huy hiệu pill (viền mảnh, nền `on-inverse` 15%, số đậm); tên · số bài · mô tả · nút nằm thẳng trên ảnh ở đáy thẻ, không khung bó; lơ lửng `elevated-lg`, hover nhấc + ảnh phóng + lớp phủ nhạt đi), `LatestGrid` + `PostTile` + `StatTile`, `Newsletter`, `SiteHeader`, `SiteFooter`.
 
 ## Dữ liệu
 - Bài nổi bật: bài mới nhất (hoặc đánh dấu nổi bật — cần trường mới nếu Lộc muốn; hiện chưa có trong cấu trúc bài, hỏi trước khi thêm).

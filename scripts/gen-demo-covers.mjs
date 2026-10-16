@@ -32,6 +32,7 @@ for (const b of books) {
   <text x="200" y="560" text-anchor="middle" font-family="${FONT}" font-size="12" letter-spacing="3" fill="${b.ink}" opacity="0.55">BẢN DEMO</text>
 </svg>
 `;
-  writeFileSync(resolve(out, `sach-mau-${b.n}.svg`), svg);
+  mkdirSync(resolve(out, `sach-mau-${b.n}`), { recursive: true });
+  writeFileSync(resolve(out, `sach-mau-${b.n}`, `sach-mau-${b.n}.svg`), svg);
 }
 console.log("Đã sinh", books.length, "bìa demo vào public/images/covers/");

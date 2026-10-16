@@ -1,7 +1,7 @@
 // Thanh trượt chủ đề (dải paper). Thẻ tỉ lệ 3:4, ảnh nền, khung chữ nền đặc, nổi bằng elevated-*. 375: 1 thẻ lộ mép thẻ kế · 768: ~2,5 thẻ · 1024+: 4 thẻ nguyên vẹn, ‹ › xem thẻ thứ 5.
 import Image from "next/image";
 import Link from "next/link";
-import type { Topic } from "@/config/topics";
+import type { Topic } from "@/lib/topics";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Slider } from "@/components/ui/Slider";
 import { ArrowRightIcon } from "@/components/ui/Icon";
