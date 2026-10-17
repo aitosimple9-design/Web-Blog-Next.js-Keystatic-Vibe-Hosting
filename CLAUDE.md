@@ -178,6 +178,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 - URL dạng slug không dấu
 - JSON-LD `Article` của trang bài có `image` (tuyệt đối; thứ tự ảnh chia sẻ riêng → bìa → ảnh mặc định ở Cài đặt site), `datePublished`, `dateModified` (= `updated` hoặc `date`)
 - Toàn site: `src/app/sitemap.ts` + `src/app/robots.ts`; bài `draft: true` không vào sitemap
+- **Chỉ production thật mới được lập chỉ mục** (`src/lib/indexing.ts`, `isIndexable()`): trên Vercel là `VERCEL_ENV=production`; bản xem trước (preview), máy cá nhân và mọi môi trường khác bị chặn bằng `robots.txt` (`Disallow: /`, không sitemap), thẻ meta `robots` noindex (layout) và header `X-Robots-Tag` (next.config.ts). Host không phải Vercel: đặt biến môi trường `ALLOW_INDEXING=true` ở bản production (đụng biến môi trường: hỏi Lộc trước). Cần đặt `NEXT_PUBLIC_SITE_URL` đúng tên miền thật ở production, nếu không sitemap trỏ về localhost.
 
 ## 8. Riêng cho Keystatic
 - Giữ `keystatic.config.ts` khớp 100% với mục 5 (tên trường, kiểu dữ liệu, thư mục). Ngoại lệ duy nhất: Keystatic lấy `slug` từ TÊN FILE và không ghi `slug:` vào frontmatter nên `slug` khai báo `fields.ignored()`; `posts.ts` dùng tên file khi thiếu `slug:` (có thì phải trùng). Bài do Keystatic lưu có thể không có dòng `slug:`.

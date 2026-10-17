@@ -1,11 +1,21 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { getAllPosts } from "@/lib/posts";
 
 describe("SEO", () => {
-  it("robots trỏ tới sitemap.xml", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("robots (production) trỏ tới sitemap.xml", () => {
+    vi.stubEnv("VERCEL_ENV", "production");
     expect(robots().sitemap).toMatch(/\/sitemap\.xml$/);
+  });
+
+  it("robots (không phải production) chặn toàn bộ và không công bố sitemap", () => {
+    vi.stubEnv("VERCEL_ENV", "preview");
+    const r = robots();
+    expect(r.sitemap).toBeUndefined();
+    expect(r.rules).toEqual({ userAgent: "*", disallow: "/" });
   });
 
   it("sitemap có /book và mọi bài đã đăng", () => {
