@@ -1,4 +1,10 @@
 {
+  "blocks": {
+    "marquee": 1,
+    "topics": 2,
+    "latest": 3,
+    "newsletter": 4
+  },
   "title": "Book",
   "description": "",
   "hero": {

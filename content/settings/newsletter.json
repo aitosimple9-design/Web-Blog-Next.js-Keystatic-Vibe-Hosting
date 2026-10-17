@@ -1,0 +1,30 @@
+{
+  "eyebrow": "Bản tin",
+  "title": "Nhận bài mới qua email",
+  "description": "Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.",
+  "perks": [
+    "Ý chính, ví dụ và cách áp dụng",
+    "Đọc trong khoảng 10 phút",
+    "Hủy đăng ký bất cứ lúc nào"
+  ],
+  "submitLabel": "Đăng ký",
+  "form": {
+    "formTitle": "Đăng ký nhận bài",
+    "nameLabel": "Họ tên",
+    "namePlaceholder": "Nguyễn Văn A",
+    "phoneLabel": "Số điện thoại",
+    "phonePlaceholder": "09xx xxx xxx",
+    "optionalTag": "Tùy chọn",
+    "emailLabel": "Email",
+    "emailPlaceholder": "ban@example.com",
+    "sendingLabel": "Đang gửi…",
+    "note": "Chỉ gửi bài mới, không quảng cáo.",
+    "successTitle": "Đã nhận đăng ký",
+    "successMessage": "Cảm ơn {name}. Bài mới sẽ được gửi tới {email}.",
+    "resetLabel": "Đăng ký email khác",
+    "errorNameRequired": "Nhập họ tên của bạn để chúng tôi biết cách xưng hô.",
+    "errorEmailRequired": "Nhập email để nhận bài mới.",
+    "errorEmailInvalid": "Email chưa đúng định dạng, ví dụ: ban@example.com.",
+    "errorPhoneInvalid": "Số điện thoại chưa đúng, ví dụ: 0912 345 678. Bạn có thể bỏ trống ô này."
+  }
+}

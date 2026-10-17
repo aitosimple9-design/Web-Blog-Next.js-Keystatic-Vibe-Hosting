@@ -1,4 +1,7 @@
 {
+  "blocks": {
+    "newsletter": true
+  },
   "heading": "Blog",
   "intro": "Các bài ghi chép theo từng cuốn sách và chủ đề. Chọn một chủ đề để xem danh sách bài của chủ đề đó.",
   "hero": {
