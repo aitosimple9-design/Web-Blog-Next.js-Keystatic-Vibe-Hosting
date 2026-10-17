@@ -3,7 +3,10 @@
 //   CẢNH BÁO (vẫn thoát mã 0): sách chưa có bìa, nháp lệch trạng thái, mô tả hơi dài, thư mục ảnh mồ côi...
 //   THÔNG TIN: bài đang lên lịch (ngày đăng ở tương lai).
 // Tùy chọn: --root <thư mục> kiểm tra một thư mục khác (dùng cho test).
+//   --base <nhánh / commit> so với bản đó: bài ĐÃ ĐĂNG ở bản gốc mà không còn ở đây (đổi slug hoặc xóa) thì CẢNH BÁO, vì link cũ sẽ hỏng.
+//   Trên GitHub Actions (pull_request) tự dùng nhánh đích (biến GITHUB_BASE_REF), nên CI không cần đổi gì.
 // Quy tắc phải khớp src/lib/posts.ts (đọc bài) và mục 5 của CLAUDE.md.
+import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -30,6 +33,7 @@ const warn = (where, msg) => warnings.push(`${where}: ${msg}`);
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
+const IMAGE_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:jpe?g|png|webp|gif|svg|avif)$/;
 
 const files = (dir, ext) => {
   const abs = resolve(root, dir);
@@ -133,6 +137,7 @@ for (const f of postFiles) {
   for (const k of ["cover", "ogImage"]) {
     const v = str(data[k]);
     if (v && !publicFile(v)) err(where, `file ảnh ${k} không tồn tại: ${v}`);
+    else if (v && !IMAGE_NAME.test(v.slice(v.lastIndexOf("/") + 1))) warn(where, `tên file ảnh ${k} nên là chữ thường không dấu nối bằng '-' (không dấu cách): ${v}`);
   }
   if (!str(data.cover)) warn(where, "chưa có ảnh bìa (hero dùng hình sinh tự động)");
 
@@ -197,6 +202,63 @@ for (const p of posts) {
     for (const r of p.data.related) {
       if (r === p.slug) err(p.where, "bài liên quan trỏ về chính nó");
       else if (!slugs.has(r)) err(p.where, `bài liên quan "${r}" không tồn tại`);
+    }
+  }
+}
+
+// ---------- slug của bài đã đăng phải ổn định (so với nhánh gốc) ----------
+// Bài đã đăng mà đổi tên file (slug) hoặc bị xóa thì link cũ trả 404 và mất thứ hạng tìm kiếm. Chỉ CẢNH BÁO: xóa có chủ ý (vd. dọn bài mẫu) là hợp lệ.
+{
+  const argBase = process.argv.indexOf("--base");
+  const prBase = process.env.GITHUB_BASE_REF; // GitHub đặt khi chạy cho pull_request: tên nhánh đích (vd. "main")
+  const baseRef = argBase > -1 ? process.argv[argBase + 1] : prBase ? `origin/${prBase}` : "";
+  if (baseRef) {
+    const git = (...a) =>
+      execFileSync("git", ["-C", root, ...a], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 64 * 1024 * 1024 });
+    // Bài đang hiển thị công khai: không ẩn (draft / status), và ngày đăng không ở tương lai (giờ VN). Khớp src/lib/posts.ts
+    const live = (d) => d.draft !== true && d.status !== "draft" && d.status !== "review" && ISO.test(dateStr(d.date)) && dateStr(d.date) <= todayVN;
+    try {
+      if (argBase === -1 && prBase) {
+        try {
+          git("fetch", "--quiet", "--depth=1", "origin", prBase); // checkout của CI chỉ lấy 1 commit nên phải lấy thêm nhánh đích
+        } catch {
+          /* thử dùng ref sẵn có */
+        }
+      }
+      let ref = baseRef;
+      try {
+        git("rev-parse", "--verify", "--quiet", `${ref}^{commit}`);
+      } catch {
+        if (argBase === -1) ref = "FETCH_HEAD";
+      }
+      const names = git("ls-tree", "-r", "--name-only", ref, "--", "content/posts").split(/\r?\n/).map((n) => n.trim()).filter((n) => n.endsWith(".md"));
+      const baseSlugs = new Set(names.map((n) => n.slice(n.lastIndexOf("/") + 1, -3)));
+      const nowTitles = new Map(posts.filter((p) => !baseSlugs.has(p.slug)).map((p) => [str(p.data.title).toLowerCase(), p.slug]));
+      let checked = 0;
+      let lost = 0;
+      for (const n of names) {
+        const slug = n.slice(n.lastIndexOf("/") + 1, -3);
+        let data;
+        try {
+          ({ data } = matter(git("show", `${ref}:${n}`)));
+        } catch {
+          continue;
+        }
+        if (!live(data)) continue;
+        checked++;
+        if (slugs.has(slug)) continue;
+        lost++;
+        const renamed = nowTitles.get(str(data.title).toLowerCase());
+        warn(
+          n,
+          renamed
+            ? `bài đã đăng nhưng slug đổi thành "${renamed}": link cũ /bai-viet/${slug} sẽ trả 404 (cần chuyển hướng); đừng đổi slug sau khi đăng`
+            : `bài đã đăng ở ${baseRef} nhưng không còn ở nhánh này: link cũ /bai-viet/${slug} sẽ trả 404; nếu xóa có chủ ý thì bỏ qua cảnh báo này`,
+        );
+      }
+      infos.push(lost ? `Đã so ${checked} bài đã đăng với ${baseRef}: ${lost} bài mất hoặc đổi slug (xem CẢNH BÁO).` : `Đã so ${checked} bài đã đăng với ${baseRef}: slug ổn định.`);
+    } catch {
+      infos.push(`Không so được slug với ${baseRef} (chưa có lịch sử git của nhánh đó); bỏ qua.`);
     }
   }
 }

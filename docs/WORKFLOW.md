@@ -125,6 +125,20 @@ git branch -d <tên-nhánh>
 
 Sau khi deploy: mình có thể viết trực tiếp qua CMS (`/keystatic` ở A, `/admin` ở B). Claude chỉ hỗ trợ biên tập và kiểm tra định kỳ.
 
+## 4b. Quy tắc đặt slug và tên ảnh
+
+**Slug** (tên file `content/posts/<slug>.md` = địa chỉ `/bai-viet/<slug>`; chủ đề `/blog/<slug>`):
+- Chữ thường không dấu, nối bằng `-`, chỉ gồm `a-z`, `0-9`. Ngắn gọn (khoảng 3 đến 6 từ), nói đúng nội dung bài; không đưa ngày hay số thứ tự vào (bài mẫu `demo-*` là ngoại lệ tạm).
+- **Slug phải ổn định: bài đã đăng (không ẩn, ngày đăng không ở tương lai) KHÔNG được đổi slug.** Đổi là link cũ trả 404 và mất thứ hạng tìm kiếm. Sửa tiêu đề thì được, slug không đổi theo.
+- Slug đặt ĐÚNG ngay lúc tạo bài (Keystatic lấy slug từ tên lúc tạo). Bài nháp hoặc lên lịch chưa công khai thì đổi tự do.
+- Bất đắc dĩ phải đổi hoặc xóa bài đã đăng: phải có chuyển hướng từ slug cũ sang bài mới trước khi merge. `npm run check-content` (và CI trên mỗi PR) so với nhánh `main` và CẢNH BÁO bài đã đăng bị mất hoặc đổi slug; cảnh báo này không chặn merge, nên người merge phải đọc.
+
+**Tên ảnh** (ảnh bài ở `public/images/posts/<slug>/`, do Keystatic ghi; không chép tay):
+- Chữ thường không dấu, nối bằng `-`, không dấu cách, đuôi `.jpg` `.png` `.webp` `.svg` `.avif` `.gif` (`check-content` cảnh báo nếu sai).
+- Ảnh bìa đặt `cover.<đuôi>`, ảnh chia sẻ riêng `og.<đuôi>`.
+- Ảnh TRONG thân bài phải có tên khác ảnh bìa (đặt tên mô tả, vd. `so-tay-mo-tren-ban.jpg`): Keystatic lưu cùng thư mục theo tên file, hai ảnh cùng tên ghi đè nhau mà không báo.
+- Luôn điền `coverAlt` (mô tả ảnh bìa); ảnh không mô tả thì trình đọc màn hình bỏ qua.
+
 ## 5. Khi gặp sự cố
 
 - **Build hoặc CI lỗi:** đọc log (`gh run view --log-failed`), tìm nguyên nhân gốc, sửa trên cùng nhánh.
