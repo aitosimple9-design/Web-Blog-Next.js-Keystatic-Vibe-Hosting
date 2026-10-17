@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Source_Serif_4 } from "next/font/google";
 import { site } from "@/config/site";
 import { getSiteSettings } from "@/lib/settings";
+import { isIndexable } from "@/lib/indexing";
 import "./globals.css";
 
 // Font theo Design System: Source Serif 4 (tiêu đề + bài đọc) và Be Vietnam Pro (giao diện), subset tiếng Việt.
@@ -26,6 +27,8 @@ export function generateMetadata(): Metadata {
     metadataBase: new URL(site.url),
     title: { default: `${s.name} — ${s.tagline}`, template: `%s | ${s.name}` },
     description: s.description,
+    // Không phải production: thêm thẻ meta robots noindex (header X-Robots-Tag ở next.config.ts chặn thêm một lớp)
+    ...(isIndexable() ? {} : { robots: { index: false, follow: false } }),
     openGraph: {
       type: "website",
       locale: site.locale,

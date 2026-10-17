@@ -17,6 +17,9 @@ export default defineConfig({
     command: `npm run build && npm run start -- -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
+    // Máy chủ E2E chạy như production để robots.txt / sitemap có đủ nội dung. Môi trường khác production mặc định bị chặn lập chỉ mục
+    // (src/lib/indexing.ts); phần chặn đó đã có test đơn vị (tests/unit/indexing.test.ts, seo.test.ts).
+    env: { ALLOW_INDEXING: "true" },
     timeout: 300_000,
   },
 });
