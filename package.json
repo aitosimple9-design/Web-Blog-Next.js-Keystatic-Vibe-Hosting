@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "prune-images": "node scripts/prune-orphan-images.mjs",
     "check-content": "node scripts/check-content.mjs",
+    "make-redirects": "node scripts/make-redirects.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:watch": "vitest"

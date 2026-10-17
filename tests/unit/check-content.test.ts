@@ -141,16 +141,40 @@ describe("scripts/check-content.mjs", () => {
       expect(r.out).toContain("slug ổn định");
     });
 
-    it("đổi tên file của bài đã đăng: cảnh báo, gợi ý slug mới theo tiêu đề (vẫn mã 0)", () => {
+    it("đổi tên file của bài đã đăng mà chưa có chuyển hướng: LỖI, gợi ý slug mới theo tiêu đề", () => {
       const r = runWithBase(baseFiles, (root) => fs.renameSync(path.join(root, "content/posts/bai-a.md"), path.join(root, "content/posts/bai-a-moi.md")));
-      expect(r.code).toBe(0);
+      expect(r.code).toBe(1);
       expect(r.out).toContain('slug đổi thành "bai-a-moi"');
       expect(r.out).toContain("/bai-viet/bai-a");
     });
 
-    it("xóa bài đã đăng: cảnh báo link cũ sẽ 404", () => {
+    it("xóa bài đã đăng mà chưa có chuyển hướng: LỖI link cũ sẽ 404", () => {
       const r = runWithBase(baseFiles, (root) => fs.rmSync(path.join(root, "content/posts/bai-a.md")));
+      expect(r.code).toBe(1);
       expect(r.out).toContain("không còn ở nhánh này");
+    });
+
+    const redirect = (from: string, to: string) => JSON.stringify({ label: "t", from, to, permanent: true });
+    const put = (root: string, rel: string, text: string) => {
+      fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });
+      fs.writeFileSync(path.join(root, rel), text);
+    };
+
+    it("đổi slug nhưng đã có chuyển hướng cũ → mới: đạt, không còn lỗi", () => {
+      const r = runWithBase(baseFiles, (root) => {
+        fs.renameSync(path.join(root, "content/posts/bai-a.md"), path.join(root, "content/posts/bai-a-moi.md"));
+        put(root, "content/redirects/bai-a.json", redirect("/bai-viet/bai-a", "/bai-viet/bai-a-moi"));
+      });
+      expect(r.code).toBe(0);
+      expect(r.out).toContain("đã có chuyển hướng");
+    });
+
+    it("xóa bài nhưng có chuyển hướng về /blog: đạt", () => {
+      const r = runWithBase(baseFiles, (root) => {
+        fs.rmSync(path.join(root, "content/posts/bai-a.md"));
+        put(root, "content/redirects/bai-a.json", redirect("/bai-viet/bai-a", "/blog"));
+      });
+      expect(r.code).toBe(0);
     });
 
     it("bài nháp hoặc lên lịch ở bản gốc thì đổi / xóa thoải mái", () => {
@@ -173,6 +197,58 @@ describe("scripts/check-content.mjs", () => {
       const r = spawnSync(process.execPath, [path.join(process.cwd(), "scripts", "check-content.mjs"), "--root", root, "--base", "nhanh-khong-co"], { encoding: "utf8" });
       expect(r.status).toBe(0);
       expect(r.stdout).toContain("Không so được slug");
+    });
+  });
+
+  // Kiểm tra từng chuyển hướng (content/redirects/*.json)
+  describe("chuyển hướng", () => {
+    const r1 = (from: string, to: string, extra: Record<string, string> = {}) =>
+      run({ ...topic, "content/posts/bai-a.md": post(), "content/redirects/x.json": JSON.stringify({ label: "x", from, to, permanent: true }), ...extra });
+
+    it("hợp lệ: đạt", () => {
+      const r = r1("/bai-viet/slug-cu", "/bai-viet/bai-a");
+      expect(r.code).toBe(0);
+      expect(r.out).toContain("Chuyển hướng: 1 mục");
+    });
+    it("đích là trang không có trên web (gõ sai): LỖI", () => {
+      const r = r1("/bai-viet/slug-cu", "/bai-viet/bai-khong-co");
+      expect(r.code).toBe(1);
+      expect(r.out).toContain("không phải trang có trên web");
+    });
+    it("đích là bài nháp / chưa đăng: LỖI", () => {
+      const r = run({ ...topic, "content/posts/bai-nhap.md": post("draft: true\n"), "content/redirects/x.json": JSON.stringify({ label: "x", from: "/cu", to: "/bai-viet/bai-nhap" }) });
+      expect(r.code).toBe(1);
+    });
+    it("đích là địa chỉ https ngoài site: không kiểm tra, đạt", () => {
+      expect(r1("/cu", "https://example.com/trang").code).toBe(0);
+    });
+    it("đường dẫn cũ sai mẫu hoặc thuộc hệ thống: LỖI", () => {
+      expect(r1("/Bai Viet", "/blog").out).toContain("sai mẫu");
+      expect(r1("/keystatic/x", "/blog").out).toContain("hệ thống");
+      expect(r1("/:slug", "/blog").code).toBe(1);
+    });
+    it("che mất trang đang chạy (bài đã đăng, trang tĩnh, chủ đề): LỖI", () => {
+      for (const from of ["/bai-viet/bai-a", "/book", "/blog/chu-de-1"]) {
+        const r = r1(from, "https://example.com");
+        expect(r.code, from).toBe(1);
+        expect(r.out).toContain("che mất nó");
+      }
+    });
+    it("hai mục cùng đường dẫn cũ: LỖI", () => {
+      const r = r1("/cu", "/blog", { "content/redirects/y.json": JSON.stringify({ label: "y", from: "/cu", to: "/book" }) });
+      expect(r.code).toBe(1);
+      expect(r.out).toContain("hai lần");
+    });
+    it("vòng lặp và chuỗi nối tiếp: LỖI", () => {
+      const loop = run({ ...topic, "content/posts/bai-a.md": post(), "content/redirects/a.json": JSON.stringify({ from: "/a", to: "/b" }), "content/redirects/b.json": JSON.stringify({ from: "/b", to: "/a" }) });
+      expect(loop.code).toBe(1);
+      const chain = run({ ...topic, "content/posts/bai-a.md": post(), "content/redirects/a.json": JSON.stringify({ from: "/a", to: "/b" }), "content/redirects/b.json": JSON.stringify({ from: "/b", to: "/blog" }) });
+      expect(chain.code).toBe(1);
+      expect(chain.out).toContain("chuỗi nối tiếp");
+    });
+    it("file chuyển hướng hỏng: LỖI, không làm sập kiểm tra", () => {
+      const r = run({ ...topic, "content/posts/bai-a.md": post(), "content/redirects/hong.json": "{không phải json" });
+      expect(r.code).toBe(1);
     });
   });
 });

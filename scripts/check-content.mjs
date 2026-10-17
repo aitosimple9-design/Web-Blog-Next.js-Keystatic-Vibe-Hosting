@@ -3,7 +3,7 @@
 //   CẢNH BÁO (vẫn thoát mã 0): sách chưa có bìa, nháp lệch trạng thái, mô tả hơi dài, thư mục ảnh mồ côi...
 //   THÔNG TIN: bài đang lên lịch (ngày đăng ở tương lai).
 // Tùy chọn: --root <thư mục> kiểm tra một thư mục khác (dùng cho test).
-//   --base <nhánh / commit> so với bản đó: bài ĐÃ ĐĂNG ở bản gốc mà không còn ở đây (đổi slug hoặc xóa) thì CẢNH BÁO, vì link cũ sẽ hỏng.
+//   --base <nhánh / commit> so với bản đó: bài ĐÃ ĐĂNG ở bản gốc mà không còn ở đây (đổi slug hoặc xóa) mà chưa có chuyển hướng thì LỖI, vì link cũ sẽ hỏng.
 //   Trên GitHub Actions (pull_request) tự dùng nhánh đích (biến GITHUB_BASE_REF), nên CI không cần đổi gì.
 // Quy tắc phải khớp src/lib/posts.ts (đọc bài) và mục 5 của CLAUDE.md.
 import { execFileSync } from "node:child_process";
@@ -206,6 +206,46 @@ for (const p of posts) {
   }
 }
 
+// Bài đang hiển thị công khai: không ẩn (draft / status), và ngày đăng không ở tương lai (giờ VN). Khớp src/lib/posts.ts
+const live = (d) => d.draft !== true && d.status !== "draft" && d.status !== "review" && ISO.test(dateStr(d.date)) && dateStr(d.date) <= todayVN;
+
+// ---------- chuyển hướng (content/redirects/*.json, quy tắc ở src/lib/redirects.ts) ----------
+// Lỗi gõ sai, vòng lặp, đích không tồn tại, che mất trang đang chạy đều là LỖI. Lúc chạy web, buildRedirects() vẫn tự bỏ mục hỏng nên web không sập.
+const redirectFroms = new Set(); // đường dẫn cũ hợp lệ, dùng ở phần "slug ổn định" bên dưới
+try {
+  const { readRedirectFiles, entryProblem, finalTarget, REDIRECTS_MAX, STATIC_ROUTES } = await import("../src/lib/redirects.ts");
+  const entries = readRedirectFiles(root);
+  if (entries.length > REDIRECTS_MAX) err("content/redirects", `có ${entries.length} chuyển hướng, vượt giới hạn ${REDIRECTS_MAX} của Next.js`);
+  const livePaths = new Set([...STATIC_ROUTES, ...[...topicSlugs].map((t) => `/blog/${t}`), ...posts.filter((p) => live(p.data)).map((p) => `/bai-viet/${p.slug}`)]);
+  const exists = (p) => livePaths.has(p) || [...topicSlugs].some((t) => new RegExp(`^/blog/${t}/trang/[0-9]+$`).test(p));
+  const bySource = new Map();
+  for (const e of entries) {
+    const where = `content/redirects/${e.file}`;
+    const problem = entryProblem(e);
+    if (problem) {
+      err(where, problem);
+      continue;
+    }
+    if (bySource.has(e.from)) {
+      err(where, `đường dẫn cũ "${e.from}" bị khai báo hai lần (cũng ở content/redirects/${bySource.get(e.from).file})`);
+      continue;
+    }
+    bySource.set(e.from, e);
+    if (exists(e.from)) err(where, `"${e.from}" đang là trang có thật trên web: chuyển hướng sẽ che mất nó (xóa chuyển hướng này, hoặc đổi / ẩn trang đó trước)`);
+    if (e.to.startsWith("/") && !exists(e.to)) err(where, `đường dẫn mới "${e.to}" không phải trang có trên web (kiểm tra chính tả; bài nháp hoặc lên lịch chưa công khai cũng không dùng được)`);
+  }
+  const map = new Map([...bySource].map(([k, e]) => [k, e.to]));
+  for (const [from, e] of bySource) {
+    const end = finalTarget(from, map);
+    if (end === null) err(`content/redirects/${e.file}`, `vòng lặp chuyển hướng bắt đầu từ "${from}"`);
+    else if (end !== e.to) err(`content/redirects/${e.file}`, `chuỗi nối tiếp "${from}" → "${e.to}" → ... → "${end}": hãy trỏ thẳng tới "${end}" (web vẫn chạy đúng nhưng mỗi bước thêm một lần chuyển, hại SEO)`);
+    redirectFroms.add(from);
+  }
+  if (entries.length) infos.push(`Chuyển hướng: ${entries.length} mục.`);
+} catch (e) {
+  infos.push(`Không kiểm tra được chuyển hướng (${String(e.message).split(/\r?\n/)[0]}); cần Node >= 22.18 để đọc file .ts.`);
+}
+
 // ---------- slug của bài đã đăng phải ổn định (so với nhánh gốc) ----------
 // Bài đã đăng mà đổi tên file (slug) hoặc bị xóa thì link cũ trả 404 và mất thứ hạng tìm kiếm. Chỉ CẢNH BÁO: xóa có chủ ý (vd. dọn bài mẫu) là hợp lệ.
 {
@@ -215,8 +255,6 @@ for (const p of posts) {
   if (baseRef) {
     const git = (...a) =>
       execFileSync("git", ["-C", root, ...a], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 64 * 1024 * 1024 });
-    // Bài đang hiển thị công khai: không ẩn (draft / status), và ngày đăng không ở tương lai (giờ VN). Khớp src/lib/posts.ts
-    const live = (d) => d.draft !== true && d.status !== "draft" && d.status !== "review" && ISO.test(dateStr(d.date)) && dateStr(d.date) <= todayVN;
     try {
       if (argBase === -1 && prBase) {
         try {
@@ -236,6 +274,7 @@ for (const p of posts) {
       const nowTitles = new Map(posts.filter((p) => !baseSlugs.has(p.slug)).map((p) => [str(p.data.title).toLowerCase(), p.slug]));
       let checked = 0;
       let lost = 0;
+      let handled = 0;
       for (const n of names) {
         const slug = n.slice(n.lastIndexOf("/") + 1, -3);
         let data;
@@ -247,16 +286,20 @@ for (const p of posts) {
         if (!live(data)) continue;
         checked++;
         if (slugs.has(slug)) continue;
+        if (redirectFroms.has(`/bai-viet/${slug}`)) {
+          handled++; // đã có chuyển hướng từ link cũ: không mất link
+          continue;
+        }
         lost++;
         const renamed = nowTitles.get(str(data.title).toLowerCase());
-        warn(
+        err(
           n,
           renamed
-            ? `bài đã đăng nhưng slug đổi thành "${renamed}": link cũ /bai-viet/${slug} sẽ trả 404 (cần chuyển hướng); đừng đổi slug sau khi đăng`
-            : `bài đã đăng ở ${baseRef} nhưng không còn ở nhánh này: link cũ /bai-viet/${slug} sẽ trả 404; nếu xóa có chủ ý thì bỏ qua cảnh báo này`,
+            ? `bài đã đăng nhưng slug đổi thành "${renamed}": link cũ /bai-viet/${slug} sẽ trả 404. Thêm chuyển hướng /bai-viet/${slug} → /bai-viet/${renamed} (menu Chuyển hướng) hoặc trả lại slug cũ`
+            : `bài đã đăng ở ${baseRef} nhưng không còn ở nhánh này: link cũ /bai-viet/${slug} sẽ trả 404. Thêm chuyển hướng (menu Chuyển hướng; xóa hàng loạt: npm run make-redirects) hoặc khôi phục bài`,
         );
       }
-      infos.push(lost ? `Đã so ${checked} bài đã đăng với ${baseRef}: ${lost} bài mất hoặc đổi slug (xem CẢNH BÁO).` : `Đã so ${checked} bài đã đăng với ${baseRef}: slug ổn định.`);
+      infos.push(lost ? `Đã so ${checked} bài đã đăng với ${baseRef}: ${lost} bài mất hoặc đổi slug mà chưa có chuyển hướng (xem LỖI).` : `Đã so ${checked} bài đã đăng với ${baseRef}: slug ổn định${handled ? ` (${handled} bài đã có chuyển hướng)` : ""}.`);
     } catch {
       infos.push(`Không so được slug với ${baseRef} (chưa có lịch sử git của nhánh đó); bỏ qua.`);
     }

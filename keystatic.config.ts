@@ -4,6 +4,7 @@
 import { collection, config, fields, singleton } from "@keystatic/core";
 import { POST_FIELD_LABELS } from "@/lib/seo-fields";
 import { PAGE_BLOCKS, type BlocksPageKey } from "@/config/blocks";
+import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/lib/redirect-patterns";
 
 // Ô chữ ngắn: nhãn + giới hạn ký tự (+ nhiều dòng nếu cần). Dùng cho các singleton chữ ở nhóm "Trang".
 const t = (label: string, max: number, multiline = false) =>
@@ -36,7 +37,7 @@ export default config({
   ui: {
     brand: { name: "Blog sách" },
     // Menu trái chia nhóm
-    navigation: { "Nội dung": ["posts", "topics", "books"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
+    navigation: { "Nội dung": ["posts", "topics", "books", "redirects"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
   },
   singletons: {
     // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
@@ -494,6 +495,35 @@ export default config({
     }),
   },
   collections: {
+    // Chuyển hướng: đường dẫn cũ → đường dẫn mới (đọc bởi src/lib/redirects.ts, áp dụng ở next.config.ts lúc build). Ô nhập bị ép đúng mẫu để không gõ sai;
+    // check-content kiểm tra thêm đích có thật, vòng lặp, chuỗi nối tiếp.
+    redirects: collection({
+      label: "Chuyển hướng",
+      path: "content/redirects/*",
+      slugField: "label",
+      format: "json",
+      columns: ["from", "to"] as never,
+      schema: {
+        label: fields.slug({
+          name: { label: "Tên gợi nhớ (ví dụ: Bài đổi tên 10/2026)", validation: { isRequired: true } },
+          slug: { label: "Tên file (tự sinh)" },
+        }),
+        from: fields.text({
+          label: "Đường dẫn cũ (ví dụ: /bai-viet/slug-cu)",
+          description: REDIRECT_FROM_MESSAGE,
+          validation: { isRequired: true, pattern: { regex: REDIRECT_FROM_RE, message: REDIRECT_FROM_MESSAGE } },
+        }),
+        to: fields.text({
+          label: "Đường dẫn mới (ví dụ: /bai-viet/slug-moi)",
+          description: REDIRECT_TO_MESSAGE,
+          validation: { isRequired: true, pattern: { regex: REDIRECT_TO_RE, message: REDIRECT_TO_MESSAGE } },
+        }),
+        permanent: fields.checkbox({
+          label: "Chuyển hướng vĩnh viễn (khuyên dùng: giữ thứ hạng tìm kiếm; bỏ tích = tạm thời)",
+          defaultValue: true,
+        }),
+      },
+    }),
     topics: collection({
       label: "Chủ đề",
       path: "content/topics/*",
