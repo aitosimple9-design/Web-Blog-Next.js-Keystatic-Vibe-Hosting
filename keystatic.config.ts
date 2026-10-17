@@ -3,10 +3,28 @@
 // `slug` lấy từ TÊN FILE (Keystatic không ghi trường slug vào frontmatter); src/lib/posts.ts chấp nhận cả hai.
 import { collection, config, fields, singleton } from "@keystatic/core";
 import { POST_FIELD_LABELS } from "@/lib/seo-fields";
+import { PAGE_BLOCKS, type BlocksPageKey } from "@/config/blocks";
 
 // Ô chữ ngắn: nhãn + giới hạn ký tự (+ nhiều dòng nếu cần). Dùng cho các singleton chữ ở nhóm "Trang".
 const t = (label: string, max: number, multiline = false) =>
   fields.text({ label, multiline, validation: { length: { max } } });
+
+// Ô "Các khối" của một trang, MỖI KHỐI MỘT DÒNG: trang cho đổi thứ tự thì là ô số (1, 2, 3... = vị trí hiện, 0 = ẩn); trang chỉ bật / tắt thì là ô tích.
+// Danh mục khối ở src/config/blocks.ts; đọc bởi getPageBlocks() (src/lib/pages.ts). Dùng ô số thay cho kéo thả vì mảng của Keystatic không có giá trị mặc định.
+const blocksField = (page: BlocksPageKey) => {
+  const { reorder, blocks } = PAGE_BLOCKS[page];
+  return fields.object(
+    Object.fromEntries(
+      blocks.map((b, i) => [
+        b.id,
+        reorder
+          ? fields.integer({ label: b.label, defaultValue: i + 1, validation: { min: 0, max: 99 } })
+          : fields.checkbox({ label: b.label, defaultValue: true }),
+      ]),
+    ) as never,
+    { label: reorder ? "Các khối của trang: ghi số vị trí (số nhỏ hiện trước, Hero luôn đứng đầu), 0 = ẩn khối, để trống = giữ vị trí mặc định (số mờ trong ô)" : "Các khối của trang: tích = hiện khối" },
+  );
+};
 
 export default config({
   // Chọn chế độ lưu bằng NEXT_PUBLIC_KEYSTATIC_STORAGE ("github" | "local", mặc định local).
@@ -223,6 +241,7 @@ export default config({
       path: "content/pages/trang-chu",
       format: "json",
       schema: {
+        blocks: blocksField("homePage"),
         name: fields.text({
           label: "Tên hiển thị (chữ khổng lồ ở đầu trang; cũng là tên trong thẻ chia sẻ)",
           validation: { length: { max: 60 } },
@@ -231,6 +250,11 @@ export default config({
           label: "Câu định vị dưới tên (cũng là mô tả khi chia sẻ, ≤ 160 ký tự)",
           multiline: true,
           validation: { length: { max: 160 } },
+        }),
+        ogImage: fields.image({
+          label: "Ảnh chia sẻ riêng của trang này (Open Graph, nên 1200x630; để trống = dùng ảnh mặc định ở Cài đặt site)",
+          directory: "public/images/profile",
+          publicPath: "/images/profile/",
         }),
         greeting: fields.text({ label: "Lời chào phía trên tên (mặc định: Xin chào, mình là)", validation: { length: { max: 40 } } }),
         ctaLabel: fields.text({ label: "Chữ nút chính ở đầu trang (mặc định: Đăng ký nhận bài)", validation: { length: { max: 30 } } }),
@@ -357,8 +381,14 @@ export default config({
       path: "content/pages/book",
       format: "json",
       schema: {
+        blocks: blocksField("bookPage"),
         title: t("Tiêu đề tab trình duyệt (hiện thành: <tiêu đề> — <tên site>; mặc định: Book)", 40),
         description: t("Mô tả trang khi chia sẻ (≤ 160 ký tự; để trống = dùng mô tả của Cài đặt site)", 160, true),
+        ogImage: fields.image({
+          label: "Ảnh chia sẻ riêng của trang này (Open Graph, nên 1200x630; để trống = dùng ảnh mặc định ở Cài đặt site)",
+          directory: "public/images/profile",
+          publicPath: "/images/profile/",
+        }),
         hero: fields.object(
           {
             titleLine1: t("Tiêu đề lớn, dòng 1 (mặc định: Điều đọng lại)", 40),
@@ -404,6 +434,12 @@ export default config({
       path: "content/pages/blog",
       format: "json",
       schema: {
+        blocks: blocksField("blogPage"),
+        ogImage: fields.image({
+          label: "Ảnh chia sẻ riêng của trang này (Open Graph, nên 1200x630; để trống = dùng ảnh mặc định ở Cài đặt site)",
+          directory: "public/images/profile",
+          publicPath: "/images/profile/",
+        }),
         heading: t("Tiêu đề trang cho trình đọc màn hình và công cụ tìm kiếm (không hiện ra mắt nhìn; mặc định: Blog)", 40),
         intro: t("Đoạn giới thiệu cho trình đọc màn hình và công cụ tìm kiếm (không hiện ra mắt nhìn)", 240, true),
         hero: fields.object(
@@ -435,6 +471,7 @@ export default config({
       path: "content/pages/bai-viet",
       format: "json",
       schema: {
+        blocks: blocksField("articlePage"),
         sourceLabel: t("Nhãn khối nguồn sách (mặc định: Bài viết dựa trên)", 40),
         relatedTitle: t("Tiêu đề khối bài liên quan (mặc định: Bài liên quan.)", 40),
         relatedDek: t("Dòng phụ cạnh tiêu đề bài liên quan (mặc định: Đọc tiếp những bài cùng chủ đề.)", 80),
@@ -447,6 +484,7 @@ export default config({
       path: "content/pages/404",
       format: "json",
       schema: {
+        tabTitle: t("Tiêu đề tab trình duyệt (hiện thành: <tiêu đề> | <tên site>; mặc định: Không tìm thấy trang)", 60),
         eyebrow: t("Dòng nhỏ (mặc định: Lỗi 404)", 30),
         title: t("Tiêu đề (mặc định: Không tìm thấy trang này)", 60),
         text: t("Đoạn mô tả", 240, true),

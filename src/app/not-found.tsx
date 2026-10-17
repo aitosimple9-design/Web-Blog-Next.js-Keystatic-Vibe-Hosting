@@ -1,6 +1,11 @@
 import { PageShell } from "@/components/layout/PageShell";
 import { Button } from "@/components/ui/Button";
+import type { Metadata } from "next";
 import { getNotFoundPage } from "@/lib/pages";
+
+export function generateMetadata(): Metadata {
+  return { title: getNotFoundPage().tabTitle };
+}
 
 export default function NotFound() {
   const t = getNotFoundPage();

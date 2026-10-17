@@ -5,7 +5,7 @@ import { site } from "@/config/site";
 import { brushStyle } from "@/lib/brush";
 import { topicBySlug } from "@/lib/topics";
 import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
-import { getArticlePage, getBlogPage } from "@/lib/pages";
+import { getArticlePage, getBlogPage, getPageBlocks } from "@/lib/pages";
 import { getRelatedPosts, type Post } from "@/lib/posts";
 import { PageShell } from "@/components/layout/PageShell";
 import { Newsletter } from "@/components/layout/Newsletter";
@@ -26,6 +26,18 @@ const infoCard =
 export function ArticleView({ post, previewNote }: { post: Post; previewNote?: string }) {
   const related = getRelatedPosts(post);
   const { tocLabel } = getArticlePage();
+  // Khối bật / tắt ở Keystatic (Trang → Trang bài viết → Các khối); thứ tự cố định
+  const on = new Set(getPageBlocks("articlePage").filter((b) => b.enabled).map((b) => b.id));
+  const showToc = on.has("toc");
+  const showSource = on.has("source");
+  // Lưới thân bài: mặc định TOC | thân bài | nguồn sách. Tắt mục lục: dưới 1280px chỉ còn một cột; từ 1280px giữ cột trái trống để thân bài đứng đúng chỗ cũ.
+  // Tắt cả hai: một cột, thân bài căn giữa.
+  const gridCols =
+    showToc
+      ? "desktop:grid-cols-[var(--toc-width)_minmax(0,1fr)] desktop:gap-x-s7 min-[1280px]:grid-cols-[180px_minmax(0,var(--measure-prose))_minmax(0,1fr)] min-[1280px]:gap-x-s6"
+      : showSource
+        ? "desktop:grid-cols-1 min-[1280px]:grid-cols-[180px_minmax(0,var(--measure-prose))_minmax(0,1fr)] min-[1280px]:gap-x-s6"
+        : "desktop:grid-cols-1";
   const { breadcrumb } = getBlogPage();
   const topic = topicBySlug(post.category);
 
@@ -100,46 +112,56 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
           </div>
         </section>
 
-        <div className="wrap grid gap-s6 pt-s7 pb-s8 desktop:grid-cols-[var(--toc-width)_minmax(0,1fr)] desktop:gap-x-s7 min-[1280px]:grid-cols-[180px_minmax(0,var(--measure-prose))_minmax(0,1fr)] min-[1280px]:gap-x-s6">
-          {/* Dưới 1024px: MỘT thẻ chung = nguồn sách (bìa nhỏ đúng tỉ lệ) + hàng "Mục lục" xổ ngay trong thẻ */}
-          <div className={`mx-auto w-full max-w-175 overflow-hidden desktop:hidden ${infoCard}`}>
-            <SourceBox variant="strip" book={post.source.book} author={post.source.author} className="p-s4" />
-            <div className="border-t-(length:--border-width) border-rule">
-              <TOC variant="inline" headings={post.headings} label={tocLabel} />
+        <div className={`wrap grid gap-s6 pt-s7 pb-s8 ${gridCols}`}>
+          {/* Dưới 1024px: MỘT thẻ chung = nguồn sách (bìa nhỏ đúng tỉ lệ) + hàng "Mục lục" xổ ngay trong thẻ (khối nào tắt thì bỏ khỏi thẻ) */}
+          {showToc || showSource ? (
+            <div className={`mx-auto w-full max-w-175 overflow-hidden desktop:hidden ${infoCard}`}>
+              {showSource ? <SourceBox variant="strip" book={post.source.book} author={post.source.author} className="p-s4" /> : null}
+              {showToc ? (
+                <div className={showSource ? "border-t-(length:--border-width) border-rule" : ""}>
+                  <TOC variant="inline" headings={post.headings} label={tocLabel} />
+                </div>
+              ) : null}
             </div>
-          </div>
+          ) : null}
 
           {/* Từ 1024px: mục lục là cột dính bên trái */}
-          <div className="hidden desktop:block">
-            <TOC headings={post.headings} label={tocLabel} />
-          </div>
-
-          <div className="min-w-0">
-            {/* 1024–1279px: dải nguồn sách trong cột thân bài (từ 1280px nó chuyển sang cột phải) */}
-            <div className={`hidden desktop:block min-[1280px]:hidden ${infoCard}`}>
-              <SourceBox variant="strip" book={post.source.book} author={post.source.author} className="p-s4" />
+          {showToc ? (
+            <div className="hidden desktop:block">
+              <TOC headings={post.headings} label={tocLabel} />
             </div>
+          ) : null}
+
+          <div className={`min-w-0 ${!showToc && showSource ? "min-[1280px]:col-start-2" : ""}`}>
+            {/* 1024–1279px: dải nguồn sách trong cột thân bài (từ 1280px nó chuyển sang cột phải) */}
+            {showSource ? (
+              <div className={`hidden desktop:block min-[1280px]:hidden ${infoCard}`}>
+                <SourceBox variant="strip" book={post.source.book} author={post.source.author} className="p-s4" />
+              </div>
+            ) : null}
 
             <div
-              className="prose-article mx-auto mt-s5 desktop:mx-0 tablet:mt-s6"
+              className={`prose-article mx-auto mt-s5 tablet:mt-s6 ${showToc || showSource ? "desktop:mx-0" : ""}`}
               dangerouslySetInnerHTML={{ __html: post.html }}
             />
           </div>
 
-          <div className="hidden min-w-0 min-[1280px]:block">
-            <div className="sticky top-[calc(var(--header-height)+var(--space-6))]">
-              <SourceBox
-                book={post.source.book}
-                author={post.source.author}
-                compact
-              />
+          {showSource ? (
+            <div className="hidden min-w-0 min-[1280px]:block">
+              <div className="sticky top-[calc(var(--header-height)+var(--space-6))]">
+                <SourceBox
+                  book={post.source.book}
+                  author={post.source.author}
+                  compact
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </article>
 
-      <RelatedSlider posts={related} />
-      <Newsletter settings={getNewsletterSettings()} />
+      {on.has("related") ? <RelatedSlider posts={related} /> : null}
+      {on.has("newsletter") ? <Newsletter settings={getNewsletterSettings()} /> : null}
 
       {previewNote ? (
         // sticky (không dùng fixed): bài nằm trong <main> có transform nên fixed sẽ bị tính theo <main>, không theo cửa sổ

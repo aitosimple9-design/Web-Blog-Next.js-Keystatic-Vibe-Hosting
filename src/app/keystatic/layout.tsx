@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { KeystaticBlocksColumns } from "./KeystaticBlocksColumns";
 import { KeystaticThumbnails } from "./KeystaticThumbnails";
 import { KeystaticSeoPanel } from "./SeoPanel";
 
@@ -12,6 +13,8 @@ export default function KeystaticLayout({ children }: { children: ReactNode }) {
       <KeystaticThumbnails />
       {/* Hộp điểm SEO trong form bài: chấm cả nội dung chưa lưu (nổi góc dưới bên phải) */}
       <KeystaticSeoPanel />
+      {/* Nhóm "Các khối của trang": mỗi ô chiếm nửa hàng để đỡ dài */}
+      <KeystaticBlocksColumns />
       {children}
     </>
   );

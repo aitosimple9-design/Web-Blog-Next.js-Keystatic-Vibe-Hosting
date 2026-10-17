@@ -1,4 +1,4 @@
-// Bài mới nhất — lưới bento (dải paper-sunk). 375: 1 cột, ô cao 240px · 768: 2 cột, ô đầu cao hai hàng ·
+// Bài mới nhất — lưới bento (dải paper hoặc paper-sunk theo vị trí khối). 375: 1 cột, ô cao 240px · 768: 2 cột, ô đầu cao hai hàng ·
 // 1024+: 4 cột (2 ô cao, 1 ô rộng, ô số liệu, 1 ô thường).
 import type { PostMeta } from "@/lib/posts";
 import { PostCard } from "@/components/blog/PostCard";
@@ -7,6 +7,7 @@ import { ArrowRightIcon } from "@/components/ui/Icon";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
 import type { BookPageTexts } from "@/config/page-texts";
+import { toneBg, type SectionTone } from "@/lib/brush";
 
 // Vị trí từng ô theo mốc (thứ tự DOM: t1, t2, t3, ô số liệu, t4)
 const slots = [
@@ -16,7 +17,19 @@ const slots = [
 ];
 const lastSlot = "desktop:col-start-4 desktop:row-start-2";
 
-export function LatestGrid({ posts, total, text }: { posts: PostMeta[]; total: number; text: BookPageTexts["latest"] }) {
+export function LatestGrid({
+  posts,
+  total,
+  text,
+  tone = "sunk",
+  pullUp = false,
+}: {
+  posts: PostMeta[];
+  total: number;
+  text: BookPageTexts["latest"];
+  tone?: SectionTone;
+  pullUp?: boolean;
+}) {
   const [a, b, c, d] = posts;
   const tile = (p: PostMeta | undefined, cls: string, i: number) =>
     p ? (
@@ -26,7 +39,7 @@ export function LatestGrid({ posts, total, text }: { posts: PostMeta[]; total: n
     ) : null;
 
   return (
-    <section aria-labelledby="latest-title" className="seam-both bg-paper-sunk text-ink">
+    <section aria-labelledby="latest-title" className={`${tone === "sunk" ? (pullUp ? "seam-bottom" : "seam-both") : ""} ${toneBg(tone)} ${pullUp ? "relative -mt-[clamp(40px,5.5vw,64px)] pt-[clamp(40px,5.5vw,64px)]" : ""} text-ink`}>
       <div className="wrap band-y">
         <SectionHead id="latest-title" title={text.title} dek={text.dek} />
 

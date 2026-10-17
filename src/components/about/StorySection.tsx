@@ -5,11 +5,12 @@ import { getHomePage } from "@/lib/pages";
 import { Reveal } from "@/components/ui/Reveal";
 import { RevealText } from "@/components/ui/RevealText";
 import { ScrollParallax } from "@/components/ui/Motion";
+import { toneBg, toneTop, type SectionTone } from "@/lib/brush";
 
-export function StorySection() {
+export function StorySection({ tone = "paper", pullUp = false }: { tone?: SectionTone; pullUp?: boolean }) {
   const { story } = getHomePage();
   return (
-    <section aria-labelledby="story-title" className="bg-paper py-s8 text-ink tablet:py-s9">
+    <section aria-labelledby="story-title" className={`${toneBg(tone)} ${toneTop(pullUp)} pb-s8 text-ink tablet:pb-s9`}>
       <div className="wrap grid gap-x-s8 gap-y-s6 desktop:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]">
         <Reveal className="desktop:col-start-1 desktop:row-start-1">
           <p className="type-eyebrow flex items-center gap-s2 uppercase text-ink-faint tablet:justify-center desktop:justify-start">

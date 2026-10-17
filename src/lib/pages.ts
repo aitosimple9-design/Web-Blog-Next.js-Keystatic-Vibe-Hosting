@@ -18,6 +18,8 @@ import {
   type NotFoundPageTexts,
 } from "@/config/page-texts";
 
+import { PAGE_BLOCKS, type BlocksPageKey, type PageBlock, type PageBlocksConfig } from "@/config/blocks";
+
 const DIR = path.join(process.cwd(), "content", "pages");
 
 export const STORY_PARAGRAPHS_MAX = 8;
@@ -195,6 +197,36 @@ function pick<T>(defaults: T, raw: unknown): T {
   }
   return defaults;
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Khối của trang (bật / tắt, đổi thứ tự): admin lưu `blocks.<id>`: số (trang cho đổi thứ tự; 0 = ẩn, 1+ = vị trí) hoặc true / false (trang chỉ bật / tắt).
+// An toàn: thiếu file / thiếu ô / sai kiểu thì dùng mặc định (khối hiện, thứ tự ở src/config/blocks.ts). Chỉ khối đã khai báo mới được nhận.
+// ---------------------------------------------------------------------------------------------------------------------
+
+export function resolveBlocks(page: BlocksPageKey, raw: unknown): PageBlock[] {
+  const cfg: PageBlocksConfig = PAGE_BLOCKS[page];
+  const rawBlocks = obj(obj(raw).blocks);
+  return cfg.blocks
+    .map((b, index) => {
+      const v = rawBlocks[b.id];
+      if (!cfg.reorder) return { id: b.id, enabled: v !== false, index, sort: index };
+      const pos = typeof v === "number" && Number.isFinite(v) ? v : index + 1;
+      return { id: b.id, enabled: pos > 0, index, sort: pos > 0 ? pos : index + 1 };
+    })
+    .sort((a, b) => a.sort - b.sort || a.index - b.index)
+    .map(({ id, enabled }) => ({ id, enabled }));
+}
+
+const BLOCK_FILES: Record<BlocksPageKey, string> = { homePage: "trang-chu", bookPage: "book", blogPage: "blog", articlePage: "bai-viet" };
+
+/** Các khối của một trang theo đúng thứ tự hiển thị (kể cả khối bị tắt, để nơi gọi biết vị trí của khối kế bên) */
+export const getPageBlocks = cache((page: BlocksPageKey): PageBlock[] => resolveBlocks(page, readJson(BLOCK_FILES[page])));
+
+/** Ảnh chia sẻ riêng của Trang chủ / Book / Blog (ô "Ảnh chia sẻ riêng" ở Keystatic); không có hoặc file mất thì undefined → dùng ảnh mặc định ở Cài đặt site */
+export const getPageOgImage = cache((page: "homePage" | "bookPage" | "blogPage"): string | undefined => {
+  const src = text(readJson(BLOCK_FILES[page]).ogImage);
+  return src && dims(src) ? src : undefined;
+});
 
 export const getBookPage = cache((): BookPageTexts => {
   const t = pick(bookDefaults, readJson("book"));

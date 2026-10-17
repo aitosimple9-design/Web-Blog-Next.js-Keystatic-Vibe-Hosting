@@ -3,11 +3,12 @@
 import { getHomePage } from "@/lib/pages";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
+import { toneBg, toneTop, type SectionTone } from "@/lib/brush";
 
-export function PrincipleCards() {
+export function PrincipleCards({ tone = "sunk", pullUp = false }: { tone?: SectionTone; pullUp?: boolean }) {
   const { principles } = getHomePage();
   return (
-    <section aria-labelledby="principles-title" className="bg-paper-sunk py-s8 text-ink tablet:py-s9">
+    <section aria-labelledby="principles-title" className={`${toneBg(tone)} ${toneTop(pullUp)} pb-s8 text-ink tablet:pb-s9`}>
       <div className="wrap">
         <SectionHead id="principles-title" title={principles.title} dek={principles.dek} />
         <ol className="mt-s7 grid gap-s4 tablet:grid-cols-2 desktop:grid-cols-4">

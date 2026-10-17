@@ -65,6 +65,7 @@ export const articleDefaults = {
 export type ArticlePageTexts = typeof articleDefaults;
 
 export const notFoundDefaults = {
+  tabTitle: "Không tìm thấy trang",
   eyebrow: "Lỗi 404",
   title: "Không tìm thấy trang này",
   text: "Đường dẫn có thể đã đổi hoặc bài viết chưa được đăng. Quay về Trang chủ hoặc xem các bài mới nhất.",
