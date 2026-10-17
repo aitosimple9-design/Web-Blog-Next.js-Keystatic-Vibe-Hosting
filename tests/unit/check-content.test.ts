@@ -106,4 +106,73 @@ describe("scripts/check-content.mjs", () => {
     expect(noImg.code).toBe(1);
     expect(noImg.out).toContain("file ảnh không tồn tại (portrait)");
   });
+
+  it("cảnh báo tên file ảnh sai quy ước (chữ hoa, dấu cách), ảnh đặt tên đúng thì không", () => {
+    const bad = run({ ...topic, "public/images/posts/bai-a/Ảnh Bìa.JPG": "x", "content/posts/bai-a.md": post("cover: /images/posts/bai-a/Ảnh Bìa.JPG\n") });
+    expect(bad.code).toBe(0);
+    expect(bad.out).toContain("tên file ảnh cover nên là chữ thường không dấu");
+    const good = run({ ...topic, "public/images/posts/bai-a/cover.jpg": "x", "content/posts/bai-a.md": post("cover: /images/posts/bai-a/cover.jpg\n") });
+    expect(good.out).not.toContain("tên file ảnh");
+  });
+
+  // So slug bài đã đăng với nhánh gốc (--base): dựng một kho git tạm có 1 commit gốc rồi sửa cây làm việc.
+  describe("slug bài đã đăng phải ổn định (--base)", () => {
+    function runWithBase(base: Record<string, string>, change: (root: string) => void) {
+      const root = fs.mkdtempSync(path.join(os.tmpdir(), "check-git-"));
+      const put = (rel: string, text: string) => {
+        const abs = path.join(root, rel);
+        fs.mkdirSync(path.dirname(abs), { recursive: true });
+        fs.writeFileSync(abs, text);
+      };
+      for (const [rel, text] of Object.entries(base)) put(rel, text);
+      const git = (...a: string[]) => spawnSync("git", ["-C", root, "-c", "user.name=t", "-c", "user.email=t@t", ...a], { encoding: "utf8" });
+      git("init", "-q");
+      git("add", "-A");
+      git("commit", "-q", "-m", "base");
+      change(root);
+      const r = spawnSync(process.execPath, [path.join(process.cwd(), "scripts", "check-content.mjs"), "--root", root, "--base", "HEAD"], { encoding: "utf8" });
+      return { code: r.status, out: r.stdout };
+    }
+    const baseFiles = { ...topic, "content/posts/bai-a.md": post() };
+
+    it("không đổi gì: slug ổn định, không cảnh báo", () => {
+      const r = runWithBase(baseFiles, () => {});
+      expect(r.code).toBe(0);
+      expect(r.out).toContain("slug ổn định");
+    });
+
+    it("đổi tên file của bài đã đăng: cảnh báo, gợi ý slug mới theo tiêu đề (vẫn mã 0)", () => {
+      const r = runWithBase(baseFiles, (root) => fs.renameSync(path.join(root, "content/posts/bai-a.md"), path.join(root, "content/posts/bai-a-moi.md")));
+      expect(r.code).toBe(0);
+      expect(r.out).toContain('slug đổi thành "bai-a-moi"');
+      expect(r.out).toContain("/bai-viet/bai-a");
+    });
+
+    it("xóa bài đã đăng: cảnh báo link cũ sẽ 404", () => {
+      const r = runWithBase(baseFiles, (root) => fs.rmSync(path.join(root, "content/posts/bai-a.md")));
+      expect(r.out).toContain("không còn ở nhánh này");
+    });
+
+    it("bài nháp hoặc lên lịch ở bản gốc thì đổi / xóa thoải mái", () => {
+      const draft = { ...topic, "content/posts/bai-nhap.md": post("draft: true\n"),"content/posts/bai-sau.md": post().replace("2026-10-05", "2999-01-01") };
+      const r = runWithBase(draft, (root) => {
+        fs.rmSync(path.join(root, "content/posts/bai-nhap.md"));
+        fs.rmSync(path.join(root, "content/posts/bai-sau.md"));
+      });
+      expect(r.out).not.toContain("không còn ở nhánh này");
+      expect(r.out).toContain("slug ổn định");
+    });
+
+    it("nhánh gốc không tồn tại: bỏ qua, không làm hỏng kiểm tra khác", () => {
+      const root = fs.mkdtempSync(path.join(os.tmpdir(), "check-nogit-"));
+      for (const [rel, text] of Object.entries(baseFiles)) {
+        const abs = path.join(root, rel);
+        fs.mkdirSync(path.dirname(abs), { recursive: true });
+        fs.writeFileSync(abs, text);
+      }
+      const r = spawnSync(process.execPath, [path.join(process.cwd(), "scripts", "check-content.mjs"), "--root", root, "--base", "nhanh-khong-co"], { encoding: "utf8" });
+      expect(r.status).toBe(0);
+      expect(r.stdout).toContain("Không so được slug");
+    });
+  });
 });

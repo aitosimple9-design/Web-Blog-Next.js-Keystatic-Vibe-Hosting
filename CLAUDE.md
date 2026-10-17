@@ -127,6 +127,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 ---
 ```
 - `category` là tên file trong `content/topics/` (Keystatic: menu "Chủ đề"). Nó quyết định chủ đề của bài (nhãn, Hero chủ đề và danh sách ở trang Blog, bài liên quan). Trang chi tiết dùng 1 layout chung (`docs/layout/chi-tiet-bai/`). Mục 5 dùng chung với dự án B: cần đồng bộ sang B (nhãn `sync`).
+- **Slug và tên ảnh:** slug (= tên file) chữ thường không dấu nối bằng `-`; **bài đã đăng KHÔNG đổi slug** (đổi là link cũ 404, mất thứ hạng; bất đắc dĩ thì phải có chuyển hướng). Ảnh: chữ thường không dấu nối `-`, bìa `cover.<đuôi>`, ảnh trong bài tên khác ảnh bìa. Chi tiết `docs/WORKFLOW.md` mục 4b; `check-content` (cả trên CI) cảnh báo khi bài đã đăng mất / đổi slug và khi tên ảnh sai quy ước.
 - Nội dung: diễn giải bằng lời mới, có ví dụ và góc nhìn riêng, ghi nguồn. KHÔNG chép nguyên văn đoạn dài từ sách.
 
 ## 6. Thiết kế
