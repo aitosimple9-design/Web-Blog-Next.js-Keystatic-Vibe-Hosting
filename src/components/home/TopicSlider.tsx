@@ -1,9 +1,10 @@
-// Thanh trượt chủ đề (dải paper). Thẻ tỉ lệ 3:4, ảnh nền, khung chữ nền đặc, nổi bằng elevated-*. 375: 1 thẻ lộ mép thẻ kế · 768: ~2,5 thẻ · 1024+: 4 thẻ nguyên vẹn, ‹ › xem thẻ thứ 5.
+// Thanh trượt chủ đề (dải paper hoặc paper-sunk theo vị trí khối). Thẻ tỉ lệ 3:4, ảnh nền, khung chữ nền đặc, nổi bằng elevated-*. 375: 1 thẻ lộ mép thẻ kế · 768: ~2,5 thẻ · 1024+: 4 thẻ nguyên vẹn, ‹ › xem thẻ thứ 5.
 import type { BookPageTexts } from "@/config/page-texts";
 import Image from "next/image";
 import Link from "next/link";
 import type { Topic } from "@/lib/topics";
 import { SectionHead } from "@/components/ui/SectionHead";
+import { toneBg, type SectionTone } from "@/lib/brush";
 import { Slider } from "@/components/ui/Slider";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 
@@ -63,13 +64,17 @@ export function TopicSlider({
   topics,
   counts,
   text,
+  tone = "paper",
+  pullUp = false,
 }: {
   topics: Topic[];
   counts: Record<string, number>;
   text: BookPageTexts["topics"];
+  tone?: SectionTone;
+  pullUp?: boolean;
 }) {
   return (
-    <section aria-labelledby="topics-title" className="bg-paper text-ink">
+    <section aria-labelledby="topics-title" className={`${toneBg(tone)} ${pullUp ? "relative -mt-[clamp(40px,5.5vw,64px)] pt-[clamp(40px,5.5vw,64px)]" : ""} text-ink`}>
       <div className="wrap band-y">
         <SectionHead id="topics-title" title={text.title} dek={text.dek} />
         <div className="@container mt-s6">

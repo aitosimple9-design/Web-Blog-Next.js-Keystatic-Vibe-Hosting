@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { brushStyle } from "@/lib/brush";
 import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
-import { getBlogPage } from "@/lib/pages";
+import { getBlogPage, getPageBlocks, getPageOgImage } from "@/lib/pages";
 import { topicBySlug, getTopics } from "@/lib/topics";
 import {
   countByTopic,
@@ -44,12 +44,18 @@ export function blogMetadata(slug: string, page: number): Metadata {
       title: `${title} | ${getSiteSettings().name}`,
       description: topic.description,
       type: "website",
+      // Ảnh chia sẻ chung của trang Blog → ảnh mặc định ở Cài đặt site (openGraph của trang thay hẳn của layout)
+      images: (() => {
+        const img = getPageOgImage("blogPage") ?? getSiteSettings().ogImage;
+        return img ? [{ url: img }] : undefined;
+      })(),
     },
   };
 }
 
 export function BlogView({ slug, page }: { slug: string; page: number }) {
   const bp = getBlogPage();
+  const showNewsletter = getPageBlocks("blogPage").some((b) => b.id === "newsletter" && b.enabled); // bật / tắt ở Keystatic (Trang → Trang Blog → Các khối)
   const topic = topicBySlug(slug)!;
   const all = getPostsByTopic(slug);
   const perPage = getSiteSettings().postsPerPage;
@@ -151,7 +157,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
         </div>
       </section>
 
-      <Newsletter settings={getNewsletterSettings()} />
+      {showNewsletter ? <Newsletter settings={getNewsletterSettings()} /> : null}
     </PageShell>
   );
 }

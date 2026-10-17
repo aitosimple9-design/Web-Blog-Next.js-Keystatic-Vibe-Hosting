@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { getHomePage } from "@/lib/pages";
 import { topicBySlug } from "@/lib/topics";
-import { brushStyle } from "@/lib/brush";
+import { brushStyle, PULL_UP } from "@/lib/brush";
 import { Reveal } from "@/components/ui/Reveal";
 import { RevealText } from "@/components/ui/RevealText";
 import { Slider } from "@/components/ui/Slider";
 import { BookCover } from "@/components/ui/Media";
 import { ArrowRightIcon } from "@/components/ui/Icon";
 
-export function BookShelf() {
+export function BookShelf({ pullUp = false }: { pullUp?: boolean }) {
   const { shelf } = getHomePage();
   if (shelf.books.length === 0) return null;
   const items = shelf.books.map((b) => {
@@ -44,7 +44,9 @@ export function BookShelf() {
   return (
     <section
       aria-labelledby="shelf-title"
-      className="on-inverse brush-bottom relative isolate z-10 bg-inverse pt-s8 pb-[calc(var(--brush-h)+var(--space-8))] text-on-inverse tablet:pt-s9"
+      className={`on-inverse brush-bottom relative isolate z-10 bg-inverse pb-[calc(var(--brush-h)+var(--space-8))] text-on-inverse ${
+        pullUp ? PULL_UP : "pt-s8 tablet:pt-s9"
+      }`}
       style={brushStyle}
     >
       <div className="wrap">

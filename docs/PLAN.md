@@ -150,6 +150,8 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
 - [x] Header + Footer + Newsletter cấu hình ở Keystatic, PR #18 (2026-10-16)
 - [x] Trang chủ cấu hình ở Keystatic, PR #19 (2026-10-16)
 - [x] Trang Book, Blog, Trang bài, 404 cấu hình chữ ở Keystatic (PR 4 / 5, nhánh feat/trang-con-keystatic, 2026-10-16)
+- [x] Quản lý khối từng trang ở Keystatic: bật / tắt + đổi thứ tự (Trang chủ, Book), bật / tắt (Blog, Trang bài), nền xen kẽ tự tính, ảnh chia sẻ riêng Trang chủ / Book / Blog, tiêu đề tab 404 (PR 5 / 5, nhánh feat/quan-ly-khoi, 2026-10-17)
+- [ ] (Ý tưởng, làm SAU khi Lộc cần, đã thống nhất 2026-10-17) Mức 2: gom khối vào thư viện chung `src/components/blocks/` có đăng ký trung tâm, khối nhận dữ liệu qua props, dùng lại ở nhiều trang. Mức 3: `fields.blocks` của Keystatic (thêm / xóa / nhân bản khối, tạo trang mới) — cần luật ghép nền, kiểm chứng bản Keystatic 0.6.x và đồng bộ dự án B
 - [x] B2b Chủ đề và Sách chuyển từ `src/config` sang `content/topics`, `content/books` (2026-10-15)
 - [x] B3 Trường mới của bài (ảnh bìa tải lên, Trạng thái, thẻ, SEO title, ảnh OG, bài liên quan, ghi chú) [sync sang B] (2026-10-15)
 - [x] Xóa bài / chủ đề / sách tự xóa thư mục ảnh (local); `npm run prune-images` cho chế độ GitHub (2026-10-15)

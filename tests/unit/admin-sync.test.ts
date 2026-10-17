@@ -4,6 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import keystaticConfig from "../../keystatic.config";
 import { profile } from "@/config/profile";
+import { PAGE_BLOCKS } from "@/config/blocks";
+import { resolveBlocks } from "@/lib/pages";
 import { articleDefaults, blogDefaults, bookDefaults, notFoundDefaults } from "@/config/page-texts";
 import {
   IMAGE_RULES,
@@ -218,7 +220,45 @@ describe("chốt chặn: chữ của các trang con luôn có ô sửa trong adm
   for (const [singleton, defaults] of pairs) {
     it(`${singleton}: khóa chữ mặc định khớp đúng các ô trong admin`, () => {
       const schema = (singletons as Record<string, { schema: Record<string, AnyField> }>)[singleton].schema;
-      expect(keysOfSchema(schema).sort()).toEqual(keysOfDefaults(defaults).sort());
+      expect(keysOfSchema(schema).filter((k) => !k.startsWith("blocks.") && k !== "ogImage").sort()).toEqual(keysOfDefaults(defaults).sort());
     });
   }
+});
+
+// Khối của trang (PR 5): danh mục ở src/config/blocks.ts phải khớp đúng các ô "blocks" trong admin, và hàm đọc luôn an toàn.
+describe("chốt chặn: khối của trang khớp giữa danh mục, admin và hàm đọc", () => {
+  type AnyField = { kind?: string; fields?: Record<string, AnyField> };
+  for (const [page, cfg] of Object.entries(PAGE_BLOCKS)) {
+    it(`${page}: mỗi khối trong danh mục có đúng một ô (${cfg.reorder ? "số vị trí" : "tích hiện"}) trong admin`, () => {
+      const schema = (singletons as Record<string, { schema: Record<string, AnyField> }>)[page].schema;
+      const blocks = schema.blocks.fields ?? {};
+      expect(Object.keys(blocks).sort()).toEqual(cfg.blocks.map((b) => b.id).sort());
+      for (const b of cfg.blocks) expect(blocks[b.id].kind).toBe("form");
+    });
+  }
+
+  it("thiếu file / ô sai kiểu → mọi khối hiện, đúng thứ tự mặc định", () => {
+    const ids = PAGE_BLOCKS.homePage.blocks.map((b) => b.id);
+    for (const raw of [undefined, null, {}, { blocks: "x" }, { blocks: { story: "a", shelf: null } }]) {
+      expect(resolveBlocks("homePage", raw)).toEqual(ids.map((id) => ({ id, enabled: true })));
+    }
+  });
+
+  it("tắt khối và đổi vị trí theo admin; vị trí trùng thì giữ thứ tự mặc định; khối lạ bị bỏ qua", () => {
+    const out = resolveBlocks("bookPage", {
+      blocks: { newsletter: 1, latest: 0, marquee: 2, ghost: 1 },
+    });
+    expect(out).toEqual([
+      { id: "newsletter", enabled: true },
+      { id: "marquee", enabled: true },
+      { id: "topics", enabled: true },
+      { id: "latest", enabled: false },
+    ]);
+  });
+
+  it("trang không cho đổi thứ tự: bỏ qua ô vị trí, vẫn bật / tắt được", () => {
+    const out = resolveBlocks("articlePage", { blocks: { related: false, toc: 9 } });
+    expect(out.map((b) => b.id)).toEqual(["toc", "source", "related", "newsletter"]);
+    expect(out.find((b) => b.id === "related")?.enabled).toBe(false);
+  });
 });
