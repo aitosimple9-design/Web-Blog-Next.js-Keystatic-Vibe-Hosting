@@ -8,7 +8,7 @@ export const REDIRECT_TO_RE = /^(?:\/(?:[a-z0-9._~%-]+(?:\/[a-z0-9._~%-]+)*)?|ht
 /** Đường dẫn hệ thống không được chuyển hướng (sẽ làm hỏng trang quản trị / API / tài nguyên Next) */
 export const RESERVED_PREFIXES = ["/keystatic", "/api", "/xem-truoc", "/_next"];
 /** Các trang tĩnh có thật trên web; thêm trang mới (vd. /chinh-sach-rieng-tu) thì thêm vào đây để chuyển hướng tới được */
-export const STATIC_ROUTES = ["/", "/book", "/blog"];
+export const STATIC_ROUTES = ["/", "/book", "/blog", "/chinh-sach-rieng-tu", "/lien-he"];
 /** Next.js giới hạn số chuyển hướng trong next.config (khoảng 1024); giữ dưới mức đó */
 export const REDIRECTS_MAX = 1000;
 

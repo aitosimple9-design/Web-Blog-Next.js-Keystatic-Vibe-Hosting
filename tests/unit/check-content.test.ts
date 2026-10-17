@@ -251,4 +251,23 @@ describe("scripts/check-content.mjs", () => {
       expect(r.code).toBe(1);
     });
   });
+
+  describe("trang chữ (Chính sách riêng tư, Liên hệ)", () => {
+    const base = { ...topic, "content/posts/bai-a.md": post() };
+    it("chưa có trang: THÔNG TIN đang ẨN, vẫn đạt", () => {
+      const r = run(base);
+      expect(r.code).toBe(0);
+      expect(r.out).toContain("Chính sách riêng tư: chưa có trang");
+      expect(r.out).toContain("Liên hệ: chưa có trang");
+    });
+    it("còn chữ [mẫu]: CẢNH BÁO (không chặn)", () => {
+      const r = run({ ...base, "content/pages/chinh-sach-rieng-tu.md": "---\n{}\n---\n[mẫu] Tên công ty\n" });
+      expect(r.code).toBe(0);
+      expect(r.out).toContain("còn chữ [mẫu]");
+    });
+    it("email liên hệ sai định dạng: LỖI; trang chỉ có khung rỗng thì báo đang ẨN", () => {
+      expect(run({ ...base, "content/pages/lien-he.md": "---\nemail: sai\n---\nX\n" }).code).toBe(1);
+      expect(run({ ...base, "content/pages/lien-he.md": "---\n{}\n---\n" }).out).toContain("Liên hệ: đang ẨN");
+    });
+  });
 });
