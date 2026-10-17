@@ -131,7 +131,9 @@ Sau khi deploy: mình có thể viết trực tiếp qua CMS (`/keystatic` ở A
 - Chữ thường không dấu, nối bằng `-`, chỉ gồm `a-z`, `0-9`. Ngắn gọn (khoảng 3 đến 6 từ), nói đúng nội dung bài; không đưa ngày hay số thứ tự vào (bài mẫu `demo-*` là ngoại lệ tạm).
 - **Slug phải ổn định: bài đã đăng (không ẩn, ngày đăng không ở tương lai) KHÔNG được đổi slug.** Đổi là link cũ trả 404 và mất thứ hạng tìm kiếm. Sửa tiêu đề thì được, slug không đổi theo.
 - Slug đặt ĐÚNG ngay lúc tạo bài (Keystatic lấy slug từ tên lúc tạo). Bài nháp hoặc lên lịch chưa công khai thì đổi tự do.
-- Bất đắc dĩ phải đổi hoặc xóa bài đã đăng: phải có chuyển hướng từ slug cũ sang bài mới trước khi merge. `npm run check-content` (và CI trên mỗi PR) so với nhánh `main` và CẢNH BÁO bài đã đăng bị mất hoặc đổi slug; cảnh báo này không chặn merge, nên người merge phải đọc.
+- Bất đắc dĩ phải đổi hoặc xóa bài đã đăng: phải có **chuyển hướng** từ link cũ sang bài mới (hoặc về `/blog`) ngay trong cùng PR. `npm run check-content` (và CI trên mỗi PR) so với nhánh `main` và báo **LỖI** (CI đỏ, không merge được) nếu bài đã đăng bị mất hoặc đổi slug mà chưa có chuyển hướng.
+- Tạo chuyển hướng: Keystatic → **Chuyển hướng** → Add: "Đường dẫn cũ" (vd. `/bai-viet/slug-cu`, chữ thường không dấu, không dấu cách) và "Đường dẫn mới" (vd. `/bai-viet/slug-moi`, `/blog` hoặc địa chỉ `https://...`). Chuyển một bước thẳng tới đích cuối, không nối chuỗi. Xóa nhiều bài cùng lúc (vd. bài mẫu): `npm run make-redirects -- --base main` tạo sẵn chuyển hướng về `/blog`.
+- Chuyển hướng có hiệu lực sau khi build / deploy lại (đang `npm run dev` thì khởi động lại dev). Đừng chuyển hướng một đường dẫn đang là trang có thật (check-content báo lỗi).
 
 **Tên ảnh** (ảnh bài ở `public/images/posts/<slug>/`, do Keystatic ghi; không chép tay):
 - Chữ thường không dấu, nối bằng `-`, không dấu cách, đuôi `.jpg` `.png` `.webp` `.svg` `.avif` `.gif` (`check-content` cảnh báo nếu sai).

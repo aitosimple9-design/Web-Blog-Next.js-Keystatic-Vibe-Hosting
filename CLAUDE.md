@@ -34,6 +34,7 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 - `npm run lint`
 - `npm run build` — PHẢI chạy không lỗi trước khi mở PR
 - `npm run check-content` — kiểm tra bài / chủ đề / sách / ảnh trước khi đăng: LỖI (thoát mã 1) như thiếu trường, chủ đề không tồn tại, file ảnh mất, bài liên quan sai; CẢNH BÁO như sách chưa có bìa, mô tả ngắn; THÔNG TIN bài lên lịch; từ 2026-10-16 có thêm CẢNH BÁO điểm SEO của từng bài (mục chưa đạt, dùng `src/lib/seo-score.ts`, cần Node ≥ 22.18) và ảnh trong bài trùng file với ảnh bìa (Keystatic ghi đè hai ảnh cùng tên). Chạy trước khi mở PR có đổi nội dung
+- `npm run make-redirects -- --base main [--to /blog] [--dry]` — tạo sẵn chuyển hướng cho bài ĐÃ ĐĂNG bị xóa so với `main` (dọn nhiều bài một lúc). `check-content --base <ref>` (CI tự dùng nhánh đích) báo LỖI khi bài đã đăng mất / đổi slug mà chưa có chuyển hướng
 - `npm run prune-images` — liệt kê thư mục ảnh MỒ CÔI (không còn bài / chủ đề / sách tương ứng); thêm `-- --delete` để xóa. Chỉ cần ở chế độ GitHub (chế độ local tự dọn khi xóa)
 - `npm run typecheck` — kiểm tra kiểu TypeScript; `npm run tokens` — sinh lại `src/styles/tokens.css` khi sửa `tokens.json`
 
@@ -43,6 +44,7 @@ content/posts/<slug>.md         ← bài viết (nguồn dữ liệu duy nhất)
 public/images/posts/<slug>/     ← ảnh của từng bài
 content/topics/<slug>.json      ← chủ đề (tên, thứ tự, mô tả, ảnh nền); sửa trong Keystatic menu "Chủ đề"
 content/books/<slug>.json       ← sách (tên + bìa); tên phải khớp `source.book` của bài; sửa trong Keystatic menu "Sách"
+content/redirects/<tên>.json  ← CHUYỂN HƯỚNG (đường dẫn cũ → đường dẫn mới, 308 hoặc 307); Keystatic menu "Chuyển hướng"; áp dụng ở next.config.ts `redirects()` lúc build / khởi động (sửa khi đang dev thì khởi động lại dev); logic ở `src/lib/redirects.ts`, mẫu ký tự ở `src/lib/redirect-patterns.ts` (thuần, dùng được ở trình duyệt); ô nhập bị ép đúng mẫu, `check-content` kiểm tra đích có thật, vòng lặp, chuỗi nối tiếp, che mất trang đang chạy (Lộc duyệt 2026-10-17: đường dẫn bất kỳ)
 content/pages/book.json, blog.json, bai-viet.json, 404.json ← CHỮ của trang Book, Blog (+ Hero chủ đề), Trang bài (nhãn khối quanh bài), 404; Keystatic singleton nhóm "Trang"; đọc qua `getBookPage()` / `getBlogPage()` / `getArticlePage()` / `getNotFoundPage()` (src/lib/pages.ts); ảnh chia sẻ riêng của Trang chủ / Book / Blog (`ogImage`, thiếu thì dùng ảnh mặc định ở Cài đặt site) đọc qua `getPageOgImage()`; 404 có `tabTitle` (tiêu đề tab); chữ mặc định ở `src/config/page-texts.ts`; ô để trống = dùng mặc định. Nhãn giao diện nhỏ (aria-label, "phút đọc", "Xem bài", "Đọc bài", phân trang, ô tìm kiếm) Lộc duyệt GIỮ trong mã
 content/pages/trang-chu.json     ← TRANG CHỦ `/` (tên, định vị, chân dung, Câu chuyện + ảnh, Cách mình đọc, Tủ sách chọn từ mục Sách / Chủ đề, Bài tiêu biểu, Kết nối, nhãn số liệu); Keystatic singleton nhóm "Trang"; đọc qua `getHomePage()` (src/lib/pages.ts), ô thiếu thì dùng nội dung mẫu ở src/config/profile.ts. Xóa sách / chủ đề thì route tự gỡ tham chiếu trong file này; tủ sách để trống = ẨN khối
 public/images/profile/          ← ảnh Trang chủ (chân dung, ảnh Câu chuyện) do Keystatic ghi; luật dọn ảnh ở content-cleanup.ts (ảnh mặc định trong PROTECTED_IMAGES được giữ)
@@ -127,7 +129,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 ---
 ```
 - `category` là tên file trong `content/topics/` (Keystatic: menu "Chủ đề"). Nó quyết định chủ đề của bài (nhãn, Hero chủ đề và danh sách ở trang Blog, bài liên quan). Trang chi tiết dùng 1 layout chung (`docs/layout/chi-tiet-bai/`). Mục 5 dùng chung với dự án B: cần đồng bộ sang B (nhãn `sync`).
-- **Slug và tên ảnh:** slug (= tên file) chữ thường không dấu nối bằng `-`; **bài đã đăng KHÔNG đổi slug** (đổi là link cũ 404, mất thứ hạng; bất đắc dĩ thì phải có chuyển hướng). Ảnh: chữ thường không dấu nối `-`, bìa `cover.<đuôi>`, ảnh trong bài tên khác ảnh bìa. Chi tiết `docs/WORKFLOW.md` mục 4b; `check-content` (cả trên CI) cảnh báo khi bài đã đăng mất / đổi slug và khi tên ảnh sai quy ước.
+- **Slug và tên ảnh:** slug (= tên file) chữ thường không dấu nối bằng `-`; **bài đã đăng KHÔNG đổi slug** (đổi là link cũ 404, mất thứ hạng; bất đắc dĩ thì phải có chuyển hướng ở menu "Chuyển hướng": `check-content` báo LỖI, CI đỏ, nếu bài đã đăng mất / đổi slug mà thiếu chuyển hướng). Ảnh: chữ thường không dấu nối `-`, bìa `cover.<đuôi>`, ảnh trong bài tên khác ảnh bìa. Chi tiết `docs/WORKFLOW.md` mục 4b; `check-content` (cả trên CI) báo LỖI khi bài đã đăng mất / đổi slug mà chưa có chuyển hướng, cảnh báo khi tên ảnh sai quy ước.
 - Nội dung: diễn giải bằng lời mới, có ví dụ và góc nhìn riêng, ghi nguồn. KHÔNG chép nguyên văn đoạn dài từ sách.
 
 ## 6. Thiết kế
