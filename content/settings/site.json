@@ -1,0 +1,46 @@
+{
+  "siteName": "Logo",
+  "tagline": "Ghi chép kiến thức từ sách",
+  "description": "Mỗi bài ghi chép một cuốn sách: ý chính, ví dụ và cách áp dụng.",
+  "socials": [
+    {
+      "platform": "youtube",
+      "url": "https://www.youtube.com/"
+    },
+    {
+      "platform": "tiktok",
+      "url": "https://www.tiktok.com/"
+    },
+    {
+      "platform": "facebook",
+      "url": "https://www.facebook.com/"
+    },
+    {
+      "platform": "instagram",
+      "url": "https://www.instagram.com/"
+    },
+    {
+      "platform": "linkedin",
+      "url": "https://www.linkedin.com/"
+    },
+    {
+      "platform": "x",
+      "url": "https://x.com/"
+    },
+    {
+      "platform": "zalo",
+      "url": "https://zalo.me/"
+    }
+  ],
+  "legalLinks": [
+    {
+      "label": "Điều khoản",
+      "href": ""
+    },
+    {
+      "label": "Chính sách",
+      "href": ""
+    }
+  ],
+  "postsPerPage": 6
+}

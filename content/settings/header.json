@@ -1,0 +1,24 @@
+{
+  "menu": [
+    {
+      "label": "Trang chủ",
+      "href": "/",
+      "icon": "home",
+      "newGroup": false
+    },
+    {
+      "label": "Book",
+      "href": "/book",
+      "icon": "book",
+      "newGroup": false
+    },
+    {
+      "label": "Blog",
+      "href": "/blog",
+      "icon": "blog",
+      "newGroup": true
+    }
+  ],
+  "showSearch": true,
+  "showThemeToggle": true
+}

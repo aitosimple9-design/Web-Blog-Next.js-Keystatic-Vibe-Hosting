@@ -1,4 +1,13 @@
 {
+  "blocks": {
+    "story": 1,
+    "principles": 2,
+    "stats": 3,
+    "shelf": 4,
+    "featured": 5,
+    "connect": 6,
+    "newsletter": 7
+  },
   "name": "Trần Ngọc Hoàng Ni",
   "positioning": "Mình ghi lại điều đọng lại sau mỗi cuốn sách.",
   "greeting": "Xin chào, mình là",
