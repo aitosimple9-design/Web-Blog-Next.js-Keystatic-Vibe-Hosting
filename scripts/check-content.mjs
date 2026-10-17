@@ -329,6 +329,29 @@ try {
   }
 }
 
+// ---------- trang chữ: Chính sách riêng tư, Liên hệ (content/pages/<tên>.md; quy tắc ở src/lib/legal-pages.ts) ----------
+// Trang TRỐNG thì ẨN (404, không vào sitemap, không có liên kết) nên chỉ báo THÔNG TIN; còn chữ [mẫu] hoặc email sai thì báo trước khi chạy quảng cáo.
+for (const [file, label, isContact] of [["chinh-sach-rieng-tu", "Chính sách riêng tư", false], ["lien-he", "Liên hệ", true]]) {
+  const where = `content/pages/${file}.md`;
+  if (!existsSync(resolve(root, where))) {
+    infos.push(`${label}: chưa có trang (đang ẨN: không có trên web, không vào sitemap, chân trang chưa có liên kết).`);
+    continue;
+  }
+  let parsed;
+  try {
+    parsed = matter(readFileSync(resolve(root, where), "utf8"));
+  } catch (e) {
+    err(where, `frontmatter hỏng: ${e.message.split(/\r?\n/)[0]}`);
+    continue;
+  }
+  const body = parsed.content.trim();
+  const email = isContact ? str(parsed.data.email) : "";
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) err(where, `email "${email}" sai định dạng`);
+  const shown = body || (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+  if (!shown) infos.push(`${label}: đang ẨN (chưa có nội dung).`);
+  if (/\[mẫu\]/.test(`${body} ${JSON.stringify(parsed.data)}`)) warn(where, "còn chữ [mẫu], cần thay bằng nội dung thật (và được duyệt) trước khi chạy quảng cáo");
+}
+
 // ---------- ảnh mồ côi (quy tắc dùng chung ở src/lib/content-cleanup.ts) ----------
 try {
   const { findOrphanImages } = await import("../src/lib/content-cleanup.ts");

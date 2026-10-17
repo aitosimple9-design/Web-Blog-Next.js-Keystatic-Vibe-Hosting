@@ -37,7 +37,7 @@ export default config({
   ui: {
     brand: { name: "Blog sách" },
     // Menu trái chia nhóm
-    navigation: { "Nội dung": ["posts", "topics", "books", "redirects"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
+    navigation: { "Nội dung": ["posts", "topics", "books", "redirects"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage", "privacyPage", "contactPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
   },
   singletons: {
     // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
@@ -491,6 +491,41 @@ export default config({
         text: t("Đoạn mô tả", 240, true),
         homeLabel: t("Chữ nút về Trang chủ (mặc định: Về Trang chủ)", 30),
         blogLabel: t("Chữ nút xem Blog (mặc định: Xem Blog)", 30),
+      },
+    }),
+    // Chính sách riêng tư (/chinh-sach-rieng-tu) và Liên hệ (/lien-he): chữ soạn bằng Markdown, lưu content/pages/<tên>.md (đọc bởi src/lib/legal-pages.ts).
+    // Trang TRỐNG thì ẨN: không có trên web (404), không vào sitemap, không có liên kết ở chân trang.
+    privacyPage: singleton({
+      label: "Chính sách riêng tư",
+      path: "content/pages/chinh-sach-rieng-tu",
+      format: { contentField: "content" },
+      schema: {
+        title: t("Tiêu đề trang (mặc định: Chính sách riêng tư)", 80),
+        description: t("Mô tả trang khi chia sẻ (≤ 160 ký tự; để trống = dùng mô tả của Cài đặt site)", 160, true),
+        updated: fields.date({ label: "Ngày cập nhật lần cuối (hiện dưới tiêu đề; để trống = không hiện)" }),
+        content: fields.markdoc({
+          label: "Nội dung (để TRỐNG = trang bị ẩn: không có trên web, không vào sitemap, không có liên kết ở chân trang)",
+          extension: "md",
+          options: { heading: [2, 3], image: false },
+        }),
+      },
+    }),
+    contactPage: singleton({
+      label: "Liên hệ",
+      path: "content/pages/lien-he",
+      format: { contentField: "content" },
+      schema: {
+        title: t("Tiêu đề trang (mặc định: Liên hệ)", 80),
+        description: t("Mô tả trang khi chia sẻ (≤ 160 ký tự; để trống = dùng mô tả của Cài đặt site)", 160, true),
+        email: fields.text({
+          label: "Email liên hệ (hiện thành nút bấm gửi mail; hàng icon mạng xã hội lấy ở Cài đặt site)",
+          validation: { pattern: { regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Nhập đúng dạng ten@ten-mien.com" } },
+        }),
+        content: fields.markdoc({
+          label: "Lời giới thiệu (trang chỉ hiện khi có chữ ở đây hoặc có email; để trống cả hai = trang bị ẩn)",
+          extension: "md",
+          options: { heading: [2, 3], image: false },
+        }),
       },
     }),
   },

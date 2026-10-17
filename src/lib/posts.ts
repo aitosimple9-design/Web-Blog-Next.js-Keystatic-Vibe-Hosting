@@ -271,6 +271,9 @@ async function render(body: string): Promise<{ html: string; headings: Heading[]
   return { html: processor.stringify(tree), headings: collectH2(tree) };
 }
 
+/** Dựng Markdown thành HTML an toàn (cùng bộ xử lý với bài viết); dùng cho các trang chữ khác (Chính sách riêng tư, Liên hệ) */
+export const renderMarkdown = render;
+
 /** Một bài đầy đủ (kèm HTML và mục lục). Trả về null nếu không có, đang là bản nháp hoặc chưa tới ngày đăng. */
 export const getPost = cache(async (slug: string): Promise<Post | null> => {
   const found = readAll().find((p) => p.meta.slug === slug && isPublished(p.meta));

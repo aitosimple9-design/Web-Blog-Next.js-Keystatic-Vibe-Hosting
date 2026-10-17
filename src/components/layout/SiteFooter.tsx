@@ -2,10 +2,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getFooterSettings, getHeaderSettings, getSiteSettings } from "@/lib/settings";
+import { getVisibleLegalPages, resolveLegalLinks } from "@/lib/legal-pages";
 import { SocialIcons } from "@/components/layout/SocialIcons";
 
 export function SiteFooter() {
-  const { name, tagline, year, legalLinks } = getSiteSettings();
+  const { name, tagline, year, legalLinks: adminLegalLinks } = getSiteSettings();
+  // Thêm / nối liên kết tới Chính sách riêng tư, Liên hệ khi các trang đó đang hiện (trang trống thì ẩn)
+  const legalLinks = resolveLegalLinks(adminLegalLinks, getVisibleLegalPages());
   const { logoImage, logoAlt, navGroups } = getHeaderSettings();
   const { links, copyright, showSocials } = getFooterSettings();
   // Liên kết chân trang: tự chọn ở Cài đặt → Footer; để trống thì dùng các mục cấp trên của menu Header
