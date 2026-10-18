@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createRedirect, listItems } from "@/lib/redirect-tools";
+import { createRedirect, listExisting, listItems } from "@/lib/redirect-tools";
 import { isPreviewEnabled } from "@/lib/preview";
 
 // Cấp danh sách mục (GET) và tạo chuyển hướng nhanh (POST) cho trang quản trị Keystatic (src/app/keystatic/KeystaticRedirectTools.tsx).
@@ -9,7 +9,9 @@ const noStore = { "Cache-Control": "no-store" };
 
 export function GET(req: Request) {
   if (!isPreviewEnabled()) return new NextResponse(null, { status: 404 });
-  const kind = new URL(req.url).searchParams.get("kind") ?? "";
+  const params = new URL(req.url).searchParams;
+  if (params.has("existing")) return NextResponse.json(listExisting(), { headers: noStore });
+  const kind = params.get("kind") ?? "";
   return NextResponse.json(listItems(kind), { headers: noStore });
 }
 
