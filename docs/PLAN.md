@@ -185,6 +185,7 @@ Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm S
 - [ ] [A] Deploy lên hosting Node.js đã chọn
 - [ ] [B] Deploy lên Cloudflare + Worker `sveltia-cms-auth` + GitHub OAuth App
 - [ ] Gắn tên miền, HTTPS
+- [ ] [A] Quyết định 2026-10-18 (Lộc chọn D rút gọn): trang quản trị ở chế độ GitHub tạo PR; workflow `.github/workflows/auto-merge-content.yml` tự bật auto-merge (squash) khi PR CHỈ đổi `content/` và `public/images/`, CI (`check`, `e2e`) xanh thì tự merge. PR có file ngoài hai nơi đó vẫn do Lộc duyệt. Workflow đã viết; còn: Lộc bật Settings → General → "Allow auto-merge"; khi deploy kiểm tra Keystatic GitHub mode tạo nhánh + PR ra sao (có phải bấm tạo nhánh tay không); thử với 1 PR nội dung mẫu. Phần phân quyền nhiều người (CODEOWNERS, tài khoản GitHub cho marketing) để sau, khi có người thứ hai
 - [ ] Gửi sitemap lên Google Search Console
 - [ ] Thử viết 1 bài trên web thật qua CMS → web tự cập nhật
 
