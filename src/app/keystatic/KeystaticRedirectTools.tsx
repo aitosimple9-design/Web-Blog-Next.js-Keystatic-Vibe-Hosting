@@ -109,6 +109,8 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
   const [newSlug, setNewSlug] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [existing, setExisting] = useState<{ file: string; kind: string; from: string; to: string }[]>([]);
+  const [editFile, setEditFile] = useState("");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const router = useRouter();
@@ -124,6 +126,7 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
       .catch(() => setItems([]));
   };
   const changeKind = (k: RedirectKind) => {
+    setEditFile("");
     setKind(k);
     setOldSlug("");
     setItems([]);
@@ -131,7 +134,24 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
     load(k);
   };
   // Lần mở đầu: loại mặc định là Bài viết (setState chỉ chạy sau khi tải xong)
-  useEffect(() => load("Bài viết"), []);
+  useEffect(() => {
+    load("Bài viết");
+    fetch("/api/chuyen-huong?existing=1", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setExisting)
+      .catch(() => {});
+  }, []);
+  // Chọn một chuyển hướng có sẵn để sửa: đường dẫn cũ giữ nguyên, chỉ đổi đích
+  const pickExisting = (file: string) => {
+    setEditFile(file);
+    setResult(null);
+    const e = existing.find((x) => x.file === file);
+    if (!e) return;
+    setKind(e.kind as RedirectKind);
+    setFrom(e.from);
+    setTo(e.to);
+  };
+  const byPrefix = !!prefix && !editFile;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -143,10 +163,10 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
   const label = { display: "flex", flexDirection: "column", gap: 4, fontSize: 14 } as const;
   const submit = async () => {
     setBusy(true);
-    setResult(await post(prefix ? { kind, oldSlug, newSlug } : { kind, from, to }));
+    setResult(await post(byPrefix ? { kind, oldSlug, newSlug } : { kind, from, to }));
     setBusy(false);
   };
-  const ready = prefix ? !!oldSlug && !!newSlug.trim() : !!from.trim() && !!to.trim();
+  const ready = byPrefix ? !!oldSlug && !!newSlug.trim() : !!from.trim() && !!to.trim();
 
   return createPortal(
     <div
@@ -168,9 +188,24 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
           </>
         ) : (
           <>
+            {existing.length > 0 && (
+              <label style={label}>
+                Sửa chuyển hướng có sẵn (hoặc để trống để tạo mới)
+                <select value={editFile} onChange={(e) => (e.target.value ? pickExisting(e.target.value) : changeKind(kind))} style={field}>
+                  <option value="" style={{ color: "#1f2328" }}>
+                    — Tạo mới —
+                  </option>
+                  {existing.map((x) => (
+                    <option key={x.file} value={x.file} style={{ color: "#1f2328" }}>
+                      {x.from} → {x.to}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
             <label style={label}>
               Loại
-              <select value={kind} onChange={(e) => changeKind(e.target.value as RedirectKind)} style={field}>
+              <select value={kind} disabled={!!editFile} onChange={(e) => changeKind(e.target.value as RedirectKind)} style={field}>
                 {REDIRECT_KINDS.map((k) => (
                   <option key={k} value={k} style={{ color: "#1f2328" }}>
                     {k}
@@ -178,7 +213,7 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
                 ))}
               </select>
             </label>
-            {prefix ? (
+            {byPrefix ? (
               <>
                 <label style={label}>
                   Mục
@@ -208,7 +243,7 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
                 {kind === "Sách" && <p style={{ margin: 0, fontSize: 13, color: c.mute }}>Sách chưa có trang riêng nên chưa có đường dẫn tự điền; nhập tay nếu cần.</p>}
                 <label style={label}>
                   Đường dẫn cũ
-                  <input value={from} onChange={(e) => setFrom(e.target.value.trim())} placeholder="/duong-dan-cu" style={field} />
+                  <input value={from} readOnly={!!editFile} onChange={(e) => setFrom(e.target.value.trim())} placeholder="/duong-dan-cu" style={{ ...field, opacity: editFile ? 0.8 : 1 }} />
                 </label>
                 <label style={label}>
                   Đường dẫn mới

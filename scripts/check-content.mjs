@@ -219,6 +219,7 @@ try {
   const livePaths = new Set([...STATIC_ROUTES, ...[...topicSlugs].map((t) => `/blog/${t}`), ...posts.filter((p) => live(p.data)).map((p) => `/bai-viet/${p.slug}`)]);
   const exists = (p) => livePaths.has(p) || [...topicSlugs].some((t) => new RegExp(`^/blog/${t}/trang/[0-9]+$`).test(p));
   const bySource = new Map();
+  const toCheck = [];
   for (const e of entries) {
     const where = `content/redirects/${e.file}`;
     const problem = entryProblem(e);
@@ -232,13 +233,17 @@ try {
     }
     bySource.set(e.from, e);
     if (exists(e.from)) err(where, `"${e.from}" đang là trang có thật trên web: chuyển hướng sẽ che mất nó (xóa chuyển hướng này, hoặc đổi / ẩn trang đó trước)`);
-    if (e.to.startsWith("/") && !exists(e.to)) err(where, `đường dẫn mới "${e.to}" không phải trang có trên web (kiểm tra chính tả; bài nháp hoặc lên lịch chưa công khai cũng không dùng được)`);
+    if (e.to.startsWith("/")) toCheck.push({ where, e });
+  }
+  // Đích phải là trang có thật, hoặc là đường dẫn cũ của một chuyển hướng khác (chuỗi nối tiếp: chỉ cảnh báo ở dưới)
+  for (const { where, e } of toCheck) {
+    if (!exists(e.to) && !bySource.has(e.to)) err(where, `đường dẫn mới "${e.to}" không phải trang có trên web (kiểm tra chính tả; bài nháp hoặc lên lịch chưa công khai cũng không dùng được)`);
   }
   const map = new Map([...bySource].map(([k, e]) => [k, e.to]));
   for (const [from, e] of bySource) {
     const end = finalTarget(from, map);
     if (end === null) err(`content/redirects/${e.file}`, `vòng lặp chuyển hướng bắt đầu từ "${from}"`);
-    else if (end !== e.to) err(`content/redirects/${e.file}`, `chuỗi nối tiếp "${from}" → "${e.to}" → ... → "${end}": hãy trỏ thẳng tới "${end}" (web vẫn chạy đúng nhưng mỗi bước thêm một lần chuyển, hại SEO)`);
+    else if (end !== e.to) warn(`content/redirects/${e.file}`, `chuỗi nối tiếp "${from}" → "${e.to}" → ... → "${end}": hãy trỏ thẳng tới "${end}" (web vẫn chạy đúng nhưng mỗi bước thêm một lần chuyển, hại SEO; web đã tự gộp về đích cuối nên không hỏng)`);
     redirectFroms.add(from);
   }
   if (entries.length) infos.push(`Chuyển hướng: ${entries.length} mục.`);

@@ -7,6 +7,7 @@ import { entryProblem, readRedirectFiles } from "./redirects";
 import { KIND_PREFIX, REDIRECT_KINDS, SLUG_RE, type RedirectKind } from "./redirect-patterns";
 
 export type RedirectItem = { slug: string; title: string };
+export type ExistingRedirect = { file: string; kind: string; from: string; to: string };
 export type CreateInput = { kind: string; oldSlug?: string; newSlug?: string; from?: string; to?: string; label?: string };
 export type CreateResult = { ok: true; from: string; to: string; file: string; flattened: string[]; removed: string[] } | { ok: false; error: string };
 
@@ -47,7 +48,7 @@ export function createRedirect(input: CreateInput, root: string = process.cwd())
   const prefix = KIND_PREFIX[kind];
   let from = (input.from ?? "").trim();
   let to = (input.to ?? "").trim();
-  if (prefix) {
+  if (prefix && input.oldSlug !== undefined) {
     const o = (input.oldSlug ?? "").trim();
     const n = (input.newSlug ?? "").trim();
     if (!SLUG_RE.test(o)) return { ok: false, error: "Slug cũ không hợp lệ." };
@@ -69,7 +70,9 @@ export function createRedirect(input: CreateInput, root: string = process.cwd())
   for (const e of readRedirectFiles(root)) {
     if (e.file === file) continue;
     try {
-      if (e.from === to) {
+      if (e.from === from) {
+        fs.unlinkSync(path.join(dir, e.file)); // cùng đường dẫn cũ: mục này thay thế mục cũ (sửa chuyển hướng có sẵn)
+      } else if (e.from === to) {
         fs.unlinkSync(path.join(dir, e.file));
         removed.push(`${e.from} → ${e.to}`);
       } else if (e.to === from) {
@@ -83,4 +86,19 @@ export function createRedirect(input: CreateInput, root: string = process.cwd())
   const label = (input.label ?? "").trim() || `${kind}: ${from.replace(/^\/(?:bai-viet|blog)\//, "")} → ${to.replace(/^\/(?:bai-viet|blog)\//, "")}`;
   write(file, { label, kind, from, to, permanent: true });
   return { ok: true, from, to, file, flattened, removed };
+}
+
+/** Các chuyển hướng đang có (để chọn sửa trong hộp "Thêm chuyển hướng") */
+export function listExisting(root: string = process.cwd()): ExistingRedirect[] {
+  const dir = path.join(root, "content", "redirects");
+  return readRedirectFiles(root).map((e) => {
+    let kind = "Khác";
+    try {
+      const k = (JSON.parse(fs.readFileSync(path.join(dir, e.file), "utf8")) as { kind?: unknown }).kind;
+      if (typeof k === "string" && isKind(k)) kind = k;
+    } catch {
+      /* file hỏng: coi là Khác */
+    }
+    return { file: e.file, kind, from: e.from, to: e.to };
+  });
 }

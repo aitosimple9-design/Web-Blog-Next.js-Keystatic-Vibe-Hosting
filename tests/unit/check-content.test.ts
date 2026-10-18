@@ -247,11 +247,11 @@ describe("scripts/check-content.mjs", () => {
       expect(r.code).toBe(1);
       expect(r.out).toContain("hai lần");
     });
-    it("vòng lặp và chuỗi nối tiếp: LỖI", () => {
+    it("vòng lặp: LỖI; chuỗi nối tiếp: chỉ CẢNH BÁO", () => {
       const loop = run({ ...topic, "content/posts/bai-a.md": post(), "content/redirects/a.json": JSON.stringify({ from: "/a", to: "/b" }), "content/redirects/b.json": JSON.stringify({ from: "/b", to: "/a" }) });
       expect(loop.code).toBe(1);
       const chain = run({ ...topic, "content/posts/bai-a.md": post(), "content/redirects/a.json": JSON.stringify({ from: "/a", to: "/b" }), "content/redirects/b.json": JSON.stringify({ from: "/b", to: "/blog" }) });
-      expect(chain.code).toBe(1);
+      expect(chain.code).toBe(0);
       expect(chain.out).toContain("chuỗi nối tiếp");
     });
     it("file chuyển hướng hỏng: LỖI, không làm sập kiểm tra", () => {

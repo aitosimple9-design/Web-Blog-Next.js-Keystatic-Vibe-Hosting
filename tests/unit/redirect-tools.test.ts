@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { createRedirect, listItems } from "@/lib/redirect-tools";
+import { createRedirect, listExisting, listItems } from "@/lib/redirect-tools";
 import { readRedirectFiles } from "@/lib/redirects";
 
 const mk = () => {
@@ -54,5 +54,14 @@ describe("redirect-tools", () => {
     expect(createRedirect({ kind: "Khác", from: "/keystatic", to: "/blog" }, root).ok).toBe(false);
     expect(createRedirect({ kind: "Sai", from: "/x", to: "/y" }, root).ok).toBe(false);
     expect(createRedirect({ kind: "Khác", from: "/x", to: "/y" }, root).ok).toBe(true);
+  });
+
+  it("sửa chuyển hướng có sẵn: cùng đường dẫn cũ thì thay mục cũ (không trùng), đọc lại được qua listExisting", () => {
+    const root = mk();
+    createRedirect({ kind: "Bài viết", oldSlug: "a", newSlug: "b" }, root);
+    fs.writeFileSync(path.join(root, "content/redirects/tay.json"), JSON.stringify({ label: "tay", from: "/bai-viet/a", to: "/blog" }));
+    const r = createRedirect({ kind: "Bài viết", from: "/bai-viet/a", to: "/bai-viet/c" }, root);
+    expect(r.ok).toBe(true);
+    expect(listExisting(root)).toEqual([{ file: "bai-viet-a.json", kind: "Bài viết", from: "/bai-viet/a", to: "/bai-viet/c" }]);
   });
 });
