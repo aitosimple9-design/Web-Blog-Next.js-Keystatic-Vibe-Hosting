@@ -4,7 +4,7 @@
 import { collection, config, fields, singleton } from "@keystatic/core";
 import { POST_FIELD_LABELS } from "@/lib/seo-fields";
 import { PAGE_BLOCKS, type BlocksPageKey } from "@/config/blocks";
-import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/lib/redirect-patterns";
+import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_KINDS, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/lib/redirect-patterns";
 
 // Ô chữ ngắn: nhãn + giới hạn ký tự (+ nhiều dòng nếu cần). Dùng cho các singleton chữ ở nhóm "Trang".
 const t = (label: string, max: number, multiline = false) =>
@@ -537,11 +537,17 @@ export default config({
       path: "content/redirects/*",
       slugField: "label",
       format: "json",
-      columns: ["from", "to"] as never,
+      columns: ["label", "kind", "from", "to"] as never,
       schema: {
         label: fields.slug({
           name: { label: "Tên gợi nhớ (ví dụ: Bài đổi tên 10/2026)", validation: { isRequired: true } },
           slug: { label: "Tên file (tự sinh)" },
+        }),
+        kind: fields.select({
+          label: "Loại",
+          description: 'Chỉ để phân loại danh sách. Nút "Thêm" ở danh sách cho chọn loại → mục rồi tự điền đường dẫn cũ.',
+          options: REDIRECT_KINDS.map((k) => ({ label: k, value: k })),
+          defaultValue: "Khác",
         }),
         from: fields.text({
           label: "Đường dẫn cũ (ví dụ: /bai-viet/slug-cu)",
