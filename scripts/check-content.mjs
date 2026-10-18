@@ -284,6 +284,7 @@ try {
           continue;
         }
         if (!live(data)) continue;
+        if (slug.startsWith("demo-")) continue; // bài mẫu (demo-*): được sửa thành bài thật / đổi slug thoải mái, chưa có người đọc
         checked++;
         if (slugs.has(slug)) continue;
         if (redirectFroms.has(`/bai-viet/${slug}`)) {

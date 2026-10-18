@@ -16,3 +16,10 @@ export const REDIRECT_FROM_MESSAGE =
   "Bắt đầu bằng /, chữ thường không dấu, không dấu cách, không có ? # : * ( ), không / ở cuối. Ví dụ: /bai-viet/slug-cu";
 export const REDIRECT_TO_MESSAGE =
   "Đường dẫn trong site (ví dụ: /bai-viet/slug-moi, /blog, /) hoặc địa chỉ đầy đủ bắt đầu bằng https://";
+
+/** Loại chuyển hướng (ô "Loại" ở menu Chuyển hướng). Giá trị lưu trong file = chữ tiếng Việt để cột danh sách đọc được. */
+export const REDIRECT_KINDS = ["Bài viết", "Chủ đề", "Sách", "Khác"] as const;
+export type RedirectKind = (typeof REDIRECT_KINDS)[number];
+/** Tiền tố địa chỉ của loại có trang riêng (sách không có trang riêng nên nhập tay) */
+export const KIND_PREFIX: Partial<Record<RedirectKind, string>> = { "Bài viết": "/bai-viet/", "Chủ đề": "/blog/" };
+export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;

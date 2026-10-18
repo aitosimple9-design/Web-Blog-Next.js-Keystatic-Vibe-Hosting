@@ -148,6 +148,14 @@ describe("scripts/check-content.mjs", () => {
       expect(r.out).toContain("/bai-viet/bai-a");
     });
 
+    it("bài mẫu (slug bắt đầu bằng demo-) bị xóa hoặc đổi slug: không bắt chuyển hướng", () => {
+      const demo = { ...topic, "content/posts/demo-bai-a.md": post() };
+      const r0 = runWithBase(demo, (root) => fs.rmSync(path.join(root, "content/posts/demo-bai-a.md")));
+      expect(r0.out).not.toContain("LỖI");
+      expect(r0.code).toBe(0);
+      expect(runWithBase(demo, (root) => fs.renameSync(path.join(root, "content/posts/demo-bai-a.md"), path.join(root, "content/posts/bai-that.md"))).code).toBe(0);
+    });
+
     it("xóa bài đã đăng mà chưa có chuyển hướng: LỖI link cũ sẽ 404", () => {
       const r = runWithBase(baseFiles, (root) => fs.rmSync(path.join(root, "content/posts/bai-a.md")));
       expect(r.code).toBe(1);

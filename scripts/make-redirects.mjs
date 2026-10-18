@@ -48,6 +48,7 @@ for (const n of names) {
     continue;
   }
   if (!live(data)) continue;
+  if (slug.startsWith("demo-")) continue; // bài mẫu: không cần chuyển hướng (cùng quy tắc với check-content)
   const entry = { label: `Bài đã xóa: ${slug}`, from: `/bai-viet/${slug}`, to, permanent: true };
   console.log(`${dry ? "[thử] " : ""}${entry.from} → ${to}`);
   if (!dry) {
