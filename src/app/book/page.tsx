@@ -1,21 +1,21 @@
 // Trang Book (trước đây là Trang chủ): Hero tối cố định, rồi các khối (dải chữ chạy, chủ đề, bài mới, Newsletter) theo thứ tự / bật tắt ở Keystatic. Layout: docs/layout/book/README.md
 import type { Metadata } from "next";
-import { getNewsletterSettings, getSiteSettings } from "@/lib/settings";
+import { getNewsletterSettings, getSiteSettings } from "@/shared/content/settings";
 import { Fragment, type ReactNode } from "react";
-import { getBookPage, getPageBlocks, getPageOgImage } from "@/lib/pages";
-import { layoutBlocks, type LaidOutBlock } from "@/config/blocks";
-import type { SectionTone } from "@/lib/brush";
-import { getTopics } from "@/lib/topics";
-import { site } from "@/config/site";
-import { countByTopic, getAllPosts, getSiteStats } from "@/lib/posts";
-import { PageShell } from "@/components/layout/PageShell";
-import { Newsletter } from "@/components/layout/Newsletter";
-import { Hero } from "@/components/home/Hero";
-import { HeroBackdrop } from "@/components/home/HeroBackdrop";
-import { brushStyle } from "@/lib/brush";
-import { TopicSlider } from "@/components/home/TopicSlider";
-import { LatestGrid } from "@/components/home/LatestGrid";
-import { ScrollMarquee } from "@/components/ui/Motion";
+import { getBookPage, getPageBlocks, getPageOgImage } from "@/shared/content/pages";
+import { layoutBlocks, type LaidOutBlock } from "@/shared/config/blocks";
+import type { SectionTone } from "@/frontend/lib/brush";
+import { getTopics } from "@/shared/content/topics";
+import { site } from "@/shared/config/site";
+import { countByTopic, getAllPosts, getSiteStats } from "@/shared/content/posts";
+import { PageShell } from "@/frontend/components/layout/PageShell";
+import { Newsletter } from "@/frontend/components/layout/Newsletter";
+import { Hero } from "@/frontend/components/home/Hero";
+import { HeroBackdrop } from "@/frontend/components/home/HeroBackdrop";
+import { brushStyle } from "@/frontend/lib/brush";
+import { TopicSlider } from "@/frontend/components/home/TopicSlider";
+import { LatestGrid } from "@/frontend/components/home/LatestGrid";
+import { ScrollMarquee } from "@/frontend/components/ui/Motion";
 
 export function generateMetadata(): Metadata {
   const s = getSiteSettings();

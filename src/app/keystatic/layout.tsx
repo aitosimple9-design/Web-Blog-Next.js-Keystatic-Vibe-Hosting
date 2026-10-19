@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { KeystaticBlocksColumns } from "./KeystaticBlocksColumns";
-import { KeystaticNavIcons } from "./KeystaticNavIcons";
-import { KeystaticRedirectTools } from "./KeystaticRedirectTools";
-import { KeystaticThumbnails } from "./KeystaticThumbnails";
-import { KeystaticSeoPanel } from "./SeoPanel";
+import { KeystaticBlocksColumns } from "../../cms/ui/KeystaticBlocksColumns";
+import { KeystaticNavIcons } from "../../cms/ui/KeystaticNavIcons";
+import { KeystaticRedirectTools } from "../../cms/ui/KeystaticRedirectTools";
+import { KeystaticThumbnails } from "../../cms/ui/KeystaticThumbnails";
+import { KeystaticSeoPanel } from "../../cms/ui/SeoPanel";
 
 // Trang quản trị không cần SEO: không cho công cụ tìm kiếm lập chỉ mục.
 export const metadata = { title: "Quản trị bài viết", robots: { index: false, follow: false } };

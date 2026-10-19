@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { getTopics } from "@/lib/topics";
+import { getTopics } from "@/shared/content/topics";
 
 // Nạp lại posts.ts với thư mục content giả (POSTS_DIR được tính từ process.cwd() lúc import).
 async function loadWithContent(files: Record<string, string>) {
@@ -19,7 +19,7 @@ async function loadWithContent(files: Record<string, string>) {
   );
   vi.spyOn(process, "cwd").mockReturnValue(root);
   vi.resetModules();
-  return import("@/lib/posts");
+  return import("@/shared/content/posts");
 }
 
 const cat = getTopics()[0].slug;
@@ -46,7 +46,7 @@ afterEach(() => {
 
 describe("posts (nội dung thật trong content/posts)", () => {
   it("mọi bài hợp lệ, không bài nào là nháp, mới nhất trước", async () => {
-    const { getAllPosts } = await import("@/lib/posts");
+    const { getAllPosts } = await import("@/shared/content/posts");
     const all = getAllPosts();
     expect(all.length).toBeGreaterThan(0);
     expect(all.every((p) => !p.draft)).toBe(true);
@@ -55,14 +55,14 @@ describe("posts (nội dung thật trong content/posts)", () => {
   });
 
   it("getPost trả HTML; slug lạ trả null", async () => {
-    const { getAllPosts, getPost } = await import("@/lib/posts");
+    const { getAllPosts, getPost } = await import("@/shared/content/posts");
     const full = await getPost(getAllPosts()[0].slug);
     expect(full?.html).toContain("<");
     expect(await getPost("khong-ton-tai")).toBeNull();
   });
 
   it("bài liên quan không chứa chính bài đó và tôn trọng giới hạn", async () => {
-    const { getAllPosts, getRelatedPosts } = await import("@/lib/posts");
+    const { getAllPosts, getRelatedPosts } = await import("@/shared/content/posts");
     const p = getAllPosts()[0];
     const rel = getRelatedPosts(p, 4);
     expect(rel.length).toBeLessThanOrEqual(4);
@@ -70,7 +70,7 @@ describe("posts (nội dung thật trong content/posts)", () => {
   });
 
   it("countByTopic cộng lại bằng tổng số bài", async () => {
-    const { countByTopic, getAllPosts } = await import("@/lib/posts");
+    const { countByTopic, getAllPosts } = await import("@/shared/content/posts");
     const sum = Object.values(countByTopic()).reduce((a, b) => a + b, 0);
     expect(sum).toBe(getAllPosts().length);
   });
@@ -263,7 +263,7 @@ describe("cổng xem trước (isPreviewEnabled)", () => {
     vi.stubEnv("VERCEL", vercel ?? "");
   };
   it("chỉ bật khi Keystatic ở chế độ local và không chạy trên Vercel", async () => {
-    const { isPreviewEnabled } = await import("@/lib/preview");
+    const { isPreviewEnabled } = await import("@/cms/lib/preview");
     set("local", undefined);
     expect(isPreviewEnabled()).toBe(true);
     set("github", undefined);

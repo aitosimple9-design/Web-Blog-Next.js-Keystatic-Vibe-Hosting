@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { scoreSeo, slugify, type SeoInput } from "@/lib/seo-score";
+import { scoreSeo, slugify, type SeoInput } from "@/shared/seo-score";
 
 const words = (n: number, w = "chữ") => Array.from({ length: n }, () => w).join(" ");
 

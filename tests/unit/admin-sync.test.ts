@@ -3,10 +3,10 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import keystaticConfig from "../../keystatic.config";
-import { profile } from "@/config/profile";
-import { PAGE_BLOCKS } from "@/config/blocks";
-import { resolveBlocks } from "@/lib/pages";
-import { articleDefaults, blogDefaults, bookDefaults, notFoundDefaults } from "@/config/page-texts";
+import { profile } from "@/shared/config/profile";
+import { PAGE_BLOCKS } from "@/shared/config/blocks";
+import { resolveBlocks } from "@/shared/content/pages";
+import { articleDefaults, blogDefaults, bookDefaults, notFoundDefaults } from "@/shared/config/page-texts";
 import {
   IMAGE_RULES,
   MANAGED_IMAGE_DIRS,
@@ -15,7 +15,7 @@ import {
   findOrphanImages,
   removeHomeReferences,
   removeOrphanImages,
-} from "@/lib/content-cleanup";
+} from "@/cms/lib/content-cleanup";
 
 // NGUYÊN TẮC (Lộc, 2026-10-16): thêm / xóa gì trong trang quản trị thì file đi kèm phải đồng bộ theo.
 // Nhóm "chốt chặn" bên dưới đọc keystatic.config.ts và FAIL khi ai đó thêm nội dung / ô ảnh mới mà quên đồng bộ.

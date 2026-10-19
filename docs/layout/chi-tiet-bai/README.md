@@ -44,7 +44,7 @@ Dải nền: Nav (paper, viền dưới) · hero (ảnh) · thân bài (`paper`)
 ## Component cần dựng
 `ArticleHero` (ảnh + khối tiêu đề), `ArticleHeader`, `TOC` (nút + cột dính), `SourceBox`/`BookRef`, `Prose`, `Slider` + `RelatedCard`, `ScrollProgress`, `Newsletter`, `SiteHeader`, `SiteFooter`.
 
-## Dữ liệu lấy từ bài viết (`src/lib/posts.ts`)
+## Dữ liệu lấy từ bài viết (`src/shared/content/posts.ts`)
 `title`, `description` (dek), `category`, `date`, `source.book`, `source.author`, `cover`; thời gian đọc và mục lục tính từ nội dung (H2).
 Bài liên quan: cùng `category`, trừ bài hiện tại, bỏ `draft: true`. Bài chưa có `cover` dùng `CoverArt` (ảnh nghệ thuật sinh từ slug).
 
@@ -56,4 +56,4 @@ Bài liên quan: cùng `category`, trừ bài hiện tại, bỏ `draft: true`. 
 - Cả hai theme Giấy và Đêm; 5 mốc test + các điểm giữa (ví dụ 600, 900, 1200px).
 
 
-> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/lib/pages.ts`); chữ mặc định ở `src/config/page-texts.ts`.
+> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/shared/content/pages.ts`); chữ mặc định ở `src/shared/config/page-texts.ts`.

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { imageFoldersToRemove, removeImageFolders } from "@/lib/content-cleanup";
+import { imageFoldersToRemove, removeImageFolders } from "@/cms/lib/content-cleanup";
 
 describe("content-cleanup: xóa nội dung thì xóa luôn thư mục ảnh", () => {
   it("xóa bài / chủ đề / sách → thư mục ảnh cùng slug", () => {
@@ -33,7 +33,7 @@ describe("content-cleanup: xóa nội dung thì xóa luôn thư mục ảnh", ()
           { path: "content/settings/site.json" },
           { path: "content/posts/../../x.md" },
           { path: "content/posts/Bai A.md" },
-          { path: "src/lib/posts.ts" },
+          { path: "src/shared/content/posts.ts" },
         ],
       }),
     ).toEqual([]);

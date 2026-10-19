@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "../styles/tokens.css";
-@import "../styles/prose.css";
+@import "../frontend/styles/tokens.css";
+@import "../frontend/styles/prose.css";
 
 /* ===== Nền tảng ===== */
 @layer base {

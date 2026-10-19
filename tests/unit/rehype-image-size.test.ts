@@ -6,7 +6,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { rehypeImageSize } from "@/lib/rehype-image-size";
+import { rehypeImageSize } from "@/shared/content/rehype-image-size";
 
 // PNG tối thiểu chỉ cần phần đầu (chữ ký + khối IHDR) cho thư viện đọc kích thước
 function png(width: number, height: number): Buffer {

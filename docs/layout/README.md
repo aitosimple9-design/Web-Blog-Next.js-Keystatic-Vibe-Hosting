@@ -17,7 +17,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Chú thích `w1`…`w4` trong mockup = thay đổi tại mốc 375 / 768 / 1024 / 1440. Phần "Thay đổi giữa các mốc" ở cuối mỗi mockup đã được chép vào spec.
 - Vùng bấm 44px (`tap`), khe 8px, thumb zone (hết màn hình đầu ở 812px).
 - Tên khối (`data-c`) = tên component cần dựng. Mockup là tham chiếu, KHÔNG chép nguyên mã.
-- Khối của từng trang (Trang chủ, Book, Blog, Trang bài) bật / tắt và đổi thứ tự ở Keystatic theo danh mục `src/config/blocks.ts` (Hero luôn đứng đầu); nền xen kẽ `paper` / `paper-sunk` và việc kéo lên dưới nét cọ tự tính theo vị trí (`layoutBlocks`), nên spec từng trang dưới đây là THỨ TỰ MẶC ĐỊNH.
+- Khối của từng trang (Trang chủ, Book, Blog, Trang bài) bật / tắt và đổi thứ tự ở Keystatic theo danh mục `src/shared/config/blocks.ts` (Hero luôn đứng đầu); nền xen kẽ `paper` / `paper-sunk` và việc kéo lên dưới nét cọ tự tính theo vị trí (`layoutBlocks`), nên spec từng trang dưới đây là THỨ TỰ MẶC ĐỊNH.
 - Các file chạy mockup (`wf.css`, `support.js`, `vendor/`) chưa được cung cấp nên mockup chưa mở được bằng trình duyệt; cấu trúc và ghi chú vẫn đọc được trong file `.dc.html`.
 
 ## Điểm chuyển mốc chung (đã khớp Design System)
@@ -35,7 +35,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Dính trên cùng. Trang có hero tối (Trang chủ `/`, `/book`, Blog, Chi tiết bài; tone `inverse`): hero kéo lên nằm SAU menu, thanh menu TRONG SUỐT ở đầu trang nên hòa vào hero (không dải nền riêng, cập nhật 2026-10-14). Trang không có hero tối (404) giữ thanh phẳng nền `paper` + viền dưới.
 - Mọi nút ≥ 44x44px, cách nhau ≥ 8px; nút icon có `aria-label` ("Tìm kiếm", "Đổi theme", "Menu").
 - Cuộn quá 24px (cập nhật 2026-10-14): thanh thành VIÊN THUỐC bo tròn, cao 48px, rộng hơn khung nội dung 24px mỗi bên (dưới 768px chỉ 12px để không chạm mép màn hình), cách mép trên 12px, nền 70% + làm mờ, viền mảnh, bóng `elevated-sm`; hai lớp nền mờ qua lại (chỉ `opacity` + `transform`), giảm chuyển động thì chỉ bỏ phần trượt. Menu ngăn kéo điện thoại hạ theo, cách viên thuốc 16px.
-- Menu ngăn kéo dưới 768px (`MobileMenu`, cập nhật 2026-10-10): trượt từ trái, rộng 70% màn hình (tỉ lệ 70 / 30, bên phải 30% còn thấy nội dung), KHÔNG phủ tối phần bên phải (vẫn thấy nội dung); bấm ra ngoài, Esc hoặc ☰ để đóng. Mỗi mục có icon + chữ cao 44px; các nhóm cách nhau bằng đường kẻ ngang tự vẽ; mục có danh sách con (Blog → các chủ đề, có đường dọc bên trái nối từ icon mục cha) thu gọn sẵn, bấm mới xổ, đóng menu thì thu lại. Dữ liệu từ `navGroups` trong `src/config/site.ts`: thêm trang = thêm 1 dòng vào nhóm (hoặc thêm nhóm mới), icon tra ở `NavIcon.tsx`.
+- Menu ngăn kéo dưới 768px (`MobileMenu`, cập nhật 2026-10-10): trượt từ trái, rộng 70% màn hình (tỉ lệ 70 / 30, bên phải 30% còn thấy nội dung), KHÔNG phủ tối phần bên phải (vẫn thấy nội dung); bấm ra ngoài, Esc hoặc ☰ để đóng. Mỗi mục có icon + chữ cao 44px; các nhóm cách nhau bằng đường kẻ ngang tự vẽ; mục có danh sách con (Blog → các chủ đề, có đường dọc bên trái nối từ icon mục cha) thu gọn sẵn, bấm mới xổ, đóng menu thì thu lại. Dữ liệu từ `navGroups` trong `src/shared/config/site.ts`: thêm trang = thêm 1 dòng vào nhóm (hoặc thêm nhóm mới), icon tra ở `NavIcon.tsx`.
 
 ### Chuyển động khi cuộn (2026-10-14)
 - Tiêu đề mục hiện TỪNG TỪ khi cuộn tới (`RevealText`); khối và thẻ hiện lần lượt (`Reveal`, `delay` theo thứ tự). Màn hình đầu không ẩn; không JS vẫn hiện đủ; tắt khi giảm chuyển động. Chi tiết ở `docs/design-system/EXTENSIONS.md`.

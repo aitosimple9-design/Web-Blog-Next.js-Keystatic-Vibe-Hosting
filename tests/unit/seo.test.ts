@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts } from "@/shared/content/posts";
 
 describe("SEO", () => {
   afterEach(() => vi.unstubAllEnvs());

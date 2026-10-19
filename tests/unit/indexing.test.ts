@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { isIndexable } from "@/lib/indexing";
+import { isIndexable } from "@/frontend/lib/indexing";
 
 describe("isIndexable: chỉ production thật mới được lập chỉ mục", () => {
   it("Vercel production: được", () => expect(isIndexable({ VERCEL_ENV: "production" })).toBe(true));

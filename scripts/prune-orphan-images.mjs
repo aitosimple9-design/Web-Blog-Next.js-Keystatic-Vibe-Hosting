@@ -9,7 +9,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const { findOrphanImages } = await import("../src/lib/content-cleanup.ts");
+const { findOrphanImages } = await import("../src/cms/lib/content-cleanup.ts");
 const doDelete = process.argv.includes("--delete");
 
 const orphans = findOrphanImages(root);

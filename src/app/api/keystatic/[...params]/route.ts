@@ -1,6 +1,6 @@
 import { makeRouteHandler } from "@keystatic/next/route-handler";
 import config from "../../../../../keystatic.config";
-import { imageFoldersToRemove, removeHomeReferences, removeImageFolders, removeOrphanImages } from "@/lib/content-cleanup";
+import { imageFoldersToRemove, removeHomeReferences, removeImageFolders, removeOrphanImages } from "@/cms/lib/content-cleanup";
 
 const handler = makeRouteHandler({ config });
 

@@ -8,7 +8,7 @@ Mockup: `Home.dc.html` (cùng thư mục). Route: `/book`. Từ 2026-10-11 Trang
    - **FeaturedPost** — ảnh bài nổi bật, bấm được cả khối; lớp chữ: nhãn "Bài nổi bật", tiêu đề, mũi tên
    - Dek: "Mỗi bài ghi chép một cuốn sách: ý chính, ví dụ và cách áp dụng."
    - **CTA chính duy nhất:** nút "Đọc bài mới nhất"
-   - "Theo dõi" + 7 icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 sốmạng xã hội (YouTube, TikTok, Facebook, Instagram, LinkedIn, X, Zalo): MỘT hàng duy nhất ở mọi mốc; Zalo nằm chính giữa, to nhất (60px, icon 32px, luôn có nền gradient + vòng ngoài `accent-warm`); 6 chip còn lại nhỏ 36px (icon 20px, vùng bấm mở rộng đủ 44px); hover nhấc lên, nền gradient hiện dần, nhãn tên nền tảng nổi phía trên; URL demo ở `src/config/site.ts`
+   - "Theo dõi" + 7 icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 sốmạng xã hội (YouTube, TikTok, Facebook, Instagram, LinkedIn, X, Zalo): MỘT hàng duy nhất ở mọi mốc; Zalo nằm chính giữa, to nhất (60px, icon 32px, luôn có nền gradient + vòng ngoài `accent-warm`); 6 chip còn lại nhỏ 36px (icon 20px, vùng bấm mở rộng đủ 44px); hover nhấc lên, nền gradient hiện dần, nhãn tên nền tảng nổi phía trên; URL demo ở `src/shared/config/site.ts`
    - **Số liệu:** 120+ Bài viết · 5 Chủ đề · 80+ Cuốn sách (tính từ nội dung, không viết cứng)
 1b. **Dải chữ** (`paper`, viền kẻ trên và dưới): "Đọc · Ghi chép · Suy ngẫm · Áp dụng · Nhớ lâu", cỡ `display-sm`, dấu phân cách hình thoi `accent-warm`; tự trôi chậm 60s, dừng khi rê chuột, tắt khi giảm chuyển động.
 2. **TopicSlider** (`paper`) — tiêu đề mục (`SectionHead`: căn giữa, tiêu đề `display-lg`, dek chữ sans `ui-body` màu `ink-faint`, đường kẻ họa tiết hình thoi) "Chủ đề" + dek "Chọn một chủ đề để đọc các bài ghi chép liên quan. Vuốt ngang để xem thêm."
@@ -45,4 +45,4 @@ Mockup: `Home.dc.html` (cùng thư mục). Route: `/book`. Từ 2026-10-11 Trang
 - Cả hai theme; 5 mốc + điểm giữa.
 
 
-> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/lib/pages.ts`); chữ mặc định ở `src/config/page-texts.ts`.
+> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/shared/content/pages.ts`); chữ mặc định ở `src/shared/config/page-texts.ts`.

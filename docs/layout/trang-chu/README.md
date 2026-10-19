@@ -1,6 +1,6 @@
 # Trang chủ (thương hiệu cá nhân)
 
-Mockup: `Intro.dc.html` (cùng thư mục). Route `/`. Nội dung chỉnh MỘT chỗ: `src/config/profile.ts` (chữ [mẫu] chờ Lộc thay; chỉ tên "Trần Ngọc Hoàng Ni" là thật). Trang Book (Trang chủ cũ) ở `/book`: `../book/README.md`. Khối dùng chung: `../README.md`.
+Mockup: `Intro.dc.html` (cùng thư mục). Route `/`. Nội dung chỉnh MỘT chỗ: `src/shared/config/profile.ts` (chữ [mẫu] chờ Lộc thay; chỉ tên "Trần Ngọc Hoàng Ni" là thật). Trang Book (Trang chủ cũ) ở `/book`: `../book/README.md`. Khối dùng chung: `../README.md`.
 Mục tiêu: người đọc tin người viết trước khi đăng ký. CTA chính DUY NHẤT của cả trang: nút "Đăng ký nhận bài" ở Hero, cuộn tới form `Newsletter` (`#dang-ky`).
 Menu: Trang chủ · Book · Blog (`navGroups`, icon `home` / `book` / `blog`).
 
@@ -32,7 +32,7 @@ Chỗ chừa (chưa dựng, thêm sau không phải thiết kế lại): Hành t
 `title` "<Tên> — <tagline>", meta description = câu định vị, Open Graph `profile`, canonical `/`, JSON-LD `Person` (trong `page.tsx`).
 
 ## Ảnh
-Chân dung demo: ảnh Pexels của Eugene Lisyuk (giấy phép Pexels, miễn phí), xóa phông cục bộ bằng `rembg` (model `isnet-general-use`), xuất WebP nền trong suốt 1100px; ghi nguồn ở `public/images/CREDITS.md`. Ảnh thứ hai (khối Câu chuyện): `vintage-book-sofa.jpg` (CC BY 2.0, phải ghi công khi đăng thật). Thay bằng ảnh thật của Lộc: ảnh người ngồi quay thẳng, ĐÃ xóa phông (PNG / WebP nền trong suốt, tỉ lệ ≈ 0,69), sửa đường dẫn ở `src/config/profile.ts`.
+Chân dung demo: ảnh Pexels của Eugene Lisyuk (giấy phép Pexels, miễn phí), xóa phông cục bộ bằng `rembg` (model `isnet-general-use`), xuất WebP nền trong suốt 1100px; ghi nguồn ở `public/images/CREDITS.md`. Ảnh thứ hai (khối Câu chuyện): `vintage-book-sofa.jpg` (CC BY 2.0, phải ghi công khi đăng thật). Thay bằng ảnh thật của Lộc: ảnh người ngồi quay thẳng, ĐÃ xóa phông (PNG / WebP nền trong suốt, tỉ lệ ≈ 0,69), sửa đường dẫn ở `src/shared/config/profile.ts`.
 
 ## Ghi chú kiểm tra
 - Ảnh chân dung cắt dọc 3:4 từ ảnh ngang bằng `object-position` (`profile.portrait.position`).
@@ -43,4 +43,4 @@ Chân dung demo: ảnh Pexels của Eugene Lisyuk (giấy phép Pexels, miễn p
 - Chiều sâu: cả cảnh lùi xa rồi tiến lại (`anim-dolly`, translateZ + scale, 2,2s); hai cánh cửa xoay ra phía người xem, mép trong viền `accent-warm`, ánh sáng ấm lộ ở khe giữa rồi tan (`anim-light`); vành elip `accent-warm` quấn quanh thân (nửa sau nằm sau người, nửa trước đè lên người), trôi theo con trỏ ở độ sâu khác nhau. Chỉ transform + opacity, nét phẳng, không gradient.
 
 
-> 2026-10-16: nội dung trang này sửa được ở Keystatic (Trang → Trang chủ, `content/pages/trang-chu.json`, đọc qua `src/lib/pages.ts`); `src/config/profile.ts` chỉ còn là nội dung mẫu mặc định. Tủ sách để trống = ẩn khối (khối Bài tiêu biểu khi đó không kéo lên dưới nét cọ).
+> 2026-10-16: nội dung trang này sửa được ở Keystatic (Trang → Trang chủ, `content/pages/trang-chu.json`, đọc qua `src/shared/content/pages.ts`); `src/shared/config/profile.ts` chỉ còn là nội dung mẫu mặc định. Tủ sách để trống = ẩn khối (khối Bài tiêu biểu khi đó không kéo lên dưới nét cọ).

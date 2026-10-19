@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getTopics, topicBySlug } from "@/lib/topics";
+import { getTopics, topicBySlug } from "@/shared/content/topics";
 
 const topics = getTopics();
 

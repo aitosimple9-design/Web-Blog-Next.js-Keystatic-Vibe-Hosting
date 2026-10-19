@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { buildRedirects, readRedirectFiles } from "./src/lib/redirects";
+import { buildRedirects, readRedirectFiles } from "./src/shared/redirects";
 
 // Giống `isIndexable()` ở src/lib/indexing.ts (file này không import được alias `@/`; tests/unit/indexing.test.ts chặn lệch):
 // chỉ production thật mới được lập chỉ mục. Ngoài ra thêm header X-Robots-Tag cho MỌI đường dẫn (kể cả ảnh, file tĩnh) ở các môi trường khác.

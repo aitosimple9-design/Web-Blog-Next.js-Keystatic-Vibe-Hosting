@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { createRedirect, listExisting, listItems } from "@/lib/redirect-tools";
-import { readRedirectFiles } from "@/lib/redirects";
+import { createRedirect, listExisting, listItems } from "@/cms/lib/redirect-tools";
+import { readRedirectFiles } from "@/shared/redirects";
 
 const mk = () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "rtools-"));

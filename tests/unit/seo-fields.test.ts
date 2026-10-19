@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import keystaticConfig from "../../keystatic.config";
-import { POST_FIELD_LABELS, POST_FIELD_NAMES, type PostFieldKey } from "@/lib/seo-fields";
+import { POST_FIELD_LABELS, POST_FIELD_NAMES, type PostFieldKey } from "@/cms/lib/seo-fields";
 
 // Hộp điểm SEO tìm ô trong form Keystatic theo ĐÚNG các nhãn này. Nhãn trong keystatic.config.ts mà lệch khỏi file
 // src/lib/seo-fields.ts thì hộp điểm sẽ không thấy ô và chấm sai, nên test này chặn lệch bằng hai lớp:

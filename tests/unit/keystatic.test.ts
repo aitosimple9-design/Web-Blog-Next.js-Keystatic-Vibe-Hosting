@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
-import { getTopics } from "@/lib/topics";
-import { getAllPosts } from "@/lib/posts";
+import { getTopics } from "@/shared/content/topics";
+import { getAllPosts } from "@/shared/content/posts";
 
 // keystatic.config.ts phải khớp CLAUDE.md mục 5 và đọc được đúng các bài trong content/posts.
 const reader = createReader(process.cwd(), keystaticConfig);

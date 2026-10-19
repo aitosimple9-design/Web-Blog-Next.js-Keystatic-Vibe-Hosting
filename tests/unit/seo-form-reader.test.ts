@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { editorToMarkdown, type MdNode } from "@/app/keystatic/seo-form-reader";
-import { scoreSeo } from "@/lib/seo-score";
+import { editorToMarkdown, type MdNode } from "@/cms/ui/seo-form-reader";
+import { scoreSeo } from "@/shared/seo-score";
 
 // Dựng cây DOM giả: el("p", {}, "chữ", el("a", {href:"/x"}, "liên kết"))
 type Child = MdNode | string;

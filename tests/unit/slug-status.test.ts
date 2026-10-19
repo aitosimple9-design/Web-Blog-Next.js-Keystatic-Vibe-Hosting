@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { createRedirect, slugStatus } from "@/lib/redirect-tools";
+import { createRedirect, slugStatus } from "@/cms/lib/redirect-tools";
 
 const mk = () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "slugst-"));

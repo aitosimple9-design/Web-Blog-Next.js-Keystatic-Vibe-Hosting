@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { isAdminCookieHeader, tokenFromCookieHeader, tokenCanPush } from "@/lib/admin-access";
-import { applyPlanGitHub, fetchPostRaw, friendlyGithubError, GithubError, listRedirectsGitHub, validBranch } from "@/lib/github-content";
-import { planRedirect } from "@/lib/redirect-tools";
+import { isAdminCookieHeader, tokenFromCookieHeader, tokenCanPush } from "@/cms/lib/admin-access";
+import { applyPlanGitHub, fetchPostRaw, friendlyGithubError, GithubError, listRedirectsGitHub, validBranch } from "@/cms/lib/github-content";
+import { planRedirect } from "@/cms/lib/redirect-tools";
 
 afterEach(() => {
   vi.unstubAllEnvs();

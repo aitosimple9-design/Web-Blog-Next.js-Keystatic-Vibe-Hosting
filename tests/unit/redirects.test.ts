@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { buildRedirects, entryProblem, finalTarget, readRedirectFiles, type RedirectEntry } from "@/lib/redirects";
-import { REDIRECT_FROM_RE, REDIRECT_TO_RE } from "@/lib/redirect-patterns";
+import { buildRedirects, entryProblem, finalTarget, readRedirectFiles, type RedirectEntry } from "@/shared/redirects";
+import { REDIRECT_FROM_RE, REDIRECT_TO_RE } from "@/shared/redirect-patterns";
 import keystaticConfig from "../../keystatic.config";
 
 const e = (from: string, to: string, file = `${from.replace(/\W+/g, "-")}.json`, permanent = true): RedirectEntry => ({ file, from, to, permanent });

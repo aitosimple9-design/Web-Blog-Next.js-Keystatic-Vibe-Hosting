@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateLong, formatDateShort, formatReadTime, readingMinutes } from "@/lib/format";
+import { formatDateLong, formatDateShort, formatReadTime, readingMinutes } from "@/shared/format";
 
 describe("format", () => {
   it("viết ngày bằng chữ, ngày luôn 2 chữ số", () => {

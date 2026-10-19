@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Source_Serif_4 } from "next/font/google";
-import { site } from "@/config/site";
-import { getSiteSettings } from "@/lib/settings";
-import { isIndexable } from "@/lib/indexing";
+import { site } from "@/shared/config/site";
+import { getSiteSettings } from "@/shared/content/settings";
+import { isIndexable } from "@/frontend/lib/indexing";
 import "./globals.css";
 
 // Font theo Design System: Source Serif 4 (tiêu đề + bài đọc) và Be Vietnam Pro (giao diện), subset tiếng Việt.

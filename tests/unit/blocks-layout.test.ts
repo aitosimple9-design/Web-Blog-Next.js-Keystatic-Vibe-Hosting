@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { layoutBlocks } from "@/config/blocks";
-import { resolveBlocks } from "@/lib/pages";
+import { layoutBlocks } from "@/shared/config/blocks";
+import { resolveBlocks } from "@/shared/content/pages";
 
 const home = (raw?: unknown, exclude: string[] = []) => layoutBlocks("homePage", resolveBlocks("homePage", raw), exclude);
 const sum = (l: ReturnType<typeof home>) => l.map((b) => `${b.id}:${b.tone}${b.pullUp ? "^" : ""}`).join(" ");
