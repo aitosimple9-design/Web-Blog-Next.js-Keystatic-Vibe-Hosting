@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { KeystaticBlocksColumns } from "./KeystaticBlocksColumns";
+import { KeystaticNavIcons } from "./KeystaticNavIcons";
 import { KeystaticRedirectTools } from "./KeystaticRedirectTools";
 import { KeystaticThumbnails } from "./KeystaticThumbnails";
 import { KeystaticSeoPanel } from "./SeoPanel";
@@ -16,6 +17,8 @@ export default function KeystaticLayout({ children }: { children: ReactNode }) {
       <KeystaticSeoPanel />
       {/* Nhóm "Các khối của trang": mỗi ô chiếm nửa hàng để đỡ dài */}
       <KeystaticBlocksColumns />
+      {/* Menu trái: icon trước từng mục + vạch phân cách giữa các nhóm */}
+      <KeystaticNavIcons />
       {/* Nút "Tạo chuyển hướng" cạnh ô Slug và hộp "Thêm chuyển hướng" ở danh sách Chuyển hướng */}
       <KeystaticRedirectTools />
       {children}
