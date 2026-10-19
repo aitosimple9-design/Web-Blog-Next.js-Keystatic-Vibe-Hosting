@@ -212,6 +212,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 - Mọi thay đổi code đi đường: nhánh trên máy → `git push` nhánh → Pull Request.
   Không ghi file trực tiếp lên GitHub qua API.
 - Mô tả PR theo `.github/pull_request_template.md`, có `Closes #<số>`.
+- **Tự merge PR nội dung (Lộc duyệt 2026-10-18):** `.github/workflows/auto-merge-content.yml` bật auto-merge (squash) cho PR mà MỌI file đổi nằm trong `content/` hoặc `public/images/` (nơi trang quản trị Keystatic ghi); CI xanh thì tự merge. PR đụng file khác (src, scripts, .github, keystatic.config.ts, package.json…) KHÔNG tự merge, Lộc duyệt. PR do Claude mở để sửa code vẫn do Lộc merge.
 - Merge là việc của mình. Lệnh bị chặn bởi `.claude/settings.json` → báo mình, KHÔNG tìm cách lách.
 
 ## 11. Định nghĩa "xong" — kiểm tra trước khi mở PR
@@ -228,5 +229,5 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 - Sửa hoặc xóa file trong `content/posts/` khi mình không yêu cầu rõ
 - Sửa `.env*`, đưa secret vào code hoặc commit
 - Tự cài thư viện, tự đổi phiên bản, tự deploy, tự merge
-- Sửa `.github/workflows/` (chỉ soạn nội dung để mình commit)
+- Sửa `.github/workflows/` Cho phép sửa nhưng cần hỏi đang chuẩn bị sửa gì
 - Chép nguyên văn đoạn dài từ sách vào bài viết

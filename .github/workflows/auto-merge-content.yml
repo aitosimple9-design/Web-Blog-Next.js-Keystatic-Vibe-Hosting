@@ -1,0 +1,56 @@
+name: Tự merge PR nội dung
+
+# Quyết định 2026-10-18 (Lộc): PR do trang quản trị Keystatic tạo (chỉ đổi nội dung) tự merge khi CI xanh, không cần bấm Merge tay.
+# PR chỉ được tự merge khi MỌI file đổi nằm trong content/ hoặc public/images/ (nơi Keystatic ghi). Chỉ cần một file ngoài hai nơi đó
+# (src/, scripts/, .github/, keystatic.config.ts, package.json...) là KHÔNG tự merge, Lộc duyệt như thường.
+# Cần: Settings → General → "Allow auto-merge" đã bật, và luật bảo vệ `main` yêu cầu job `check` và `e2e` (đã có): auto-merge chỉ merge khi hai job xanh.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Bật tự merge nếu chỉ đổi nội dung
+    # Chỉ PR từ nhánh trong chính repo này (không phải fork), không phải bản nháp
+    if: github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Kiểm tra PR chỉ đổi content/ và public/images/
+        id: scope
+        run: |
+          outside=0
+          total=0
+          # Cả tên file mới lẫn tên cũ (khi đổi tên) phải nằm trong vùng nội dung
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            total=$((total + 1))
+            case "$f" in
+              content/*|public/images/*) ;;
+              *) outside=$((outside + 1)); echo "Ngoài vùng nội dung: $f" ;;
+            esac
+          done < <(gh api "repos/$REPO/pulls/$PR/files" --paginate --jq '.[] | .filename, (.previous_filename // empty)')
+          if [ "$total" -gt 0 ] && [ "$outside" -eq 0 ]; then
+            echo "content_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "content_only=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bật tự merge (squash) khi CI xanh
+        if: steps.scope.outputs.content_only == 'true'
+        run: gh pr merge "$PR" --repo "$REPO" --auto --squash
+
+      # PR từng bật tự merge rồi bị thêm file code vào: tắt ngay để Lộc duyệt
+      - name: Tắt tự merge (PR có file ngoài vùng nội dung)
+        if: steps.scope.outputs.content_only != 'true'
+        run: gh pr merge "$PR" --repo "$REPO" --disable-auto || true
