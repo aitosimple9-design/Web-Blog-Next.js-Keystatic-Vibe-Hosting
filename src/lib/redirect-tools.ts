@@ -1,4 +1,4 @@
-// Công cụ tạo chuyển hướng nhanh từ trang quản trị (nút cạnh ô Slug, hộp "Thêm chuyển hướng"). CHỈ chạy phía server, máy soạn bài (cổng isPreviewEnabled ở route).
+// Công cụ tạo chuyển hướng nhanh từ trang quản trị (nút cạnh ô Slug, hộp "Thêm chuyển hướng"). CHỈ chạy phía server; route kiểm tra quyền quản trị (src/lib/admin-access.ts).
 // Ghi đúng định dạng Keystatic dùng cho collection `redirects` (content/redirects/<tên>.json) nên mở lại trong admin vẫn sửa được.
 // Mỗi lần tạo còn dọn chuỗi: chuyển hướng cũ đang trỏ tới đường dẫn vừa bị bỏ thì được trỏ thẳng về đích mới; chuyển hướng ngược (đích mới → cũ) bị xóa để khỏi vòng lặp.
 import fs from "node:fs";
@@ -43,7 +43,19 @@ export function listItems(kind: string, root: string = process.cwd()): RedirectI
 
 const fileNameFor = (from: string) => from.replace(/^\//, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80) || "chuyen-huong";
 
-export function createRedirect(input: CreateInput, root: string = process.cwd()): CreateResult {
+/** Một file chuyển hướng đã có (nội dung JSON thô); `sha` chỉ có khi đọc từ GitHub (cần để sửa / xóa file qua API) */
+export type RedirectFile = { file: string; data: Record<string, unknown>; sha?: string };
+export type RedirectPlan =
+  | { ok: true; from: string; to: string; file: string; data: Record<string, unknown>; updates: RedirectFile[]; deletes: string[]; flattened: string[]; removed: string[] }
+  | { ok: false; error: string };
+
+const strOf = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+
+/**
+ * Lập kế hoạch tạo / sửa một chuyển hướng (THUẦN, không đọc / ghi file): file mới, các file cũ cần sửa đích, các file cần xóa.
+ * Dùng chung cho ghi file ở máy local (createRedirect) và ghi qua GitHub ở web thật (src/lib/github-content.ts).
+ */
+export function planRedirect(input: CreateInput, existing: RedirectFile[]): RedirectPlan {
   const kind = input.kind;
   if (!isKind(kind)) return { ok: false, error: "Loại không hợp lệ." };
   const prefix = KIND_PREFIX[kind];
@@ -60,49 +72,75 @@ export function createRedirect(input: CreateInput, root: string = process.cwd())
   const problem = entryProblem({ from, to });
   if (problem) return { ok: false, error: problem };
 
-  const dir = path.join(root, "content", "redirects");
-  fs.mkdirSync(dir, { recursive: true });
+  const file = `${fileNameFor(from)}.json`;
+  const updates: RedirectFile[] = [];
+  const deletes: string[] = [];
   const flattened: string[] = [];
   const removed: string[] = [];
-  const write = (file: string, data: Record<string, unknown>) => fs.writeFileSync(path.join(dir, file), `${JSON.stringify(data, null, 2)}\n`);
-  const read = (file: string): Record<string, unknown> => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")) as Record<string, unknown>;
-
-  const file = `${fileNameFor(from)}.json`;
-  for (const e of readRedirectFiles(root)) {
+  for (const e of existing) {
     if (e.file === file) continue;
-    try {
-      if (e.from === from) {
-        fs.unlinkSync(path.join(dir, e.file)); // cùng đường dẫn cũ: mục này thay thế mục cũ (sửa chuyển hướng có sẵn)
-      } else if (e.from === to) {
-        fs.unlinkSync(path.join(dir, e.file));
-        removed.push(`${e.from} → ${e.to}`);
-      } else if (e.to === from) {
-        write(e.file, { ...read(e.file), to });
-        flattened.push(`${e.from} → ${to}`);
-      }
-    } catch {
-      /* file hỏng: để check-content báo */
+    const ef = strOf(e.data.from);
+    const et = strOf(e.data.to);
+    if (ef === from) {
+      deletes.push(e.file); // cùng đường dẫn cũ: mục này thay thế mục cũ (sửa chuyển hướng có sẵn)
+    } else if (ef === to) {
+      deletes.push(e.file);
+      removed.push(`${ef} → ${et}`);
+    } else if (et === from) {
+      updates.push({ file: e.file, data: { ...e.data, to }, sha: e.sha });
+      flattened.push(`${ef} → ${to}`);
     }
   }
-  const label = (input.label ?? "").trim() || `${kind}: ${from.replace(/^\/(?:bai-viet|blog)\//, "")} → ${to.replace(/^\/(?:bai-viet|blog)\//, "")}`;
-  write(file, { label, kind, from, to, permanent: true });
-  return { ok: true, from, to, file, flattened, removed };
+  const short = (p: string) => p.replace(/^\/(?:bai-viet|blog)\//, "");
+  const label = (input.label ?? "").trim() || `${kind}: ${short(from)} → ${short(to)}`;
+  return { ok: true, from, to, file, data: { label, kind, from, to, permanent: true }, updates, deletes, flattened, removed };
 }
 
-/** Các chuyển hướng đang có (để chọn sửa trong hộp "Thêm chuyển hướng") */
-export function listExisting(root: string = process.cwd()): ExistingRedirect[] {
+/** Đọc thô mọi file content/redirects/*.json ở máy (file hỏng bị bỏ qua: check-content sẽ báo) */
+export function readRedirectFilesRaw(root: string = process.cwd()): RedirectFile[] {
   const dir = path.join(root, "content", "redirects");
-  return readRedirectFiles(root).map((e) => {
-    let kind = "Khác";
+  let names: string[] = [];
+  try {
+    names = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+  } catch {
+    return [];
+  }
+  const out: RedirectFile[] = [];
+  for (const f of names) {
     try {
-      const k = (JSON.parse(fs.readFileSync(path.join(dir, e.file), "utf8")) as { kind?: unknown }).kind;
-      if (typeof k === "string" && isKind(k)) kind = k;
+      const v: unknown = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
+      if (typeof v === "object" && v !== null) out.push({ file: f, data: v as Record<string, unknown> });
     } catch {
-      /* file hỏng: coi là Khác */
+      /* file hỏng */
     }
-    return { file: e.file, kind, from: e.from, to: e.to };
+  }
+  return out;
+}
+
+/** Tạo chuyển hướng bằng cách GHI FILE ở máy (chế độ local) */
+export function createRedirect(input: CreateInput, root: string = process.cwd()): CreateResult {
+  const plan = planRedirect(input, readRedirectFilesRaw(root));
+  if (!plan.ok) return plan;
+  const dir = path.join(root, "content", "redirects");
+  fs.mkdirSync(dir, { recursive: true });
+  const write = (file: string, data: Record<string, unknown>) => fs.writeFileSync(path.join(dir, file), `${JSON.stringify(data, null, 2)}
+`);
+  for (const f of plan.deletes) fs.unlinkSync(path.join(dir, f));
+  for (const u of plan.updates) write(u.file, u.data);
+  write(plan.file, plan.data);
+  return { ok: true, from: plan.from, to: plan.to, file: plan.file, flattened: plan.flattened, removed: plan.removed };
+}
+
+/** Rút gọn danh sách file thô thành danh sách hiển thị trong hộp "Thêm chuyển hướng" */
+export function toExisting(files: RedirectFile[]): ExistingRedirect[] {
+  return files.map((f) => {
+    const k = strOf(f.data.kind);
+    return { file: f.file, kind: isKind(k) ? k : "Khác", from: strOf(f.data.from), to: strOf(f.data.to) };
   });
 }
+
+/** Các chuyển hướng đang có ở máy / bản đã build (để chọn sửa trong hộp "Thêm chuyển hướng") */
+export const listExisting = (root: string = process.cwd()): ExistingRedirect[] => toExisting(readRedirectFilesRaw(root));
 
 /**
  * Trạng thái của một slug để trang quản trị quyết định có bắt tạo chuyển hướng trước khi đổi slug hay không.

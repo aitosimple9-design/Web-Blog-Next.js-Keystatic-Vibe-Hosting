@@ -2,6 +2,7 @@
 // Bài lưu ở content/posts/<slug>.md (đuôi .md thuần, không .mdoc).
 // `slug` lấy từ TÊN FILE (Keystatic không ghi trường slug vào frontmatter); src/lib/posts.ts chấp nhận cả hai.
 import { collection, config, fields, singleton } from "@keystatic/core";
+import { GITHUB_REPO } from "@/lib/github-repo";
 import { POST_FIELD_LABELS } from "@/lib/seo-fields";
 import { PAGE_BLOCKS, type BlocksPageKey } from "@/config/blocks";
 import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_KINDS, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/lib/redirect-patterns";
@@ -32,7 +33,7 @@ export default config({
   // Phải có tiền tố NEXT_PUBLIC_ vì trang /keystatic chạy ở trình duyệt, cần cùng giá trị với server.
   storage:
     process.env.NEXT_PUBLIC_KEYSTATIC_STORAGE === "github"
-      ? { kind: "github", repo: "aitosimple9-design/Web-Blog-Next.js-Keystatic-Vibe-Hosting" }
+      ? { kind: "github", repo: GITHUB_REPO }
       : { kind: "local" },
   ui: {
     brand: { name: "Blog sách" },
@@ -620,8 +621,8 @@ export default config({
       label: "Bài viết",
       path: "content/posts/*",
       slugField: "title",
-      // Nút "Xem trước" trong form bài: mở bản ĐÃ LƯU với giao diện thật, cả bài nháp / lên lịch (chỉ chạy trên máy soạn bài, xem src/lib/preview.ts)
-      previewUrl: "/xem-truoc/bai-viet/{slug}",
+      // Nút "Xem trước" trong form bài: mở bản ĐÃ LƯU với giao diện thật, cả bài nháp / lên lịch (chỉ quản trị viên mở được, xem src/lib/admin-access.ts; chế độ GitHub đọc bản đã lưu ở nhánh {branch} qua GitHub API)
+      previewUrl: "/xem-truoc/bai-viet/{slug}?branch={branch}",
       format: { contentField: "content" },
       entryLayout: "content",
       columns: ["title", "source", "category", "date", "status", "draft", "focusKeyword", "cover"] as never, // xem ghi chú về cột ở collection topics

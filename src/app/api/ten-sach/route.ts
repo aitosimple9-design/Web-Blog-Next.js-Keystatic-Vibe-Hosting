@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { getBookNamesBySlug } from "@/lib/posts";
-import { isPreviewEnabled } from "@/lib/preview";
+import { isAdminRequest } from "@/lib/admin-access";
 
 // Cấp tên sách của mọi bài cho cột "Nguồn sách" ở danh sách quản trị Keystatic (src/app/keystatic/KeystaticThumbnails.tsx).
-// Gồm cả bài nháp nên cùng cổng với trang xem trước: chỉ chạy ở máy soạn bài (chế độ local, không VERCEL), còn lại 404.
+// Gồm cả bài nháp nên chỉ quản trị viên được gọi (src/lib/admin-access.ts: máy local, hoặc người đã đăng nhập Keystatic bằng GitHub và có quyền ghi vào repo), còn lại 404.
+// Chế độ GitHub: đọc từ bản đã build (mới sau mỗi lần merge).
 export const dynamic = "force-dynamic";
 
-export function GET() {
-  if (!isPreviewEnabled()) return new NextResponse(null, { status: 404 });
+export async function GET(request: Request) {
+  if (!(await isAdminRequest(request))) return new NextResponse(null, { status: 404 });
   return NextResponse.json(getBookNamesBySlug(), { headers: { "Cache-Control": "no-store" } });
 }
