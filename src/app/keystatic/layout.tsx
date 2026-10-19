@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { KeystaticBlocksColumns } from "../../cms/ui/KeystaticBlocksColumns";
 import { KeystaticNavIcons } from "../../cms/ui/KeystaticNavIcons";
 import { KeystaticRedirectTools } from "../../cms/ui/KeystaticRedirectTools";
+import { KeystaticSettingsCards } from "../../cms/ui/KeystaticSettingsCards";
 import { KeystaticThumbnails } from "../../cms/ui/KeystaticThumbnails";
 import { KeystaticSeoPanel } from "../../cms/ui/SeoPanel";
 
@@ -21,6 +22,8 @@ export default function KeystaticLayout({ children }: { children: ReactNode }) {
       <KeystaticNavIcons />
       {/* Nút "Tạo chuyển hướng" cạnh ô Slug và hộp "Thêm chuyển hướng" ở danh sách Chuyển hướng */}
       <KeystaticRedirectTools />
+      {/* Trang cài đặt (singleton): mỗi ô thành một thẻ có tiêu đề, mô tả, chân thẻ như trang Settings của Vercel */}
+      <KeystaticSettingsCards />
       {children}
     </>
   );
