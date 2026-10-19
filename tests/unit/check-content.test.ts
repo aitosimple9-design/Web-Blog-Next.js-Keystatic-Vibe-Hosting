@@ -135,6 +135,19 @@ describe("scripts/check-content.mjs", () => {
     }
     const baseFiles = { ...topic, "content/posts/bai-a.md": post() };
 
+    it("chủ đề bị xóa / đổi slug mà chưa có chuyển hướng: LỖI; có chuyển hướng /blog/<slug> thì đạt", () => {
+      const two = { ...baseFiles, "content/topics/chu-de-2.json": JSON.stringify({ name: "Chủ đề 2", description: "Mô tả", image: "/images/t.jpg" }) };
+      const lost = runWithBase(two, (root) => fs.rmSync(path.join(root, "content/topics/chu-de-2.json")));
+      expect(lost.code).toBe(1);
+      expect(lost.out).toContain("/blog/chu-de-2");
+      const ok = runWithBase(two, (root) => {
+        fs.rmSync(path.join(root, "content/topics/chu-de-2.json"));
+        fs.mkdirSync(path.join(root, "content/redirects"), { recursive: true });
+        fs.writeFileSync(path.join(root, "content/redirects/c2.json"), JSON.stringify({ label: "c2", from: "/blog/chu-de-2", to: "/blog", permanent: true }));
+      });
+      expect(ok.code).toBe(0);
+    });
+
     it("không đổi gì: slug ổn định, không cảnh báo", () => {
       const r = runWithBase(baseFiles, () => {});
       expect(r.code).toBe(0);
@@ -276,6 +289,31 @@ describe("scripts/check-content.mjs", () => {
     it("email liên hệ sai định dạng: LỖI; trang chỉ có khung rỗng thì báo đang ẨN", () => {
       expect(run({ ...base, "content/pages/lien-he.md": "---\nemail: sai\n---\nX\n" }).code).toBe(1);
       expect(run({ ...base, "content/pages/lien-he.md": "---\n{}\n---\n" }).out).toContain("Liên hệ: đang ẨN");
+    });
+  });
+
+  describe("link nội bộ trong thân bài", () => {
+    const withBody = (body: string, extra: Record<string, string> = {}) =>
+      run({ ...topic, "content/posts/bai-a.md": post().replace("Nội dung.", body), "content/posts/bai-b.md": post().replace("Bài A", "Bài B"), ...extra });
+    it("link tới bài có thật / chủ đề / trang tĩnh / file: đạt", () => {
+      const r = withBody("Xem [bài B](/bai-viet/bai-b), [chủ đề](/blog/chu-de-1#x), [Book](/book), [tệp](/files/a.pdf).");
+      expect(r.code).toBe(0);
+      expect(r.out).toContain("link nội bộ");
+    });
+    it("link tới bài không còn (đổi slug / xóa): LỖI", () => {
+      const r = withBody("Xem [bài cũ](/bai-viet/bai-da-doi-ten).");
+      expect(r.code).toBe(1);
+      expect(r.out).toContain("/bai-viet/bai-da-doi-ten");
+    });
+    it("link tới bài nháp: LỖI (bài đã đăng); link kiểu HTML cũng được kiểm tra", () => {
+      const draft = { "content/posts/bai-c.md": post("draft: true\n").replace("Bài A", "Bài C") };
+      expect(withBody("Xem [nháp](/bai-viet/bai-c).", draft).code).toBe(1);
+      expect(withBody('<a href="/bai-viet/khong-co">x</a>').code).toBe(1);
+    });
+    it("link đi qua chuyển hướng: chỉ CẢNH BÁO", () => {
+      const r = withBody("Xem [cũ](/bai-viet/bai-cu).", { "content/redirects/r.json": JSON.stringify({ label: "r", from: "/bai-viet/bai-cu", to: "/bai-viet/bai-b", permanent: true }) });
+      expect(r.code).toBe(0);
+      expect(r.out).toContain("đang đi qua chuyển hướng");
     });
   });
 });

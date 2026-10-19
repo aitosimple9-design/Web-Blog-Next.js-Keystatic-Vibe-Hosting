@@ -3,6 +3,7 @@
 // Mỗi lần tạo còn dọn chuỗi: chuyển hướng cũ đang trỏ tới đường dẫn vừa bị bỏ thì được trỏ thẳng về đích mới; chuyển hướng ngược (đích mới → cũ) bị xóa để khỏi vòng lặp.
 import fs from "node:fs";
 import path from "node:path";
+import matter from "gray-matter";
 import { entryProblem, readRedirectFiles } from "./redirects";
 import { KIND_PREFIX, REDIRECT_KINDS, SLUG_RE, type RedirectKind } from "./redirect-patterns";
 
@@ -101,4 +102,27 @@ export function listExisting(root: string = process.cwd()): ExistingRedirect[] {
     }
     return { file: e.file, kind, from: e.from, to: e.to };
   });
+}
+
+/**
+ * Trạng thái của một slug để trang quản trị quyết định có bắt tạo chuyển hướng trước khi đổi slug hay không.
+ * `needsRedirect` = bài ĐÃ ĐĂNG (không nháp / lên lịch, không phải bài mẫu demo-*) hoặc chủ đề đang có, và chưa có chuyển hướng từ đường dẫn cũ.
+ */
+export function slugStatus(kind: string, slug: string, root: string = process.cwd()): { live: boolean; hasRedirect: boolean; needsRedirect: boolean } {
+  const prefix = KIND_PREFIX[kind as RedirectKind];
+  if (!prefix || !SLUG_RE.test(slug)) return { live: false, hasRedirect: false, needsRedirect: false };
+  let live = false;
+  if (kind === "Chủ đề") live = fs.existsSync(path.join(root, "content", "topics", `${slug}.json`));
+  else {
+    try {
+      const { data } = matter(fs.readFileSync(path.join(root, "content", "posts", `${slug}.md`), "utf8"));
+      const d = data.date instanceof Date ? data.date.toISOString().slice(0, 10) : String(data.date ?? "");
+      const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+      live = data.draft !== true && data.status !== "draft" && data.status !== "review" && /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= today && !slug.startsWith("demo-");
+    } catch {
+      live = false;
+    }
+  }
+  const hasRedirect = readRedirectFiles(root).some((e) => e.from === prefix + slug);
+  return { live, hasRedirect, needsRedirect: live && !hasRedirect };
 }
