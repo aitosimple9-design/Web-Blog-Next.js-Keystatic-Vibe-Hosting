@@ -16,7 +16,7 @@ import matter from "gray-matter";
 // bản Node cũ hơn không đọc được thì bỏ qua phần chấm SEO và báo rõ ở mục THÔNG TIN, không làm hỏng các kiểm tra khác.
 let scoreSeo = null;
 try {
-  ({ scoreSeo } = await import("../src/lib/seo-score.ts"));
+  ({ scoreSeo } = await import("../src/shared/seo-score.ts"));
 } catch {
   /* xử lý ở dưới */
 }
@@ -213,7 +213,7 @@ const live = (d) => d.draft !== true && d.status !== "draft" && d.status !== "re
 // Lỗi gõ sai, vòng lặp, đích không tồn tại, che mất trang đang chạy đều là LỖI. Lúc chạy web, buildRedirects() vẫn tự bỏ mục hỏng nên web không sập.
 const redirectFroms = new Set(); // đường dẫn cũ hợp lệ, dùng ở phần "slug ổn định" bên dưới
 try {
-  const { readRedirectFiles, entryProblem, finalTarget, REDIRECTS_MAX, RESERVED_PREFIXES, STATIC_ROUTES } = await import("../src/lib/redirects.ts");
+  const { readRedirectFiles, entryProblem, finalTarget, REDIRECTS_MAX, RESERVED_PREFIXES, STATIC_ROUTES } = await import("../src/shared/redirects.ts");
   const entries = readRedirectFiles(root);
   if (entries.length > REDIRECTS_MAX) err("content/redirects", `có ${entries.length} chuyển hướng, vượt giới hạn ${REDIRECTS_MAX} của Next.js`);
   const livePaths = new Set([...STATIC_ROUTES, ...[...topicSlugs].map((t) => `/blog/${t}`), ...posts.filter((p) => live(p.data)).map((p) => `/bai-viet/${p.slug}`)]);
@@ -395,7 +395,7 @@ for (const [file, label, isContact] of [["chinh-sach-rieng-tu", "Chính sách ri
 
 // ---------- ảnh mồ côi (quy tắc dùng chung ở src/lib/content-cleanup.ts) ----------
 try {
-  const { findOrphanImages } = await import("../src/lib/content-cleanup.ts");
+  const { findOrphanImages } = await import("../src/cms/lib/content-cleanup.ts");
   for (const o of findOrphanImages(root)) {
     warn(o.path, `${o.kind === "folder" ? "thư mục ảnh" : "file ảnh"} mồ côi, không còn thuộc nội dung nào (chạy npm run prune-images)`);
   }

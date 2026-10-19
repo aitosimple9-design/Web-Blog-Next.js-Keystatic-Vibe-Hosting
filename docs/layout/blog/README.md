@@ -40,4 +40,4 @@ Cùng khuôn với thẻ chủ đề Trang chủ: thẻ dọc 3:4, ảnh bài tr
 - Thumb zone: PostCard và Pagination nằm trong 2/3 dưới màn hình khi cuộn.
 
 
-> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/lib/pages.ts`); chữ mặc định ở `src/config/page-texts.ts`.
+> 2026-10-16: chữ của trang này sửa được ở Keystatic (menu Trang, file content/pages/*.json, đọc qua `src/shared/content/pages.ts`); chữ mặc định ở `src/shared/config/page-texts.ts`.

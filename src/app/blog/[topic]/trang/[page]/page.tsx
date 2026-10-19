@@ -1,6 +1,6 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import { topicBySlug, getTopics } from "@/lib/topics";
-import { BlogView, blogMetadata, topicHref, totalPagesFor } from "@/components/blog/BlogView";
+import { topicBySlug, getTopics } from "@/shared/content/topics";
+import { BlogView, blogMetadata, topicHref, totalPagesFor } from "@/frontend/components/blog/BlogView";
 
 type Props = { params: Promise<{ topic: string; page: string }> };
 

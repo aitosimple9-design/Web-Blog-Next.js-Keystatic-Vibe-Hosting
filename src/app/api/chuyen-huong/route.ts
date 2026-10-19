@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { adminToken, isAdminRequest } from "@/lib/admin-access";
-import { applyPlanGitHub, friendlyGithubError, listRedirectsGitHub, validBranch } from "@/lib/github-content";
-import { createRedirect, listExisting, listItems, planRedirect, slugStatus, toExisting } from "@/lib/redirect-tools";
-import { KIND_PREFIX, type RedirectKind } from "@/lib/redirect-patterns";
+import { adminToken, isAdminRequest } from "@/cms/lib/admin-access";
+import { applyPlanGitHub, friendlyGithubError, listRedirectsGitHub, validBranch } from "@/cms/lib/github-content";
+import { createRedirect, listExisting, listItems, planRedirect, slugStatus, toExisting } from "@/cms/lib/redirect-tools";
+import { KIND_PREFIX, type RedirectKind } from "@/shared/redirect-patterns";
 
 // Cấp danh sách mục (GET) và tạo chuyển hướng nhanh (POST) cho trang quản trị Keystatic (src/app/keystatic/KeystaticRedirectTools.tsx).
 // Chỉ quản trị viên (src/lib/admin-access.ts): máy local, hoặc người đã đăng nhập Keystatic bằng GitHub và có quyền ghi vào repo; còn lại 404.

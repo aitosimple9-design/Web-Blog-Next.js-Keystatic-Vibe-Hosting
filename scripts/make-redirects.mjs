@@ -20,7 +20,7 @@ const base = arg("--base", "main");
 const to = arg("--to", "/blog");
 const dry = process.argv.includes("--dry");
 
-const { readRedirectFiles, STATIC_ROUTES } = await import("../src/lib/redirects.ts");
+const { readRedirectFiles, STATIC_ROUTES } = await import("../src/shared/redirects.ts");
 if (!STATIC_ROUTES.includes(to) && !/^\/(?:bai-viet|blog)\/[a-z0-9-]+$/.test(to)) {
   console.error(`--to "${to}" không phải trang có thật (dùng /blog, /book, / hoặc /bai-viet/<slug>)`);
   process.exit(1);

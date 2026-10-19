@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getSeoResultBySlug, getSeoScoresBySlug } from "@/lib/posts";
-import { isAdminRequest } from "@/lib/admin-access";
+import { getSeoResultBySlug, getSeoScoresBySlug } from "@/shared/content/posts";
+import { isAdminRequest } from "@/cms/lib/admin-access";
 
 // Cấp điểm SEO của mọi bài cho cột "SEO" ở danh sách quản trị Keystatic (src/app/keystatic/KeystaticThumbnails.tsx).
 // Gồm cả bài nháp nên chỉ quản trị viên được gọi (src/lib/admin-access.ts: máy local, hoặc người đã đăng nhập Keystatic bằng GitHub và có quyền ghi vào repo), còn lại 404.

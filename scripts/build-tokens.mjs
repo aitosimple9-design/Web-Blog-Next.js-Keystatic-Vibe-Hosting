@@ -1,4 +1,4 @@
-// Sinh src/styles/tokens.css từ docs/design-system/tokens.json.
+// Sinh src/frontend/styles/tokens.css từ docs/design-system/tokens.json.
 // Chạy: npm run tokens   (KHÔNG sửa tay tokens.css; sửa tokens.json rồi chạy lại)
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -109,5 +109,5 @@ for (const g of t.type.groups) {
 }
 push();
 
-writeFileSync(resolve(root, "src/styles/tokens.css"), out.join("\n") + "\n");
-console.log("Đã sinh src/styles/tokens.css (" + out.length + " dòng)");
+writeFileSync(resolve(root, "src/frontend/styles/tokens.css"), out.join("\n") + "\n");
+console.log("Đã sinh src/frontend/styles/tokens.css (" + out.length + " dòng)");

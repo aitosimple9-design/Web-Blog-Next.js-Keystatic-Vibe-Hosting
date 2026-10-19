@@ -2,10 +2,10 @@
 // Bài lưu ở content/posts/<slug>.md (đuôi .md thuần, không .mdoc).
 // `slug` lấy từ TÊN FILE (Keystatic không ghi trường slug vào frontmatter); src/lib/posts.ts chấp nhận cả hai.
 import { collection, config, fields, singleton } from "@keystatic/core";
-import { GITHUB_REPO } from "@/lib/github-repo";
-import { POST_FIELD_LABELS } from "@/lib/seo-fields";
-import { PAGE_BLOCKS, type BlocksPageKey } from "@/config/blocks";
-import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_KINDS, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/lib/redirect-patterns";
+import { GITHUB_REPO } from "@/cms/lib/github-repo";
+import { POST_FIELD_LABELS } from "@/cms/lib/seo-fields";
+import { PAGE_BLOCKS, type BlocksPageKey } from "@/shared/config/blocks";
+import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_KINDS, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/shared/redirect-patterns";
 
 // Ô chữ ngắn: nhãn + giới hạn ký tự (+ nhiều dòng nếu cần). Dùng cho các singleton chữ ở nhóm "Trang".
 const t = (label: string, max: number, multiline = false) =>

@@ -41,7 +41,7 @@ Layout từng trang (wireframe + spec) nằm ở `docs/layout/` (mỗi trang m�
 | Q11 | Form đăng ký (Họ tên + Số điện thoại + Email) gửi đi đâu, lưu ở đâu; trường nào bắt buộc; câu đồng ý dữ liệu cá nhân | Giả định tạm: Họ tên + Email bắt buộc, SĐT tùy chọn; CHƯA gửi đi đâu (hàm `submitSubscription` trong `Newsletter.tsx`) | 3 (giao diện) / 4 (kết nối) |
 | Q12 | Ô tìm kiếm trên thanh đầu trang: làm chức năng ngay hay chỉ dựng giao diện (PLAN cũ xếp tìm kiếm vào sau ra mắt) | Đã làm tìm kiếm cơ bản phía trình duyệt (tiêu đề, mô tả, chủ đề, sách; không phân biệt dấu); nâng cấp sau | 3 |
 | Q13 | Blog: URL từng chủ đề / từng trang; số bài mỗi trang cố định (đề xuất 6) hay đổi 2 / 4 / 6 theo màn hình; có tab "Tất cả" không | Giả định tạm: `/blog/<chu-de>`, `/blog/<chu-de>/trang/<n>`, bài `/bai-viet/<slug>`; 6 bài/trang cố định; `/blog` chuyển về chủ đề đầu; không có tab "Tất cả" | 4 |
-| Q14 | Tên blog, logo, link 7 mạng xã hội, trang Điều khoản / Chính sách; 7 icon x 44px không vừa hàng ở 375px (xuống 2 hàng hay cuộn) | Giả định tạm: tên "Logo", icon chưa có link (hiển thị mờ), xuống 2 hàng ở màn hẹp. Sửa ở `src/config/site.ts` | 3 |
+| Q14 | Tên blog, logo, link 7 mạng xã hội, trang Điều khoản / Chính sách; 7 icon x 44px không vừa hàng ở 375px (xuống 2 hàng hay cuộn) | Giả định tạm: tên "Logo", icon chưa có link (hiển thị mờ), xuống 2 hàng ở màn hẹp. Sửa ở `src/shared/config/site.ts` | 3 |
 
 Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ngày, và cập nhật mục "Stack" trong CLAUDE.md.
 
@@ -73,10 +73,10 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 
 ## Giai đoạn 2 — Lớp nội dung
 - [ ] Chốt Q6, Q7
-- [ ] `src/lib/posts.ts`: lấy danh sách bài, lấy 1 bài theo slug, lọc theo danh mục, bỏ bài `draft: true`
+- [ ] `src/shared/content/posts.ts`: lấy danh sách bài, lấy 1 bài theo slug, lọc theo danh mục, bỏ bài `draft: true`
 - [ ] Kiểm tra dữ liệu: thiếu trường bắt buộc → build báo lỗi rõ ràng (không im lặng bỏ qua)
 - [ ] 3 bài mẫu, mỗi danh mục 1 bài, dùng chung cho A và B
-- [x] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local (2026-10-13; `slug` lấy từ tên file, khai báo `fields.ignored()`; có test `tests/unit/keystatic.test.ts`)
+- [x] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local (2026-10-13; `slug` lấy từ tên file, khai báo `fields.ignored()`; có test `tests/unit/project/keystatic.test.ts`)
 - [ ] [B] `public/admin/index.html` + `config.yml` khớp mục 5 CLAUDE.md
 - [ ] Thử: sửa bài qua CMS trên máy → file `.md` thay đổi đúng định dạng
 
@@ -84,7 +84,7 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 
 ## Giai đoạn 3 — Design system trong code
 - [x] Chốt Q8 (theo Design System)
-- [x] Token màu, chữ, khoảng cách, bo góc lấy từ `docs/design-system/tokens.json` (CSS variables), ánh xạ vào theme Tailwind (`npm run tokens` sinh `src/styles/tokens.css`)
+- [x] Token màu, chữ, khoảng cách, bo góc lấy từ `docs/design-system/tokens.json` (CSS variables), ánh xạ vào theme Tailwind (`npm run tokens` sinh `src/frontend/styles/tokens.css`)
 - [x] Hai theme Giấy / Đêm: nút chuyển theme, nhớ lựa chọn, không nháy sáng khi tải
 - [x] Layout gốc: global nav, footer
 - [x] Component cơ bản: nút chính, nút phụ, card bài viết, nhãn danh mục
@@ -93,7 +93,7 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [x] Bìa sách demo SVG 7 cuốn + `content/books/*.json` (trước là `src/config/covers.ts`, chuyển sang Keystatic 2026-10-15)
 - [x] Breadcrumb ở trang Blog, ẩn tiêu đề "Blog"; breadcrumb viên nổi giữa đường giao ảnh hero / khối trắng ở trang bài; tiêu đề "Bài liên quan" nổi bật (2026-10-07)
 - [x] Đường nối mềm giữa các dải nền, bỏ viền kẻ dải chữ (2026-10-07)
-- [x] Trang chủ mới (thương hiệu cá nhân, `/`): Hero trung tâm (chân dung xóa phông, tên khổng lồ sau người, cánh cửa mở đầu trang, thẻ kính mờ), Câu chuyện, Cách mình đọc, Con số, Tủ sách, Bài tiêu biểu, Kết nối; Trang chủ cũ chuyển sang `/book`; menu Trang chủ · Book · Blog; nội dung mẫu ở `src/config/profile.ts` (2026-10-11)
+- [x] Trang chủ mới (thương hiệu cá nhân, `/`): Hero trung tâm (chân dung xóa phông, tên khổng lồ sau người, cánh cửa mở đầu trang, thẻ kính mờ), Câu chuyện, Cách mình đọc, Con số, Tủ sách, Bài tiêu biểu, Kết nối; Trang chủ cũ chuyển sang `/book`; menu Trang chủ · Book · Blog; nội dung mẫu ở `src/shared/config/profile.ts` (2026-10-11)
 - [x] Hero Trang book nền tối, đáy nét cọ, họa tiết bằng token (dòng kẻ, chữ "Đọc" nét viền, vòng tròn `accent-warm`), không ảnh (2026-10-11)
 - [ ] Review bằng mắt toàn bộ trang cũ ở 2 theme + 5 mốc, `design-reviewer` duyệt
 - [x] Component `Newsletter` (form đăng ký) tái sử dụng được, đủ trạng thái (mặc định, lỗi, thành công)
@@ -152,10 +152,10 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
 - [x] Trang Book, Blog, Trang bài, 404 cấu hình chữ ở Keystatic (PR 4 / 5, nhánh feat/trang-con-keystatic, 2026-10-16)
 - [x] Quản lý khối từng trang ở Keystatic: bật / tắt + đổi thứ tự (Trang chủ, Book), bật / tắt (Blog, Trang bài), nền xen kẽ tự tính, ảnh chia sẻ riêng Trang chủ / Book / Blog, tiêu đề tab 404 (PR 5 / 5, nhánh feat/quan-ly-khoi, 2026-10-17)
 - [x] Quy tắc slug ổn định + tên ảnh (WORKFLOW 4b, CLAUDE.md mục 5); `check-content --base` (tự dùng nhánh đích trên CI) cảnh báo bài đã đăng mất / đổi slug, cảnh báo tên file ảnh sai quy ước (nhánh feat/quy-tac-slug, 2026-10-17)
-- [x] Chuyển hướng (redirects): menu Keystatic "Chuyển hướng" (đường dẫn bất kỳ), next.config `redirects()` (308 / 307), `src/lib/redirects.ts`, check-content kiểm tra đích / vòng lặp / chuỗi / che trang, bài đã đăng mất mà thiếu chuyển hướng = LỖI, `npm run make-redirects` (nhánh feat/chuyen-huong, 2026-10-17)
+- [x] Chuyển hướng (redirects): menu Keystatic "Chuyển hướng" (đường dẫn bất kỳ), next.config `redirects()` (308 / 307), `src/shared/redirects.ts`, check-content kiểm tra đích / vòng lặp / chuỗi / che trang, bài đã đăng mất mà thiếu chuyển hướng = LỖI, `npm run make-redirects` (nhánh feat/chuyen-huong, 2026-10-17)
 - [x] Trang Chính sách riêng tư + Liên hệ (Keystatic singleton, Markdown, trống = ẩn, tự nối chân trang + sitemap; nội dung pháp lý Lộc duyệt, chưa có chữ) (nhánh feat/trang-phap-ly, 2026-10-17)
 - [x] Chặn lập chỉ mục môi trường không phải production (preview của Vercel, máy cá nhân): robots.txt, meta robots, X-Robots-Tag; test `indexing.test.ts` (nhánh feat/noindex-preview, 2026-10-17)
-- [ ] (Ý tưởng, làm SAU khi Lộc cần, đã thống nhất 2026-10-17) Mức 2: gom khối vào thư viện chung `src/components/blocks/` có đăng ký trung tâm, khối nhận dữ liệu qua props, dùng lại ở nhiều trang. Mức 3: `fields.blocks` của Keystatic (thêm / xóa / nhân bản khối, tạo trang mới) — cần luật ghép nền, kiểm chứng bản Keystatic 0.6.x và đồng bộ dự án B
+- [ ] (Ý tưởng, làm SAU khi Lộc cần, đã thống nhất 2026-10-17) Mức 2: gom khối vào thư viện chung `src/frontend/components/blocks/` có đăng ký trung tâm, khối nhận dữ liệu qua props, dùng lại ở nhiều trang. Mức 3: `fields.blocks` của Keystatic (thêm / xóa / nhân bản khối, tạo trang mới) — cần luật ghép nền, kiểm chứng bản Keystatic 0.6.x và đồng bộ dự án B
 - [x] B2b Chủ đề và Sách chuyển từ `src/config` sang `content/topics`, `content/books` (2026-10-15)
 - [x] B3 Trường mới của bài (ảnh bìa tải lên, Trạng thái, thẻ, SEO title, ảnh OG, bài liên quan, ghi chú) [sync sang B] (2026-10-15)
 - [x] Xóa bài / chủ đề / sách tự xóa thư mục ảnh (local); `npm run prune-images` cho chế độ GitHub (2026-10-15)
@@ -171,10 +171,10 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
 
 ## Kiểm tra SEO trong trang quản trị (nhánh `feat/seo-checker`, chưa có Issue)
 Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm SEO trong form bài (chấm cả lúc đang gõ), bộ tiêu chí theo Google / Yoast / Rank Math (không có phần đọc hiểu tiếng Anh).
-- [x] Bước 1 Lõi chấm điểm `src/lib/seo-score.ts` (20 tiêu chí, điểm 0-100, hàm thuần) + 29 test
+- [x] Bước 1 Lõi chấm điểm `src/shared/seo-score.ts` (20 tiêu chí, điểm 0-100, hàm thuần) + 29 test
 - [x] Bước 2 Hai trường mới `focusKeyword` (từ khóa chính) và `coverAlt` (alt ảnh bìa): `keystatic.config.ts`, `posts.ts`, CLAUDE.md mục 5 [sync: cần đồng bộ sang dự án B]; `coverAlt` dùng làm alt ảnh hero và ảnh chia sẻ
 - [x] Bước 3 Cột "Điểm SEO" ở danh sách Bài viết (điểm + chữ Tốt / Cần cải thiện / Chưa đạt, màu theo 2 theme của Keystatic; dựa trên bản đã lưu): `getSeoScoresBySlug` + `/api/diem-seo` + `KeystaticThumbnails.tsx`; mượn cột "Từ khóa chính" làm chỗ giữ chỗ (2026-10-16)
-- [x] Bước 4 Hộp điểm SEO trong form bài (nổi góc dưới, chấm cả nội dung chưa Lưu, liệt kê chưa đạt + cách sửa, chuyển trái / phải, nhớ trạng thái): `SeoPanel.tsx`, `seo-form-reader.ts`, `src/lib/seo-fields.ts` (nhãn dùng chung với config); tự báo khi không đọc được ô / lệch bản đã lưu; test trên giao diện thật: gõ từng ô, thẻ, bài liên quan, nội dung, gỡ ảnh, bài mới, 2 theme, màn hình hẹp, bài 6.400 từ (2026-10-16)
+- [x] Bước 4 Hộp điểm SEO trong form bài (nổi góc dưới, chấm cả nội dung chưa Lưu, liệt kê chưa đạt + cách sửa, chuyển trái / phải, nhớ trạng thái): `SeoPanel.tsx`, `seo-form-reader.ts`, `src/cms/lib/seo-fields.ts` (nhãn dùng chung với config); tự báo khi không đọc được ô / lệch bản đã lưu; test trên giao diện thật: gõ từng ô, thẻ, bài liên quan, nội dung, gỡ ảnh, bài mới, 2 theme, màn hình hẹp, bài 6.400 từ (2026-10-16)
 - [x] Bước 5 `npm run check-content` báo thêm cảnh báo SEO từng bài + điểm trung bình, cảnh báo ảnh trong bài trùng file với ảnh bìa (lỗi thật gặp khi thử: hai ảnh cùng tên `cover.jpg` ghi đè nhau); tự bỏ qua có thông báo nếu Node cũ không đọc được .ts (2026-10-16)
 - [ ] Thêm bước `npm run check-content` vào `.github/workflows/ci.yml` (Lộc tự commit, Claude không sửa được thư mục workflows)
 
@@ -199,13 +199,13 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 - Theo dõi chuyển đổi từ quảng cáo (pixel / analytics)
 - Bình luận
 - Nâng cấp backend lên WordPress Headless — chỉ khi cần thành viên, nhiều người viết hoặc bán hàng.
-  Nhờ `src/lib/posts.ts` là nơi duy nhất đọc bài, việc chuyển chủ yếu là viết lại file này và nhập bài vào WordPress.
+  Nhờ `src/shared/content/posts.ts` là nơi duy nhất đọc bài, việc chuyển chủ yếu là viết lại file này và nhập bài vào WordPress.
 
 ---
 
 ## Việc tồn đọng (Lộc giao ghi lại 2026-10-19, xử lý sau; làm xong thì gạch và ghi ngày)
 
-**Đang làm ngay (Lộc ưu tiên):** menu trang quản trị có icon + phân cách; quy hoạch lại `src/` tách Frontend / CMS và chia nhỏ `src/lib`; dọn thư mục kết quả test cục bộ (`.playwright-mcp`, `shots`, `playwright-report`, `test-results`: đã dọn 2026-10-19).
+**Đã xong (2026-10-19, Lộc ưu tiên):** menu trang quản trị có icon + phân cách (#38); quy hoạch `src/` thành ba vùng `frontend/` · `cms/` · `shared/` có test chặn import sai (tests/unit/project/layers.test.ts); dọn thư mục kết quả test cục bộ (`.playwright-mcp`, `shots`, `playwright-report`, `test-results`). Test đơn vị xếp theo vùng `tests/unit/{frontend,cms,shared,app,project}`; đổi tên `components/about` → `home`, `home` → `book` cho khớp trang; E2E trang quản trị `tests/e2e/admin/` (chỉ đọc; bắt được lỗi hộp điểm SEO không hiện do ô Slug ghi DOM lặp, đã sửa).
 
 **Nội dung (việc của Lộc)**
 - [ ] Thay 8 chỗ `[mẫu]` ở Trang chủ, tên site "Logo", link mạng xã hội thật, email liên hệ, nội dung Chính sách riêng tư (trang đang ẨN vì trống)
@@ -221,10 +221,10 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 - [ ] Redeploy để `NEXT_PUBLIC_SITE_URL` (đã đổi sang địa chỉ ngắn) có hiệu lực
 - [ ] Gắn tên miền thật: đổi `NEXT_PUBLIC_SITE_URL`, tắt bảo vệ đăng nhập Vercel khi công khai, kiểm tra header `x-robots-tag: noindex` (hiện do Vercel thêm cho địa chỉ `vercel.app`, không phải của mã) và Google Search Console
 - [ ] Hosting chính thức: vẫn dự kiến PaaS Việt Nam, Vercel chỉ dùng tạm (CLAUDE.md mục 1)
-- [ ] Cảnh báo Turbopack ở `src/lib/content-cleanup.ts:113` (đọc thư mục ảnh theo đường dẫn tính toán, làm gói function admin nặng hơn): xử lý bằng chú thích `turbopackIgnore` hoặc đổi cách đọc
+- [ ] Cảnh báo Turbopack ở `src/cms/lib/content-cleanup.ts:113` (đọc thư mục ảnh theo đường dẫn tính toán, làm gói function admin nặng hơn): xử lý bằng chú thích `turbopackIgnore` hoặc đổi cách đọc
 - [ ] Phân quyền nhiều người (CODEOWNERS, tài khoản GitHub cho marketing, quyền theo vai trò): để sau khi có người thứ hai
 - [ ] Xem trước ở chế độ GitHub: chủ đề mới tạo cùng lúc chưa có trong bản build nên chưa xem trước được tới khi merge
 
 **Tính năng / hệ thống**
-- [ ] Trang riêng cho Sách (Lộc đang cân nhắc); khi có thì thêm địa chỉ vào `KIND_PREFIX` (`src/lib/redirect-patterns.ts`), nút Tạo chuyển hướng ở trang sửa Sách và kiểm tra slug sách ở `check-content`
+- [ ] Trang riêng cho Sách (Lộc đang cân nhắc); khi có thì thêm địa chỉ vào `KIND_PREFIX` (`src/shared/redirect-patterns.ts`), nút Tạo chuyển hướng ở trang sửa Sách và kiểm tra slug sách ở `check-content`
 - [ ] Đưa nốt chữ giao diện nhỏ còn nằm trong mã (aria-label, "phút đọc"...) lên admin nếu Lộc muốn (hiện duyệt GIỮ trong mã)

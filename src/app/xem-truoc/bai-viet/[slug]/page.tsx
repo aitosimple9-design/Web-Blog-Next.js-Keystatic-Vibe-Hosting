@@ -5,10 +5,10 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { isAdminCookieHeader, tokenFromCookieHeader } from "@/lib/admin-access";
-import { fetchPostRaw, friendlyGithubError, GithubError, validBranch } from "@/lib/github-content";
-import { getPostForPreview, getPostFromRaw } from "@/lib/posts";
-import { ArticleView } from "@/components/article/ArticleView";
+import { isAdminCookieHeader, tokenFromCookieHeader } from "@/cms/lib/admin-access";
+import { fetchPostRaw, friendlyGithubError, GithubError, validBranch } from "@/cms/lib/github-content";
+import { getPostForPreview, getPostFromRaw } from "@/shared/content/posts";
+import { ArticleView } from "@/frontend/components/article/ArticleView";
 
 export const dynamic = "force-dynamic";
 

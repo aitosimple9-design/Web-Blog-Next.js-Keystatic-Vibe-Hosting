@@ -11,5 +11,5 @@ Blog Book Mono là phiên bản đen trắng phối kem nhẹ của Blog Book: g
 ## Nguyên tắc và giá trị
 
 - Nguyên tắc về màu, chữ, bố cục, hình dạng, đổ bóng, nội dung và trạng thái: xem `DESIGN-SYSTEM.md`.
-- Giá trị số liệu (màu, cỡ chữ, khoảng cách, bo góc, breakpoint, đổ bóng, gradient): xem `tokens.json`. Token gradient được script `scripts/build-tokens.mjs` đưa vào `src/styles/tokens.css` (biến `--gradient-*`, `--elevated-*`); class dùng chung `.btn-grad`, `.surface-raised`, `.field-premium`, `.img-elevated`, `.marquee-run` nằm ở `src/app/globals.css`.
+- Giá trị số liệu (màu, cỡ chữ, khoảng cách, bo góc, breakpoint, đổ bóng, gradient): xem `tokens.json`. Token gradient được script `scripts/build-tokens.mjs` đưa vào `src/frontend/styles/tokens.css` (biến `--gradient-*`, `--elevated-*`); class dùng chung `.btn-grad`, `.surface-raised`, `.field-premium`, `.img-elevated`, `.marquee-run` nằm ở `src/app/globals.css`.
 - Mở rộng đã được duyệt cho dự án (ngoài Design System gốc): xem `EXTENSIONS.md`.

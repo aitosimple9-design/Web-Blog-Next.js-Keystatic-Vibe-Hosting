@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getBookNamesBySlug } from "@/lib/posts";
-import { isAdminRequest } from "@/lib/admin-access";
+import { getBookNamesBySlug } from "@/shared/content/posts";
+import { isAdminRequest } from "@/cms/lib/admin-access";
 
 // Cấp tên sách của mọi bài cho cột "Nguồn sách" ở danh sách quản trị Keystatic (src/app/keystatic/KeystaticThumbnails.tsx).
 // Gồm cả bài nháp nên chỉ quản trị viên được gọi (src/lib/admin-access.ts: máy local, hoặc người đã đăng nhập Keystatic bằng GitHub và có quyền ghi vào repo), còn lại 404.

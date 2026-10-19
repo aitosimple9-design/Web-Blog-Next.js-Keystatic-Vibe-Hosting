@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/config/site";
-import { getTopics } from "@/lib/topics";
-import { getAllPosts } from "@/lib/posts";
-import { getVisibleLegalPages } from "@/lib/legal-pages";
-import { totalPagesFor } from "@/components/blog/BlogView";
+import { site } from "@/shared/config/site";
+import { getTopics } from "@/shared/content/topics";
+import { getAllPosts } from "@/shared/content/posts";
+import { getVisibleLegalPages } from "@/shared/content/legal-pages";
+import { totalPagesFor } from "@/frontend/components/blog/BlogView";
 
 // Bài nháp và bài lên lịch (ngày đăng ở tương lai) không có trong getAllPosts() nên không vào sitemap.
 export default function sitemap(): MetadataRoute.Sitemap {

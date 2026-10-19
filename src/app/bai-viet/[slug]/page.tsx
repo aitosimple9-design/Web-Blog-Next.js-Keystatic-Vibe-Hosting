@@ -1,9 +1,9 @@
 // Trang Chi tiết bài (ưu tiên số 1; đích của quảng cáo). Giao diện: src/components/article/ArticleView.tsx
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSiteSettings } from "@/lib/settings";
-import { getAllPosts, getPost } from "@/lib/posts";
-import { ArticleView } from "@/components/article/ArticleView";
+import { getSiteSettings } from "@/shared/content/settings";
+import { getAllPosts, getPost } from "@/shared/content/posts";
+import { ArticleView } from "@/frontend/components/article/ArticleView";
 
 type Props = { params: Promise<{ slug: string }> };
 
