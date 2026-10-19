@@ -17,7 +17,8 @@ Hai dự án dùng CHUNG cấu trúc bài viết (mục 5) — mọi thay đổi
 - Đã chốt:
   - Next.js App Router, chạy **server Node.js** (KHÔNG dùng `output: 'export'`)
   - CMS: Keystatic — hiện dùng `storage: { kind: 'local' }`; chuyển sang `kind: 'github'` ở giai đoạn deploy
-  - Hosting dự kiến: PaaS Việt Nam hỗ trợ Node.js — CHƯA mua
+  - Hosting: **Vercel** (Lộc xác nhận 2026-10-19; dự án `web-blog-next-js-keystatic-vibe-hosting` thuộc team `aitosimple`, nối GitHub, chỉ build nhánh `main`; kèm bảo vệ đăng nhập Vercel cho địa chỉ `vercel.app` lúc thử). Tên miền: CHƯA mua, dùng tạm địa chỉ `vercel.app`
+  - **Biến môi trường** (đặt ở Vercel → Settings → Environment Variables, target production + preview; bản mẫu ở `.env.example`, máy cá nhân ở `.env.local` gitignore): `NEXT_PUBLIC_KEYSTATIC_STORAGE=github` (máy cá nhân: `local`), `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`, `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` (4 biến sau do GitHub App của Keystatic cấp; secret không bao giờ vào repo / chat), và `NEXT_PUBLIC_SITE_URL` = địa chỉ chính thức của web (sitemap, canonical, ảnh chia sẻ, JSON-LD; không có dấu `/` ở cuối; hiện là địa chỉ `vercel.app`, ĐỔI sang tên miền thật khi gắn tên miền rồi Redeploy). Đổi biến Vercel chỉ có hiệu lực sau Redeploy
   - Máy làm việc: Windows (Q1)
   - TypeScript, npm, Next.js 16.4.0 (Q2, Q4, Q5; kiểm tra lỗi Keystatic GitHub mode ở GĐ2/GĐ8, lỗi thì hạ về 15.x)
   - `next.config.ts` KHÔNG bật `cacheComponents` (chưa chắc tương thích Keystatic); xem lại ở GĐ2
@@ -227,7 +228,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 
 ## 12. Không bao giờ
 - Sửa hoặc xóa file trong `content/posts/` khi mình không yêu cầu rõ
-- Sửa `.env*`, đưa secret vào code hoặc commit
+- Đưa secret vào code hoặc commit, hoặc in giá trị secret ra chat. Được phép (Lộc cho phép 2026-10-19): thêm biến KHÔNG bí mật vào `.env.example` / `.env.local` và vào Vercel (qua MCP) khi Lộc yêu cầu; biến bí mật chỉ Lộc tự nhập
 - Tự cài thư viện, tự đổi phiên bản, tự deploy, tự merge
 - Sửa `.github/workflows/` Cho phép sửa nhưng cần hỏi đang chuẩn bị sửa gì
 - Chép nguyên văn đoạn dài từ sách vào bài viết
