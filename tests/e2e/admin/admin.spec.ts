@@ -69,6 +69,31 @@ test.describe("Menu trái", () => {
   });
 });
 
+test.describe("Trang cài đặt (singleton) dạng thẻ", () => {
+  const SINGLETONS = MENU.filter((m) => m.href.includes("/singleton/"));
+
+  test("mỗi ô là một thẻ có tiêu đề, nhãn gốc vẫn là tên truy cập của ô", async ({ page }) => {
+    test.setTimeout(240_000);
+    for (const item of SINGLETONS) {
+      await page.goto(item.href);
+      const cards = page.locator("[data-ks-card]");
+      await expect(cards.first(), item.name).toBeVisible({ timeout: 30_000 });
+      // thẻ có nhãn đều có tiêu đề không rỗng
+      const heads = page.locator("[data-ks-card-head] > :first-child");
+      expect(await heads.count(), `${item.name}: có thẻ có tiêu đề`).toBeGreaterThan(0);
+      for (const t of await heads.allInnerTexts()) expect(t.trim(), `${item.name}: tiêu đề thẻ rỗng`).not.toBe("");
+    }
+  });
+
+  test("Cài đặt site: tách nhãn dài thành tiêu đề + mô tả, ô nhập vẫn dùng được theo tên truy cập", async ({ page }) => {
+    await page.goto("/keystatic/singleton/siteSettings");
+    const card = page.locator("[data-ks-card]").first();
+    await expect(card.locator("[data-ks-card-head] > :first-child")).toHaveText("Tên site", { timeout: 30_000 });
+    await expect(card.locator("[data-ks-card-head] > :nth-child(2)")).toContainText("tiêu đề tab");
+    await expect(page.getByRole("textbox", { name: /^Tên site/ })).toBeVisible();
+  });
+});
+
 test.describe("Danh sách Bài viết", () => {
   test("có cột Điểm SEO, Ảnh bìa; tên sách không còn [object Object]", async ({ page }) => {
     await page.goto("/keystatic/collection/posts");
