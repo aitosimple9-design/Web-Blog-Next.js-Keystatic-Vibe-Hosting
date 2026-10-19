@@ -72,6 +72,7 @@ src/app/xem-truoc/bai-viet/<slug>/ ← XEM TRƯỚC bài nháp / lên lịch (n�
 src/lib/posts.ts                ← module DUY NHẤT đọc bài viết
 src/lib/rehype-image-size.ts    ← plugin rehype gắn width / height thật + loading="lazy" cho ảnh trong thân bài (posts.ts dùng khi dựng HTML)
 src/config/blocks.ts             ← DANH MỤC KHỐI đã duyệt của Trang chủ / Book / Blog / Trang bài (id, nhãn, loại dark / fixed, có cho đổi thứ tự không) + `layoutBlocks()` tự xen kẽ nền paper / paper-sunk và đánh dấu khối kéo lên dưới nét cọ; admin lưu `blocks.<id>` (số vị trí, 0 = ẩn; hoặc tích) trong content/pages/*.json, đọc qua `getPageBlocks()` (Lộc duyệt PR 5, 2026-10-16). Thêm khối mới = thêm vào đây + ô trong keystatic.config.ts (blocksField dựng tự động) + nơi render; `tests/unit/admin-sync.test.ts` và `blocks-layout.test.ts` chặn lệch
+src/app/keystatic/KeystaticNavIcons.tsx ← icon trước từng mục + vạch phân cách giữa các nhóm ở menu trái của trang quản trị (chỉ đổi hiển thị; nhận mục theo đuôi địa chỉ /collection/<id>, /singleton/<id>; thêm collection / singleton mới thì thêm icon vào bảng SVG ở file này, thiếu thì dùng icon file)
 src/app/keystatic/KeystaticBlocksColumns.tsx ← xếp ô "Các khối của trang" thành 4 cột trong admin (chỉ đổi hiển thị)
 src/lib/topics.ts, books.ts, settings.ts, pages.ts, nav.ts, preview.ts, content-cleanup.ts (luật dọn ảnh DUY NHẤT, xem mục 8) ← đọc chủ đề / sách / cài đặt site từ content/, ghép menu (chỉ chạy phía server)
 src/components/                 ← UI components (ui/, layout/, home/, blog/, article/)
