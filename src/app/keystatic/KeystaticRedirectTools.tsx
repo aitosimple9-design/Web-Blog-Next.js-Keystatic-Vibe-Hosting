@@ -30,7 +30,9 @@ async function post(body: Record<string, string>): Promise<Result> {
 const notes = (r: Extract<Result, { ok: true }>) =>
   [...r.flattened.map((x) => `Đã cập nhật chuyển hướng cũ: ${x}`), ...r.removed.map((x) => `Đã xóa chuyển hướng ngược gây vòng lặp: ${x}`)].join(" · ");
 
-/* ---------- 1) Nút cạnh ô Slug ---------- */
+/* ---------- 1) Khóa ô Slug + nút cạnh ô Slug ---------- */
+// Ở trang sửa Bài viết / Chủ đề, ô Slug (và nút Regenerate) bị KHÓA mặc định: đổi slug làm gãy link cũ. Muốn đổi thì bấm "Mở khóa", rồi
+// bấm "Tạo chuyển hướng". Bài đã đăng / chủ đề mà chưa có chuyển hướng thì nút Lưu bị chặn cho tới khi tạo (bài mẫu demo-* và bài nháp được miễn).
 
 function slugInput(): HTMLInputElement | null {
   for (const input of document.querySelectorAll<HTMLInputElement>("main input")) {
@@ -39,29 +41,71 @@ function slugInput(): HTMLInputElement | null {
   return null;
 }
 
+type Status = { live: boolean; hasRedirect: boolean; needsRedirect: boolean };
+let status: (Status & { key: string }) | null = null; // trạng thái của slug đang sửa (lấy từ máy chủ)
+
+function currentTarget() {
+  const m = location.pathname.match(ITEM_URL);
+  return m ? { kind: KIND_OF[m[1]], oldSlug: decodeURIComponent(m[2]) } : null;
+}
+
+function loadStatus(kind: RedirectKind, oldSlug: string, then: () => void) {
+  const key = `${kind}/${oldSlug}`;
+  if (status?.key === key) return;
+  status = { key, live: false, hasRedirect: false, needsRedirect: false };
+  fetch(`/api/chuyen-huong?kind=${encodeURIComponent(kind)}&slug=${encodeURIComponent(oldSlug)}`, { cache: "no-store" })
+    .then((r) => (r.ok ? (r.json() as Promise<Status>) : null))
+    .then((d) => {
+      if (d && status?.key === key) {
+        status = { key, ...d };
+        then();
+      }
+    })
+    .catch(() => {});
+}
+
+const slugChanged = (input: HTMLInputElement, oldSlug: string) => input.value.trim() !== "" && input.value.trim() !== oldSlug;
+
+function applyLock(input: HTMLInputElement, locked: boolean) {
+  input.readOnly = locked;
+  input.style.opacity = locked ? "0.7" : "";
+  input.style.cursor = locked ? "not-allowed" : "";
+  const regen = input.closest("main")?.querySelector<HTMLElement>('button[aria-label="regenerate"]');
+  if (regen) regen.style.display = locked ? "none" : "";
+}
+
 function refreshBox(box: HTMLElement, oldSlug: string, kind: RedirectKind, input: HTMLInputElement) {
-  const button = box.querySelector<HTMLButtonElement>("button")!;
   const prefix = KIND_PREFIX[kind]!;
+  const unlocked = box.dataset.unlocked === "1";
+  applyLock(input, !unlocked);
+  const unlock = box.querySelector<HTMLButtonElement>('[data-role="unlock"]')!;
+  const create = box.querySelector<HTMLButtonElement>('[data-role="create"]')!;
+  const hint = box.querySelector<HTMLElement>('[data-role="hint"]')!;
+  unlock.style.display = unlocked ? "none" : "";
+  create.style.display = unlocked ? "" : "none";
+  hint.textContent = unlocked
+    ? status?.needsRedirect
+      ? "Bài / chủ đề này đã đăng: đổi slug thì PHẢI tạo chuyển hướng trước khi Lưu."
+      : "Đổi slug xong thì tạo chuyển hướng (nếu đã có người đọc) rồi bấm Lưu."
+    : 'Slug đang khóa để tránh gãy link cũ. Bấm "Mở khóa" nếu thật sự cần đổi.';
   const now = input.value.trim();
-  const same = !now || now === oldSlug;
-  button.disabled = same;
-  button.style.opacity = same ? "0.55" : "1";
-  button.style.cursor = same ? "not-allowed" : "pointer";
-  button.textContent = same ? "Tạo chuyển hướng (Slug chưa đổi)" : `Tạo chuyển hướng ${prefix}${oldSlug} → ${prefix}${now}`;
-  button.dataset.newSlug = now;
+  const same = !slugChanged(input, oldSlug);
+  create.disabled = same || box.dataset.created === now;
+  create.style.opacity = create.disabled ? "0.55" : "1";
+  create.style.cursor = create.disabled ? "not-allowed" : "pointer";
+  create.textContent = same ? "Tạo chuyển hướng (Slug chưa đổi)" : box.dataset.created === now ? "Đã tạo chuyển hướng" : `Tạo chuyển hướng ${prefix}${oldSlug} → ${prefix}${now}`;
+  create.dataset.newSlug = now;
 }
 
 function mountBox() {
-  const match = location.pathname.match(ITEM_URL);
-  const input = match ? slugInput() : null;
+  const target = currentTarget();
+  const input = target ? slugInput() : null;
   const existing = document.querySelector<HTMLElement>(`[${BOX}]`);
-  if (!match || !input) {
+  if (!target || !input) {
     existing?.remove();
     return;
   }
-  const oldSlug = decodeURIComponent(match[2]);
-  const kind = KIND_OF[match[1]];
-  // Hàng chứa ô Slug + nút Regenerate: hộp nằm ngay dưới hàng này
+  const { kind, oldSlug } = target;
   const row = input.closest<HTMLElement>("div[class]")?.parentElement?.closest<HTMLElement>("div[class]");
   const anchor = [...(input.closest("main")?.querySelectorAll<HTMLElement>('button[aria-label="regenerate"]') ?? [])][0]?.parentElement?.parentElement ?? row;
   if (!anchor) return;
@@ -75,29 +119,70 @@ function mountBox() {
     box.setAttribute(BOX, "");
     box.dataset.old = oldSlug;
     box.style.cssText = "margin-top:8px;display:flex;flex-direction:column;gap:6px;align-items:flex-start";
-    const button = document.createElement("button");
-    button.type = "button";
     const dark = isDarkTheme();
-    button.style.cssText = `font:inherit;font-size:13px;padding:6px 12px;border-radius:6px;border:1px solid ${dark ? "#6b7280" : "#9ca3af"};background:transparent;color:inherit;text-align:left`;
-    const status = document.createElement("span");
-    status.setAttribute("role", "status");
-    status.style.cssText = "font-size:13px";
-    button.addEventListener("click", async () => {
-      const newSlug = button.dataset.newSlug ?? "";
-      if (button.disabled || !newSlug) return;
-      button.disabled = true;
-      status.textContent = "Đang tạo...";
-      const r = await post({ kind, oldSlug, newSlug });
-      status.style.color = r.ok ? (isDarkTheme() ? "#56d364" : "#1a7f37") : isDarkTheme() ? "#ff7b72" : "#cf222e";
-      status.textContent = r.ok
-        ? `Đã tạo chuyển hướng ${r.from} → ${r.to}. Nhớ bấm Lưu để đổi slug bài. ${notes(r)}`
-        : `Chưa tạo được: ${r.error}`;
-      refreshBox(box!, oldSlug, kind, input);
+    const btnCss = `font:inherit;font-size:13px;padding:6px 12px;border-radius:6px;border:1px solid ${dark ? "#6b7280" : "#9ca3af"};background:transparent;color:inherit;text-align:left`;
+    const hint = document.createElement("span");
+    hint.dataset.role = "hint";
+    hint.style.cssText = "font-size:13px;opacity:.85";
+    const unlock = document.createElement("button");
+    unlock.type = "button";
+    unlock.dataset.role = "unlock";
+    unlock.style.cssText = `${btnCss};cursor:pointer`;
+    unlock.textContent = "Mở khóa để đổi slug";
+    const create = document.createElement("button");
+    create.type = "button";
+    create.dataset.role = "create";
+    create.style.cssText = btnCss;
+    const out = document.createElement("span");
+    out.setAttribute("role", "status");
+    out.dataset.role = "out";
+    out.style.cssText = "font-size:13px";
+    const b = box;
+    unlock.addEventListener("click", () => {
+      b.dataset.unlocked = "1";
+      refreshBox(b, oldSlug, kind, input);
+      input.focus();
     });
-    box.append(button, status);
+    create.addEventListener("click", async () => {
+      const newSlug = create.dataset.newSlug ?? "";
+      if (create.disabled || !newSlug) return;
+      create.disabled = true;
+      out.textContent = "Đang tạo...";
+      const r = await post({ kind, oldSlug, newSlug });
+      out.style.color = r.ok ? (isDarkTheme() ? "#56d364" : "#1a7f37") : isDarkTheme() ? "#ff7b72" : "#cf222e";
+      if (r.ok) {
+        b.dataset.created = newSlug;
+        if (status) status = { ...status, hasRedirect: true, needsRedirect: false };
+      }
+      out.textContent = r.ok ? `Đã tạo chuyển hướng ${r.from} → ${r.to}. Nhớ bấm Lưu để đổi slug thật. ${notes(r)}` : `Chưa tạo được: ${r.error}`;
+      refreshBox(b, oldSlug, kind, input);
+    });
+    box.append(hint, unlock, create, out);
     anchor.after(box);
   }
+  loadStatus(kind, oldSlug, () => box && refreshBox(box, oldSlug, kind, input));
   refreshBox(box, oldSlug, kind, input);
+}
+
+// Chặn Lưu khi đã đổi slug của bài đã đăng / chủ đề mà chưa tạo chuyển hướng (chạy ở pha bắt, đi trước nút Lưu của Keystatic)
+function guardSave(e: Event) {
+  const target = currentTarget();
+  const input = target ? slugInput() : null;
+  if (!target || !input || !status?.needsRedirect || !slugChanged(input, target.oldSlug)) return;
+  const box = document.querySelector<HTMLElement>(`[${BOX}]`);
+  if (box?.dataset.created === input.value.trim()) return;
+  if (e instanceof MouseEvent) {
+    const button = e.target instanceof Element ? e.target.closest("button") : null;
+    if (!button || !/^(save|lưu)$/i.test((button.textContent ?? "").trim())) return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  const out = box?.querySelector<HTMLElement>('[data-role="out"]');
+  if (out) {
+    out.style.color = isDarkTheme() ? "#ff7b72" : "#cf222e";
+    out.textContent = 'Chưa Lưu: đây là bài / chủ đề đã đăng, hãy bấm "Tạo chuyển hướng" trước để link cũ không bị 404.';
+  }
+  box?.scrollIntoView({ block: "center" });
 }
 
 /* ---------- 2) Hộp "Thêm chuyển hướng" ---------- */
@@ -297,13 +382,20 @@ export function KeystaticRedirectTools() {
       e.stopPropagation();
       setListUrl(new URL(a.href).pathname.replace(/\/create$/, ""));
     };
+    const onKeySave = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") guardSave(e);
+    };
     document.addEventListener("input", onInput, true);
+    document.addEventListener("click", guardSave, true);
+    document.addEventListener("keydown", onKeySave, true);
     document.addEventListener("click", onClick, true);
     schedule();
     return () => {
       observer.disconnect();
       clearTimeout(timer);
       document.removeEventListener("input", onInput, true);
+      document.removeEventListener("click", guardSave, true);
+      document.removeEventListener("keydown", onKeySave, true);
       document.removeEventListener("click", onClick, true);
       document.querySelector(`[${BOX}]`)?.remove();
     };

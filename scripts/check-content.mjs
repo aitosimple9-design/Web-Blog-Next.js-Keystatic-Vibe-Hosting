@@ -108,7 +108,7 @@ for (const f of postFiles) {
     continue;
   }
   const slug = f.slice(0, -3);
-  posts.push({ slug, data, where });
+  posts.push({ slug, data, where, body });
 
   if (!SLUG.test(slug)) err(where, "tên file phải là chữ thường không dấu nối bằng '-'");
   if (data.slug !== undefined && data.slug !== slug) err(where, `slug "${data.slug}" phải trùng tên file`);
@@ -213,7 +213,7 @@ const live = (d) => d.draft !== true && d.status !== "draft" && d.status !== "re
 // Lỗi gõ sai, vòng lặp, đích không tồn tại, che mất trang đang chạy đều là LỖI. Lúc chạy web, buildRedirects() vẫn tự bỏ mục hỏng nên web không sập.
 const redirectFroms = new Set(); // đường dẫn cũ hợp lệ, dùng ở phần "slug ổn định" bên dưới
 try {
-  const { readRedirectFiles, entryProblem, finalTarget, REDIRECTS_MAX, STATIC_ROUTES } = await import("../src/lib/redirects.ts");
+  const { readRedirectFiles, entryProblem, finalTarget, REDIRECTS_MAX, RESERVED_PREFIXES, STATIC_ROUTES } = await import("../src/lib/redirects.ts");
   const entries = readRedirectFiles(root);
   if (entries.length > REDIRECTS_MAX) err("content/redirects", `có ${entries.length} chuyển hướng, vượt giới hạn ${REDIRECTS_MAX} của Next.js`);
   const livePaths = new Set([...STATIC_ROUTES, ...[...topicSlugs].map((t) => `/blog/${t}`), ...posts.filter((p) => live(p.data)).map((p) => `/bai-viet/${p.slug}`)]);
@@ -247,6 +247,32 @@ try {
     redirectFroms.add(from);
   }
   if (entries.length) infos.push(`Chuyển hướng: ${entries.length} mục.`);
+
+  // Link nội bộ trong thân bài (/bai-viet/..., /blog/...) phải trỏ tới trang có thật. Đổi slug bài kia mà bài này còn link cũ thì link gãy (404).
+  // Bài đã đăng: LỖI; bài nháp / lên lịch: chỉ CẢNH BÁO. Link đi qua chuyển hướng vẫn chạy nhưng nên sửa thành link thẳng. Link tới file (có đuôi .pdf, .jpg...) bỏ qua.
+  const LINK = /\]\(\s*(\/[^)\s]*)|href=["'](\/[^"']*)/g;
+  const postSlugs = new Set(posts.map((p) => p.slug));
+  let linkCount = 0;
+  for (const p of posts) {
+    const isLive = live(p.data);
+    const seen = new Set();
+    for (const m of (p.body ?? "").matchAll(LINK)) {
+      let path = (m[1] ?? m[2]).split(/[?#]/)[0].replace(/\/+$/, "") || "/";
+      if (seen.has(path) || /\.[a-z0-9]{2,5}$/i.test(path) || path.startsWith("//")) continue;
+      seen.add(path);
+      if (RESERVED_PREFIXES.some((r) => path === r || path.startsWith(`${r}/`))) continue;
+      linkCount++;
+      if (exists(path)) continue;
+      const bad = bySource.has(path)
+        ? null
+        : /^\/bai-viet\/[^/]+$/.test(path) && postSlugs.has(path.slice(10))
+          ? `link nội bộ "${path}" trỏ tới bài chưa đăng (nháp hoặc lên lịch), người đọc sẽ gặp 404`
+          : `link nội bộ "${path}" không trỏ tới trang nào có trên web (bài đổi slug / bị xóa? sửa link, hoặc thêm chuyển hướng)`;
+      if (bad) (isLive ? err : warn)(p.where, bad);
+      else warn(p.where, `link nội bộ "${path}" đang đi qua chuyển hướng tới "${finalTarget(path, map)}": nên sửa thành link thẳng`);
+    }
+  }
+  if (linkCount) infos.push(`Đã kiểm tra ${linkCount} link nội bộ trong thân bài.`);
 } catch (e) {
   infos.push(`Không kiểm tra được chuyển hướng (${String(e.message).split(/\r?\n/)[0]}); cần Node >= 22.18 để đọc file .ts.`);
 }
@@ -305,6 +331,15 @@ try {
             : `bài đã đăng ở ${baseRef} nhưng không còn ở nhánh này: link cũ /bai-viet/${slug} sẽ trả 404. Thêm chuyển hướng (menu Chuyển hướng; xóa hàng loạt: npm run make-redirects) hoặc khôi phục bài`,
         );
       }
+      // Chủ đề (/blog/<slug>): đổi slug hoặc xóa mà chưa có chuyển hướng thì link cũ 404
+      let topicsLost = 0;
+      for (const n of git("ls-tree", "-r", "--name-only", ref, "--", "content/topics").split(/\r?\n/).map((x) => x.trim()).filter((x) => x.endsWith(".json"))) {
+        const tslug = n.slice(n.lastIndexOf("/") + 1, -5);
+        if (topicSlugs.has(tslug) || redirectFroms.has(`/blog/${tslug}`)) continue;
+        topicsLost++;
+        err(n, `chủ đề ở ${baseRef} không còn (đổi slug hoặc bị xóa): link cũ /blog/${tslug} sẽ trả 404. Thêm chuyển hướng /blog/${tslug} → slug mới hoặc /blog (menu Chuyển hướng, Loại "Chủ đề")`);
+      }
+      infos.push(topicsLost ? `Chủ đề: ${topicsLost} chủ đề mất hoặc đổi slug mà chưa có chuyển hướng (xem LỖI).` : "Chủ đề: slug ổn định.");
       infos.push(lost ? `Đã so ${checked} bài đã đăng với ${baseRef}: ${lost} bài mất hoặc đổi slug mà chưa có chuyển hướng (xem LỖI).` : `Đã so ${checked} bài đã đăng với ${baseRef}: slug ổn định${handled ? ` (${handled} bài đã có chuyển hướng)` : ""}.`);
     } catch {
       infos.push(`Không so được slug với ${baseRef} (chưa có lịch sử git của nhánh đó); bỏ qua.`);
