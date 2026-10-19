@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
   async redirects() {
     return buildRedirects(readRedirectFiles());
   },
+  // Các API / trang quản trị đọc content/ lúc chạy (điểm SEO, tên sách, chuyển hướng nhanh, xem trước): bảo đảm thư mục content/ có trong gói
+  // của chúng trên Vercel (Next chỉ tự gom file mà nó nhìn thấy được đường dẫn tĩnh).
+  outputFileTracingIncludes: {
+    "/api/diem-seo": ["./content/**/*"],
+    "/api/ten-sach": ["./content/**/*"],
+    "/api/chuyen-huong": ["./content/**/*"],
+    "/xem-truoc/bai-viet/[slug]": ["./content/**/*"],
+  },
   async headers() {
     return indexable ? [] : [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }];
   },

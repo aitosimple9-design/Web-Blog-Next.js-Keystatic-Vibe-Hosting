@@ -18,9 +18,25 @@ const KIND_OF: Record<string, RedirectKind> = { posts: "Bài viết", topics: "C
 
 type Result = { ok: true; from: string; to: string; flattened: string[]; removed: string[] } | { ok: false; error: string };
 
+// Nhánh đang soạn (chế độ GitHub: địa chỉ có dạng /keystatic/branch/<nhánh>/...; chế độ local không có) để API biết commit chuyển hướng vào đâu
+function branchOf(): string | null {
+  const m = location.pathname.match(/\/keystatic\/branch\/([^/]+)/);
+  if (!m) return null;
+  try {
+    return decodeURIComponent(m[1]);
+  } catch {
+    return null;
+  }
+}
+const branchQuery = () => {
+  const b = branchOf();
+  return b ? `&branch=${encodeURIComponent(b)}` : "";
+};
+
 async function post(body: Record<string, string>): Promise<Result> {
   try {
-    const r = await fetch("/api/chuyen-huong", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const branch = branchOf();
+    const r = await fetch("/api/chuyen-huong", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(branch ? { ...body, branch } : body) });
     return (await r.json()) as Result;
   } catch {
     return { ok: false, error: "Không gọi được máy chủ. Chạy lại npm run dev rồi thử lại." };
@@ -53,7 +69,7 @@ function loadStatus(kind: RedirectKind, oldSlug: string, then: () => void) {
   const key = `${kind}/${oldSlug}`;
   if (status?.key === key) return;
   status = { key, live: false, hasRedirect: false, needsRedirect: false };
-  fetch(`/api/chuyen-huong?kind=${encodeURIComponent(kind)}&slug=${encodeURIComponent(oldSlug)}`, { cache: "no-store" })
+  fetch(`/api/chuyen-huong?kind=${encodeURIComponent(kind)}&slug=${encodeURIComponent(oldSlug)}${branchQuery()}`, { cache: "no-store" })
     .then((r) => (r.ok ? (r.json() as Promise<Status>) : null))
     .then((d) => {
       if (d && status?.key === key) {
@@ -221,7 +237,7 @@ function Modal({ listUrl, onClose }: { listUrl: string; onClose: () => void }) {
   // Lần mở đầu: loại mặc định là Bài viết (setState chỉ chạy sau khi tải xong)
   useEffect(() => {
     load("Bài viết");
-    fetch("/api/chuyen-huong?existing=1", { cache: "no-store" })
+    fetch(`/api/chuyen-huong?existing=1${branchQuery()}`, { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : []))
       .then(setExisting)
       .catch(() => {});

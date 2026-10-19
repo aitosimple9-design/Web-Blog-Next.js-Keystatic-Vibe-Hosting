@@ -296,6 +296,16 @@ export async function getPostForPreview(slug: string): Promise<(Post & { state: 
   return { ...found.meta, ...(await render(found.body)), state: getPostState(found.meta) };
 }
 
+/**
+ * Dựng bài XEM TRƯỚC từ nội dung thô (chế độ GitHub: lấy bản đã lưu ở NHÁNH đang soạn qua GitHub API, không có trên bản build).
+ * Cũng chỉ dùng ở route xem trước đã kiểm tra quyền quản trị. Chủ đề (category) phải có trong bản build; nếu không, ném lỗi có nói rõ.
+ */
+export async function getPostFromRaw(slug: string, raw: string): Promise<Post & { state: PostState }> {
+  const { data, content } = matter(raw);
+  const meta = parseMeta(`${slug}.md`, data, content);
+  return { ...meta, ...(await render(content)), state: getPostState(meta) };
+}
+
 /** Bài liên quan: bài chọn tay (nếu còn đăng) trước, rồi cùng chủ đề, thiếu thì bổ sung bài mới nhất chủ đề khác. */
 export function getRelatedPosts(post: PostMeta, limit = 6): PostMeta[] {
   const all = getAllPosts().filter((p) => p.slug !== post.slug);
