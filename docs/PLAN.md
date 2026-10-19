@@ -200,3 +200,31 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 - Bình luận
 - Nâng cấp backend lên WordPress Headless — chỉ khi cần thành viên, nhiều người viết hoặc bán hàng.
   Nhờ `src/lib/posts.ts` là nơi duy nhất đọc bài, việc chuyển chủ yếu là viết lại file này và nhập bài vào WordPress.
+
+---
+
+## Việc tồn đọng (Lộc giao ghi lại 2026-10-19, xử lý sau; làm xong thì gạch và ghi ngày)
+
+**Đang làm ngay (Lộc ưu tiên):** menu trang quản trị có icon + phân cách; quy hoạch lại `src/` tách Frontend / CMS và chia nhỏ `src/lib`; dọn thư mục kết quả test cục bộ (`.playwright-mcp`, `shots`, `playwright-report`, `test-results`: đã dọn 2026-10-19).
+
+**Nội dung (việc của Lộc)**
+- [ ] Thay 8 chỗ `[mẫu]` ở Trang chủ, tên site "Logo", link mạng xã hội thật, email liên hệ, nội dung Chính sách riêng tư (trang đang ẨN vì trống)
+- [ ] Sửa 21 bài `demo-*` thành bài thật (đã chọn cách A: `demo-*` được miễn kiểm tra slug; giữ `scripts/seed-demo-posts.mjs` nhưng chạy lại sẽ XÓA và ghi đè bài đã sửa, cẩn thận)
+- [ ] Đặt ảnh chia sẻ mặc định (Cài đặt → Site) và ảnh chia sẻ riêng của Trang chủ / Book / Blog: hiện thiếu `og:image` ở ba trang này
+- [ ] 2 bài demo có tiêu đề SEO ngắn (điểm 65/100): `demo-04`, `demo-14`
+- [ ] Newsletter: chốt nơi gửi dữ liệu form (Q11), chưa chọn
+- [ ] Test tay trên 1 iPhone và 1 Android thật trước khi ra mắt
+
+**Deploy / hạ tầng**
+- [ ] Thử THẬT Keystatic chế độ GitHub trên Vercel sau PR #36: cột Điểm SEO, cột Nguồn sách, hộp điểm SEO, Xem trước; Tạo chuyển hướng và Lưu thử ở NHÁNH MỚI (không thử ở `main`); xem Keystatic tạo nhánh + PR ra sao; PR chỉ đổi nội dung có tự merge không
+- [ ] Thêm Callback URL của địa chỉ ngắn vào GitHub App (`https://web-blog-next-js-keystatic-vibe-hos.vercel.app/api/keystatic/github/oauth/callback`) nếu chưa; khi có tên miền thật thì thêm tiếp
+- [ ] Redeploy để `NEXT_PUBLIC_SITE_URL` (đã đổi sang địa chỉ ngắn) có hiệu lực
+- [ ] Gắn tên miền thật: đổi `NEXT_PUBLIC_SITE_URL`, tắt bảo vệ đăng nhập Vercel khi công khai, kiểm tra header `x-robots-tag: noindex` (hiện do Vercel thêm cho địa chỉ `vercel.app`, không phải của mã) và Google Search Console
+- [ ] Hosting chính thức: vẫn dự kiến PaaS Việt Nam, Vercel chỉ dùng tạm (CLAUDE.md mục 1)
+- [ ] Cảnh báo Turbopack ở `src/lib/content-cleanup.ts:113` (đọc thư mục ảnh theo đường dẫn tính toán, làm gói function admin nặng hơn): xử lý bằng chú thích `turbopackIgnore` hoặc đổi cách đọc
+- [ ] Phân quyền nhiều người (CODEOWNERS, tài khoản GitHub cho marketing, quyền theo vai trò): để sau khi có người thứ hai
+- [ ] Xem trước ở chế độ GitHub: chủ đề mới tạo cùng lúc chưa có trong bản build nên chưa xem trước được tới khi merge
+
+**Tính năng / hệ thống**
+- [ ] Trang riêng cho Sách (Lộc đang cân nhắc); khi có thì thêm địa chỉ vào `KIND_PREFIX` (`src/lib/redirect-patterns.ts`), nút Tạo chuyển hướng ở trang sửa Sách và kiểm tra slug sách ở `check-content`
+- [ ] Đưa nốt chữ giao diện nhỏ còn nằm trong mã (aria-label, "phút đọc"...) lên admin nếu Lộc muốn (hiện duyệt GIỮ trong mã)
