@@ -76,7 +76,7 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [ ] `src/shared/content/posts.ts`: lấy danh sách bài, lấy 1 bài theo slug, lọc theo danh mục, bỏ bài `draft: true`
 - [ ] Kiểm tra dữ liệu: thiếu trường bắt buộc → build báo lỗi rõ ràng (không im lặng bỏ qua)
 - [ ] 3 bài mẫu, mỗi danh mục 1 bài, dùng chung cho A và B
-- [x] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local (2026-10-13; `slug` lấy từ tên file, khai báo `fields.ignored()`; có test `tests/unit/keystatic.test.ts`)
+- [x] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local (2026-10-13; `slug` lấy từ tên file, khai báo `fields.ignored()`; có test `tests/unit/project/keystatic.test.ts`)
 - [ ] [B] `public/admin/index.html` + `config.yml` khớp mục 5 CLAUDE.md
 - [ ] Thử: sửa bài qua CMS trên máy → file `.md` thay đổi đúng định dạng
 
@@ -205,7 +205,7 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 
 ## Việc tồn đọng (Lộc giao ghi lại 2026-10-19, xử lý sau; làm xong thì gạch và ghi ngày)
 
-**Đã xong (2026-10-19, Lộc ưu tiên):** menu trang quản trị có icon + phân cách (#38); quy hoạch `src/` thành ba vùng `frontend/` · `cms/` · `shared/` có test chặn import sai (tests/unit/layers.test.ts); dọn thư mục kết quả test cục bộ (`.playwright-mcp`, `shots`, `playwright-report`, `test-results`).
+**Đã xong (2026-10-19, Lộc ưu tiên):** menu trang quản trị có icon + phân cách (#38); quy hoạch `src/` thành ba vùng `frontend/` · `cms/` · `shared/` có test chặn import sai (tests/unit/project/layers.test.ts); dọn thư mục kết quả test cục bộ (`.playwright-mcp`, `shots`, `playwright-report`, `test-results`). Test đơn vị xếp theo vùng `tests/unit/{frontend,cms,shared,app,project}`; đổi tên `components/about` → `home`, `home` → `book` cho khớp trang; E2E trang quản trị `tests/e2e/admin/` (chỉ đọc; bắt được lỗi hộp điểm SEO không hiện do ô Slug ghi DOM lặp, đã sửa).
 
 **Nội dung (việc của Lộc)**
 - [ ] Thay 8 chỗ `[mẫu]` ở Trang chủ, tên site "Logo", link mạng xã hội thật, email liên hệ, nội dung Chính sách riêng tư (trang đang ẨN vì trống)

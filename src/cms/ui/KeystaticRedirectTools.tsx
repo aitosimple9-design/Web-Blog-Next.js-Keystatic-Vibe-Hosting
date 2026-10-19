@@ -82,12 +82,21 @@ function loadStatus(kind: RedirectKind, oldSlug: string, then: () => void) {
 
 const slugChanged = (input: HTMLInputElement, oldSlug: string) => input.value.trim() !== "" && input.value.trim() !== oldSlug;
 
+// Mọi thay đổi DOM ở đây CHỈ ghi khi giá trị thật sự đổi: ghi lại cùng giá trị vẫn tạo bản ghi MutationObserver, làm các bộ quan sát
+// (của chính file này và hộp điểm SEO) chạy lại liên tục, hộp điểm SEO không bao giờ kịp vẽ (phát hiện bằng E2E trang quản trị).
+const setStyle = (el: HTMLElement, prop: "opacity" | "cursor" | "display", value: string) => {
+  if (el.style[prop] !== value) el.style[prop] = value;
+};
+const setText = (el: HTMLElement, text: string) => {
+  if (el.textContent !== text) el.textContent = text;
+};
+
 function applyLock(input: HTMLInputElement, locked: boolean) {
-  input.readOnly = locked;
-  input.style.opacity = locked ? "0.7" : "";
-  input.style.cursor = locked ? "not-allowed" : "";
+  if (input.readOnly !== locked) input.readOnly = locked;
+  setStyle(input, "opacity", locked ? "0.7" : "");
+  setStyle(input, "cursor", locked ? "not-allowed" : "");
   const regen = input.closest("main")?.querySelector<HTMLElement>('button[aria-label="regenerate"]');
-  if (regen) regen.style.display = locked ? "none" : "";
+  if (regen) setStyle(regen, "display", locked ? "none" : "");
 }
 
 function refreshBox(box: HTMLElement, oldSlug: string, kind: RedirectKind, input: HTMLInputElement) {
@@ -97,20 +106,21 @@ function refreshBox(box: HTMLElement, oldSlug: string, kind: RedirectKind, input
   const unlock = box.querySelector<HTMLButtonElement>('[data-role="unlock"]')!;
   const create = box.querySelector<HTMLButtonElement>('[data-role="create"]')!;
   const hint = box.querySelector<HTMLElement>('[data-role="hint"]')!;
-  unlock.style.display = unlocked ? "none" : "";
-  create.style.display = unlocked ? "" : "none";
-  hint.textContent = unlocked
+  setStyle(unlock, "display", unlocked ? "none" : "");
+  setStyle(create, "display", unlocked ? "" : "none");
+  setText(hint, unlocked
     ? status?.needsRedirect
       ? "Bài / chủ đề này đã đăng: đổi slug thì PHẢI tạo chuyển hướng trước khi Lưu."
       : "Đổi slug xong thì tạo chuyển hướng (nếu đã có người đọc) rồi bấm Lưu."
-    : 'Slug đang khóa để tránh gãy link cũ. Bấm "Mở khóa" nếu thật sự cần đổi.';
+    : 'Slug đang khóa để tránh gãy link cũ. Bấm "Mở khóa" nếu thật sự cần đổi.');
   const now = input.value.trim();
   const same = !slugChanged(input, oldSlug);
-  create.disabled = same || box.dataset.created === now;
-  create.style.opacity = create.disabled ? "0.55" : "1";
-  create.style.cursor = create.disabled ? "not-allowed" : "pointer";
-  create.textContent = same ? "Tạo chuyển hướng (Slug chưa đổi)" : box.dataset.created === now ? "Đã tạo chuyển hướng" : `Tạo chuyển hướng ${prefix}${oldSlug} → ${prefix}${now}`;
-  create.dataset.newSlug = now;
+  const disabled = same || box.dataset.created === now;
+  if (create.disabled !== disabled) create.disabled = disabled;
+  setStyle(create, "opacity", disabled ? "0.55" : "1");
+  setStyle(create, "cursor", disabled ? "not-allowed" : "pointer");
+  setText(create, same ? "Tạo chuyển hướng (Slug chưa đổi)" : box.dataset.created === now ? "Đã tạo chuyển hướng" : `Tạo chuyển hướng ${prefix}${oldSlug} → ${prefix}${now}`);
+  if (create.dataset.newSlug !== now) create.dataset.newSlug = now;
 }
 
 function mountBox() {

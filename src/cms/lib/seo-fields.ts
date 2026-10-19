@@ -1,6 +1,6 @@
 // NHÃN các ô của form bài trong Keystatic mà hộp điểm SEO phải đọc (src/app/keystatic/SeoPanel.tsx).
 // Đây là NGUỒN DUY NHẤT: keystatic.config.ts dùng đúng các hằng số này làm nhãn ô, hộp điểm tìm ô theo đúng các chuỗi này
-// (khớp tên truy cập của ô). Sửa nhãn ở đây là cả hai cùng đổi; tests/unit/seo-fields.test.ts chặn việc ai đó sửa nhãn trong
+// (khớp tên truy cập của ô). Sửa nhãn ở đây là cả hai cùng đổi; tests/unit/cms/seo-fields.test.ts chặn việc ai đó sửa nhãn trong
 // keystatic.config.ts mà không qua file này, vì khi đó hộp điểm sẽ không tìm thấy ô và chấm sai.
 export const POST_FIELD_LABELS = {
   title: "Tiêu đề",

@@ -4,7 +4,7 @@
 // Route /api/keystatic/update dùng các hàm này: xóa thư mục ảnh theo slug, rồi quét ảnh mồ côi từng file (`removeOrphanImages`). Chỉ chạy phía server.
 // Chế độ GitHub: trình duyệt gửi lệnh xóa thẳng lên GitHub, máy chủ không chen vào được → dùng `npm run prune-images`.
 // scripts/prune-orphan-images.mjs và scripts/check-content.mjs ĐỌC THẲNG file này (Node >= 22.18), nên quy tắc chỉ có MỘT nơi.
-// Thêm ô ảnh mới vào keystatic.config.ts (thư mục ảnh mới) thì PHẢI khai báo ở đây; tests/unit/admin-sync.test.ts chặn việc quên.
+// Thêm ô ảnh mới vào keystatic.config.ts (thư mục ảnh mới) thì PHẢI khai báo ở đây; tests/unit/project/admin-sync.test.ts chặn việc quên.
 
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
@@ -29,7 +29,7 @@ export const SINGLETON_IMAGE_RULES = [
 
 /**
  * Ảnh MẶC ĐỊNH mà mã dùng khi ô ảnh trong admin để trống (src/config/profile.ts). Không file .json nào nhắc tới chúng nên nếu không bảo vệ,
- * gỡ ảnh trong admin sẽ làm quét ảnh mồ côi xóa luôn ảnh mặc định → trang vỡ ảnh. tests/unit/admin-sync.test.ts bắt buộc khớp với profile.ts.
+ * gỡ ảnh trong admin sẽ làm quét ảnh mồ côi xóa luôn ảnh mặc định → trang vỡ ảnh. tests/unit/project/admin-sync.test.ts bắt buộc khớp với profile.ts.
  */
 export const PROTECTED_IMAGES: string[] = ["/images/profile/portrait-cutout.webp", "/images/profile/story.jpg"];
 

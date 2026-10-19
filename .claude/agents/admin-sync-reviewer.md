@@ -15,7 +15,7 @@ Bạn là người duyệt NGUYÊN TẮC ĐỒNG BỘ ADMIN của dự án blog 
 - `src/cms/lib/content-cleanup.ts`: `IMAGE_RULES` (ảnh theo slug: posts / topics / books), `SINGLETON_IMAGE_RULES` (ảnh singleton ở `public/images/site`), `MANAGED_IMAGE_DIRS`, `findOrphanImages`, `removeOrphanImages`.
 - `src/app/api/keystatic/[...params]/route.ts`: dọn ảnh sau mỗi lần lưu / xóa (chế độ local). Chế độ GitHub: `npm run prune-images`.
 - `scripts/prune-orphan-images.mjs`, `scripts/check-content.mjs`: ĐỌC luật từ file trên, không tự khai báo lại.
-- `tests/unit/admin-sync.test.ts`: chốt chặn tự động (menu admin đủ mục, mọi `directory:` có luật dọn, singleton ở `content/settings/`, script không viết lại luật).
+- `tests/unit/project/admin-sync.test.ts`: chốt chặn tự động (menu admin đủ mục, mọi `directory:` có luật dọn, singleton ở `content/settings/`, script không viết lại luật).
 
 ## Cách làm
 1. Chạy: `npm test -- admin-sync`, `npm run check-content`, `npm run prune-images` (chỉ liệt kê, KHÔNG thêm `--delete`). Ghi kết quả.

@@ -6,6 +6,8 @@ import { buildRedirects, readRedirectFiles } from "./src/shared/redirects";
 const indexable = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === "production" : process.env.ALLOW_INDEXING === "true";
 
 const nextConfig: NextConfig = {
+  // Thư mục build riêng cho server dev của E2E trang quản trị (tránh đụng server dev đang chạy của máy); bình thường vẫn là .next
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   // Chỉ ảnh hưởng khi chạy `npm run dev`: đưa nút "N" của Next.js sang góc phải để không đè lên icon mạng xã hội ở góc dưới trái Hero
   devIndicators: { position: "bottom-right" },
   // Keystatic ở GitHub mode tự chuyển localhost sang 127.0.0.1; Next 16 chặn địa chỉ này trong dev nên trang quản trị trắng

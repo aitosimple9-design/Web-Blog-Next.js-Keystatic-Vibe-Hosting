@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import keystaticConfig from "../../keystatic.config";
+import keystaticConfig from "../../../keystatic.config";
 import { profile } from "@/shared/config/profile";
 import { PAGE_BLOCKS } from "@/shared/config/blocks";
 import { resolveBlocks } from "@/shared/content/pages";

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createReader } from "@keystatic/core/reader";
-import keystaticConfig from "../../keystatic.config";
+import keystaticConfig from "../../../keystatic.config";
 import { getTopics } from "@/shared/content/topics";
 import { getAllPosts } from "@/shared/content/posts";
 
