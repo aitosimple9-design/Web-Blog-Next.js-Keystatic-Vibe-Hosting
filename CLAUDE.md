@@ -62,7 +62,7 @@ docs/layout/                     ← layout từng trang (wireframe + spec), L�
 keystatic.config.ts             ← collection "posts" theo đúng mục 5
 src/                            ← CHIA BA VÙNG (Lộc duyệt 2026-10-19; luật ranh giới có test chặn: tests/unit/layers.test.ts)
   src/app/                      ← CHỈ route (App Router bắt buộc nằm đây), mỏng; import được cả ba vùng
-  src/frontend/                 ← GIAO DIỆN CÔNG KHAI: components/ (about, article, blog, home, layout, ui), lib/ (brush, motion-tokens, indexing), styles/ (tokens.css TỰ SINH từ docs/design-system/tokens.json bằng `npm run tokens`, prose.css). KHÔNG được import cms/
+  src/frontend/                 ← GIAO DIỆN CÔNG KHAI: components/ (home = Trang chủ `/`, book = Trang Book `/book`, blog, article, layout, ui), lib/ (brush, motion-tokens, indexing), styles/ (tokens.css TỰ SINH từ docs/design-system/tokens.json bằng `npm run tokens`, prose.css). KHÔNG được import cms/
   src/cms/                      ← TRANG QUẢN TRỊ Keystatic: ui/ (menu icon, cột ảnh / SEO, hộp điểm SEO, chia cột khối, công cụ chuyển hướng), lib/ (admin-access, github-*, redirect-tools, content-cleanup, seo-fields, preview). KHÔNG được import frontend/
   src/shared/                   ← DÙNG CHUNG, không import frontend / cms: content/ (posts, topics, books, settings, pages, nav, legal-pages, rehype-image-size: lớp ĐỌC nội dung), config/ (site, page-texts, profile, blocks: chữ / khối mặc định), redirects.ts, redirect-patterns.ts, seo-score.ts, format.ts
   Thêm file mới: giao diện công khai → frontend/; trang quản trị → cms/; cả hai cùng dùng (hoặc script / next.config dùng) → shared/. Route mới vẫn đặt ở app/ nhưng chỉ nối các phần trên lại.

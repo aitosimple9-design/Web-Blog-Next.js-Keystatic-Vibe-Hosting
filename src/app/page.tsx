@@ -13,11 +13,11 @@ import { brushStyle, PULL_UP, toneBg, type SectionTone } from "@/frontend/lib/br
 import { PageShell } from "@/frontend/components/layout/PageShell";
 import { Newsletter } from "@/frontend/components/layout/Newsletter";
 import { SocialIcons } from "@/frontend/components/layout/SocialIcons";
-import { PersonBackdrop } from "@/frontend/components/about/PersonBackdrop";
-import { PersonHero } from "@/frontend/components/about/PersonHero";
-import { StorySection } from "@/frontend/components/about/StorySection";
-import { PrincipleCards } from "@/frontend/components/about/PrincipleCards";
-import { BookShelf } from "@/frontend/components/about/BookShelf";
+import { PersonBackdrop } from "@/frontend/components/home/PersonBackdrop";
+import { PersonHero } from "@/frontend/components/home/PersonHero";
+import { StorySection } from "@/frontend/components/home/StorySection";
+import { PrincipleCards } from "@/frontend/components/home/PrincipleCards";
+import { BookShelf } from "@/frontend/components/home/BookShelf";
 import { PostCard } from "@/frontend/components/blog/PostCard";
 import { Reveal } from "@/frontend/components/ui/Reveal";
 import { RevealText } from "@/frontend/components/ui/RevealText";

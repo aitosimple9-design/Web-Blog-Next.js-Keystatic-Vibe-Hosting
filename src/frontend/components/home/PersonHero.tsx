@@ -13,9 +13,9 @@ import { Button } from "@/frontend/components/ui/Button";
 import { ArrowRightIcon } from "@/frontend/components/ui/Icon";
 import { CountUp, PointerLayer, PointerScene } from "@/frontend/components/ui/Motion";
 import { SocialIcons } from "@/frontend/components/layout/SocialIcons";
-import { Drift } from "@/frontend/components/about/Drift";
-import { HeroCurtain } from "@/frontend/components/about/HeroCurtain";
-import { HeroName } from "@/frontend/components/about/HeroName";
+import { Drift } from "@/frontend/components/home/Drift";
+import { HeroCurtain } from "@/frontend/components/home/HeroCurtain";
+import { HeroName } from "@/frontend/components/home/HeroName";
 
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 // --pw: bề rộng người · --ph: chiều cao người (tỉ lệ ảnh 844x866) · --bh: chiều cao nét cọ ở đáy dải

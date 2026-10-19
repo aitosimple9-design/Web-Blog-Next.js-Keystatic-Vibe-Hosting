@@ -10,11 +10,11 @@ import { site } from "@/shared/config/site";
 import { countByTopic, getAllPosts, getSiteStats } from "@/shared/content/posts";
 import { PageShell } from "@/frontend/components/layout/PageShell";
 import { Newsletter } from "@/frontend/components/layout/Newsletter";
-import { Hero } from "@/frontend/components/home/Hero";
-import { HeroBackdrop } from "@/frontend/components/home/HeroBackdrop";
+import { Hero } from "@/frontend/components/book/Hero";
+import { HeroBackdrop } from "@/frontend/components/book/HeroBackdrop";
 import { brushStyle } from "@/frontend/lib/brush";
-import { TopicSlider } from "@/frontend/components/home/TopicSlider";
-import { LatestGrid } from "@/frontend/components/home/LatestGrid";
+import { TopicSlider } from "@/frontend/components/book/TopicSlider";
+import { LatestGrid } from "@/frontend/components/book/LatestGrid";
 import { ScrollMarquee } from "@/frontend/components/ui/Motion";
 
 export function generateMetadata(): Metadata {
