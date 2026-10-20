@@ -42,7 +42,7 @@ describe("scripts/check-content.mjs", () => {
     expect(temp.out).toContain("địa chỉ tạm");
     expect(run(base, { VERCEL_ENV: "production", NEXT_PUBLIC_SITE_URL: "https://blog.example.com" }).code).toBe(0);
     expect(run(base).code).toBe(0);
-  });
+  }, 30_000); // chạy script 6 lần, mỗi lần một tiến trình Node: mặc định 5 giây không đủ khi máy bận
 
   it("bắt chủ đề không tồn tại, ảnh bìa mất, bài liên quan sai (mã 1)", () => {
     const r = run({

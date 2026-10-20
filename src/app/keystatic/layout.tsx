@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { KeystaticBlocksColumns } from "../../cms/ui/KeystaticBlocksColumns";
 import { KeystaticNavIcons } from "../../cms/ui/KeystaticNavIcons";
 import { KeystaticRedirectTools } from "../../cms/ui/KeystaticRedirectTools";
-import { KeystaticSiteUrlBanner } from "../../cms/ui/KeystaticSiteUrlBanner";
+import { KeystaticScrollbars } from "../../cms/ui/KeystaticScrollbars";
+import { KeystaticSiteUrlCard } from "../../cms/ui/KeystaticSiteUrlCard";
 import { KeystaticSettingsCards } from "../../cms/ui/KeystaticSettingsCards";
 import { KeystaticThumbnails } from "../../cms/ui/KeystaticThumbnails";
 import { KeystaticSeoPanel } from "../../cms/ui/SeoPanel";
@@ -25,8 +26,10 @@ export default function KeystaticLayout({ children }: { children: ReactNode }) {
       <KeystaticRedirectTools />
       {/* Trang cài đặt (singleton): mỗi ô thành một thẻ có tiêu đề, mô tả, chân thẻ như trang Settings của Vercel */}
       <KeystaticSettingsCards />
-      {/* Dải báo địa chỉ web (NEXT_PUBLIC_SITE_URL): đúng / tạm / còn localhost */}
-      <KeystaticSiteUrlBanner />
+      {/* Thẻ "Địa chỉ web" đầu trang Cài đặt → Site (NEXT_PUBLIC_SITE_URL): đúng / tạm / còn localhost */}
+      <KeystaticSiteUrlCard />
+      {/* Thanh cuộn mảnh như Vercel; khung cuộn của form kéo ra sát mép phải */}
+      <KeystaticScrollbars />
       {children}
     </>
   );
