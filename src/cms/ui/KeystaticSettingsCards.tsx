@@ -1,6 +1,7 @@
 "use client";
 
-// Trang quản trị Keystatic, các trang CÀI ĐẶT (singleton: /keystatic/singleton/<id>): Keystatic xếp mọi ô thành một cột dài, nhãn viết liền một dòng,
+// Trang quản trị Keystatic, các trang CÀI ĐẶT (singleton: /keystatic/singleton/<id>) và form Chủ đề / Sách / Chuyển hướng (cùng bố cục một cột;
+// form Bài viết có trình soạn thảo + cột bên nên KHÔNG áp dụng): Keystatic xếp mọi ô thành một cột dài, nhãn viết liền một dòng,
 // nhìn các ô giống hệt nhau. Component này vẽ lại theo kiểu trang Settings của Vercel: mỗi ô là MỘT THẺ có viền bo góc, tiêu đề đậm,
 // một dòng mô tả xám, ô nhập ở giữa, dải chân thẻ nền xám nhạt (ghi chú "để trống = dùng mặc định"). Chỉ đổi HIỂN THỊ ở trình duyệt, không đụng dữ liệu.
 // - Nhãn gốc của Keystatic KHÔNG bị xóa: chỉ ẩn bằng kiểu "chỉ trình đọc màn hình thấy" (tên truy cập của ô giữ nguyên, bấm vào chữ vẫn focus ô).
@@ -12,12 +13,14 @@ import { usePathname } from "next/navigation";
 import { splitLabel } from "./settings-card-text";
 import { isDarkTheme } from "./ks-theme";
 
-const SINGLETON_ROUTE = /^\/keystatic\/(?:branch\/[^/]+\/)?singleton\//;
+// Chế độ GitHub có thêm /branch/<nhánh>/ sau /keystatic
+export const CARD_ROUTE = /^\/keystatic\/(?:branch\/[^/]+\/)?(?:singleton\/|collection\/(?:topics|books|redirects)\/(?:item\/[^/]+|create)\/?$)/;
 const LIST = "data-ks-cards";
 const CARD = "data-ks-card";
 const HEAD = "data-ks-card-head";
 const FOOT = "data-ks-card-foot";
 const HIDDEN_LABEL = "data-ks-card-label";
+const SUB = "data-ks-sub-head";
 const SOFT = "color-mix(in srgb, currentColor 14%, transparent)";
 
 const CSS = `
@@ -30,6 +33,9 @@ main form:has([${LIST}]) > div { max-width: none; }
 [${HEAD}] { padding: 20px 24px 0; }
 [${HEAD}] > :first-child { font-size: 18px; font-weight: 600; line-height: 1.35; }
 [${HEAD}] > :nth-child(2) { margin-top: 4px; font-size: 14px; line-height: 1.5; color: color-mix(in srgb, currentColor 70%, transparent); }
+[${SUB}] { margin: 0 0 4px; }
+[${SUB}] > :first-child { font-size: 14px; font-weight: 600; line-height: 1.4; }
+[${SUB}] > :nth-child(2) { margin-top: 2px; font-size: 13px; line-height: 1.5; color: color-mix(in srgb, currentColor 70%, transparent); }
 [${FOOT}] { padding: 12px 24px; border-top: 1px solid ${SOFT}; border-radius: 0 0 9px 9px; background: color-mix(in srgb, currentColor 5%, transparent); font-size: 13px; line-height: 1.5; color: color-mix(in srgb, currentColor 70%, transparent); }
 [${HIDDEN_LABEL}] { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 @media (max-width: 640px) {
@@ -71,6 +77,7 @@ function decorate(cell: HTMLElement) {
   const label = labelOf(cell);
   // Ô tích chọn (label bọc luôn ô tích) hoặc không có nhãn: giữ nguyên nhãn gốc, chỉ bọc thẻ cho thống nhất
   const wrapsControl = !!label?.querySelector("input, textarea, button, select");
+  decorateNested(cell);
   if (!label || wrapsControl) {
     if (!cell.hasAttribute("data-ks-card-bare")) cell.setAttribute("data-ks-card-bare", "");
     return;
@@ -94,8 +101,33 @@ function decorate(cell: HTMLElement) {
   else foot?.remove();
 }
 
+/** Nhãn của các ô LỒNG trong nhóm (ví dụ "Nhãn và thông báo của form"): nhãn có phần "(mô tả)" thì tách thành tiêu đề đậm + dòng xám nhỏ. */
+function decorateNested(cell: HTMLElement) {
+  // Ô lồng thật luôn nằm TRONG một nhóm (role=group); nhãn của ô ngoài cùng thì không (nhãn xuất hiện trước khi cấu trúc dựng xong nên không dựa vào "nhãn ngoài cùng" được)
+  const nested = (l: Element) => l.parentElement?.closest("[role=group]") != null && cell.contains(l.parentElement.closest("[role=group]"));
+  for (const head of cell.querySelectorAll(`[${SUB}]`)) if (!head.nextElementSibling || !nested(head.nextElementSibling)) head.remove();
+  for (const label of cell.querySelectorAll<HTMLElement>("label")) {
+    if (!nested(label) || label.querySelector("input, textarea, button, select")) continue;
+    const prev = label.previousElementSibling;
+    const { title, description, footer } = splitLabel(label.textContent ?? "");
+    const desc = [description, footer].filter(Boolean).join(" ");
+    if (!title || !desc) continue;
+    let head = prev?.hasAttribute(SUB) ? (prev as HTMLElement) : null;
+    if (!head) {
+      head = document.createElement("div");
+      head.setAttribute(SUB, "");
+      head.setAttribute("aria-hidden", "true");
+      head.append(document.createElement("div"), document.createElement("div"));
+      label.before(head);
+    }
+    setText(head.children[0], title);
+    setText(head.children[1], desc);
+    if (!label.hasAttribute(HIDDEN_LABEL)) label.setAttribute(HIDDEN_LABEL, "");
+  }
+}
+
 function mark() {
-  if (!SINGLETON_ROUTE.test(location.pathname)) return;
+  if (!CARD_ROUTE.test(location.pathname)) return;
   // main > form > div > div > div (lưới các ô)
   const grid = document.querySelector<HTMLElement>("main form > div > div > div");
   if (!grid || getComputedStyle(grid).display === "none") return;
