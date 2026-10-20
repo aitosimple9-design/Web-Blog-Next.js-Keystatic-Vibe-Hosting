@@ -110,7 +110,8 @@ export function findOrphanImages(root = process.cwd()): OrphanImage[] {
         out.push({ path: `${r.imageDir}/${d.name}`, kind: "folder" });
         continue;
       }
-      for (const f of listDir(path.join(imgRoot, d.name))) {
+      // turbopackIgnore: đường dẫn này chỉ tính lúc chạy (chế độ local / script), không cần đóng gói cả dự án vào function
+      for (const f of listDir(path.join(/*turbopackIgnore: true*/ imgRoot, d.name))) {
         if (f.isFile() && !mentioned(text, `${publicBase}/${d.name}/${f.name}`)) {
           out.push({ path: `${r.imageDir}/${d.name}/${f.name}`, kind: "file" });
         }
