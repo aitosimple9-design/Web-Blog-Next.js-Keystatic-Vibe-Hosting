@@ -403,6 +403,18 @@ try {
   infos.push("Không kiểm tra được ảnh mồ côi (cần Node >= 22.18 để đọc file .ts).");
 }
 
+// ---------- địa chỉ web (NEXT_PUBLIC_SITE_URL) ----------
+// Production thật mà để trống / localhost / sai dạng = LỖI; địa chỉ vercel.app = CẢNH BÁO; môi trường khác chỉ báo THÔNG TIN.
+try {
+  const { checkSiteUrl } = await import("../src/shared/site-url-check.ts");
+  const s = checkSiteUrl();
+  if (s.level === "error") err("NEXT_PUBLIC_SITE_URL", s.message);
+  else if (s.level === "warn") warn("NEXT_PUBLIC_SITE_URL", s.message);
+  else infos.push(`NEXT_PUBLIC_SITE_URL: ${s.message}`);
+} catch {
+  infos.push("Không kiểm tra được NEXT_PUBLIC_SITE_URL (cần Node >= 22.18 để đọc file .ts).");
+}
+
 // ---------- kết quả ----------
 const out = (title, list) => list.length && console.log(`\n${title} (${list.length})\n${list.map((l) => `  - ${l}`).join("\n")}`);
 console.log(`Đã kiểm tra: ${posts.length} bài, ${topicSlugs.size} chủ đề, ${bookNames.size} sách.`);

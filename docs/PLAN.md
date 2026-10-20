@@ -219,6 +219,7 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 - [ ] Thử THẬT Keystatic chế độ GitHub trên Vercel sau PR #36: cột Điểm SEO, cột Nguồn sách, hộp điểm SEO, Xem trước; Tạo chuyển hướng và Lưu thử ở NHÁNH MỚI (không thử ở `main`); xem Keystatic tạo nhánh + PR ra sao; PR chỉ đổi nội dung có tự merge không
 - [ ] Thêm Callback URL của địa chỉ ngắn vào GitHub App (`https://web-blog-next-js-keystatic-vibe-hos.vercel.app/api/keystatic/github/oauth/callback`) nếu chưa; khi có tên miền thật thì thêm tiếp
 - [ ] Redeploy để `NEXT_PUBLIC_SITE_URL` (đã đổi sang địa chỉ ngắn) có hiệu lực
+- [x] (2026-10-20) Kiểm tra `NEXT_PUBLIC_SITE_URL`: build production dừng khi sai, `check-content` báo, dải thông báo ở trang quản trị (`src/shared/site-url-check.ts`)
 - [ ] Gắn tên miền thật: đổi `NEXT_PUBLIC_SITE_URL`, tắt bảo vệ đăng nhập Vercel khi công khai, kiểm tra header `x-robots-tag: noindex` (hiện do Vercel thêm cho địa chỉ `vercel.app`, không phải của mã) và Google Search Console
 - [ ] Hosting chính thức: vẫn dự kiến PaaS Việt Nam, Vercel chỉ dùng tạm (CLAUDE.md mục 1)
 - [ ] Cảnh báo Turbopack ở `src/cms/lib/content-cleanup.ts:113` (đọc thư mục ảnh theo đường dẫn tính toán, làm gói function admin nặng hơn): xử lý bằng chú thích `turbopackIgnore` hoặc đổi cách đọc

@@ -177,6 +177,15 @@ test.describe("API của trang quản trị (máy local)", () => {
     expect(await res.json()).toMatchObject({ score: expect.any(Number) });
   });
 
+  test("/api/dia-chi-web trả kết quả kiểm tra NEXT_PUBLIC_SITE_URL; máy local không phải production nên dải thông báo ẩn", async ({ request, page }) => {
+    const res = await request.get("/api/dia-chi-web");
+    expect(res.status()).toBe(200);
+    expect((await res.json()).level).toBe("dev");
+    await page.goto("/keystatic");
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator("[data-ks-site-url]")).toHaveCount(0);
+  });
+
   test("/api/ten-sach trả tên sách theo slug", async ({ request }) => {
     const res = await request.get("/api/ten-sach");
     expect(res.status()).toBe(200);

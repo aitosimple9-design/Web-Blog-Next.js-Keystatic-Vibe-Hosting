@@ -27,7 +27,8 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       // Máy chủ E2E chạy như production để robots.txt / sitemap có đủ nội dung. Môi trường khác production mặc định bị chặn lập chỉ mục
       // (src/frontend/lib/indexing.ts); phần chặn đó đã có test đơn vị (tests/unit/frontend/indexing.test.ts, tests/unit/app/seo.test.ts).
-      env: { ALLOW_INDEXING: "true" },
+      // Chạy như production nên next.config.ts đòi NEXT_PUBLIC_SITE_URL hợp lệ (https, không phải localhost): đặt địa chỉ giả cho test.
+      env: { ALLOW_INDEXING: "true", NEXT_PUBLIC_SITE_URL: "https://e2e.example.com" },
       timeout: 300_000,
     },
     {
