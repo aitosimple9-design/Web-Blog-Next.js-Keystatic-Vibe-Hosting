@@ -54,8 +54,8 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [x] Thêm `docs/WORKFLOW.md`, `docs/PLAN.md`, `docs/claude-log.md` (rỗng)
 - [x] Thêm `.claude/settings.json` (luật chặn quyền + hook)
 - [x] Thêm `.github/ISSUE_TEMPLATE/task.md` và `.github/pull_request_template.md`
-- [ ] Tạo nhãn theo Phụ lục C của WORKFLOW.md
-- [ ] (Mình làm) Bật Ruleset bảo vệ `main` nếu tài khoản hỗ trợ
+- [x] Tạo nhãn theo Phụ lục C của WORKFLOW.md (Lộc xác nhận 2026-10-20)
+- [x] (Mình làm) Bật Ruleset bảo vệ `main` nếu tài khoản hỗ trợ (Lộc xác nhận 2026-10-20)
 - [x] Kiểm tra `/mcp`: GitHub và Playwright đều `connected`
 - [ ] [B] Tạo repo `web_blog_static` và thêm vào GitHub token
 
@@ -64,7 +64,7 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 ## Giai đoạn 1 — Khởi tạo Next.js
 - [x] Chốt Q2 → Q5
 - [x] Tạo project bằng `create-next-app` trong repo hiện tại (không tạo thư mục con)
-- [ ] Cấu trúc thư mục đúng mục 3 CLAUDE.md
+- [x] Cấu trúc thư mục đúng mục 3 CLAUDE.md
 - [ ] [B] `output: 'export'`, `images: { unoptimized: true }`
 - [x] `npm run dev`, `npm run lint`, `npm run build` đều chạy được
 - [x] `.gitignore` có `.env*`, `node_modules`, `.next`, `out`
@@ -72,10 +72,10 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 **Xong khi:** trang mặc định chạy, build không lỗi, PR đã merge.
 
 ## Giai đoạn 2 — Lớp nội dung
-- [ ] Chốt Q6, Q7
-- [ ] `src/shared/content/posts.ts`: lấy danh sách bài, lấy 1 bài theo slug, lọc theo danh mục, bỏ bài `draft: true`
-- [ ] Kiểm tra dữ liệu: thiếu trường bắt buộc → build báo lỗi rõ ràng (không im lặng bỏ qua)
-- [ ] 3 bài mẫu, mỗi danh mục 1 bài, dùng chung cho A và B
+- [x] Chốt Q6, Q7
+- [x] `src/shared/content/posts.ts`: lấy danh sách bài, lấy 1 bài theo slug, lọc theo danh mục, bỏ bài `draft: true`
+- [x] Kiểm tra dữ liệu: thiếu trường bắt buộc → build báo lỗi rõ ràng (không im lặng bỏ qua) (2026-10-20: do `npm run check-content` làm CI đỏ, không phải lúc `build`)
+- [x] 3 bài mẫu, mỗi danh mục 1 bài, dùng chung cho A và B (2026-10-20: nay có 22 bài `demo-*`)
 - [x] [A] `keystatic.config.ts` khớp mục 5 CLAUDE.md, lưu đuôi `.md`, chế độ local (2026-10-13; `slug` lấy từ tên file, khai báo `fields.ignored()`; có test `tests/unit/project/keystatic.test.ts`)
 - [ ] [B] `public/admin/index.html` + `config.yml` khớp mục 5 CLAUDE.md
 - [ ] Thử: sửa bài qua CMS trên máy → file `.md` thay đổi đúng định dạng
@@ -118,19 +118,20 @@ Layout đã duyệt nằm ở `docs/layout/<trang>/README.md`. Làm theo thứ t
 Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `design-reviewer`.
 
 ## Giai đoạn 5 — SEO
-- [ ] `metadata` / `generateMetadata` cho mọi trang
-- [ ] Open Graph + ảnh chia sẻ mặc định
-- [ ] `sitemap.ts`, `robots.ts` (bỏ bài nháp)
-- [ ] Dữ liệu có cấu trúc (JSON-LD) cho bài viết
+- [x] `metadata` / `generateMetadata` cho mọi trang
+- [x] Open Graph + ảnh chia sẻ mặc định
+- [x] `sitemap.ts`, `robots.ts` (bỏ bài nháp)
+- [x] Dữ liệu có cấu trúc (JSON-LD) cho bài viết
 - [ ] [B] sitemap và robots được sinh thành file tĩnh trong `out/`
 
 **Xong khi:** xem nguồn trang có đủ thẻ meta, `/sitemap.xml` liệt kê đúng bài.
 
 ## Giai đoạn 6 — Chất lượng
 - [ ] Lighthouse trên trang chủ và 1 trang bài (bản build): Performance, Accessibility, SEO, Best Practices ≥ 90
+  - Đo 2026-10-20 (bản build, Lighthouse 12, mặc định mobile): Accessibility 100, Best Practices 100, SEO 100 (khi bản build cho lập chỉ mục; máy local chặn nên đo 69). Performance CHƯA đạt: trang bài 72–79, Blog 67–73, LCP 5–6 s (TBT 90–270 ms, CLS 0); Trang chủ không đo được LCP (`NO_LCP`, nghi do cánh cửa `HeroCurtain` và chữ hiện từng từ). Cần kế hoạch tối ưu riêng (hỏi Lộc)
 - [ ] Kiểm tra bàn phím và trình đọc màn hình theo skill `frontend-a11y`
-- [ ] Ảnh có kích thước đúng, không làm nhảy bố cục
-- [ ] (Mình làm) Thêm CI chạy lint + build cho mỗi PR — Claude soạn file workflow, mình commit
+- [x] Ảnh có kích thước đúng, không làm nhảy bố cục (plugin `rehype-image-size`; CLS đo 0 ở Lighthouse 2026-10-20)
+- [x] (Mình làm) Thêm CI chạy lint + build cho mỗi PR — Claude soạn file workflow, mình commit (`ci.yml` có lint, typecheck, test, check-content, build, e2e)
 
 **Xong khi:** đạt ngưỡng Lighthouse và CI xanh.
 
@@ -166,7 +167,7 @@ Mỗi trang = 1 Issue riêng. **Xong khi:** mọi trang qua `ui-tester` và `des
 - [x] Danh sách trong Keystatic có thêm cột: Bài (Tiêu đề, Chủ đề, Ngày đăng, Trạng thái, Ẩn bài này, Ảnh bìa), Chủ đề (Tên, Thứ tự, Mô tả, Ảnh nền), Sách (Tên, Ảnh sách); ô tick `draft` đổi nhãn thành "Ẩn bài này" (giữ nguyên hai ô Trạng thái và Ẩn bài này) (2026-10-16)
 - [x] Cột ảnh trong danh sách Keystatic hiện ảnh thu nhỏ thay vì đường dẫn (`KeystaticThumbnails.tsx`, thay ở trình duyệt, không đổi dữ liệu) (2026-10-16)
 - [x] Cột "Nguồn sách" ở danh sách Bài viết hiện tên sách (Keystatic không đọc được khối lồng `source.book`): `KeystaticThumbnails.tsx` thay "[object Object]" bằng tên lấy từ `/api/ten-sach` (`getBookNamesBySlug` trong `posts.ts`; cùng cổng `preview.ts`), không đổi dữ liệu (2026-10-16)
-- [ ] Trước khi mở PR: `ui-tester` (375/414/768/1024/1440, 2 theme) + `design-reviewer`, tạo Issue, test tay iOS + Android
+- (Nhắc, không phải việc) Trước khi mở PR đổi diện mạo: `ui-tester` + `design-reviewer`, test tay iOS + Android (xem CLAUDE.md mục 11)
 - [ ] Hồ sơ / Trang chủ trong Keystatic: hỏi lại Lộc khi tới
 
 ## Kiểm tra SEO trong trang quản trị (nhánh `feat/seo-checker`, chưa có Issue)
@@ -176,7 +177,7 @@ Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm S
 - [x] Bước 3 Cột "Điểm SEO" ở danh sách Bài viết (điểm + chữ Tốt / Cần cải thiện / Chưa đạt, màu theo 2 theme của Keystatic; dựa trên bản đã lưu): `getSeoScoresBySlug` + `/api/diem-seo` + `KeystaticThumbnails.tsx`; mượn cột "Từ khóa chính" làm chỗ giữ chỗ (2026-10-16)
 - [x] Bước 4 Hộp điểm SEO trong form bài (nổi góc dưới, chấm cả nội dung chưa Lưu, liệt kê chưa đạt + cách sửa, chuyển trái / phải, nhớ trạng thái): `SeoPanel.tsx`, `seo-form-reader.ts`, `src/cms/lib/seo-fields.ts` (nhãn dùng chung với config); tự báo khi không đọc được ô / lệch bản đã lưu; test trên giao diện thật: gõ từng ô, thẻ, bài liên quan, nội dung, gỡ ảnh, bài mới, 2 theme, màn hình hẹp, bài 6.400 từ (2026-10-16)
 - [x] Bước 5 `npm run check-content` báo thêm cảnh báo SEO từng bài + điểm trung bình, cảnh báo ảnh trong bài trùng file với ảnh bìa (lỗi thật gặp khi thử: hai ảnh cùng tên `cover.jpg` ghi đè nhau); tự bỏ qua có thông báo nếu Node cũ không đọc được .ts (2026-10-16)
-- [ ] Thêm bước `npm run check-content` vào `.github/workflows/ci.yml` (Lộc tự commit, Claude không sửa được thư mục workflows)
+- [x] Thêm bước `npm run check-content` vào `.github/workflows/ci.yml` (Lộc tự commit, Claude không sửa được thư mục workflows) (đã có ở `ci.yml`)
 
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
 - [ ] Chốt Q9, Q10
@@ -216,14 +217,14 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 - [ ] Test tay trên 1 iPhone và 1 Android thật trước khi ra mắt
 
 **Deploy / hạ tầng**
-- [ ] Thử THẬT Keystatic chế độ GitHub trên Vercel sau PR #36: cột Điểm SEO, cột Nguồn sách, hộp điểm SEO, Xem trước; Tạo chuyển hướng và Lưu thử ở NHÁNH MỚI (không thử ở `main`); xem Keystatic tạo nhánh + PR ra sao; PR chỉ đổi nội dung có tự merge không
+- [x] Thử THẬT Keystatic chế độ GitHub trên Vercel sau PR #36: cột Điểm SEO, cột Nguồn sách, hộp điểm SEO, Xem trước; Tạo chuyển hướng và Lưu thử ở NHÁNH MỚI (không thử ở `main`); xem Keystatic tạo nhánh + PR ra sao; PR chỉ đổi nội dung có tự merge không (2026-10-20, xem mục "Đã xong")
 - [ ] Thêm Callback URL của địa chỉ ngắn vào GitHub App (`https://web-blog-next-js-keystatic-vibe-hos.vercel.app/api/keystatic/github/oauth/callback`) nếu chưa; khi có tên miền thật thì thêm tiếp
-- [ ] Redeploy để `NEXT_PUBLIC_SITE_URL` (đã đổi sang địa chỉ ngắn) có hiệu lực
+- [x] Redeploy để `NEXT_PUBLIC_SITE_URL` (đã đổi sang địa chỉ ngắn) có hiệu lực (mọi bản deploy production từ khi đổi biến, mới nhất là #41 ngày 2026-10-20, đều đã build lại)
 - [ ] Gắn tên miền thật: đổi `NEXT_PUBLIC_SITE_URL`, tắt bảo vệ đăng nhập Vercel khi công khai, kiểm tra header `x-robots-tag: noindex` (hiện do Vercel thêm cho địa chỉ `vercel.app`, không phải của mã) và Google Search Console
 - [ ] Hosting chính thức: vẫn dự kiến PaaS Việt Nam, Vercel chỉ dùng tạm (CLAUDE.md mục 1)
-- [ ] Cảnh báo Turbopack ở `src/cms/lib/content-cleanup.ts:113` (đọc thư mục ảnh theo đường dẫn tính toán, làm gói function admin nặng hơn): xử lý bằng chú thích `turbopackIgnore` hoặc đổi cách đọc
+- [x] Cảnh báo Turbopack ở `src/cms/lib/content-cleanup.ts:113` (đọc thư mục ảnh theo đường dẫn tính toán, làm gói function admin nặng hơn): xử lý bằng chú thích `turbopackIgnore` hoặc đổi cách đọc (2026-10-20: thêm `/*turbopackIgnore: true*/`, build sạch cảnh báo)
 - [ ] Phân quyền nhiều người (CODEOWNERS, tài khoản GitHub cho marketing, quyền theo vai trò): để sau khi có người thứ hai
-- [ ] Xem trước ở chế độ GitHub: chủ đề mới tạo cùng lúc chưa có trong bản build nên chưa xem trước được tới khi merge
+- [x] Xem trước ở chế độ GitHub: chủ đề mới tạo cùng lúc chưa có trong bản build nên chưa xem trước được tới khi merge (#41 `registerPreviewTopic`)
 
 **Tính năng / hệ thống**
 - [ ] Trang riêng cho Sách (Lộc đang cân nhắc); khi có thì thêm địa chỉ vào `KIND_PREFIX` (`src/shared/redirect-patterns.ts`), nút Tạo chuyển hướng ở trang sửa Sách và kiểm tra slug sách ở `check-content`
