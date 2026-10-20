@@ -3,16 +3,18 @@
 // Menu chủ đề trên dải tối của trang Blog.
 //  - TopicMenu (<768px): nút ☰ + tên chủ đề + ▾, bấm mở danh sách (aria-expanded).
 //  - TopicTabs (768–1023px): thanh tab viên tròn, căn giữa. Từ 1024px dùng danh sách dọc trong TopicHero.
+import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import type { Topic } from "@/shared/content/topics";
 import { ChevronDownIcon, MenuIcon } from "@/frontend/components/ui/Icon";
 
 export function TopicMenu({ topics, current }: { topics: Topic[]; current: string }) {
+  const ui = useUiLabels();
   const [open, setOpen] = useState(false);
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
-  const name = topics.find((t) => t.slug === current)?.name ?? "Chủ đề";
+  const name = topics.find((t) => t.slug === current)?.name ?? ui.navTopics;
 
   const [lastCurrent, setLastCurrent] = useState(current);
   if (lastCurrent !== current) {
@@ -73,8 +75,9 @@ export function TopicMenu({ topics, current }: { topics: Topic[]; current: strin
 }
 
 export function TopicTabs({ topics, current }: { topics: Topic[]; current: string }) {
+  const ui = useUiLabels();
   return (
-    <nav aria-label="Chủ đề" className="hidden justify-center tablet:flex desktop:hidden">
+    <nav aria-label={ui.navTopics} className="hidden justify-center tablet:flex desktop:hidden">
       <ul className="flex flex-wrap justify-center gap-2 rounded-pill border-(length:--border-width) border-on-inverse-soft/60 p-1">
         {topics.map((t) => (
           <li key={t.slug}>

@@ -1,6 +1,7 @@
 // Breadcrumb (đường dẫn): Trang chủ › Blog › Chủ đề. Dùng trên dải tối (trang Blog) và nền sáng (trang bài, căn giữa).
 // Tinh tế: chữ nhỏ, dấu › mảnh, mục hiện tại là huy hiệu pill trong mờ (cùng kiểu huy hiệu của thẻ chủ đề).
 // Kèm dữ liệu có cấu trúc BreadcrumbList (JSON-LD) cho SEO. Mục cuối là trang hiện tại (aria-current="page").
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import { site } from "@/shared/config/site";
 import { ChevronRightIcon, HomeIcon } from "@/frontend/components/ui/Icon";
@@ -44,7 +45,7 @@ export function Breadcrumb({
     })),
   };
   return (
-    <nav aria-label="Đường dẫn" className={className}>
+    <nav aria-label={getUiLabels().navBreadcrumb} className={className}>
       <ol
         className={`flex flex-wrap items-center gap-x-s2 gap-y-1 ${center ? "justify-center" : ""}`}
       >

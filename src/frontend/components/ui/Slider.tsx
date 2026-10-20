@@ -2,6 +2,7 @@
 
 // Thanh trượt ngang dùng chung (chủ đề ở Trang chủ, bài liên quan ở Chi tiết bài).
 // Vuốt / cuộn / phím mũi tên; có chấm vị trí và nút ‹ › trượt từng thẻ; nút khóa ở hai đầu.
+import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@/frontend/components/ui/Icon";
 
@@ -20,6 +21,7 @@ export function Slider({
   trackClassName?: string;
   gapClassName?: string;
 }) {
+  const ui = useUiLabels();
   const track = useRef<HTMLDivElement>(null);
   const [s, setS] = useState<State>({ idx: 0, positions: 0, atStart: true, atEnd: false });
 
@@ -112,7 +114,7 @@ export function Slider({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              aria-label="Trước"
+              aria-label={ui.sliderPrev}
               disabled={s.atStart}
               onClick={() => go(-1)}
               className="tap grid place-items-center rounded-sm border-(length:--border-width) border-rule-strong transition-colors duration-(--motion-fast) hover:bg-paper-sunk disabled:pointer-events-none disabled:opacity-35"
@@ -121,7 +123,7 @@ export function Slider({
             </button>
             <button
               type="button"
-              aria-label="Sau"
+              aria-label={ui.sliderNext}
               disabled={s.atEnd}
               onClick={() => go(1)}
               className="tap grid place-items-center rounded-sm border-(length:--border-width) border-rule-strong transition-colors duration-(--motion-fast) hover:bg-paper-sunk disabled:pointer-events-none disabled:opacity-35"

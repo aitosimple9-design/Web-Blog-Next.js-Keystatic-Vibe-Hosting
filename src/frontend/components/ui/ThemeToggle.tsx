@@ -1,12 +1,14 @@
 "use client";
 
 // Nút đổi theme Giấy / Đêm. Theme được đặt bằng script chạy TRƯỚC khi vẽ trang (xem layout.tsx) nên không nháy sáng.
+import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import { useCallback, useEffect, useState } from "react";
 import { MoonIcon, SunIcon } from "@/frontend/components/ui/Icon";
 
 type Theme = "light" | "dark";
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
+  const ui = useUiLabels();
   const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     <button
       type="button"
       onClick={toggle}
-      aria-label={theme === null ? "Đổi theme" : dark ? "Chuyển sang theme Giấy (sáng)" : "Chuyển sang theme Đêm (tối)"}
+      aria-label={theme === null ? ui.themeUnknown : dark ? ui.themeToLight : ui.themeToDark}
       className={`tap inline-flex items-center justify-center rounded-sm transition-colors duration-(--motion-fast) hover:bg-current/10 ${className}`}
     >
       <span className="relative block size-5">

@@ -20,4 +20,4 @@ export function readingMinutes(words: number): number {
   return Math.max(1, Math.round(words / 200));
 }
 
-export const formatReadTime = (min: number) => `${min} phút đọc`;
+export const formatReadTime = (min: number, template = "{n} phút đọc") => template.replace("{n}", String(min));

@@ -3,6 +3,7 @@
 // Mặc định: mỗi chip 44px, hàng tự xuống dòng khi hết chỗ (chân trang).
 // `featured` (Hero): MỘT hàng duy nhất, icon được chọn nằm giữa, to nhất và luôn có nền gradient; 6 chip còn lại nhỏ 36px
 // (vùng bấm vẫn đủ 44px nhờ lớp mở rộng 5px mỗi phía tính từ mép trong của viền 1px: 34 + 10 = 44; hai vùng bấm kề nhau chạm sát; khoảng cách giữa các vòng 8px).
+import { getUiLabels } from "@/shared/content/ui-labels";
 import type { SocialId } from "@/shared/config/site";
 import { getSiteSettings } from "@/shared/content/settings";
 import { SocialIcon } from "@/frontend/components/ui/Icon";
@@ -32,7 +33,7 @@ export function SocialIcons({
   return (
     <ul
       className={`flex gap-s2 ${featured ? "flex-nowrap items-center" : "flex-wrap"} ${className}`}
-      aria-label="Mạng xã hội"
+      aria-label={getUiLabels().navSocial}
     >
       {list.map((s) => {
         const big = featured === s.id;

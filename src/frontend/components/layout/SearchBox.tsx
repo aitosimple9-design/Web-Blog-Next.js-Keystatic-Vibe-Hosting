@@ -2,6 +2,7 @@
 
 // Ô tìm kiếm trên thanh đầu trang. Dưới 1024px là nút kính lúp mở một hàng nhập; từ 1024px mở rộng sẵn.
 // Tìm trong tiêu đề, mô tả, chủ đề và tên sách (không phân biệt dấu). Q12: chức năng cơ bản, nâng cấp sau.
+import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -17,6 +18,7 @@ const fold = (s: string) =>
     .replace(/đ/g, "d");
 
 export function SearchBox({ index }: { index: SearchItem[] }) {
+  const ui = useUiLabels();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [focused, setFocused] = useState(false);
@@ -63,7 +65,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
     <div ref={root} className="desktop:relative">
       <button
         type="button"
-        aria-label={open ? "Đóng tìm kiếm" : "Tìm kiếm"}
+        aria-label={open ? ui.searchClose : ui.searchOpen}
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((v) => !v)}
@@ -88,7 +90,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
           {/* Từ 1024px ô cao 32px cho thanh đầu trang gọn; vùng bấm vẫn 44px nhờ lớp ::after kéo ra 7px mỗi phía trên / dưới (tính cả viền 1px) */}
           <label className="tap relative flex w-full items-center gap-s2 rounded-pill border-(length:--border-width) border-rule-strong bg-paper-raised px-s4 text-ink focus-within:outline-(length:--focus-ring-width) focus-within:outline-accent desktop:h-8 desktop:min-h-0 desktop:w-56 desktop:gap-s1 desktop:px-s3 desktop:after:absolute desktop:after:inset-x-0 desktop:after:-inset-y-[7px] desktop:after:content-['']">
             <SearchIcon size={18} className="shrink-0 text-ink-faint" />
-            <span className="sr-only-x">Tìm bài viết</span>
+            <span className="sr-only-x">{ui.searchLabel}</span>
             <input
               ref={input}
               type="search"
@@ -98,7 +100,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
               onKeyDown={(e) => {
                 if (e.key === "Escape") close();
               }}
-              placeholder="Tìm bài viết"
+              placeholder={ui.searchPlaceholder}
               autoComplete="off"
               enterKeyHint="search"
               aria-controls={listId}
@@ -129,7 +131,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
               ))}
             </ul>
           ) : (
-            <p className="type-ui-body p-s4 text-ink-soft">Không tìm thấy bài phù hợp. Thử một từ khóa khác.</p>
+            <p className="type-ui-body p-s4 text-ink-soft">{ui.searchEmpty}</p>
           )}
         </div>
       </div>

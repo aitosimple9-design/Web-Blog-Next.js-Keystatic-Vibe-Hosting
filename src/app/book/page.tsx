@@ -1,4 +1,5 @@
 // Trang Book (trước đây là Trang chủ): Hero tối cố định, rồi các khối (dải chữ chạy, chủ đề, bài mới, Newsletter) theo thứ tự / bật tắt ở Keystatic. Layout: docs/layout/book/README.md
+import { getUiLabels } from "@/shared/content/ui-labels";
 import type { Metadata } from "next";
 import { getNewsletterSettings, getSiteSettings } from "@/shared/content/settings";
 import { Fragment, type ReactNode } from "react";
@@ -53,7 +54,7 @@ export default function BookPage() {
       <section
         className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse pt-(--header-height) text-on-inverse"
         style={brushStyle}
-        aria-label="Giới thiệu"
+        aria-label={getUiLabels().intro}
       >
         <HeroBackdrop word={b.hero.backdropWord} />
         <Hero

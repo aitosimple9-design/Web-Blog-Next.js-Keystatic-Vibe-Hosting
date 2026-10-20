@@ -1,4 +1,6 @@
 // Thanh trượt chủ đề (dải paper hoặc paper-sunk theo vị trí khối). Thẻ tỉ lệ 3:4, ảnh nền, khung chữ nền đặc, nổi bằng elevated-*. 375: 1 thẻ lộ mép thẻ kế · 768: ~2,5 thẻ · 1024+: 4 thẻ nguyên vẹn, ‹ › xem thẻ thứ 5.
+import { fillLabel } from "@/shared/config/ui-labels";
+import { getUiLabels } from "@/shared/content/ui-labels";
 import type { BookPageTexts } from "@/shared/config/page-texts";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,7 +54,7 @@ function TopicCard({
           href={`/blog/${topic.slug}`}
           className="type-button tap inline-flex items-center justify-center gap-s2 rounded-sm bg-on-inverse px-(--button-pad-x) text-inverse no-underline shadow-elevated-sm transition-[color,filter,box-shadow] duration-(--motion-fast) after:absolute after:inset-0 hover:shadow-elevated-md hover:brightness-95"
         >
-          Xem bài <span className="sr-only-x">chủ đề {topic.name}</span>
+          {getUiLabels().viewTopic} <span className="sr-only-x">{fillLabel(getUiLabels().viewTopicSr, { name: topic.name })}</span>
           <ArrowRightIcon className="transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:translate-x-2" />
         </Link>
       </div>
@@ -79,7 +81,7 @@ export function TopicSlider({
         <SectionHead id="topics-title" title={text.title} dek={text.dek} />
         <div className="@container mt-s6">
           <Slider
-            label="Danh sách chủ đề"
+            label={getUiLabels().topicList}
             trackClassName="bleed desktop:-ml-4 desktop:-mr-2 desktop:pl-4 desktop:pr-2 desktop:scroll-px-4 -mb-24 pt-3 pb-32"
             itemClassName="w-[86cqw] tablet:w-[calc((100cqw-2*var(--space-4))/2.5)] desktop:w-[calc((100cqw-3*var(--space-4))/4)] [&>*]:h-full"
             items={topics.map((t, i) => (

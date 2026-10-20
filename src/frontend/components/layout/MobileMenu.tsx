@@ -3,6 +3,7 @@
 // Menu ngăn kéo cho màn hình dưới 768px: trượt từ trái, chiếm 70% bề ngang (30% bên phải còn thấy nội dung), KHÔNG phủ tối phần bên phải
 // để người đọc vẫn thấy nội dung. Dữ liệu lấy từ `getNavGroups()` (src/lib/nav.ts: menu tĩnh ở src/config/site.ts + chủ đề từ content/topics): thêm trang / nhóm ở đó là tự có mặt ở đây,
 // đường kẻ ngang giữa các nhóm do component này tự vẽ. Mục có `children` thu gọn sẵn, bấm mới xổ ra.
+import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import Link from "next/link";
 import { useState } from "react";
 import type { NavGroup, NavItem } from "@/shared/config/site";
@@ -23,6 +24,7 @@ export function MobileMenu({
   pathname: string;
   groups: NavGroup[];
 }) {
+  const ui = useUiLabels();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   // Đóng menu thì thu gọn mọi mục, lần mở sau luôn thu gọn sẵn
   const [wasOpen, setWasOpen] = useState(open);
@@ -92,7 +94,7 @@ export function MobileMenu({
         open ? "visible translate-x-0" : "invisible -translate-x-full"
       }`}
     >
-      <nav aria-label="Menu" className="px-s3 py-s3">
+      <nav aria-label={ui.navMobile} className="px-s3 py-s3">
         {groups.map((g, i) => (
           <ul
             key={g.id}

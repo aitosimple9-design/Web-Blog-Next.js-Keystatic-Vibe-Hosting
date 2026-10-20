@@ -1,6 +1,7 @@
 // Cấu hình Keystatic — PHẢI khớp CLAUDE.md mục 5 (cấu trúc bài viết dùng chung với dự án B).
 // Bài lưu ở content/posts/<slug>.md (đuôi .md thuần, không .mdoc).
 // `slug` lấy từ TÊN FILE (Keystatic không ghi trường slug vào frontmatter); src/lib/posts.ts chấp nhận cả hai.
+import { UI_LABEL_GROUPS } from "@/shared/config/ui-labels";
 import { collection, config, fields, singleton } from "@keystatic/core";
 import { GITHUB_REPO } from "@/cms/lib/github-repo";
 import { POST_FIELD_LABELS } from "@/cms/lib/seo-fields";
@@ -38,7 +39,7 @@ export default config({
   ui: {
     brand: { name: "Blog sách" },
     // Menu trái chia nhóm
-    navigation: { "Nội dung": ["posts", "topics", "books", "redirects"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage", "privacyPage", "contactPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings"] },
+    navigation: { "Nội dung": ["posts", "topics", "books", "redirects"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage", "privacyPage", "contactPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings", "uiLabels"] },
   },
   singletons: {
     // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
@@ -236,6 +237,27 @@ export default config({
           { label: "Nhãn và thông báo của form (để trống ô nào thì dùng chữ mặc định)" },
         ),
       },
+    }),
+    // Nhãn giao diện nhỏ: tên vùng điều hướng, nút điều khiển, ô tìm kiếm, phân trang, thẻ bài (đọc bởi getUiLabels). Các ô DỰNG TỰ ĐỘNG từ UI_LABEL_GROUPS
+    // (src/shared/config/ui-labels.ts, nơi duy nhất khai báo khóa + chữ mặc định): thêm nhãn mới thì thêm ở đó, không sửa ở đây.
+    uiLabels: singleton({
+      label: "Nhãn giao diện",
+      path: "content/settings/ui-labels",
+      format: "json",
+      schema: Object.fromEntries(
+        UI_LABEL_GROUPS.map((group) => [
+          group.id,
+          fields.object(
+            Object.fromEntries(
+              group.items.map(([key, name, def]) => [
+                key,
+                fields.text({ label: `${name} (mặc định: ${def})`, validation: { length: { max: 120 } } }),
+              ]),
+            ),
+            { label: group.title },
+          ),
+        ]),
+      ),
     }),
     // Trang chủ (/): toàn bộ chữ và ảnh của trang (đọc bởi getHomePage ở src/lib/pages.ts). Ô để trống thì dùng nội dung mẫu mặc định (src/config/profile.ts).
     homePage: singleton({

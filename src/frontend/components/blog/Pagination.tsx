@@ -1,4 +1,6 @@
 // Phân trang: ‹ 1 2 3 … cuối ›. Trang hiện tại có aria-current="page". Mọi nút cao ≥ 44px, cách nhau 8px.
+import { fillLabel } from "@/shared/config/ui-labels";
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import { ArrowLeftIcon, ArrowRightIcon } from "@/frontend/components/ui/Icon";
 
@@ -30,7 +32,7 @@ export function Pagination({
     const target = dir === "prev" ? current - 1 : current + 1;
     const disabled = target < 1 || target > total;
     const icon = dir === "prev" ? <ArrowLeftIcon /> : <ArrowRightIcon />;
-    const label = dir === "prev" ? "Trang trước" : "Trang sau";
+    const label = dir === "prev" ? getUiLabels().pagePrev : getUiLabels().pageNext;
     return disabled ? (
       <span aria-hidden className={`${item} border-(length:--border-width) border-rule opacity-40`}>
         {icon}
@@ -48,7 +50,7 @@ export function Pagination({
   };
 
   return (
-    <nav aria-label="Phân trang" className="mt-s7 flex flex-wrap items-center justify-center gap-2">
+    <nav aria-label={getUiLabels().pagination} className="mt-s7 flex flex-wrap items-center justify-center gap-2">
       {arrow("prev")}
       {pageList(current, total).map((p, i) =>
         typeof p === "string" ? (
@@ -57,14 +59,14 @@ export function Pagination({
           </span>
         ) : p === current ? (
           <span key={p} aria-current="page" className={`${item} bg-ink text-paper`}>
-            <span className="sr-only-x">Trang </span>
+            <span className="sr-only-x">{getUiLabels().pageN.split("{n}")[0]}</span>
             {p}
           </span>
         ) : (
           <Link
             key={p}
             href={hrefFor(p)}
-            aria-label={`Trang ${p}`}
+            aria-label={fillLabel(getUiLabels().pageN, { n: p })}
             className={`${item} border-(length:--border-width) border-rule-strong hover:bg-paper-sunk`}
           >
             {p}

@@ -35,6 +35,7 @@ const MENU = [
   { href: "/keystatic/singleton/headerSettings", name: "Header" },
   { href: "/keystatic/singleton/footerSettings", name: "Footer" },
   { href: "/keystatic/singleton/newsletterSettings", name: "Newsletter" },
+  { href: "/keystatic/singleton/uiLabels", name: "Nhãn giao diện" },
 ];
 
 function watchErrors(page: Page) {

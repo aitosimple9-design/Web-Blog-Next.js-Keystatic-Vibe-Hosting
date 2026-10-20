@@ -27,6 +27,7 @@ const SVG: Record<string, string> = {
   headerSettings: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/>',
   footerSettings: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 15h18"/>',
   newsletterSettings: '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
+  uiLabels: '<path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/>',
   fallback: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>',
 };
 

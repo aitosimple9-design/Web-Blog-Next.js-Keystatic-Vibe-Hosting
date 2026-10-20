@@ -1,6 +1,8 @@
 // Bài liên quan: hàng thẻ trượt. Nền thẻ là HÌNH CHỮ NHẬT DỌC tỉ lệ 3:4, bo góc radius-lg; bố cục bên trong giữ như wireframe
 // (nhãn chủ đề, tiêu đề, bìa sách nhỏ, tóm tắt, thời gian đọc); nền là ảnh bài màu gốc phủ `inverse` 55%, không còn xen kẽ đen / trắng.
 // 375: 272px (lộ mép thẻ kế) · 768: 300px · 1024+: 320px · tràn ra mép phải màn hình.
+import { fillLabel } from "@/shared/config/ui-labels";
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import { topicBySlug } from "@/shared/content/topics";
 import type { PostMeta } from "@/shared/content/posts";
@@ -48,7 +50,7 @@ function RelatedCard({ post }: { post: PostMeta }) {
           {post.description}
         </p>
         <p className="type-caption mt-s3 text-on-inverse-soft">
-          {post.readingMinutes} phút đọc
+          {fillLabel(getUiLabels().readTime, { n: post.readingMinutes })}
         </p>
       </div>
     </article>
@@ -75,7 +77,7 @@ export function RelatedSlider({ posts }: { posts: PostMeta[] }) {
         </div>
         <div className="mt-s6">
           <Slider
-            label="Danh sách bài liên quan"
+            label={getUiLabels().relatedList}
             gapClassName="gap-s4"
             trackClassName="bleed-r -ml-6 -mb-24 pt-3 pb-32 pl-6 scroll-pl-6"
             itemClassName="w-[272px] tablet:w-[300px] desktop:w-[320px]"
