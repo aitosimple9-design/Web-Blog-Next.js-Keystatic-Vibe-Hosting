@@ -94,6 +94,23 @@ test.describe("Trang cài đặt (singleton) dạng thẻ", () => {
   });
 });
 
+test.describe("Form Chủ đề / Sách / Chuyển hướng dạng thẻ; form Bài viết giữ nguyên", () => {
+  for (const path of ["collection/topics/create", "collection/books/create", "collection/redirects/create"]) {
+    test(`${path}: dạng thẻ`, async ({ page }) => {
+      await page.goto(`/keystatic/${path}`);
+      await expect(page.locator("[data-ks-card]").first()).toBeVisible({ timeout: 30_000 });
+      expect(await page.locator("[data-ks-card]").count()).toBeGreaterThan(1);
+    });
+  }
+
+  test("form Bài viết KHÔNG bị vẽ dạng thẻ (hộp điểm SEO đọc form theo nhãn)", async ({ page }) => {
+    await page.goto(`/keystatic/collection/posts/item/${slug}`);
+    await expect(page.getByRole("textbox", { name: /^Slug/ })).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator("[data-ks-card]")).toHaveCount(0);
+    await expect(page.locator("[data-ks-sub-head]")).toHaveCount(0);
+  });
+});
+
 test.describe("Danh sách Bài viết", () => {
   test("có cột Điểm SEO, Ảnh bìa; tên sách không còn [object Object]", async ({ page }) => {
     await page.goto("/keystatic/collection/posts");
