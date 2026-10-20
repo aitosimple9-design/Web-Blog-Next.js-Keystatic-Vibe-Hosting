@@ -2,6 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 3100; // web công khai: build + start như production
 const ADMIN_PORT = 3200; // trang quản trị: next dev, Keystatic chế độ local
+const GITHUB_PORT = 3201; // trang quản trị: next dev, Keystatic chế độ GitHub nói chuyện với máy chủ GitHub GIẢ
+const MOCK_PORT = 3300; // máy chủ GitHub giả (tests/e2e/admin-github/mock-github.mjs)
 
 export default defineConfig({
   testDir: "tests/e2e",
@@ -14,7 +16,9 @@ export default defineConfig({
     // tests/e2e/public/: các trang công khai, SEO, chuyển hướng
     { name: "chromium", testDir: "tests/e2e/public", use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${PORT}` } },
     // tests/e2e/admin/: trang quản trị Keystatic (CHỈ ĐỌC, không ghi vào content/)
-    { name: "admin", testDir: "tests/e2e/admin", use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${ADMIN_PORT}` } },
+    { name: "admin", testDir: "tests/e2e/admin", timeout: 90_000, use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${ADMIN_PORT}` } },
+    // tests/e2e/admin-github/: đường GitHub của trang quản trị (xác minh quyền, ghi chuyển hướng vào nhánh, xem trước / chấm SEO từ nhánh). Các test dùng chung một máy chủ giả có trạng thái nên chạy lần lượt
+    { name: "admin-github", testDir: "tests/e2e/admin-github", fullyParallel: false, timeout: 90_000, use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${GITHUB_PORT}` } },
   ],
   webServer: [
     {
@@ -33,6 +37,19 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       // NEXT_DIST_DIR: Next chỉ cho MỘT server dev mỗi thư mục build, nên dùng thư mục riêng để chạy song song với `npm run dev` của máy.
       env: { NEXT_PUBLIC_KEYSTATIC_STORAGE: "local", NEXT_DIST_DIR: ".next-e2e" },
+      timeout: 300_000,
+    },
+    {
+      command: `node tests/e2e/admin-github/mock-github.mjs ${MOCK_PORT}`,
+      url: `http://localhost:${MOCK_PORT}/health`,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      // Chế độ GitHub nhưng GitHub API là máy chủ giả. Thư mục build riêng (.next-e2e-github) vì Next chỉ cho một server dev mỗi thư mục.
+      command: `npm run dev -- -p ${GITHUB_PORT}`,
+      url: `http://localhost:${GITHUB_PORT}/robots.txt`,
+      reuseExistingServer: !process.env.CI,
+      env: { NEXT_PUBLIC_KEYSTATIC_STORAGE: "github", GITHUB_API_URL: `http://localhost:${MOCK_PORT}`, NEXT_DIST_DIR: ".next-e2e-github" },
       timeout: 300_000,
     },
   ],

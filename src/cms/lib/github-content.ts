@@ -1,11 +1,11 @@
 // Đọc / ghi nội dung trên GitHub bằng token đăng nhập của CHÍNH người quản trị (chế độ GitHub của Keystatic, web thật không ghi được file).
 // Chỉ gọi sau khi `adminToken()` (src/lib/admin-access.ts) đã xác minh người gọi có quyền push. Token không bao giờ ghi log hay trả ra ngoài.
 import { githubHeaders } from "./admin-access";
-import { GITHUB_REPO } from "./github-repo";
+import { GITHUB_API, GITHUB_REPO } from "./github-repo";
 import type { RedirectFile, RedirectPlan } from "./redirect-tools";
 import { SLUG_RE } from "../../shared/redirect-patterns";
 
-const API = `https://api.github.com/repos/${GITHUB_REPO}`;
+const API = `${GITHUB_API}/repos/${GITHUB_REPO}`;
 const REDIRECTS_DIR = "content/redirects";
 const MAX_REDIRECT_FILES = 300;
 
@@ -90,6 +90,15 @@ export async function applyPlanGitHub(token: string, branch: string, plan: Extra
 export async function fetchPostRaw(token: string, branch: string, slug: string): Promise<string | null> {
   if (!SLUG_RE.test(slug) || !validBranch(branch)) return null;
   const res = await gh(token, `/contents/content/posts/${slug}.md?ref=${enc(branch)}`, { headers: { Accept: "application/vnd.github.raw+json" } });
+  if (res.status === 404) return null;
+  if (!res.ok) return fail(res);
+  return res.text();
+}
+
+/** Nội dung thô (JSON) của một chủ đề ở một nhánh (null nếu chưa có file): xem trước bài thuộc chủ đề mới tạo, chưa có trong bản build */
+export async function fetchTopicRaw(token: string, branch: string, slug: string): Promise<string | null> {
+  if (!SLUG_RE.test(slug) || !validBranch(branch)) return null;
+  const res = await gh(token, `/contents/content/topics/${slug}.json?ref=${enc(branch)}`, { headers: { Accept: "application/vnd.github.raw+json" } });
   if (res.status === 404) return null;
   if (!res.ok) return fail(res);
   return res.text();

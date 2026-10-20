@@ -4,6 +4,7 @@ node_modules/
 # next.js
 .next/
 .next-e2e/
+.next-e2e-github/
 out/
 
 # env files (keep .env.example)

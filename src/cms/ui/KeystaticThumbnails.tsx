@@ -150,10 +150,10 @@ let schedule: (() => void) | null = null;
 
 export function KeystaticThumbnails() {
   useEffect(() => {
-    let frame = 0;
+    let timer = 0;
     schedule = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(enhance);
+      clearTimeout(timer);
+      timer = window.setTimeout(enhance, 30); // setTimeout thay vì requestAnimationFrame: tab chạy nền không bị treo (đã gặp: cột SEO không hiện ở tab nền)
     };
     // Bỏ qua thay đổi do chính mình gây ra (thêm / bỏ thẻ ảnh) để khỏi lặp vô hạn
     const own = (n: Node) => n instanceof HTMLElement && n.hasAttribute(THUMB_ATTR);
@@ -174,7 +174,7 @@ export function KeystaticThumbnails() {
       schedule = null;
       observer.disconnect();
       themeObserver.disconnect();
-      cancelAnimationFrame(frame);
+      clearTimeout(timer);
       // trả lại trang như cũ khi rời khỏi /keystatic
       for (const img of document.querySelectorAll<HTMLElement>(`img[${THUMB_ATTR}]`)) {
         const leaf = img.previousElementSibling as HTMLElement | null;
