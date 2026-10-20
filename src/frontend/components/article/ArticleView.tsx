@@ -1,6 +1,7 @@
 // Phần giao diện của một bài viết, dùng cho trang thật (/bai-viet/<slug>) và trang xem trước (/xem-truoc/bai-viet/<slug>).
 // Layout: docs/layout/chi-tiet-bai/README.md
 //  375–767: 1 cột · 768: thân bài căn giữa · 1024: TOC dính trái, ảnh + nguồn sách trong cột phải · 1280+: TOC | thân bài | nguồn sách
+import { getUiLabels } from "@/shared/content/ui-labels";
 import { site } from "@/shared/config/site";
 import { brushStyle } from "@/frontend/lib/brush";
 import { topicBySlug } from "@/shared/content/topics";
@@ -70,7 +71,7 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
       <article>
         {/* HERO: ảnh tràn hết bề ngang, chủ đề / tiêu đề / mô tả / ngày nằm GIỮA ảnh (không có nền riêng bên dưới);
             lớp phủ `inverse` 55% (màu phẳng) giữ chữ dễ đọc; đáy cắt bằng mask nét cọ */}
-        <section aria-label="Đầu bài">
+        <section aria-label={getUiLabels().articleHead}>
           <div
             className="on-inverse brush-bottom relative isolate min-h-[calc(clamp(560px,52vw,680px)+var(--header-height))] w-full overflow-hidden bg-inverse text-on-inverse"
             style={brushStyle}

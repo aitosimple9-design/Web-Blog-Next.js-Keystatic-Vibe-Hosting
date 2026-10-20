@@ -1,4 +1,5 @@
 // Các khối nhỏ của trang Chi tiết bài: ArticleHeader, SourceBox (= BookRef của Design System).
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import { topicBySlug } from "@/shared/content/topics";
 import { formatDateLong, formatReadTime } from "@/shared/format";
@@ -55,7 +56,7 @@ export function ArticleHeader({ post }: { post: PostMeta }) {
         style={{ "--delay": "680ms" } as React.CSSProperties}
       >
         <time dateTime={post.date}>{formatDateLong(post.date)}</time> ·{" "}
-        {formatReadTime(post.readingMinutes)}
+        {formatReadTime(post.readingMinutes, getUiLabels().readTime)}
       </p>
     </header>
   );
@@ -84,7 +85,7 @@ export function SourceBox({
   const { sourceLabel } = getArticlePage();
   if (variant === "strip") {
     return (
-      <aside aria-label="Nguồn sách" className={`flex items-center gap-s4 ${className}`}>
+      <aside aria-label={getUiLabels().sourceBook} className={`flex items-center gap-s4 ${className}`}>
         <BookCover src={cover} seed={book} className="w-14! tablet:w-16!" />
         <div className="min-w-0">
           <p className="type-eyebrow uppercase text-ink-faint">{sourceLabel}</p>
@@ -96,7 +97,7 @@ export function SourceBox({
   }
   return (
     <aside
-      aria-label="Nguồn sách"
+      aria-label={getUiLabels().sourceBook}
       className={`on-inverse group relative isolate flex flex-col justify-end overflow-hidden rounded-lg bg-inverse p-s4 text-on-inverse shadow-elevated-md ${
         compact ? "aspect-[3/4]" : "min-h-52 tablet:min-h-60"
       } ${className}`}

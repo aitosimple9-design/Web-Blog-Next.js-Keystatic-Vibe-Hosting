@@ -1,4 +1,5 @@
 // Chân trang (SiteFooter): nền paper-raised. 375: xếp dọc · 768+: logo trái · menu giữa · 7 icon phải.
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import Image from "next/image";
 import { getFooterSettings, getHeaderSettings, getSiteSettings } from "@/shared/content/settings";
@@ -38,7 +39,7 @@ export function SiteFooter() {
             )}
           </Link>
 
-          <nav aria-label="Chân trang">
+          <nav aria-label={getUiLabels().navFooter}>
             <ul className="type-nav flex flex-wrap gap-x-s2 gap-y-s2 tablet:justify-center">
               {nav.map((l) => (
                 <li key={l.href}>

@@ -1,5 +1,6 @@
 // Trang Blog: dải đầu trang tối (tiêu đề, menu chủ đề, Hero chủ đề) → khối danh sách bài gối lên đáy dải tối → Newsletter.
 // URL (Q13, giả định): /blog/<chu-de> và /blog/<chu-de>/trang/<n>; 6 bài mỗi trang, lưới tự đổi số cột (1 / 2 / 3).
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Image from "next/image";
 import { brushStyle } from "@/frontend/lib/brush";
 import { getNewsletterSettings, getSiteSettings } from "@/shared/content/settings";
@@ -69,7 +70,7 @@ export function BlogView({ slug, page }: { slug: string; page: number }) {
       <section
         className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse text-on-inverse"
         style={brushStyle}
-        aria-label="Chủ đề"
+        aria-label={getUiLabels().navTopics}
       >
         {/* Ảnh nền theo chủ đề; lớp nền đặc `inverse` phủ lên để chữ vẫn đọc rõ (chữ không nằm trực tiếp trên ảnh) */}
         <Image

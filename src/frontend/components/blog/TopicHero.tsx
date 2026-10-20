@@ -1,6 +1,8 @@
 // Hero chủ đề trên dải tối (inverse). 375: căn giữa · 768: căn giữa, tiêu đề lớn hơn, số liệu trong thẻ ·
 // 1024+: chữ + CTA trái, bìa giữa, danh sách chủ đề dọc bên phải, số liệu một hàng bên dưới.
 // Lưới 1fr | cột giữa | 1fr: hai cột bên BẰNG NHAU nên cụm bìa nằm chính giữa, khoảng cách hai bên đều.
+import { fillLabel } from "@/shared/config/ui-labels";
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import type { Topic } from "@/shared/content/topics";
 import { Button } from "@/frontend/components/ui/Button";
@@ -70,10 +72,10 @@ export function TopicHero({
       </PointerScene>
 
       {/* Danh sách chủ đề dọc (từ 1024px) */}
-      <nav aria-label="Chủ đề" className="hidden desktop:block">
+      <nav aria-label={getUiLabels().navTopics} className="hidden desktop:block">
         <div className="mb-s3 flex items-baseline justify-between border-b-(length:--border-width) border-on-inverse-soft/40 pb-s3">
           <p className="type-eyebrow uppercase text-on-inverse-soft">{hero.eyebrow}</p>
-          <p className="type-caption text-on-inverse-soft">{topics.length} mục</p>
+          <p className="type-caption text-on-inverse-soft">{fillLabel(getUiLabels().topicCount, { n: topics.length })}</p>
         </div>
         <ol className="flex flex-col gap-s2">
           {topics.map((t, i) => {

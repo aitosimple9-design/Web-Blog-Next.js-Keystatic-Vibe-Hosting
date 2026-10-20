@@ -1,5 +1,7 @@
 // Thẻ bài. `card`: lưới Blog (ảnh 3:2, nhãn, tiêu đề, tóm tắt, chân thẻ). `tile`: ô lưới bento Trang chủ.
 // Bấm được CẢ thẻ nhưng chỉ có MỘT liên kết (tiêu đề kéo giãn phủ thẻ) để trình đọc màn hình không đọc lặp.
+import { fillLabel } from "@/shared/config/ui-labels";
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import { topicBySlug } from "@/shared/content/topics";
 import { formatDateLong, formatDateShort, formatReadTime } from "@/shared/format";
@@ -56,7 +58,7 @@ export function PostCard({
             </Link>
           </h3>
           <p className="type-caption text-on-inverse-soft">
-            {formatDateLong(post.date)} · {formatReadTime(post.readingMinutes)}
+            {formatDateLong(post.date)} · {formatReadTime(post.readingMinutes, getUiLabels().readTime)}
           </p>
         </div>
       </article>
@@ -101,13 +103,13 @@ export function PostCard({
         </p>
         <div className="flex items-center justify-between gap-s3">
           <p className="type-caption text-on-inverse-soft">
-            {formatDateShort(post.date)} · {post.readingMinutes} phút
+            {formatDateShort(post.date)} · {fillLabel(getUiLabels().readTimeShort, { n: post.readingMinutes })}
           </p>
           <span
             className="type-label inline-flex items-center gap-s1"
             aria-hidden
           >
-            Đọc bài
+            {getUiLabels().readPost}
             <ArrowRightIcon className="transition-transform duration-(--motion-normal) ease-(--ease-smooth) motion-safe:group-hover:translate-x-2" />
           </span>
         </div>

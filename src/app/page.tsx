@@ -1,6 +1,7 @@
 // Trang chủ (thương hiệu cá nhân): Hero cố định, rồi các khối (Câu chuyện, Cách mình đọc, Con số, Tủ sách, Bài tiêu biểu, Kết nối, Newsletter)
 // theo thứ tự / bật tắt ở Keystatic (Trang → Trang chủ → Các khối); nền xen kẽ tự tính ở layoutBlocks (src/config/blocks.ts).
 // Layout: docs/layout/trang-chu/README.md. Nội dung chỉnh ở Keystatic (Trang → Trang chủ); mặc định ở src/config/profile.ts. Trang Book (Trang chủ cũ) nằm ở /book.
+import { getUiLabels } from "@/shared/content/ui-labels";
 import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
@@ -59,7 +60,7 @@ export default function HomePage() {
     principles: (b) => <PrincipleCards tone={tone(b)} pullUp={b.pullUp} />,
     // Con số: đếm từ nội dung thật
     stats: (b) => (
-      <section aria-label="Con số" className={`${toneBg(tone(b))} ${b.pullUp ? PULL_UP : "pt-s7 tablet:pt-s8"} pb-s7 text-ink tablet:pb-s8`}>
+      <section aria-label={getUiLabels().statsSection} className={`${toneBg(tone(b))} ${b.pullUp ? PULL_UP : "pt-s7 tablet:pt-s8"} pb-s7 text-ink tablet:pb-s8`}>
         <dl className="wrap grid grid-cols-3 divide-x divide-rule text-center">
           {[
             { value: stats.posts, suffix: "+", label: h.statLabels.posts },
@@ -139,7 +140,7 @@ export default function HomePage() {
       <section
         className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse pt-(--header-height) text-on-inverse"
         style={brushStyle}
-        aria-label="Giới thiệu"
+        aria-label={getUiLabels().intro}
       >
         <PersonBackdrop />
         <PersonHero stats={{ posts: stats.posts, topics: stats.topics }} />

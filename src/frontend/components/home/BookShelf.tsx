@@ -1,5 +1,6 @@
 // Tủ sách của mình: dải tối `inverse`, đáy nét cọ, thanh trượt bìa sách (mỗi bìa bấm sang chủ đề liên quan).
 // 375: ~2,3 bìa · 768: ~4,4 bìa · 1024+: 5 bìa, nút ‹ › trượt tới bìa thứ 6.
+import { getUiLabels } from "@/shared/content/ui-labels";
 import Link from "next/link";
 import { getHomePage } from "@/shared/content/pages";
 import { topicBySlug } from "@/shared/content/topics";
@@ -58,7 +59,7 @@ export function BookShelf({ pullUp = false }: { pullUp?: boolean }) {
         </Reveal>
         <Reveal className="mt-s7">
           <Slider
-            label="Tủ sách"
+            label={getUiLabels().shelfList}
             items={items}
             trackClassName="pb-s4 pl-1 pt-s2"
             itemClassName="w-[calc((100%-var(--space-4))/2.3)] tablet:w-[calc((100%-3*var(--space-4))/4.4)] desktop:w-[calc((100%-4*var(--space-4))/5)]"

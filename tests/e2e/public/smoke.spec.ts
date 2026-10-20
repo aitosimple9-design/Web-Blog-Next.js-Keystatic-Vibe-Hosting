@@ -83,3 +83,24 @@ test("theme: mặc định theo hệ thống, ưu tiên lựa chọn đã lưu",
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
+
+// Nhãn giao diện nhỏ lấy từ Keystatic → Cài đặt → Nhãn giao diện (content/settings/ui-labels.json); mặc định phải đúng chữ cũ viết cứng trong mã
+test.describe("Nhãn giao diện (aria-label, nút) giữ đúng chữ mặc định", () => {
+  test("thanh đầu trang, liên kết bỏ qua, nút đổi theme, ô tìm kiếm", async ({ page }) => {
+    await page.goto("/book");
+    await expect(page.locator(".skip-link")).toHaveText("Bỏ qua, đến nội dung chính");
+    await expect(page.locator('nav[aria-label="Chính"]')).toHaveCount(1);
+    await expect(page.locator('button[aria-label="Mở menu"]')).toHaveCount(1);
+    await expect(page.locator('button[aria-label^="Chuyển sang theme"], button[aria-label="Đổi theme"]').first()).toBeVisible();
+    await expect(page.locator('button[aria-label="Tìm kiếm"]')).toHaveCount(1);
+    await expect(page.locator('footer nav[aria-label="Chân trang"]')).toHaveCount(1);
+  });
+
+  test("thẻ bài hiện thời gian đọc và Phân trang ở Blog đúng chữ", async ({ page }) => {
+    await page.goto("/blog");
+    await expect(page.getByText(/\d+ phút đọc|\d+ phút/).first()).toBeVisible();
+    await expect(page.getByText("Đọc bài").first()).toBeVisible();
+    await expect(page.locator('nav[aria-label="Phân trang"]')).toHaveCount(1);
+    await expect(page.locator('a[aria-label="Trang sau"]')).toHaveCount(1);
+  });
+});

@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { UiLabelsProvider } from "@/frontend/components/ui/UiLabels";
+import { getUiLabels } from "@/shared/content/ui-labels";
 import { Be_Vietnam_Pro, Source_Serif_4 } from "next/font/google";
 import { site } from "@/shared/config/site";
 import { getSiteSettings } from "@/shared/content/settings";
@@ -51,6 +53,7 @@ export const viewport: Viewport = {
 const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const ui = getUiLabels();
   return (
     <html lang="vi" suppressHydrationWarning className={`${serif.variable} ${sans.variable}`}>
       <head>
@@ -58,10 +61,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       {/* Tiện ích trình duyệt (Monica, Grammarly...) hay chèn thuộc tính vào <body> trước khi React gắn vào: bỏ qua cảnh báo hydration CHỈ cho chính thẻ này (không che lỗi của phần bên trong) */}
       <body suppressHydrationWarning>
-        <a href="#main" className="skip-link">
-          Bỏ qua, đến nội dung chính
-        </a>
-        {children}
+        <UiLabelsProvider labels={ui}>
+          <a href="#main" className="skip-link">
+            {ui.skipLink}
+          </a>
+          {children}
+        </UiLabelsProvider>
       </body>
     </html>
   );

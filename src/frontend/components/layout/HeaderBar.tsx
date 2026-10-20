@@ -3,6 +3,7 @@
 // Thanh đầu trang (SiteHeader): dính trên cùng, nền mờ, MỘT tầng duy nhất.
 // Cuộn quá SCROLL_THRESHOLD: thanh phẳng mờ đi, "viên thuốc" bo tròn nổi lên (chỉ opacity + transform, hai lớp nền chồng nhau).
 // <768px: ☰ + Logo trái · tìm kiếm + ☾ phải, ☰ mở ngăn kéo menu (MobileMenu) · 768px+: menu căn giữa, ☰ ẩn · 1024px+: ô tìm kiếm mở rộng.
+import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -81,6 +82,7 @@ export function HeaderBar({
 }) {
   // Menu ngang = các mục cấp trên của mọi nhóm
   const mainNav = navGroups.flatMap((g) => g.items.map(({ label, href }) => ({ label, href })));
+  const ui = useUiLabels();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -152,7 +154,7 @@ export function HeaderBar({
           <button
             ref={menuButton}
             type="button"
-            aria-label={menuOpen ? "Đóng menu" : "Mở menu"}
+            aria-label={menuOpen ? ui.menuClose : ui.menuOpen}
             aria-expanded={menuOpen}
             aria-controls={panelId}
             onClick={() => setMenuOpen((v) => !v)}
@@ -163,7 +165,7 @@ export function HeaderBar({
           <Logo name={siteName} image={logoImage} alt={logoAlt} />
         </div>
 
-        <nav aria-label="Chính" className="hidden items-center gap-s1 tablet:flex">
+        <nav aria-label={ui.navMain} className="hidden items-center gap-s1 tablet:flex">
           {mainNav.map((l) => (
             <Link
               key={l.href}

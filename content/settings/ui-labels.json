@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "skipLink": "Bỏ qua, đến nội dung chính",
+    "navMain": "Chính",
+    "navMobile": "Menu",
+    "navFooter": "Chân trang",
+    "navTopics": "Chủ đề",
+    "navBreadcrumb": "Đường dẫn",
+    "navSocial": "Mạng xã hội",
+    "articleHead": "Đầu bài",
+    "sourceBook": "Nguồn sách",
+    "intro": "Giới thiệu",
+    "statsSection": "Con số",
+    "relatedList": "Danh sách bài liên quan",
+    "topicList": "Danh sách chủ đề",
+    "shelfList": "Tủ sách"
+  },
+  "controls": {
+    "menuOpen": "Mở menu",
+    "menuClose": "Đóng menu",
+    "sliderPrev": "Trước",
+    "sliderNext": "Sau",
+    "themeUnknown": "Đổi theme",
+    "themeToLight": "Chuyển sang theme Giấy (sáng)",
+    "themeToDark": "Chuyển sang theme Đêm (tối)"
+  },
+  "search": {
+    "searchOpen": "Tìm kiếm",
+    "searchClose": "Đóng tìm kiếm",
+    "searchLabel": "Tìm bài viết",
+    "searchPlaceholder": "Tìm bài viết",
+    "searchEmpty": "Không tìm thấy bài phù hợp. Thử một từ khóa khác."
+  },
+  "pagination": {
+    "pagination": "Phân trang",
+    "pagePrev": "Trang trước",
+    "pageNext": "Trang sau",
+    "pageN": "Trang {n}"
+  },
+  "cards": {
+    "readTime": "{n} phút đọc",
+    "readTimeShort": "{n} phút",
+    "readPost": "Đọc bài",
+    "viewTopic": "Xem bài",
+    "viewTopicSr": "chủ đề {name}",
+    "topicCount": "{n} mục"
+  }
+}
