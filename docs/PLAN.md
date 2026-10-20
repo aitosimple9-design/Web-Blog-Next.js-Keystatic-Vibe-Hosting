@@ -185,6 +185,7 @@ Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm S
 - [ ] [A] Hosting: Vercel (đang chờ MCP Vercel); local mode không chạy được trên Vercel nên cần GitHub mode
 - [ ] [A] Deploy lên hosting Node.js đã chọn
 - [ ] [B] Deploy lên Cloudflare + Worker `sveltia-cms-auth` + GitHub OAuth App
+- [x] (2026-10-20) Kiểm tra `NEXT_PUBLIC_SITE_URL`: build production dừng khi sai, `check-content` báo, dải thông báo ở trang quản trị (`src/shared/site-url-check.ts`)
 - [ ] Gắn tên miền, HTTPS
 - [ ] [A] Quyết định 2026-10-18 (Lộc chọn D rút gọn): trang quản trị ở chế độ GitHub tạo PR; workflow `.github/workflows/auto-merge-content.yml` tự bật auto-merge (squash) khi PR CHỈ đổi `content/` và `public/images/`, CI (`check`, `e2e`) xanh thì tự merge. PR có file ngoài hai nơi đó vẫn do Lộc duyệt. Workflow đã viết, Lộc đã bật "Allow auto-merge" và đã thử PR #31 (chỉ đổi content/): tự merge đúng (2026-10-19). Còn: khi deploy kiểm tra Keystatic GitHub mode tạo nhánh + PR ra sao (có phải bấm tạo nhánh tay không). Phần phân quyền nhiều người (CODEOWNERS, tài khoản GitHub cho marketing) để sau, khi có người thứ hai
 - [ ] Gửi sitemap lên Google Search Console

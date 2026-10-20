@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
 import { buildRedirects, readRedirectFiles } from "./src/shared/redirects";
+import { checkSiteUrl } from "./src/shared/site-url-check";
 
 // Giống `isIndexable()` ở src/lib/indexing.ts (file này không import được alias `@/`; tests/unit/indexing.test.ts chặn lệch):
 // chỉ production thật mới được lập chỉ mục. Ngoài ra thêm header X-Robots-Tag cho MỌI đường dẫn (kể cả ảnh, file tĩnh) ở các môi trường khác.
 const indexable = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === "production" : process.env.ALLOW_INDEXING === "true";
+
+// Build production thật mà NEXT_PUBLIC_SITE_URL để trống / là localhost / sai dạng thì DỪNG build: bản đó không lên mạng, web đang chạy giữ nguyên.
+// Máy cá nhân và bản preview không bị chặn (xem src/shared/site-url-check.ts).
+const siteUrl = checkSiteUrl();
+if (siteUrl.level === "error") throw new Error(`[NEXT_PUBLIC_SITE_URL] ${siteUrl.message}`);
 
 const nextConfig: NextConfig = {
   // Thư mục build riêng cho server dev của E2E trang quản trị (tránh đụng server dev đang chạy của máy); bình thường vẫn là .next

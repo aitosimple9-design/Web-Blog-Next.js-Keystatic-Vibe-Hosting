@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 
 // Chạy scripts/check-content.mjs trên một thư mục nội dung giả (--root).
-function run(files: Record<string, string>) {
+function run(files: Record<string, string>, env: Record<string, string> = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "check-"));
   for (const [rel, text] of Object.entries(files)) {
     const abs = path.join(root, rel);
@@ -14,6 +14,8 @@ function run(files: Record<string, string>) {
   }
   const r = spawnSync(process.execPath, [path.join(process.cwd(), "scripts", "check-content.mjs"), "--root", root], {
     encoding: "utf8",
+    // Xóa các biến môi trường của máy chạy test để kết quả không phụ thuộc máy
+    env: { ...process.env, VERCEL_ENV: "", ALLOW_INDEXING: "", NEXT_PUBLIC_SITE_URL: "", ...env },
   });
   return { code: r.status, out: r.stdout };
 }
@@ -27,6 +29,19 @@ describe("scripts/check-content.mjs", () => {
     const r = run({ ...topic, "content/posts/bai-a.md": post() });
     expect(r.code).toBe(0);
     expect(r.out).toContain("không có lỗi");
+  });
+
+  it("địa chỉ web: production mà còn localhost / để trống là LỖI, vercel.app là cảnh báo, máy cá nhân chỉ là thông tin", () => {
+    const base = { ...topic, "content/posts/bai-a.md": post() };
+    const bad = run(base, { VERCEL_ENV: "production", NEXT_PUBLIC_SITE_URL: "http://localhost:3000" });
+    expect(bad.code).toBe(1);
+    expect(bad.out).toContain("NEXT_PUBLIC_SITE_URL");
+    expect(run(base, { VERCEL_ENV: "production" }).code).toBe(1);
+    const temp = run(base, { VERCEL_ENV: "production", NEXT_PUBLIC_SITE_URL: "https://abc.vercel.app" });
+    expect(temp.code).toBe(0);
+    expect(temp.out).toContain("địa chỉ tạm");
+    expect(run(base, { VERCEL_ENV: "production", NEXT_PUBLIC_SITE_URL: "https://blog.example.com" }).code).toBe(0);
+    expect(run(base).code).toBe(0);
   });
 
   it("bắt chủ đề không tồn tại, ảnh bìa mất, bài liên quan sai (mã 1)", () => {
