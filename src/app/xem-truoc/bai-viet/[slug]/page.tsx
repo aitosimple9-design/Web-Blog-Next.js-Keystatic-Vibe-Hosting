@@ -6,8 +6,9 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { isAdminCookieHeader, tokenFromCookieHeader } from "@/cms/lib/admin-access";
-import { fetchPostRaw, friendlyGithubError, GithubError, validBranch } from "@/cms/lib/github-content";
-import { getPostForPreview, getPostFromRaw } from "@/shared/content/posts";
+import { fetchPostRaw, fetchTopicRaw, friendlyGithubError, GithubError, validBranch } from "@/cms/lib/github-content";
+import { categoryOfRaw, getPostForPreview, getPostFromRaw } from "@/shared/content/posts";
+import { registerPreviewTopic, topicBySlug, topicFromJson } from "@/shared/content/topics";
 import { ArticleView } from "@/frontend/components/article/ArticleView";
 
 export const dynamic = "force-dynamic";
@@ -48,7 +49,16 @@ export default async function PreviewPage({ params, searchParams }: Props) {
     try {
       const raw = await fetchPostRaw(token, branch, slug);
       if (raw === null) problem = `Chưa có bài "${slug}" ở nhánh "${branch}". Bấm Lưu trong Keystatic rồi mở lại Xem trước.`;
-      else post = await getPostFromRaw(slug, raw);
+      else {
+        // Chủ đề mới tạo cùng lúc ở nhánh này chưa có trong bản build: lấy từ nhánh để dựng được bài
+        const category = categoryOfRaw(raw);
+        if (category && !topicBySlug(category)) {
+          const topicRaw = await fetchTopicRaw(token, branch, category);
+          const topic = topicRaw === null ? null : topicFromJson(category, topicRaw);
+          if (topic) registerPreviewTopic({ slug: topic.slug, name: topic.name, description: topic.description, image: topic.image });
+        }
+        post = await getPostFromRaw(slug, raw);
+      }
     } catch (e) {
       problem = `Không dựng được bản xem trước: ${e instanceof GithubError ? friendlyGithubError(e) : e instanceof Error ? e.message : "lỗi không rõ"}`;
     }

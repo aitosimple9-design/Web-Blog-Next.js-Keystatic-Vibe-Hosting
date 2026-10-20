@@ -177,16 +177,16 @@ export function getBookNamesBySlug(): Record<string, string> {
 }
 
 /** Dữ liệu để chấm SEO của một file bài (đọc lỏng: thiếu trường thì để trống, không báo lỗi). Null nếu file không đọc được. */
-function seoInputOf(file: string): SeoInput | null {
+function seoInputFromRaw(slug: string, raw: string): SeoInput | null {
   try {
     const text = (v: unknown) => (typeof v === "string" ? v : "");
     const list = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
-    const { data, content } = matter(fs.readFileSync(path.join(POSTS_DIR, file), "utf8"));
+    const { data, content } = matter(raw);
     return {
       title: text(data.title),
       seoTitle: text(data.seoTitle),
       description: text(data.description),
-      slug: file.replace(/\.md$/, ""),
+      slug,
       focusKeyword: text(data.focusKeyword),
       cover: text(data.cover),
       coverAlt: text(data.coverAlt),
@@ -215,6 +215,30 @@ export function getSeoScoresBySlug(): Record<string, { score: number; level: "go
     out[input.slug] = { score, level };
   }
   return out;
+}
+
+function seoInputOf(file: string): SeoInput | null {
+  try {
+    return seoInputFromRaw(file.replace(/\.md$/, ""), fs.readFileSync(path.join(POSTS_DIR, file), "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+/** Chấm SEO từ nội dung thô của một bài (chế độ GitHub: bản đã lưu ở NHÁNH đang soạn, lấy qua GitHub API). */
+export function getSeoResultFromRaw(slug: string, raw: string): SeoResult | null {
+  const input = seoInputFromRaw(slug, raw);
+  return input ? scoreSeo(input) : null;
+}
+
+/** Chủ đề (category) ghi trong nội dung thô của bài; null nếu không đọc được. */
+export function categoryOfRaw(raw: string): string | null {
+  try {
+    const c = matter(raw).data.category;
+    return typeof c === "string" && c.trim() ? c.trim() : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Kết quả chấm đầy đủ của MỘT bài đã lưu, để hộp điểm SEO trong form đối chiếu với điểm chấm trực tiếp. Null nếu chưa có file. */
@@ -298,7 +322,7 @@ export async function getPostForPreview(slug: string): Promise<(Post & { state: 
 
 /**
  * Dựng bài XEM TRƯỚC từ nội dung thô (chế độ GitHub: lấy bản đã lưu ở NHÁNH đang soạn qua GitHub API, không có trên bản build).
- * Cũng chỉ dùng ở route xem trước đã kiểm tra quyền quản trị. Chủ đề (category) phải có trong bản build; nếu không, ném lỗi có nói rõ.
+ * Cũng chỉ dùng ở route xem trước đã kiểm tra quyền quản trị. Chủ đề (category) phải có trong bản build hoặc đã `registerPreviewTopic` (chủ đề mới ở nhánh); nếu không, ném lỗi có nói rõ.
  */
 export async function getPostFromRaw(slug: string, raw: string): Promise<Post & { state: PostState }> {
   const { data, content } = matter(raw);

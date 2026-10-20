@@ -17,7 +17,8 @@ import { POST_FIELD_NAMES, type PostFieldKey } from "@/cms/lib/seo-fields";
 import { isFormDirty, readSeoForm } from "./seo-form-reader";
 import { SEO_LABEL, isDarkTheme, seoPalette } from "./ks-theme";
 
-const POST_ROUTE = /^\/keystatic\/collection\/posts\/(?:item\/([^/]+)|create)\/?$/;
+// Chế độ GitHub có thêm /branch/<nhánh>/ ngay sau /keystatic (chế độ local thì không)
+export const POST_ROUTE = /^\/keystatic\/(?:branch\/([^/]+)\/)?collection\/posts\/(?:item\/([^/]+)|create)\/?$/;
 const PANEL_ATTR = "data-ks-seo-panel";
 const OPEN_KEY = "ks-seo-panel-open";
 const SIDE_KEY = "ks-seo-panel-side"; // hộp nổi che một phần form: cho chuyển sang trái / phải, nhớ lựa chọn
@@ -67,7 +68,7 @@ function differing(live: SeoResult, saved: SeoResult): string[] {
   return live.checks.filter((c) => savedStatus.get(c.id) !== c.status).map((c) => c.label);
 }
 
-function Inner({ slug }: { slug: string | null }) {
+function Inner({ slug, branch }: { slug: string | null; branch: string | null }) {
   const [view, setView] = useState<View | null>(null);
   const [failed, setFailed] = useState(false);
   const [mismatch, setMismatch] = useState<string[] | null>(null);
@@ -102,7 +103,7 @@ function Inner({ slug }: { slug: string | null }) {
         console.warn('[SeoPanel] không tìm thấy nút "Reset changes" của Keystatic: không biết form đã sửa chưa, vẫn đối chiếu với bản đã lưu');
         setDirtyUnknown(true);
       }
-      fetch(`/api/diem-seo?slug=${encodeURIComponent(slug)}`, { cache: "no-store" })
+      fetch(`/api/diem-seo?slug=${encodeURIComponent(slug)}${branch ? `&branch=${encodeURIComponent(branch)}` : ""}`, { cache: "no-store" })
         .then((r) => (r.ok ? (r.json() as Promise<SeoResult>) : null))
         .then((saved) => {
           if (!saved) return;
@@ -114,7 +115,7 @@ function Inner({ slug }: { slug: string | null }) {
         })
         .catch(() => {});
     }
-  }, [slug]);
+  }, [slug, branch]);
 
   useEffect(() => {
     startedAt.current = Date.now();
@@ -336,5 +337,5 @@ export function KeystaticSeoPanel() {
   const match = POST_ROUTE.exec(pathname ?? "");
   if (!mounted || !match) return null;
   // `key` buộc dựng lại hộp (và đối chiếu lại) khi chuyển sang bài khác
-  return <Inner key={pathname} slug={match[1] ? decodeURIComponent(match[1]) : null} />;
+  return <Inner key={pathname} slug={match[2] ? decodeURIComponent(match[2]) : null} branch={match[1] ? decodeURIComponent(match[1]) : null} />;
 }

@@ -5,7 +5,7 @@
 //    cookie `keystatic-gh-access-token`; ta hỏi GitHub "token này có quyền push vào repo không" (kết quả nhớ 60 giây, chỉ lưu bản băm của token).
 // Mọi trường hợp khác (không cookie, token hết hạn, không quyền, GitHub lỗi) = KHÔNG cho qua. Token chỉ dùng phía server, không bao giờ trả ra ngoài hay ghi log.
 import { createHash } from "node:crypto";
-import { GITHUB_REPO } from "./github-repo";
+import { GITHUB_API, GITHUB_REPO } from "./github-repo";
 import { isPreviewEnabled } from "./preview";
 
 export const GITHUB_TOKEN_COOKIE = "keystatic-gh-access-token";
@@ -44,7 +44,7 @@ export async function tokenCanPush(token: string): Promise<boolean> {
   if (hit && hit.until > Date.now()) return hit.ok;
   let ok = false;
   try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}`, { headers: githubHeaders(token), cache: "no-store" });
+    const res = await fetch(`${GITHUB_API}/repos/${GITHUB_REPO}`, { headers: githubHeaders(token), cache: "no-store" });
     if (res.ok) {
       const data = (await res.json()) as { permissions?: { push?: boolean } };
       ok = data.permissions?.push === true;
