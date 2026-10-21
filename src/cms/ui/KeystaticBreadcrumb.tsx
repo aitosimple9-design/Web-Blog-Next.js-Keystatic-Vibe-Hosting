@@ -12,7 +12,7 @@ const CSS = `
 main > header > div { height: 44px !important; min-height: 44px !important; padding-inline: 16px !important; }
 main > header button { height: 28px !important; min-height: 28px !important; border-radius: 6px; font-size: 13px; }
 main > header button:not(:has(svg:only-child)) { padding-inline: 14px; }
-/* Breadcrumb: chữ 13px, thẳng hàng, mục hiện tại đậm, mục cha nhạt (rê chuột thì rõ) */
+/* Breadcrumb: chữ 12px, thẳng hàng, mục hiện tại cùng cỡ chữ với mục cha, mục cha nhạt (rê chuột thì rõ) */
 ul[class*="Breadcrumb"] { display: flex; align-items: center; gap: 0; }
 ul[class*="Breadcrumb"] li { display: flex; align-items: center; min-height: 28px; border-top: 0 !important; padding-top: 0 !important; font-size: 13px; line-height: 1; }
 ul[class*="Breadcrumb"] li:not(:last-child) a { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 6px; border-radius: 6px; font-size: 13px; font-weight: 500; line-height: 1; text-decoration: none; opacity: .62; transition: opacity .15s; }
@@ -20,7 +20,9 @@ ul[class*="Breadcrumb"] li:not(:last-child) a:hover { opacity: 1; }
 ul[class*="Breadcrumb"] li:not(:last-child) a > span { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; }
 ul[class*="Breadcrumb"] li:not(:last-child) a > span > svg { display: block; width: 14px; height: 14px; }
 ul[class*="Breadcrumb"] li > svg { flex: none; width: 14px; height: 14px; opacity: .35; }
-ul[class*="Breadcrumb"] li:last-child { max-width: 48ch; padding: 0 4px !important; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+ul[class*="Breadcrumb"] li:last-child { max-width: 40ch; padding: 0 4px !important; font-size: 12px !important; font-weight: 500; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+ul[class*="Breadcrumb"] li:last-child * { font-size: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
+ul[class*="Breadcrumb"] li:not(:last-child) a { font-size: 12px; }
 `;
 
 export function KeystaticBreadcrumb() {
