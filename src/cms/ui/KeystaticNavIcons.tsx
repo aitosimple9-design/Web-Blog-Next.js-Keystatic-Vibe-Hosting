@@ -1,7 +1,7 @@
 "use client";
 
 // Trang quản trị Keystatic: menu trái chỉ có chữ. Component này thêm ICON trước từng mục và ĐƯỜNG PHÂN CÁCH giữa các nhóm (giống menu app điện thoại):
-// mỗi nhóm cách nhau một vạch mảnh, tiêu đề nhóm nhỏ, mục có chiều cao thoải mái, icon cùng màu chữ nên theo cả hai chế độ sáng / tối của Keystatic.
+// mỗi nhóm cách nhau một vạch mảnh, tiêu đề nhóm nhỏ, mục mỏng gọn (cao 32px, icon 16px) như menu của Vercel, icon cùng màu chữ nên theo cả hai chế độ sáng / tối của Keystatic.
 // Keystatic không có tùy chọn icon cho menu (ui.navigation chỉ nhận tên), nên chỉ đổi HIỂN THỊ ở trình duyệt, không đụng dữ liệu. Icon dạng nét (lucide, ISC).
 // Nhận mục theo đuôi địa chỉ: /collection/<id>, /singleton/<id>; mục Dashboard là liên kết còn lại trong menu. Mục mới chưa có icon thì dùng icon file.
 import { useEffect } from "react";
@@ -33,11 +33,11 @@ const SVG: Record<string, string> = {
 
 // Các nhóm của menu là <li> con của <ul> đầu tiên trong <nav>; tiêu đề nhóm là <h3>. Vạch phân cách đặt ở đầu mỗi nhóm từ nhóm thứ hai trở đi.
 const CSS = `
-nav > ul > li + li { margin-top: 6px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
-nav > ul > li > h3 { letter-spacing: .06em; opacity: .7; margin-bottom: 4px; }
-nav a:has(> [${ATTR}]), nav a[${ATTR}-row] { align-items: center; gap: 10px; min-height: 36px; }
-[${ATTR}] { display: inline-flex; flex: none; width: 18px; height: 18px; opacity: .8; }
-[${ATTR}] svg { width: 18px; height: 18px; }
+nav > ul > li + li { margin-top: 4px; padding-top: 8px; border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+nav > ul > li > h3 { letter-spacing: .06em; opacity: .7; margin-bottom: 2px; font-size: 11px; }
+nav a:has(> [${ATTR}]), nav a[${ATTR}-row] { align-items: center; gap: 8px; min-height: 32px; padding-block: 0; border-radius: 6px; }
+[${ATTR}] { display: inline-flex; flex: none; width: 16px; height: 16px; opacity: .8; }
+[${ATTR}] svg { width: 16px; height: 16px; }
 nav a[aria-current="page"] [${ATTR}], nav a:hover [${ATTR}] { opacity: 1; }`;
 
 function keyOf(a: HTMLAnchorElement): string {
