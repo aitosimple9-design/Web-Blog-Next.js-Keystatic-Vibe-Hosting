@@ -29,8 +29,19 @@ const CSS = `
 @supports not selector(::-webkit-scrollbar) {
   * { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, currentColor 28%, transparent) transparent; }
 }
+/* globals.css của web công khai có "html { overflow-x: clip }": làm cửa sổ giữ MỘT thanh cuộn riêng (8px, không dùng được) nằm sát thanh cuộn của nội dung, thành hai thanh cạnh nhau. Trang quản trị tự cuộn trong khung của nó nên cửa sổ không cuộn. */
+html { overflow: hidden !important; }
 main form:has([data-ks-cards]) { max-width: none !important; width: 100%; margin-inline: 0 !important; }
 main form:has([data-ks-cards]) > div > div { margin-inline: auto; width: 100%; }
+/* Menu trái: thanh cuộn chỉ hiện khi rê chuột vào menu (kiểu Vercel), để trang chỉ còn MỘT thanh cuộn thường trực ở mép phải */
+@supports selector(::-webkit-scrollbar) {
+  div:has(> nav)::-webkit-scrollbar-thumb { background: transparent; }
+  div:has(> nav):hover::-webkit-scrollbar-thumb { background: color-mix(in srgb, currentColor 25%, transparent); background-clip: content-box; }
+}
+@supports not selector(::-webkit-scrollbar) {
+  div:has(> nav) { scrollbar-color: transparent transparent; }
+  div:has(> nav):hover { scrollbar-color: color-mix(in srgb, currentColor 28%, transparent) transparent; }
+}
 [${MERGE}] { overflow-y: auto !important; align-items: flex-start !important; }
 [${MERGED}] { overflow: visible !important; height: auto !important; max-height: none !important; }
 `;
