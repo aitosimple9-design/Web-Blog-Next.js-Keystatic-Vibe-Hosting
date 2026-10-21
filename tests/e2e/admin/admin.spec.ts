@@ -178,12 +178,15 @@ test.describe("API của trang quản trị (máy local)", () => {
     expect(await res.json()).toMatchObject({ score: expect.any(Number) });
   });
 
-  test("/api/dia-chi-web trả kết quả kiểm tra NEXT_PUBLIC_SITE_URL; máy local không phải production nên dải thông báo ẩn", async ({ request, page }) => {
+  test("/api/dia-chi-web trả kết quả kiểm tra NEXT_PUBLIC_SITE_URL; trang Cài đặt site hiện thẻ Địa chỉ web (máy local: mức bình thường)", async ({ request, page }) => {
     const res = await request.get("/api/dia-chi-web");
     expect(res.status()).toBe(200);
     expect((await res.json()).level).toBe("dev");
-    await page.goto("/keystatic");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/keystatic/singleton/siteSettings");
+    const card = page.locator("[data-ks-site-url]");
+    await expect(card).toHaveAttribute("data-ks-site-url", "dev", { timeout: 30_000 });
+    await expect(card).toContainText("Địa chỉ web");
+    await page.goto("/keystatic/collection/posts");
     await expect(page.locator("[data-ks-site-url]")).toHaveCount(0);
   });
 
