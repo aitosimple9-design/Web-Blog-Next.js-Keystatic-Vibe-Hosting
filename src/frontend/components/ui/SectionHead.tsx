@@ -71,15 +71,18 @@ export function SectionHead({
   id,
   title,
   dek,
+  size = "lg",
 }: {
   id: string;
   title: string;
   dek: string;
+  /** `xl`: tiêu đề lớn hơn một bậc (khối Chủ đề con ở trang Blog phải lớn hơn tiêu đề danh sách bài ngay dưới) */
+  size?: "lg" | "xl";
 }) {
   return (
     // Hiện theo thứ tự: tiêu đề (từng từ) → dòng mô tả → họa tiết; không bọc cả khối để tránh hai chuyển động chồng nhau
     <div className="mx-auto max-w-2xl text-center">
-      <h2 id={id} className="type-display-lg text-balance">
+      <h2 id={id} className={`${size === "xl" ? "type-display-xl" : "type-display-lg"} text-balance`}>
         <RevealText text={title} />
       </h2>
       <Reveal delay={0.3}>
