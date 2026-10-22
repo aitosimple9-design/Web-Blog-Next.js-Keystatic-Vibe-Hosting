@@ -2,6 +2,7 @@
 
 // Thanh trượt ngang dùng chung (chủ đề ở Trang chủ, bài liên quan ở Chi tiết bài).
 // Vuốt / cuộn / phím mũi tên; có chấm vị trí và nút ‹ › trượt từng thẻ; nút khóa ở hai đầu.
+// `controls="sides"` (khối chủ đề con ở trang Blog): bỏ hàng chấm, đặt nút ‹ › nổi ở GIỮA hai bên khối; nút ẩn hẳn khi đã tới đầu / cuối.
 import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@/frontend/components/ui/Icon";
@@ -14,12 +15,14 @@ export function Slider({
   itemClassName = "",
   trackClassName = "",
   gapClassName = "gap-s4",
+  controls = "below",
 }: {
   items: ReactNode[];
   label: string;
   itemClassName?: string;
   trackClassName?: string;
   gapClassName?: string;
+  controls?: "below" | "sides";
 }) {
   const ui = useUiLabels();
   const track = useRef<HTMLDivElement>(null);
@@ -78,9 +81,22 @@ export function Slider({
   const go = (dir: -1 | 1) => track.current?.scrollBy({ left: dir * stepPx(), behavior: behavior() });
 
   const showControls = s.positions > 1;
+  const sides = controls === "sides";
+  const sideBtn =
+    "tap absolute top-1/2 z-10 grid -translate-y-1/2 place-items-center rounded-pill border-(length:--border-width) border-rule-strong bg-paper-raised text-ink shadow-elevated-md transition-[opacity,background-color] duration-(--motion-fast) hover:bg-paper-sunk disabled:pointer-events-none disabled:opacity-0";
 
   return (
-    <div>
+    <div className={sides ? "relative" : undefined}>
+      {sides && showControls ? (
+        <>
+          <button type="button" aria-label={ui.sliderPrev} disabled={s.atStart} onClick={() => go(-1)} className={`${sideBtn} left-1 desktop:left-0 desktop:-translate-x-1/2`}>
+            <ArrowLeftIcon />
+          </button>
+          <button type="button" aria-label={ui.sliderNext} disabled={s.atEnd} onClick={() => go(1)} className={`${sideBtn} right-1 desktop:right-0 desktop:translate-x-1/2`}>
+            <ArrowRightIcon />
+          </button>
+        </>
+      ) : null}
       <div
         ref={track}
         role="region"
@@ -99,7 +115,7 @@ export function Slider({
         ))}
       </div>
 
-      {showControls ? (
+      {showControls && !sides ? (
         <div className="mt-s5 flex items-center justify-between gap-s4">
           <div className="flex items-center gap-2" aria-hidden>
             {Array.from({ length: s.positions }).map((_, i) => (

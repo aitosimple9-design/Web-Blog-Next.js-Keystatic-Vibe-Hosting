@@ -104,3 +104,56 @@ test.describe("Nhãn giao diện (aria-label, nút) giữ đúng chữ mặc đ�
     await expect(page.locator('a[aria-label="Trang sau"]')).toHaveCount(1);
   });
 });
+
+// ---------- Chủ đề con (/blog/<chủ đề>/<chủ đề con>) ----------
+// Dữ liệu lấy từ content/ (không viết cứng): chủ đề có nhiều chủ đề con có bài nhất, để thử thanh trượt.
+const readJson = (rel: string) => JSON.parse(fs.readFileSync(path.join(process.cwd(), rel), "utf8"));
+const subDir = path.join(process.cwd(), "content", "subtopics");
+const subs = fs.readdirSync(subDir).filter((f) => f.endsWith(".json")).map((f) => ({ slug: f.slice(0, -5), topic: readJson(`content/subtopics/${f}`).topic as string }));
+const usedSubs = new Set(
+  fs.readdirSync(dir).filter((f) => f.endsWith(".md")).flatMap((f) => {
+    const d = matter(fs.readFileSync(path.join(dir, f), "utf8")).data;
+    return d.draft === true || d.status === "draft" || d.status === "review" ? [] : ((d.subtopics as string[]) ?? []);
+  }),
+);
+const withPosts = subs.filter((s) => usedSubs.has(s.slug));
+const byTopic = new Map<string, string[]>();
+for (const s of withPosts) byTopic.set(s.topic, [...(byTopic.get(s.topic) ?? []), s.slug]);
+const [bigTopic, bigSubs] = [...byTopic.entries()].sort((a, b) => b[1].length - a[1].length)[0];
+
+test.describe("Chủ đề con", () => {
+  test("trang chủ đề có khối chủ đề con: thẻ liên kết đúng, 5 thẻ cùng lúc ở 1440px, nút ‹ › trượt được", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`/blog/${bigTopic}`);
+    const region = page.getByRole("region", { name: "Danh sách chủ đề con" });
+    await expect(region).toBeVisible();
+    const links = region.getByRole("link");
+    await expect(links).toHaveCount(bigSubs.length);
+    await expect(links.first()).toHaveAttribute("href", new RegExp(`^/blog/${bigTopic}/`));
+    const visible = await region.evaluate((t) => [...t.children].filter((c) => { const r = c.getBoundingClientRect(), tr = t.getBoundingClientRect(); return r.left >= tr.left - 2 && r.right <= tr.right + 2; }).length);
+    expect(visible).toBe(Math.min(5, bigSubs.length));
+    if (bigSubs.length > 5) {
+      const next = page.getByRole("button", { name: "Sau" });
+      await expect(page.getByRole("button", { name: "Trước" })).toBeDisabled();
+      await next.click();
+      await expect(page.getByRole("button", { name: "Trước" })).toBeEnabled();
+    }
+  });
+
+  test("trang chủ đề con: 200, canonical, tiêu đề, danh sách bài riêng, nút quay về cả chủ đề; sitemap có địa chỉ", async ({ page, request }) => {
+    const slug = bigSubs[0];
+    const res = await page.goto(`/blog/${bigTopic}/${slug}`);
+    expect(res?.status()).toBe(200);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", new RegExp(`/blog/${bigTopic}/${slug}$`));
+    await expect(page.locator("#post-list-title")).toContainText("Bài viết trong");
+    await expect(page.getByRole("link", { name: "Tất cả bài trong chủ đề" })).toHaveAttribute("href", `/blog/${bigTopic}`);
+    const sitemap = await (await request.get("/sitemap.xml")).text();
+    expect(sitemap).toContain(`/blog/${bigTopic}/${slug}`);
+  });
+
+  test("địa chỉ sai bị 404: chủ đề cha sai, đoạn 'trang' không kèm số", async ({ request }) => {
+    const other = [...byTopic.keys()].find((t) => t !== bigTopic);
+    if (other) expect((await request.get(`/blog/${other}/${bigSubs[0]}`)).status()).toBe(404);
+    expect((await request.get(`/blog/${bigTopic}/trang`)).status()).toBe(404);
+  });
+});

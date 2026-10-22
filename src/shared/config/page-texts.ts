@@ -53,6 +53,14 @@ export const blogDefaults = {
   breadcrumb: { home: "Trang chủ", blog: "Blog" },
   listTitle: "Bài viết trong {topic}",
   emptyText: "Chủ đề này chưa có bài viết. Hãy quay lại sau nhé.",
+  /** Khối chủ đề con (thanh trượt 5 thẻ phía trên danh sách bài) và trang /blog/<chủ đề>/<chủ đề con> */
+  subtopics: {
+    title: "Chủ đề con",
+    dek: "Chọn một chủ đề con để xem các bài trong đó.",
+    allLabel: "Tất cả bài trong chủ đề",
+  },
+  subtopicListTitle: "Bài viết trong {subtopic}",
+  subtopicEmptyText: "Chủ đề con này chưa có bài viết. Hãy quay lại sau nhé.",
 };
 export type BlogPageTexts = typeof blogDefaults;
 

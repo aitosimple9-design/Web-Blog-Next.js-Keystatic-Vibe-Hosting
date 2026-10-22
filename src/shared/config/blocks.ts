@@ -36,7 +36,10 @@ export const PAGE_BLOCKS = {
   },
   blogPage: {
     reorder: false,
-    blocks: [{ id: "newsletter", label: "Newsletter", kind: "fixed" }],
+    blocks: [
+      { id: "subtopics", label: "Chủ đề con" },
+      { id: "newsletter", label: "Newsletter", kind: "fixed" },
+    ],
   },
   articlePage: {
     reorder: false,

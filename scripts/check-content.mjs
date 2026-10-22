@@ -247,8 +247,8 @@ try {
   const { readRedirectFiles, entryProblem, finalTarget, REDIRECTS_MAX, RESERVED_PREFIXES, STATIC_ROUTES } = await import("../src/shared/redirects.ts");
   const entries = readRedirectFiles(root);
   if (entries.length > REDIRECTS_MAX) err("content/redirects", `có ${entries.length} chuyển hướng, vượt giới hạn ${REDIRECTS_MAX} của Next.js`);
-  const livePaths = new Set([...STATIC_ROUTES, ...[...topicSlugs].map((t) => `/blog/${t}`), ...posts.filter((p) => live(p.data)).map((p) => `/bai-viet/${p.slug}`)]);
-  const exists = (p) => livePaths.has(p) || [...topicSlugs].some((t) => new RegExp(`^/blog/${t}/trang/[0-9]+$`).test(p));
+  const livePaths = new Set([...STATIC_ROUTES, ...[...topicSlugs].map((t) => `/blog/${t}`), ...[...subtopicTopic].map(([sl, t]) => `/blog/${t}/${sl}`), ...posts.filter((p) => live(p.data)).map((p) => `/bai-viet/${p.slug}`)]);
+  const exists = (p) => livePaths.has(p) || [...topicSlugs].some((t) => new RegExp(`^/blog/${t}/trang/[0-9]+$`).test(p)) || [...subtopicTopic].some(([sl, t]) => new RegExp(`^/blog/${t}/${sl}/trang/[0-9]+$`).test(p));
   const bySource = new Map();
   const toCheck = [];
   for (const e of entries) {
@@ -370,6 +370,21 @@ try {
         topicsLost++;
         err(n, `chủ đề ở ${baseRef} không còn (đổi slug hoặc bị xóa): link cũ /blog/${tslug} sẽ trả 404. Thêm chuyển hướng /blog/${tslug} → slug mới hoặc /blog (menu Chuyển hướng, Loại "Chủ đề")`);
       }
+      // Chủ đề con (/blog/<chủ đề>/<chủ đề con>): mất, đổi slug hoặc đổi chủ đề cha mà chưa có chuyển hướng thì link cũ 404
+      let subsLost = 0;
+      for (const n of git("ls-tree", "-r", "--name-only", ref, "--", "content/subtopics").split(/\r?\n/).map((x) => x.trim()).filter((x) => x.endsWith(".json"))) {
+        const sslug = n.slice(n.lastIndexOf("/") + 1, -5);
+        let oldTopic = "";
+        try {
+          oldTopic = String(JSON.parse(git("show", `${ref}:${n}`)).topic ?? "").trim();
+        } catch {
+          continue;
+        }
+        if (!oldTopic || subtopicTopic.get(sslug) === oldTopic || redirectFroms.has(`/blog/${oldTopic}/${sslug}`)) continue;
+        subsLost++;
+        err(n, `chủ đề con ở ${baseRef} không còn ở địa chỉ cũ (đổi slug, đổi chủ đề cha hoặc bị xóa): link cũ /blog/${oldTopic}/${sslug} sẽ trả 404. Thêm chuyển hướng /blog/${oldTopic}/${sslug} → địa chỉ mới hoặc /blog/${oldTopic} (menu Chuyển hướng, Loại "Khác")`);
+      }
+      infos.push(subsLost ? `Chủ đề con: ${subsLost} chủ đề con mất hoặc đổi địa chỉ mà chưa có chuyển hướng (xem LỖI).` : "Chủ đề con: địa chỉ ổn định.");
       infos.push(topicsLost ? `Chủ đề: ${topicsLost} chủ đề mất hoặc đổi slug mà chưa có chuyển hướng (xem LỖI).` : "Chủ đề: slug ổn định.");
       infos.push(lost ? `Đã so ${checked} bài đã đăng với ${baseRef}: ${lost} bài mất hoặc đổi slug mà chưa có chuyển hướng (xem LỖI).` : `Đã so ${checked} bài đã đăng với ${baseRef}: slug ổn định${handled ? ` (${handled} bài đã có chuyển hướng)` : ""}.`);
     } catch {

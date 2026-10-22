@@ -3,7 +3,8 @@ import { site } from "@/shared/config/site";
 import { getTopics } from "@/shared/content/topics";
 import { getAllPosts } from "@/shared/content/posts";
 import { getVisibleLegalPages } from "@/shared/content/legal-pages";
-import { totalPagesFor } from "@/frontend/components/blog/BlogView";
+import { subtopicsWithPosts, totalPagesFor } from "@/frontend/components/blog/BlogView";
+import { subtopicHref } from "@/shared/blog-links";
 
 // Bài nháp và bài lên lịch (ngày đăng ở tương lai) không có trong getAllPosts() nên không vào sitemap.
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -18,6 +19,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "weekly" as const,
         priority: i === 0 ? 0.7 : 0.4,
       })),
+    ),
+    // Chủ đề con có bài đã đăng (chủ đề con rỗng không có trang)
+    ...getTopics().flatMap((t) =>
+      subtopicsWithPosts(t.slug).flatMap((s) =>
+        Array.from({ length: totalPagesFor(t.slug, s.slug) }, (_, i) => ({
+          url: u(subtopicHref(t.slug, s.slug, i + 1)),
+          changeFrequency: "weekly" as const,
+          priority: i === 0 ? 0.6 : 0.3,
+        })),
+      ),
     ),
     ...getAllPosts().map((p) => ({
       url: u(`/bai-viet/${p.slug}`),

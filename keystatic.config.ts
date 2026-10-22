@@ -487,6 +487,16 @@ export default config({
         ),
         listTitle: t("Tiêu đề danh sách bài (dùng {topic} để điền tên chủ đề; mặc định: Bài viết trong {topic})", 80),
         emptyText: t("Chữ khi chủ đề chưa có bài viết nào", 160, true),
+        subtopics: fields.object(
+          {
+            title: t("Tiêu đề khối chủ đề con (mặc định: Chủ đề con)", 40),
+            dek: t("Mô tả dưới tiêu đề", 200, true),
+            allLabel: t("Chữ nút quay về cả chủ đề, hiện ở trang chủ đề con (mặc định: Tất cả bài trong chủ đề)", 40),
+          },
+          { label: "Khối Chủ đề con (thẻ chủ đề con tự lấy từ mục Chủ đề con)" },
+        ),
+        subtopicListTitle: t("Tiêu đề danh sách bài ở trang chủ đề con (dùng {subtopic} để điền tên; mặc định: Bài viết trong {subtopic})", 80),
+        subtopicEmptyText: t("Chữ khi chủ đề con chưa có bài viết nào", 160, true),
       },
     }),
     // Trang bài viết (/bai-viet/<slug>): nhãn các khối quanh bài (đọc bởi getArticlePage).
