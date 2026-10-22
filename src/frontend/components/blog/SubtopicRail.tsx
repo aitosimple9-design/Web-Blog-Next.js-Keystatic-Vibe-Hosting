@@ -15,7 +15,7 @@ import { subtopicHref } from "@/shared/blog-links";
 function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; current: boolean }) {
   return (
     <article
-      className={`group lift surface-hover on-inverse relative isolate aspect-[3/4] w-full overflow-hidden rounded-lg bg-inverse text-on-inverse shadow-elevated-md ${
+      className={`group lift surface-hover on-inverse relative isolate aspect-[3/4] w-full overflow-hidden rounded-lg bg-inverse text-on-inverse shadow-elevated-sm ${
         current ? "outline-2 outline-offset-2 outline-accent" : ""
       }`}
     >
@@ -68,14 +68,14 @@ export function SubtopicRail({
   allHref?: string;
 }) {
   return (
-    <section aria-labelledby="subtopics-title" className="mb-s6 tablet:mb-s7">
+    <section aria-labelledby="subtopics-title" className="mb-s7 tablet:mb-s8">
       <div className="mb-s6"><SectionHead id="subtopics-title" title={text.title} dek={text.dek} size="xl" /></div>
       {/* Khối thu hẹp hai bên (không tràn hết khung): 3 thẻ dọc cùng lúc, nút ‹ › nằm hai bên */}
       <div className="@container mx-auto max-w-[38rem]">
         <Slider
           label={getUiLabels().subtopicList}
           controls="sides"
-          trackClassName="-my-8 py-8 [justify-content:safe_center]"
+          trackClassName="-my-10 py-10 [justify-content:safe_center]"
           itemClassName="w-[46cqw] tablet:w-[calc((100cqw-2*var(--space-4))/3)] [&>*]:h-full"
           items={subtopics.map((s) => (
             <SubtopicCard key={s.slug} sub={s} count={counts[s.slug] ?? 0} current={s.slug === currentSlug} />
