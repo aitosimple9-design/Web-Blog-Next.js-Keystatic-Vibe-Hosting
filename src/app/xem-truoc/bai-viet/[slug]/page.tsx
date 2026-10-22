@@ -6,9 +6,10 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { isAdminCookieHeader, tokenFromCookieHeader } from "@/cms/lib/admin-access";
-import { fetchPostRaw, fetchTopicRaw, friendlyGithubError, GithubError, validBranch } from "@/cms/lib/github-content";
-import { categoryOfRaw, getPostForPreview, getPostFromRaw } from "@/shared/content/posts";
+import { fetchPostRaw, fetchSubtopicRaw, fetchTopicRaw, friendlyGithubError, GithubError, validBranch } from "@/cms/lib/github-content";
+import { categoryOfRaw, getPostForPreview, getPostFromRaw, subtopicsOfRaw } from "@/shared/content/posts";
 import { registerPreviewTopic, topicBySlug, topicFromJson } from "@/shared/content/topics";
+import { registerPreviewSubtopic, subtopicBySlug, subtopicFromJson } from "@/shared/content/subtopics";
 import { ArticleView } from "@/frontend/components/article/ArticleView";
 
 export const dynamic = "force-dynamic";
@@ -56,6 +57,13 @@ export default async function PreviewPage({ params, searchParams }: Props) {
           const topicRaw = await fetchTopicRaw(token, branch, category);
           const topic = topicRaw === null ? null : topicFromJson(category, topicRaw);
           if (topic) registerPreviewTopic({ slug: topic.slug, name: topic.name, description: topic.description, image: topic.image });
+        }
+        // Chủ đề con mới tạo cùng lúc ở nhánh này cũng chưa có trong bản build
+        for (const sub of subtopicsOfRaw(raw)) {
+          if (subtopicBySlug(sub)) continue;
+          const subRaw = await fetchSubtopicRaw(token, branch, sub);
+          const row = subRaw === null ? null : subtopicFromJson(sub, subRaw);
+          if (row) registerPreviewSubtopic({ slug: row.slug, name: row.name, topic: row.topic, description: row.description, image: row.image });
         }
         post = await getPostFromRaw(slug, raw);
       }

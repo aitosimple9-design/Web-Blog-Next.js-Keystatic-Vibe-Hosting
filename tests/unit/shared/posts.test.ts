@@ -17,12 +17,17 @@ async function loadWithContent(files: Record<string, string>) {
     path.join(root, "content", "topics", `${cat}.json`),
     JSON.stringify({ name: "Chủ đề thử", description: "Mô tả", image: "/x.jpg" }),
   );
+  fs.mkdirSync(path.join(root, "content", "subtopics"), { recursive: true });
+  for (const [slug, topic] of [[sub, cat], ["chu-de-con-khac", "chu-de-khac"]]) {
+    fs.writeFileSync(path.join(root, "content", "subtopics", `${slug}.json`), JSON.stringify({ name: "Con thử", topic, description: "Mô tả" }));
+  }
   vi.spyOn(process, "cwd").mockReturnValue(root);
   vi.resetModules();
   return import("@/shared/content/posts");
 }
 
 const cat = getTopics()[0].slug;
+const sub = "chu-de-con-thu";
 
 function post(over: Record<string, string> = {}, body = "## Mục một\n\nNội dung.") {
   const fields: Record<string, string> = {
@@ -30,6 +35,7 @@ function post(over: Record<string, string> = {}, body = "## Mục một\n\nNội
     slug: "bai-a",
     description: '"Mô tả ngắn"',
     category: cat,
+    subtopics: `[${sub}]`,
     date: "2026-10-05",
     ...over,
   };
@@ -111,6 +117,28 @@ describe("posts (kiểm tra dữ liệu bằng content giả)", () => {
   it("category chưa có trong content/topics thì báo lỗi", async () => {
     const m = await loadWithContent({ "bai-a.md": post({ category: "chu-de-khong-co" }) });
     expect(() => m.getAllPosts()).toThrow(/chưa có trong content\/topics/);
+  });
+
+  it("bài phải có ít nhất một chủ đề con (subtopics)", async () => {
+    const m = await loadWithContent({ "bai-a.md": post({ subtopics: "[]" }) });
+    expect(() => m.getAllPosts()).toThrow(/subtopics/);
+  });
+
+  it("chủ đề con chưa có trong content/subtopics thì báo lỗi", async () => {
+    const m = await loadWithContent({ "bai-a.md": post({ subtopics: "[khong-co]" }) });
+    expect(() => m.getAllPosts()).toThrow(/chưa có trong content\/subtopics/);
+  });
+
+  it("chủ đề con thuộc chủ đề khác với category của bài thì báo lỗi", async () => {
+    const m = await loadWithContent({ "bai-a.md": post({ subtopics: "[chu-de-con-khac]" }) });
+    expect(() => m.getAllPosts()).toThrow(/không thuộc chủ đề/);
+  });
+
+  it("một bài thuộc nhiều chủ đề con: getPostsBySubtopic lọc đúng, bỏ trùng", async () => {
+    const m = await loadWithContent({ "bai-a.md": post({ subtopics: `[${sub}, ${sub}]` }) });
+    expect(m.getAllPosts()[0].subtopics).toEqual([sub]);
+    expect(m.getPostsBySubtopic(sub).map((p) => p.slug)).toEqual(["bai-a"]);
+    expect(m.getPostsBySubtopic("khac")).toEqual([]);
   });
 
   it("date sai định dạng thì báo lỗi", async () => {

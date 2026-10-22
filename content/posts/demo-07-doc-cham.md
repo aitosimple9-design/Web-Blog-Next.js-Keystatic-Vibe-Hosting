@@ -3,6 +3,8 @@ title: "Đọc chậm một đoạn khó"
 slug: demo-07-doc-cham
 description: "Gặp đoạn khó, thay vì bỏ qua hãy thử bốn bước đọc chậm. Kết quả thường khiến cả chương trở nên dễ hiểu."
 category: chu-de-1
+subtopics:
+  - chu-de-1-con-1
 date: 2026-09-09
 source:
   book: "Sách mẫu 7"

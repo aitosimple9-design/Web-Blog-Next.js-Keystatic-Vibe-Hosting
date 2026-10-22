@@ -4,6 +4,9 @@ description: >-
   Ghi chép khi đọc sách chỉ cần một trang giấy cho mỗi chương. Cách làm gọn giúp
   bạn nhớ lâu hơn mà không tốn thêm thời gian.
 category: chu-de-1
+subtopics:
+  - chu-de-1-con-3
+  - chu-de-1-con-4
 date: 2026-10-16
 source:
   book: Sách mẫu 1

@@ -3,6 +3,8 @@ title: "Viết mỗi ngày một đoạn"
 slug: demo-20-viet-moi-ngay
 description: "Một đoạn văn mỗi ngày nghe nhỏ, nhưng sau ba tháng là cả một cuốn sổ ý nghĩ."
 category: chu-de-5
+subtopics:
+  - chu-de-5-con-1
 date: 2026-07-19
 source:
   book: "Sách mẫu 6"

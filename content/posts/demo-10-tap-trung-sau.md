@@ -3,6 +3,8 @@ title: "Làm việc sâu trong một thế giới nhiều thông báo"
 slug: demo-10-tap-trung-sau
 description: "Bốn việc nên làm trước khi bắt đầu một buổi làm việc cần tập trung, và một việc nên bỏ."
 category: chu-de-2
+subtopics:
+  - chu-de-2-con-2
 date: 2026-08-28
 source:
   book: "Sách mẫu 3"

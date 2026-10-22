@@ -104,6 +104,15 @@ export async function fetchTopicRaw(token: string, branch: string, slug: string)
   return res.text();
 }
 
+/** Nội dung thô (JSON) của một chủ đề con ở một nhánh (null nếu chưa có file): xem trước bài thuộc chủ đề con mới tạo, chưa có trong bản build */
+export async function fetchSubtopicRaw(token: string, branch: string, slug: string): Promise<string | null> {
+  if (!SLUG_RE.test(slug) || !validBranch(branch)) return null;
+  const res = await gh(token, `/contents/content/subtopics/${slug}.json?ref=${enc(branch)}`, { headers: { Accept: "application/vnd.github.raw+json" } });
+  if (res.status === 404) return null;
+  if (!res.ok) return fail(res);
+  return res.text();
+}
+
 /** Câu báo lỗi dễ hiểu cho người soạn bài */
 export function friendlyGithubError(e: unknown): string {
   if (e instanceof GithubError) {

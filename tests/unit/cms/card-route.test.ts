@@ -8,6 +8,7 @@ describe("CARD_ROUTE", () => {
     "/keystatic/branch/main/singleton/siteSettings",
     "/keystatic/collection/topics/item/chu-de-1",
     "/keystatic/collection/topics/create",
+    "/keystatic/collection/subtopics/create",
     "/keystatic/branch/thu/collection/books/item/sach-1",
     "/keystatic/branch/thu/collection/redirects/create",
   ])("%s dạng thẻ", (path) => expect(CARD_ROUTE.test(path)).toBe(true));

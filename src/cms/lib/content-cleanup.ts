@@ -14,6 +14,7 @@ import path from "node:path";
 export const IMAGE_RULES = [
   { contentDir: "content/posts/", ext: ".md", imageDir: "public/images/posts" },
   { contentDir: "content/topics/", ext: ".json", imageDir: "public/images/topics" },
+  { contentDir: "content/subtopics/", ext: ".json", imageDir: "public/images/subtopics" },
   { contentDir: "content/books/", ext: ".json", imageDir: "public/images/covers" },
 ] as const;
 

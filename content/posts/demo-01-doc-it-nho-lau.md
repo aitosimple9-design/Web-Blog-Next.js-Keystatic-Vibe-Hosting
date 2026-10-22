@@ -3,6 +3,8 @@ title: "Đọc ít mà nhớ lâu: ba thói quen sau mỗi chương sách"
 slug: demo-01-doc-it-nho-lau
 description: "Sau mỗi chương, dừng lại ba phút để tự nhắc lại ý chính bằng lời của mình. Một thói quen nhỏ giúp kiến thức ở lại lâu hơn."
 category: chu-de-1
+subtopics:
+  - chu-de-1-con-1
 date: 2026-10-03
 source:
   book: "Sách mẫu 1"

@@ -3,6 +3,8 @@ title: "Làm việc cùng người khác mà không mất mình"
 slug: demo-16-lam-viec-voi-nguoi-khac
 description: "Giữ ranh giới rõ ràng nhưng vẫn hợp tác tốt: những câu nói giúp việc đó dễ hơn."
 category: chu-de-3
+subtopics:
+  - chu-de-3-con-2
 date: 2026-08-04
 source:
   book: "Sách mẫu 2"

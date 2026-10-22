@@ -20,11 +20,42 @@ function run(files: Record<string, string>, env: Record<string, string> = {}) {
   return { code: r.status, out: r.stdout };
 }
 
-const topic = { "content/topics/chu-de-1.json": JSON.stringify({ name: "Chủ đề 1", description: "Mô tả", image: "/images/t.jpg" }), "public/images/t.jpg": "x" };
-const post = (extra = "") =>
-  `---\ntitle: Bài A\ndescription: "Mô tả đủ dài để qua ngưỡng cảnh báo năm mươi ký tự cho SEO nhé"\ncategory: chu-de-1\ndate: 2026-10-05\nsource:\n  book: "Sách X"\n  author: "Tác giả"\n${extra}---\nNội dung.\n`;
+const topicOnly = { "content/topics/chu-de-1.json": JSON.stringify({ name: "Chủ đề 1", description: "Mô tả", image: "/images/t.jpg" }), "public/images/t.jpg": "x" };
+const subtopic = { "content/subtopics/chu-de-1-con-1.json": JSON.stringify({ name: "Con 1", topic: "chu-de-1", description: "Mô tả" }) };
+const topic = { ...topicOnly, ...subtopic };
+const post = (extra = "", subs = "subtopics:\n  - chu-de-1-con-1\n") =>
+  `---\ntitle: Bài A\ndescription: "Mô tả đủ dài để qua ngưỡng cảnh báo năm mươi ký tự cho SEO nhé"\ncategory: chu-de-1\n${subs}date: 2026-10-05\nsource:\n  book: "Sách X"\n  author: "Tác giả"\n${extra}---\nNội dung.\n`;
 
 describe("scripts/check-content.mjs", () => {
+  it("bài thiếu chủ đề con, hoặc chủ đề con không có / thuộc chủ đề khác, là LỖI", () => {
+    const none = run({ ...topic, "content/posts/bai-a.md": post("", "") });
+    expect(none.code).toBe(1);
+    expect(none.out).toContain("subtopics");
+    const missing = run({ ...topic, "content/posts/bai-a.md": post("", "subtopics:\n  - khong-co\n") });
+    expect(missing.code).toBe(1);
+    expect(missing.out).toContain("content/subtopics");
+    const other = run({
+      ...topic,
+      "content/topics/chu-de-2.json": JSON.stringify({ name: "Chủ đề 2", description: "Mô tả", image: "/images/t.jpg" }),
+      "content/subtopics/chu-de-2-con-1.json": JSON.stringify({ name: "Con", topic: "chu-de-2", description: "Mô tả" }),
+      "content/posts/bai-a.md": post("", "subtopics:\n  - chu-de-2-con-1\n"),
+    });
+    expect(other.code).toBe(1);
+    expect(other.out).toContain("không thuộc chủ đề");
+  });
+
+  it("chủ đề con: thiếu chủ đề lớn / trỏ chủ đề không có / slug 'trang' là LỖI", () => {
+    const bad = run({
+      ...topic,
+      "content/subtopics/trang.json": JSON.stringify({ name: "Trang", topic: "chu-de-1", description: "Mô tả" }),
+      "content/subtopics/mo-coi.json": JSON.stringify({ name: "Mồ côi", topic: "khong-co", description: "Mô tả" }),
+      "content/posts/bai-a.md": post(),
+    });
+    expect(bad.code).toBe(1);
+    expect(bad.out).toContain("phân trang");
+    expect(bad.out).toContain('chủ đề "khong-co"');
+  });
+
   it("nội dung đúng thì đạt (mã 0)", () => {
     const r = run({ ...topic, "content/posts/bai-a.md": post() });
     expect(r.code).toBe(0);
