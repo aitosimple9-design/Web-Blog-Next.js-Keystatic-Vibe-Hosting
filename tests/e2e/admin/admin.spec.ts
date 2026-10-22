@@ -191,6 +191,30 @@ test.describe("API của trang quản trị (máy local)", () => {
     await expect(page.locator("[data-ks-site-url]")).toHaveCount(0);
   });
 
+  test("/api/thong-ke trả số bài, số chủ đề con và tên; danh sách Chủ đề / Chủ đề con / Bài viết có cột đếm và cột tên", async ({ request, page }) => {
+    const res = await request.get("/api/thong-ke");
+    expect(res.status()).toBe(200);
+    const data = await res.json();
+    const firstTopic = Object.keys(data.topics)[0];
+    expect(data.topics[firstTopic].subtopics).toBeGreaterThan(0);
+    expect(Object.keys(data.subtopics).length).toBeGreaterThan(0);
+    const headers = async (collection: string) => {
+      await page.goto(`/keystatic/collection/${collection}`);
+      await page.waitForSelector('main [role="row"][data-key]', { state: "attached" });
+      await expect(page.locator('main [role="columnheader"]').first()).toBeVisible();
+      return page.locator('main [role="columnheader"]').allInnerTexts();
+    };
+    expect((await headers("topics")).map((h) => h.trim())).toEqual(["Slug", "Tên chủ đề", "Số chủ đề con", "Số bài viết", "Thứ tự", "Mô tả ngắn", "Ảnh nền"]);
+    expect((await headers("subtopics")).map((h) => h.trim())).toEqual(["Slug", "Tên chủ đề con", "Chủ đề", "Số bài viết", "Thứ tự", "Mô tả ngắn", "Ảnh bìa"]);
+    const posts = (await headers("posts")).map((h) => h.trim());
+    expect(posts.slice(0, 5)).toEqual(["Slug", "Tiêu đề", "Chủ đề", "Chủ đề con", "Nguồn sách"]);
+    // Ô Chủ đề của bài hiện TÊN chủ đề (không phải slug)
+    const row = page.locator('main [role="row"][data-key]').first();
+    await expect(row).toBeVisible();
+    const slugs = Object.keys(data.topics);
+    await expect(row.locator('[data-key^="category"]')).not.toHaveText(new RegExp(`^(${slugs.join("|")})$`));
+  });
+
   test("/api/ten-sach trả tên sách theo slug", async ({ request }) => {
     const res = await request.get("/api/ten-sach");
     expect(res.status()).toBe(200);

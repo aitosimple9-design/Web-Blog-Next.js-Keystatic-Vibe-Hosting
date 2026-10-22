@@ -15,7 +15,7 @@ test.beforeEach(async ({ request }) => {
 test.describe("Cổng quản trị viên (chế độ GitHub)", () => {
   test("không cookie / token giả / token chỉ đọc đều nhận 404 ở mọi API và trang xem trước", async ({ request }) => {
     for (const headers of [{}, BAD, READER]) {
-      for (const url of ["/api/chuyen-huong?existing=1", "/api/diem-seo", "/api/ten-sach", "/xem-truoc/bai-viet/bai-thu-nhanh?branch=nhanh-thu"]) {
+      for (const url of ["/api/chuyen-huong?existing=1", "/api/diem-seo", "/api/ten-sach", "/api/thong-ke", "/xem-truoc/bai-viet/bai-thu-nhanh?branch=nhanh-thu"]) {
         const res = await request.get(url, { headers });
         expect(res.status(), `${url} với ${JSON.stringify(headers)}`).toBe(404);
       }

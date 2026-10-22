@@ -606,8 +606,11 @@ export default config({
       // Cột danh sách. Kiểu của Keystatic chỉ cho trường chữ / số / ngày; trường ảnh (đối tượng) ép vào được nhưng chỉ hiện ĐƯỜNG DẪN chữ,
       // nên src/app/keystatic/KeystaticThumbnails.tsx đổi đường dẫn ảnh trong ô thành ảnh thu nhỏ ở trình duyệt. Khối lồng (như `source.book`)
       // không làm cột được. Nhãn ô cũng là tiêu đề cột nên giữ NGẮN, chú thích để ở `description`.
-      columns: ["name", "order", "description", "image"] as never,
+      columns: ["name", "subtopicCount", "postCount", "order", "description", "image"] as never,
       schema: {
+        // Hai ô giữ chỗ cho cột đếm (không lưu gì vào file): src/cms/ui/KeystaticThumbnails.tsx điền số lấy từ /api/thong-ke
+        subtopicCount: fields.empty(),
+        postCount: fields.empty(),
         name: fields.slug({
           name: { label: "Tên chủ đề", validation: { isRequired: true } },
           slug: { label: "Slug (tên file, khớp với ô Chủ đề của bài và địa chỉ /blog/<slug>)" },
@@ -631,8 +634,10 @@ export default config({
       path: "content/subtopics/*",
       slugField: "name",
       format: "json",
-      columns: ["name", "topic", "order", "description"] as never, // xem ghi chú về cột ở collection topics
+      // Thứ tự cột: Slug, Tên, Chủ đề, Số bài viết, Thứ tự, Mô tả, Ảnh bìa. `postCount` là ô giữ chỗ (không lưu gì), số điền ở KeystaticThumbnails
+      columns: ["name", "topic", "postCount", "order", "description", "image"] as never,
       schema: {
+        postCount: fields.empty(),
         name: fields.slug({
           name: { label: "Tên chủ đề con", validation: { isRequired: true } },
           slug: { label: "Slug (tên file, duy nhất toàn site, là địa chỉ /blog/<chủ đề>/<slug>; không dùng \"trang\")" },
@@ -650,7 +655,7 @@ export default config({
           validation: { isRequired: true, length: { max: 200 } },
         }),
         image: fields.image({
-          label: "Ảnh",
+          label: "Ảnh bìa",
           description: "Tùy chọn. Hiện ở thẻ chủ đề con trên trang Blog; để trống thì dùng hình sinh tự động",
           directory: "public/images/subtopics",
           publicPath: "/images/subtopics/",
@@ -688,7 +693,8 @@ export default config({
       previewUrl: "/xem-truoc/bai-viet/{slug}?branch={branch}",
       format: { contentField: "content" },
       entryLayout: "content",
-      columns: ["title", "source", "category", "date", "status", "draft", "focusKeyword", "cover"] as never, // xem ghi chú về cột ở collection topics
+      // Thứ tự cột: Slug, Tiêu đề, Chủ đề, Chủ đề con, Nguồn sách, ... Chủ đề / Chủ đề con hiện TÊN (không phải slug), do KeystaticThumbnails thay từ /api/thong-ke
+      columns: ["title", "category", "subtopics", "source", "date", "status", "draft", "focusKeyword", "cover"] as never, // xem ghi chú về cột ở collection topics
       schema: {
         // Bài hiện có khai báo `slug:` trong frontmatter (mục 5) mà Keystatic không cho khóa lạ → khai báo "bỏ qua".
         // Slug thật luôn là tên file (nhập ở ô Slug bên dưới).

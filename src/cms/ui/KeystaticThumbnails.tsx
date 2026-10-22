@@ -6,6 +6,9 @@
 // Cột "Nguồn sách" của danh sách Bài viết: Keystatic không đọc được khối lồng nên ô hiện "[object Object]"; thay bằng tên sách lấy từ /api/ten-sach.
 // Cột "SEO" của danh sách Bài viết: Keystatic không có cột tính toán nên mượn cột "Từ khóa chính" làm chỗ giữ chỗ, đổi tiêu đề thành
 // "Điểm SEO" và vẽ điểm (số + chữ Tốt / Cần cải thiện / Chưa đạt, không chỉ màu) lấy từ /api/diem-seo (src/lib/seo-score.ts).
+// Cột đếm và cột tên (Lộc yêu cầu 2026-10-22), số liệu lấy từ /api/thong-ke: danh sách Chủ đề có "Số chủ đề con", "Số bài viết"; Chủ đề con có "Số bài viết"
+// và cột Chủ đề hiện TÊN; Bài viết hiện TÊN chủ đề và các chủ đề con (thay cho slug). Hai cột đếm là ô giữ chỗ `fields.empty()` trong keystatic.config.ts
+// (không lưu gì vào file); tiêu đề cột "Empty" được đổi tên theo khóa cột (`data-key` của ô tiêu đề). Số bài đếm CẢ bài nháp / lên lịch.
 // Danh sách của Keystatic được "ảo hóa" (hàng được tái sử dụng khi cuộn / lọc) nên phải cập nhật lại mỗi khi DOM đổi.
 import { useEffect } from "react";
 import { SEO_LABEL, isDarkTheme, seoPalette, type SeoLevel } from "./ks-theme";
@@ -17,9 +20,15 @@ const HEIGHT = 32; // hàng danh sách cao 45px
 const OBJECT_TEXT = "[object Object]";
 const BOOK_ATTR = "data-ks-book";
 const SEO_ATTR = "data-ks-seo";
+type StatsData = {
+  topics: Record<string, { name: string; subtopics: number; posts: number }>;
+  subtopics: Record<string, { name: string; topic: string; topicName: string; posts: number }>;
+  posts: Record<string, { topicName: string; subtopicNames: string[] }>;
+};
 const SEO_HEADER = "Từ khóa chính"; // nhãn của ô chọn làm chỗ giữ chỗ (keystatic.config.ts, cột "focusKeyword")
 let books: Record<string, string> = {};
 let seo: Record<string, { score: number; level: SeoLevel }> = {};
+let stats: StatsData | null = null;
 let lastFetch = 0;
 const REFRESH_MS = 10000; // sau khi lưu bài, điểm cũ được tải lại ở lần danh sách vẽ tiếp theo
 
@@ -38,6 +47,7 @@ function loadMaps() {
       .catch(() => {});
   get<Record<string, string>>("/api/ten-sach", (d) => (books = d));
   get<typeof seo>("/api/diem-seo", (d) => (seo = d));
+  get<StatsData>("/api/thong-ke", (d) => (stats = d));
 }
 
 // Cột "Điểm SEO": tìm cột theo tiêu đề, đổi tên, rồi vẽ điểm vào ô của từng hàng (ô nào cũng được tái sử dụng khi cuộn)
@@ -84,6 +94,66 @@ function fillSeo() {
   }
 }
 
+// Cột đếm / cột tên: tiêu đề đổi theo khóa cột, ô điền theo hàng. Collection lấy từ địa chỉ (/keystatic/[branch/<nhánh>/]collection/<id>).
+const HEADERS: Record<string, Record<string, string>> = {
+  topics: { subtopicCount: "Số chủ đề con", postCount: "Số bài viết" },
+  subtopics: { postCount: "Số bài viết" },
+  posts: { subtopics: "Chủ đề con" },
+};
+function statValue(collection: string, col: string, slug: string): string | null {
+  if (!stats) return null;
+  if (collection === "topics") {
+    const t = stats.topics[slug];
+    if (!t) return null;
+    return col === "subtopicCount" ? String(t.subtopics) : col === "postCount" ? String(t.posts) : null;
+  }
+  if (collection === "subtopics") {
+    const s = stats.subtopics[slug];
+    if (!s) return null;
+    return col === "postCount" ? String(s.posts) : col === "topic" ? s.topicName : null;
+  }
+  if (collection === "posts") {
+    const p = stats.posts[slug];
+    if (!p) return null;
+    return col === "category" ? p.topicName : col === "subtopics" ? p.subtopicNames.join(", ") : null;
+  }
+  return null;
+}
+function setLeaf(cell: HTMLElement, value: string) {
+  const leaf = [...cell.querySelectorAll<HTMLElement>("span, div")].filter((l) => l.children.length === 0).pop();
+  if (!leaf) return;
+  if (leaf.textContent !== value) leaf.textContent = value;
+  if (leaf.title !== value) leaf.title = value;
+}
+function fillStats() {
+  const collection = /\/collection\/([^/]+)\/?$/.exec(location.pathname)?.[1];
+  if (!collection || !(collection in HEADERS)) return;
+  for (const head of document.querySelectorAll<HTMLElement>('main [role="columnheader"]')) {
+    const label = HEADERS[collection][head.getAttribute("data-key") ?? ""];
+    if (!label) continue;
+    for (const leaf of head.querySelectorAll<HTMLElement>("span")) {
+      if (leaf.children.length === 0 && leaf.textContent !== label) {
+        leaf.textContent = label;
+        leaf.title = label;
+      }
+    }
+  }
+  const cols = Object.keys(collection === "topics" ? { subtopicCount: 1, postCount: 1 } : collection === "subtopics" ? { postCount: 1, topic: 1 } : { category: 1, subtopics: 1 });
+  for (const row of document.querySelectorAll<HTMLElement>('main [role="row"][data-key]')) {
+    const slug = (row.getAttribute("data-key") ?? "").replace(/^key:/, "");
+    for (const col of cols) {
+      const cell = row.querySelector<HTMLElement>(`[data-key="${col}${slug}"]`);
+      if (!cell) continue;
+      const value = statValue(collection, col, slug);
+      if (value === null) {
+        if (!stats) loadMaps();
+        continue;
+      }
+      setLeaf(cell, value);
+    }
+  }
+}
+
 // Thay chữ "[object Object]" trong ô bằng tên sách của bài ở hàng đó (slug nằm ở một ô khác cùng hàng)
 function fillBooks(row: HTMLElement) {
   const leaves = [...row.querySelectorAll<HTMLElement>("span, div")].filter((l) => l.children.length === 0);
@@ -108,6 +178,7 @@ function restore(leaf: HTMLElement) {
 
 function enhance() {
   fillSeo();
+  fillStats();
   if (Date.now() - lastFetch > REFRESH_MS && document.querySelector('main [role="row"]')) loadMaps();
   for (const row of document.querySelectorAll<HTMLElement>('main [role="row"]')) {
     fillBooks(row);

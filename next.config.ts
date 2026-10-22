@@ -29,6 +29,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/diem-seo": ["./content/**/*"],
     "/api/ten-sach": ["./content/**/*"],
+    "/api/thong-ke": ["./content/**/*"],
     "/api/chuyen-huong": ["./content/**/*"],
     "/xem-truoc/bai-viet/[slug]": ["./content/**/*"],
   },
