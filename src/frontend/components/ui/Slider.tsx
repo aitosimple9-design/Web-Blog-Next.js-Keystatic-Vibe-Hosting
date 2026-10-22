@@ -2,7 +2,7 @@
 
 // Thanh trượt ngang dùng chung (chủ đề ở Trang chủ, bài liên quan ở Chi tiết bài).
 // Vuốt / cuộn / phím mũi tên; có chấm vị trí và nút ‹ › trượt từng thẻ; nút khóa ở hai đầu.
-// `controls="sides"` (khối chủ đề con ở trang Blog): bỏ hàng chấm, đặt nút ‹ › nổi ở GIỮA hai bên khối; nút ẩn hẳn khi đã tới đầu / cuối.
+// `controls="sides"` (khối chủ đề con ở trang Blog): bỏ hàng chấm, đặt nút ‹ › nổi ở GIỮA hai bên khối (từ 768px; dưới đó chỉ vuốt, để nút không che chữ thẻ); nút ẩn hẳn khi đã tới đầu / cuối.
 import { useUiLabels } from "@/frontend/components/ui/UiLabels";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@/frontend/components/ui/Icon";
@@ -83,7 +83,7 @@ export function Slider({
   const showControls = s.positions > 1;
   const sides = controls === "sides";
   const sideBtn =
-    "tap absolute top-1/2 z-10 grid -translate-y-1/2 place-items-center rounded-pill border-(length:--border-width) border-rule-strong bg-paper-raised text-ink shadow-elevated-md transition-[opacity,background-color] duration-(--motion-fast) hover:bg-paper-sunk disabled:pointer-events-none disabled:opacity-0";
+    "tap absolute top-1/2 z-10 hidden -translate-y-1/2 place-items-center tablet:grid rounded-pill border-(length:--border-width) border-rule-strong bg-paper-raised text-ink shadow-elevated-md transition-[opacity,background-color] duration-(--motion-fast) hover:bg-paper-sunk disabled:pointer-events-none disabled:opacity-0";
 
   return (
     <div className={sides ? "relative" : undefined}>
