@@ -157,3 +157,28 @@ test.describe("Chủ đề con", () => {
     expect((await request.get(`/blog/${bigTopic}/trang`)).status()).toBe(404);
   });
 });
+
+// ---------- Ô tìm kiếm: chỉ mục tải khi chạm vào ô (không nằm trong HTML mọi trang) ----------
+test.describe("Tìm kiếm", () => {
+  test("HTML trang không chứa chỉ mục; chạm vào ô mới tải /api/tim-kiem, rồi gõ ra kết quả", async ({ page, request }) => {
+    const html = await (await request.get("/blog")).text();
+    expect(html).not.toContain('"book":"Sách mẫu');
+    const api = await request.get("/api/tim-kiem");
+    expect(api.status()).toBe(200);
+    expect(api.headers()["x-robots-tag"]).toContain("noindex");
+    const items = (await api.json()) as { slug: string; title: string }[];
+    expect(items.length).toBeGreaterThan(0);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    let loaded = 0;
+    page.on("request", (r) => r.url().includes("/api/tim-kiem") && loaded++);
+    await page.goto("/");
+    expect(loaded).toBe(0);
+    await page.goto("/blog");
+    expect(loaded).toBe(0);
+    const box = page.locator('input[type="search"]');
+    await box.focus();
+    await box.fill(items[0].title.slice(0, 12));
+    await expect(page.getByRole("link", { name: new RegExp(items[0].title.slice(0, 12)) }).first()).toBeVisible();
+    expect(loaded).toBe(1);
+  });
+});

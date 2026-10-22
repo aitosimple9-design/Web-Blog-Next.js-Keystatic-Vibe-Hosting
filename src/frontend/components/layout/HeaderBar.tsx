@@ -13,7 +13,7 @@ import type { LogoImage } from "@/shared/content/settings";
 import { CloseIcon, MenuIcon } from "@/frontend/components/ui/Icon";
 import { MobileMenu } from "@/frontend/components/layout/MobileMenu";
 import { ThemeToggle } from "@/frontend/components/ui/ThemeToggle";
-import { SearchBox, type SearchItem } from "@/frontend/components/layout/SearchBox";
+import { SearchBox } from "@/frontend/components/layout/SearchBox";
 
 export type HeaderTone = "paper" | "sunk" | "inverse";
 
@@ -63,7 +63,6 @@ function Logo({ name, image, alt }: { name: string; image?: LogoImage; alt: stri
 
 export function HeaderBar({
   tone,
-  searchIndex,
   navGroups,
   siteName,
   logoImage,
@@ -72,7 +71,6 @@ export function HeaderBar({
   showThemeToggle,
 }: {
   tone: HeaderTone;
-  searchIndex: SearchItem[];
   navGroups: NavGroup[];
   siteName: string;
   logoImage?: LogoImage;
@@ -179,7 +177,7 @@ export function HeaderBar({
         </nav>
 
         <div className="col-start-2 flex items-center justify-self-end tablet:col-start-3">
-          {showSearch ? <SearchBox index={searchIndex} /> : null}
+          {showSearch ? <SearchBox /> : null}
           {showThemeToggle ? <ThemeToggle /> : null}
         </div>
       </div>

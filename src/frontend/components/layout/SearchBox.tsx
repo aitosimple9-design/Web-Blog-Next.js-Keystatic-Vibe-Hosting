@@ -17,7 +17,21 @@ const fold = (s: string) =>
     .replace(/[̀-ͯ]/g, "")
     .replace(/đ/g, "d");
 
-export function SearchBox({ index }: { index: SearchItem[] }) {
+// Chỉ mục tải MỘT lần khi người đọc chạm vào ô tìm kiếm (không nằm trong HTML của trang): /api/tim-kiem
+let indexPromise: Promise<SearchItem[]> | null = null;
+const loadIndex = () => {
+  indexPromise ??= fetch("/api/tim-kiem")
+    .then((r) => (r.ok ? (r.json() as Promise<SearchItem[]>) : []))
+    .catch(() => {
+      indexPromise = null; // lỗi mạng: lần chạm sau thử lại
+      return [] as SearchItem[];
+    });
+  return indexPromise;
+};
+
+export function SearchBox() {
+  const [index, setIndex] = useState<SearchItem[] | null>(null);
+  const warm = () => void loadIndex().then(setIndex);
   const ui = useUiLabels();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -31,7 +45,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
     const term = fold(q.trim());
     if (term.length < 2) return [];
     const words = term.split(/\s+/);
-    return index
+    return (index ?? [])
       .filter((p) => {
         const hay = fold(`${p.title} ${p.description} ${p.topic} ${p.book}`);
         return words.every((w) => hay.includes(w));
@@ -59,7 +73,7 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
     setFocused(false);
     setQ("");
   };
-  const showPanel = focused && q.trim().length >= 2;
+  const showPanel = focused && q.trim().length >= 2 && index !== null;
 
   return (
     <div ref={root} className="desktop:relative">
@@ -68,7 +82,10 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
         aria-label={open ? ui.searchClose : ui.searchOpen}
         aria-expanded={open}
         aria-controls={listId}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          warm();
+          setOpen((v) => !v);
+        }}
         className="tap inline-flex items-center justify-center rounded-sm transition-colors duration-(--motion-fast) hover:bg-current/10 desktop:hidden"
       >
         {open ? <CloseIcon /> : <SearchIcon />}
@@ -96,7 +113,10 @@ export function SearchBox({ index }: { index: SearchItem[] }) {
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              onFocus={() => setFocused(true)}
+              onFocus={() => {
+                warm();
+                setFocused(true);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Escape") close();
               }}

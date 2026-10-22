@@ -181,7 +181,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 - Giá trị token và quy tắc chi tiết nằm trong `docs/design-system/`; khi CLAUDE.md và Design System lệch nhau về giao diện, báo Lộc, không tự chọn.
 - Số CTA → tối đa 1 CTA chính mỗi khu vực
 - CẤM: emoji, câu chữ sáo rỗng ("Nâng tầm", "Đột phá"), tên giả, chữ "Cuộn để khám phá"
-- Font theo Design System (Source Serif 4 + Be Vietnam Pro, subset `vietnamese`, `next/font/google`).
+- Font theo Design System (Source Serif 4 + Be Vietnam Pro, subset `vietnamese`, `next/font/google`). **Tốc độ (Lộc giao 2026-10-22):** chữ NGHIÊNG của Source Serif khai báo riêng (`--next-serif-italic`, `preload: false`, chỉ dùng ở câu trích và `<em>` trong bài) để trang không có chữ nghiêng khỏi tải thêm font ở lần tải đầu; thêm font / trọng lượng mới phải cân nhắc vì mỗi file preload nằm trên đường tới hạn. Chỉ mục tìm kiếm KHÔNG nằm trong HTML: `/api/tim-kiem` là JSON tĩnh dựng lúc build, `SearchBox` tải một lần khi chạm vào ô; ảnh `next/image` giữ cache 7 ngày (`images.minimumCacheTTL`, thay ảnh bằng file cùng tên thì chậm thấy ảnh mới, nên đặt tên ảnh khác). Hero Trang chủ có cánh cửa mở đầu (đã duyệt) nên Lighthouse không đo được LCP của `/` và `/book` (lỗi NO_LCP của phép đo lab, người dùng thật không bị).
 - Responsive bắt buộc test đủ 5 mốc: 375px (mobile nhỏ), 414px (mobile lớn), 768px (tablet dọc), 1024px (tablet ngang), 1440px (desktop).
   Giữa các mốc: layout phải reflow mượt (fluid), không vỡ cột / tràn chữ ở bất kỳ điểm nào trong khoảng — không chỉ đúng tại 5 con số trên.
   Dùng chung điểm ngắt của Design System (`bp-phone` 480, `bp-tablet` 768, `bp-desktop` 1024, `bp-wide` 1120).
