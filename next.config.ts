@@ -12,6 +12,8 @@ const siteUrl = checkSiteUrl();
 if (siteUrl.level === "error") throw new Error(`[NEXT_PUBLIC_SITE_URL] ${siteUrl.message}`);
 
 const nextConfig: NextConfig = {
+  // Ảnh tối ưu (next/image) giữ trong bộ nhớ đệm 7 ngày thay vì 60 giây mặc định: ít lần tối ưu lại, ảnh về nhanh hơn. Thay ảnh bằng file CÙNG TÊN thì tối đa 7 ngày sau mới thấy ảnh mới (nên đặt tên ảnh khác).
+  images: { minimumCacheTTL: 604800 },
   // Thư mục build riêng cho server dev của E2E trang quản trị (tránh đụng server dev đang chạy của máy); bình thường vẫn là .next
   distDir: process.env.NEXT_DIST_DIR || ".next",
   // Chỉ ảnh hưởng khi chạy `npm run dev`: đưa nút "N" của Next.js sang góc phải để không đè lên icon mạng xã hội ở góc dưới trái Hero

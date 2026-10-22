@@ -11,9 +11,19 @@ import "./globals.css";
 const serif = Source_Serif_4({
   subsets: ["latin", "vietnamese"],
   weight: ["400", "600"],
-  style: ["normal", "italic"],
+  style: ["normal"],
   variable: "--next-serif",
   display: "swap",
+});
+// Chữ NGHIÊNG chỉ dùng ở câu trích và chữ <em> trong bài: khai báo riêng và KHÔNG preload, nên trang không có chữ nghiêng
+// không tải thêm 4 file font (~120KB) ở đường tới hạn của lần tải đầu (tối ưu tốc độ 2026-10-22). Dùng ở prose.css.
+const serifItalic = Source_Serif_4({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "600"],
+  style: ["italic"],
+  variable: "--next-serif-italic",
+  display: "swap",
+  preload: false,
 });
 const sans = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -55,7 +65,7 @@ const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!==
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const ui = getUiLabels();
   return (
-    <html lang="vi" suppressHydrationWarning className={`${serif.variable} ${sans.variable}`}>
+    <html lang="vi" suppressHydrationWarning className={`${serif.variable} ${serifItalic.variable} ${sans.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
