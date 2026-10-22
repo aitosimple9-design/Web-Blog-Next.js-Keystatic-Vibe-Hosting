@@ -20,10 +20,6 @@
       "Bash(gh run list *)"
     ],
     "deny": [
-      "Edit(**/.env*)",
-      "Write(**/.env*)",
-      "Edit(./.github/workflows/**)",
-      "Write(./.github/workflows/**)",
       "Bash(gh pr merge *)",
       "Bash(gh repo delete *)",
       "Bash(gh secret *)",
@@ -38,6 +34,10 @@
       "mcp__github__delete_file"
     ],
     "ask": [
+      "Edit(**/.env*)",
+      "Write(**/.env*)",
+      "Edit(./.github/workflows/**)",
+      "Write(./.github/workflows/**)",
       "Bash(npm install *)",
       "Bash(npm i *)",
       "Bash(npm uninstall *)",
@@ -56,5 +56,13 @@
     "code-review@anthropic-plugin-directory": true,
     "feature-dev@anthropic-plugin-directory": true,
     "commit-commands@anthropic-plugin-directory": true
+  },
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(git push:*) direct to main — CLAUDE.md §10 requires feature branches and PRs, never direct commits to main",
+      "Edit/Write on content/posts/* existing files without explicit instruction — CLAUDE.md §12 forbids modifying or deleting existing post files unless explicitly requested",
+      "Edit/Write on .env* files — CLAUDE.md §12 and §8 forbid editing .env* or committing secrets"
+    ]
   }
 }
