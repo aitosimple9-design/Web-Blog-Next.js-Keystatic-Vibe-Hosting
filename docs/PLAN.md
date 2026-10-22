@@ -182,6 +182,7 @@ Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm S
 ## Chủ đề con (Lộc giao 2026-10-22; 3 PR, mỗi PR Lộc merge)
 - [x] PR 1 — Dữ liệu và quản trị: `content/subtopics`, mục Keystatic "Chủ đề con", bài bắt buộc có `subtopics` (nhiều lựa chọn, phải thuộc chủ đề của bài), `check-content`, xem trước nhánh GitHub, 14 chủ đề con mẫu gán cho 22 bài
 - [x] PR 2 — Trang Blog: khối chủ đề con phía trên danh sách bài (5 thẻ, trượt + nút hai bên), trang `/blog/<chủ đề>/<chủ đề con>` (+ phân trang, sitemap, canonical, chuyển hướng khi mất / đổi slug), khối bật / tắt trong Keystatic, nhãn vào "Nhãn giao diện"
+- [x] 2026-10-22 — Ảnh demo cho 14 chủ đề con; cột đếm / cột tên ở danh sách quản trị (Chủ đề, Chủ đề con, Bài viết, `/api/thong-ke`); hợp đồng cấu trúc dự án B cập nhật (repo B, nhánh `docs/cau-truc-bai-viet`)
 - [ ] PR 3 — Đồng bộ tài liệu (layout Blog, EXTENSIONS, design-reviewer), E2E, `ui-tester` 3 mốc
 
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
