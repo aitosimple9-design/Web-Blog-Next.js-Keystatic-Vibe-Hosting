@@ -24,7 +24,7 @@ function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; c
           src={sub.image}
           alt=""
           fill
-          sizes="(min-width: 1024px) 260px, (min-width: 768px) 30vw, 44vw"
+          sizes="(min-width: 1024px) 200px, (min-width: 768px) 30vw, 44vw"
           className="-z-20 object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.06]"
         />
       ) : (
@@ -36,7 +36,7 @@ function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; c
           <span className="type-ui-strong tabular-nums">{count}</span>
           bài
         </p>
-        <h3 className="type-display-sm text-balance">
+        <h3 className="type-title text-balance">
           <Link
             href={subtopicHref(sub.topic, sub.slug)}
             aria-current={current ? "page" : undefined}
@@ -71,12 +71,12 @@ export function SubtopicRail({
     <section aria-labelledby="subtopics-title" className="mb-s6 tablet:mb-s7">
       <div className="mb-s6"><SectionHead id="subtopics-title" title={text.title} dek={text.dek} size="xl" /></div>
       {/* Khối thu hẹp hai bên (không tràn hết khung): 3 thẻ dọc cùng lúc, nút ‹ › nằm hai bên */}
-      <div className="@container mx-auto max-w-[50rem]">
+      <div className="@container mx-auto max-w-[38rem]">
         <Slider
           label={getUiLabels().subtopicList}
           controls="sides"
           trackClassName="-my-8 py-8 [justify-content:safe_center]"
-          itemClassName="w-[56cqw] tablet:w-[calc((100cqw-2*var(--space-4))/3)] [&>*]:h-full"
+          itemClassName="w-[46cqw] tablet:w-[calc((100cqw-2*var(--space-4))/3)] [&>*]:h-full"
           items={subtopics.map((s) => (
             <SubtopicCard key={s.slug} sub={s} count={counts[s.slug] ?? 0} current={s.slug === currentSlug} />
           ))}
