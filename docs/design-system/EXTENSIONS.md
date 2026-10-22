@@ -13,7 +13,7 @@ Mọi mở rộng vẫn dùng đúng bảng màu, bo góc, kiểu chữ, token c
 | Ngày | Nội dung | Nơi áp dụng |
 |---|---|---|
 | 2026-10-07 | **Ảnh bìa nghệ thuật sinh tự động** (`CoverArt`): hình học đơn sắc từ slug, đổi theo theme, thay ô giữ chỗ trống | Mọi ảnh bài / bìa sách chưa có ảnh thật |
-| 2026-10-22 | **Khối Chủ đề con ở trang Blog** (`SubtopicRail`): thanh trượt thẻ 4:5 (5 thẻ cùng lúc từ 1024px), thẻ theo ngôn ngữ thẻ chủ đề (ảnh tràn hoặc `CoverArt`, phủ `inverse` 65%, chữ trên ảnh, `elevated-md`), và biến thể `Slider controls="sides"`: nút ‹ › tròn nổi (`elevated-md`) ở giữa chiều cao hai bên khối, ẩn hẳn ở đầu / cuối, không hàng chấm | `docs/layout/blog/` |
+| 2026-10-22 | **Khối Chủ đề con ở trang Blog** (`SubtopicRail`): tiêu đề căn giữa `display-xl` (`SectionHead size="xl"`, lớn hơn tiêu đề danh sách bài `display-lg`) có họa tiết Ornament; khối thu hẹp (tối đa 38rem) với thanh trượt thẻ dọc 3:4 (3 thẻ cùng lúc từ 768px), thẻ theo ngôn ngữ thẻ chủ đề (ảnh tràn hoặc `CoverArt`, phủ `inverse` 65%, chữ trên ảnh, `elevated-sm`), và biến thể `Slider controls="sides"`: nút ‹ › tròn nổi (`elevated-md`) ở giữa chiều cao hai bên khối từ 768px (dưới đó chỉ vuốt), ẩn hẳn ở đầu / cuối, không hàng chấm | `docs/layout/blog/` |
 | 2026-10-07 | **Ảnh minh họa thật** từ nguồn có giấy phép, ghi ở `public/images/CREDITS.md` (CC BY phải ghi công trên web thật) | Bài mẫu, hero |
 | 2026-10-07 | **Hiệu ứng vào trang** (chữ hiện từng từ, nổi lên lần lượt), **theo con trỏ** (nghiêng, lớp trôi), **theo cuộn** (dải chữ, thị sai, thanh tiến độ đọc), **đếm số**, **View Transition** ảnh thẻ → trang bài | Hero Trang chủ, hero Blog, trang bài |
 | 2026-10-07 | **Hover**: nút nền quét, thẻ nhấc + ảnh phóng, gạch chân chạy, mũi tên trượt, icon nhấc, logo xoay | Toàn site |

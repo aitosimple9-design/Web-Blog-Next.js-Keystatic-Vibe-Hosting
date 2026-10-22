@@ -8,13 +8,14 @@ import { fillLabel } from "@/shared/config/ui-labels";
 import { getUiLabels } from "@/shared/content/ui-labels";
 import type { Subtopic } from "@/shared/content/subtopics";
 import { CoverArt } from "@/frontend/components/ui/CoverArt";
+import { SectionHead } from "@/frontend/components/ui/SectionHead";
 import { Slider } from "@/frontend/components/ui/Slider";
 import { subtopicHref } from "@/shared/blog-links";
 
 function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; current: boolean }) {
   return (
     <article
-      className={`group lift surface-hover on-inverse relative isolate aspect-[4/5] w-full overflow-hidden rounded-lg bg-inverse text-on-inverse shadow-elevated-md ${
+      className={`group lift surface-hover on-inverse relative isolate aspect-[3/4] w-full overflow-hidden rounded-lg bg-inverse text-on-inverse shadow-elevated-sm ${
         current ? "outline-2 outline-offset-2 outline-accent" : ""
       }`}
     >
@@ -23,7 +24,7 @@ function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; c
           src={sub.image}
           alt=""
           fill
-          sizes="(min-width: 1024px) 224px, (min-width: 768px) 30vw, 44vw"
+          sizes="(min-width: 1024px) 200px, (min-width: 768px) 30vw, 44vw"
           className="-z-20 object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.06]"
         />
       ) : (
@@ -45,6 +46,7 @@ function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; c
             <span className="sr-only"> ({fillLabel(getUiLabels().subtopicPosts, { n: String(count) })})</span>
           </Link>
         </h3>
+        {sub.description ? <p className="type-caption line-clamp-2 text-on-inverse">{sub.description}</p> : null}
       </div>
     </article>
   );
@@ -67,30 +69,26 @@ export function SubtopicRail({
 }) {
   return (
     <section aria-labelledby="subtopics-title" className="mb-s7 tablet:mb-s8">
-      <div className="mb-s5 flex flex-wrap items-end justify-between gap-x-s5 gap-y-s2">
-        <div>
-          <h2 id="subtopics-title" className="type-display-sm text-balance">
-            {text.title}
-          </h2>
-          {text.dek ? <p className="type-excerpt mt-s1 text-ink-soft">{text.dek}</p> : null}
-        </div>
-        {allHref ? (
-          <Link href={allHref} className="type-ui-strong tap inline-flex items-center text-ink underline underline-offset-4">
-            {text.allLabel}
-          </Link>
-        ) : null}
-      </div>
-      <div className="@container">
+      <div className="mb-s6"><SectionHead id="subtopics-title" title={text.title} dek={text.dek} size="xl" /></div>
+      {/* Khối thu hẹp hai bên (không tràn hết khung): 3 thẻ dọc cùng lúc, nút ‹ › nằm hai bên */}
+      <div className="@container mx-auto max-w-[38rem]">
         <Slider
           label={getUiLabels().subtopicList}
           controls="sides"
-          trackClassName="-my-8 py-8"
-          itemClassName="w-[44cqw] tablet:w-[calc((100cqw-2*var(--space-4))/3.3)] desktop:w-[calc((100cqw-4*var(--space-4))/5)] [&>*]:h-full"
+          trackClassName="-my-10 py-10 [justify-content:safe_center]"
+          itemClassName="w-[46cqw] tablet:w-[calc((100cqw-2*var(--space-4))/3)] [&>*]:h-full"
           items={subtopics.map((s) => (
             <SubtopicCard key={s.slug} sub={s} count={counts[s.slug] ?? 0} current={s.slug === currentSlug} />
           ))}
         />
       </div>
+      {allHref ? (
+        <div className="mt-s4 text-center">
+          <Link href={allHref} className="type-ui-strong tap inline-flex items-center text-ink underline underline-offset-4">
+            {text.allLabel}
+          </Link>
+        </div>
+      ) : null}
     </section>
   );
 }

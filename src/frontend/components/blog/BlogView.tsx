@@ -135,7 +135,8 @@ export function BlogView({ slug, page, sub }: { slug: string; page: number; sub?
         aria-labelledby="post-list-title"
         className="relative z-0 -mt-[clamp(40px,5.5vw,64px)] bg-paper pt-[clamp(40px,5.5vw,64px)] text-ink"
       >
-        <div className="wrap py-s7 tablet:py-s8">
+        {/* Đệm trên nhỏ (16 / 24px): khối sáng đã chừa sẵn vùng gối dưới nét cọ, nên khối đầu tiên (Chủ đề con hoặc tiêu đề danh sách) nằm sát lên */}
+        <div className="wrap pt-s4 pb-s7 tablet:pt-s5 tablet:pb-s8">
           {railSubtopics.length > 0 ? (
             <SubtopicRail
               subtopics={railSubtopics}

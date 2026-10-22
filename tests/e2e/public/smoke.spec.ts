@@ -122,7 +122,7 @@ for (const s of withPosts) byTopic.set(s.topic, [...(byTopic.get(s.topic) ?? [])
 const [bigTopic, bigSubs] = [...byTopic.entries()].sort((a, b) => b[1].length - a[1].length)[0];
 
 test.describe("Chủ đề con", () => {
-  test("trang chủ đề có khối chủ đề con: thẻ liên kết đúng, 5 thẻ cùng lúc ở 1440px, nút ‹ › trượt được", async ({ page }) => {
+  test("trang chủ đề có khối chủ đề con: thẻ liên kết đúng, 3 thẻ cùng lúc ở 1440px, nút ‹ › trượt được", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(`/blog/${bigTopic}`);
     const region = page.getByRole("region", { name: "Danh sách chủ đề con" });
@@ -131,8 +131,8 @@ test.describe("Chủ đề con", () => {
     await expect(links).toHaveCount(bigSubs.length);
     await expect(links.first()).toHaveAttribute("href", new RegExp(`^/blog/${bigTopic}/`));
     const visible = await region.evaluate((t) => [...t.children].filter((c) => { const r = c.getBoundingClientRect(), tr = t.getBoundingClientRect(); return r.left >= tr.left - 2 && r.right <= tr.right + 2; }).length);
-    expect(visible).toBe(Math.min(5, bigSubs.length));
-    if (bigSubs.length > 5) {
+    expect(visible).toBe(Math.min(3, bigSubs.length));
+    if (bigSubs.length > 3) {
       const next = page.getByRole("button", { name: "Sau" });
       await expect(page.getByRole("button", { name: "Trước" })).toBeDisabled();
       await next.click();
