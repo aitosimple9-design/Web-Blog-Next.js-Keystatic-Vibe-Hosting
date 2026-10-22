@@ -3,6 +3,8 @@ title: "Quản lý tiền bạc từ ba con số"
 slug: demo-17-tien-bac-co-ban
 description: "Ba con số cần biết mỗi tháng để nắm tình hình tài chính cá nhân, không cần bảng tính phức tạp."
 category: chu-de-4
+subtopics:
+  - chu-de-4-con-1
 date: 2026-07-31
 source:
   book: "Sách mẫu 3"

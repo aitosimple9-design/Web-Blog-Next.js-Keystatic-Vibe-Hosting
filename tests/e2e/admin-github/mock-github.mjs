@@ -13,6 +13,8 @@ const POST = `---
 title: "Bài thử ở nhánh"
 description: "Bài chỉ có ở nhánh đang soạn, thuộc chủ đề mới chưa có trong bản build."
 category: chu-de-moi-thu
+subtopics:
+  - chu-de-con-moi-thu
 date: 2026-10-01
 status: draft
 source:
@@ -27,6 +29,7 @@ source:
 Nội dung chỉ tồn tại ở nhánh nhanh-thu.
 `;
 const TOPIC = JSON.stringify({ name: "Chủ đề mới thử", order: 9, description: "Chủ đề chỉ có ở nhánh." });
+const SUBTOPIC = JSON.stringify({ name: "Chủ đề con mới thử", topic: "chu-de-moi-thu", order: 1, description: "Chủ đề con chỉ có ở nhánh." });
 
 let calls = [];
 let redirects = {}; // nhánh -> { tên file: nội dung }
@@ -71,6 +74,7 @@ const server = http.createServer((req, res) => {
       }
       if (ref === "nhanh-thu" && file === "content/posts/bai-thu-nhanh.md") return send(res, 200, POST, "text/plain");
       if (ref === "nhanh-thu" && file === "content/topics/chu-de-moi-thu.json") return send(res, 200, TOPIC, "text/plain");
+      if (ref === "nhanh-thu" && file === "content/subtopics/chu-de-con-moi-thu.json") return send(res, 200, SUBTOPIC, "text/plain");
       return send(res, 404, { message: "Not Found" });
     }
     if (req.method === "PUT" || req.method === "DELETE") {

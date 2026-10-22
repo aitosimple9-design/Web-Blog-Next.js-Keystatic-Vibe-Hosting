@@ -75,6 +75,27 @@ for (const f of files("content/topics", ".json")) {
 }
 if (topicSlugs.size === 0) err("content/topics", "chưa có chủ đề nào");
 
+// ---------- chủ đề con (cấp dưới chủ đề; slug duy nhất toàn site, URL /blog/<chủ đề>/<slug>) ----------
+const subtopicTopic = new Map(); // slug chủ đề con -> slug chủ đề lớn
+for (const f of files("content/subtopics", ".json")) {
+  const slug = f.slice(0, -5);
+  const where = `content/subtopics/${f}`;
+  const s = readJson(where);
+  if (!s) {
+    err(where, "không đọc được (JSON hỏng)");
+    continue;
+  }
+  subtopicTopic.set(slug, str(s.topic));
+  if (!SLUG.test(slug)) err(where, "tên file phải là chữ thường không dấu nối bằng '-'");
+  if (slug === "trang") err(where, 'slug "trang" dành cho phân trang (/blog/<chủ đề>/trang/<n>), hãy đặt tên khác');
+  if (!str(s.name)) err(where, 'thiếu "name"');
+  if (!str(s.topic)) err(where, 'thiếu "topic" (chủ đề lớn)');
+  else if (!topicSlugs.has(str(s.topic))) err(where, `chủ đề "${s.topic}" không có trong content/topics (hiện có: ${[...topicSlugs].join(", ")})`);
+  if (!str(s.description)) warn(where, "chưa có mô tả");
+  if (str(s.image) && !publicFile(s.image)) err(where, `file ảnh không tồn tại: ${s.image}`);
+  if (topicSlugs.has(slug)) warn(where, `slug trùng với một chủ đề (${slug}), dễ nhầm khi chọn trong Keystatic`);
+}
+
 // ---------- sách ----------
 const bookNames = new Set();
 for (const f of files("content/books", ".json")) {
@@ -129,6 +150,16 @@ for (const f of postFiles) {
 
   if (str(data.category) && !topicSlugs.has(str(data.category))) {
     err(where, `chủ đề "${data.category}" không có trong content/topics (hiện có: ${[...topicSlugs].join(", ")})`);
+  }
+  {
+    const subs = Array.isArray(data.subtopics) ? data.subtopics.filter((x) => typeof x === "string" && x.trim()).map((x) => x.trim()) : [];
+    if (subs.length === 0) err(where, 'thiếu "subtopics": bài phải thuộc ít nhất một chủ đề con (Keystatic: ô "Chủ đề con")');
+    for (const sub of new Set(subs)) {
+      if (!subtopicTopic.has(sub)) err(where, `chủ đề con "${sub}" không có trong content/subtopics (hiện có: ${[...subtopicTopic.keys()].join(", ") || "chưa có"})`);
+      else if (str(data.category) && subtopicTopic.get(sub) !== str(data.category)) {
+        err(where, `chủ đề con "${sub}" thuộc chủ đề "${subtopicTopic.get(sub)}", không thuộc chủ đề "${data.category}" của bài`);
+      }
+    }
   }
   if (str(data.source?.book) && !bookNames.has(str(data.source.book))) {
     warn(where, `sách "${data.source.book}" chưa có trong mục Sách, bìa sẽ là hình sinh tự động`);
@@ -417,7 +448,7 @@ try {
 
 // ---------- kết quả ----------
 const out = (title, list) => list.length && console.log(`\n${title} (${list.length})\n${list.map((l) => `  - ${l}`).join("\n")}`);
-console.log(`Đã kiểm tra: ${posts.length} bài, ${topicSlugs.size} chủ đề, ${bookNames.size} sách.`);
+console.log(`Đã kiểm tra: ${posts.length} bài, ${topicSlugs.size} chủ đề, ${subtopicTopic.size} chủ đề con, ${bookNames.size} sách.`);
 out("LỖI", errors);
 out("CẢNH BÁO", warnings);
 out("THÔNG TIN", infos);

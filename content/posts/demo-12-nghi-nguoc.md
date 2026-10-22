@@ -3,6 +3,8 @@ title: "Nghĩ ngược để thấy rõ rủi ro"
 slug: demo-12-nghi-nguoc
 description: "Thay vì hỏi làm sao để thành công, thử hỏi điều gì chắc chắn làm ta thất bại. Cách làm và ví dụ."
 category: chu-de-2
+subtopics:
+  - chu-de-2-con-2
 date: 2026-08-20
 source:
   book: "Sách mẫu 5"

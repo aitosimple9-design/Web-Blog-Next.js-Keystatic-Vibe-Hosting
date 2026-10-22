@@ -39,7 +39,7 @@ export default config({
   ui: {
     brand: { name: "Blog sách" },
     // Menu trái chia nhóm
-    navigation: { "Nội dung": ["posts", "topics", "books", "redirects"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage", "privacyPage", "contactPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings", "uiLabels"] },
+    navigation: { "Nội dung": ["posts", "topics", "subtopics", "books", "redirects"], "Trang": ["homePage", "bookPage", "blogPage", "articlePage", "notFoundPage", "privacyPage", "contactPage"], "Cài đặt": ["siteSettings", "headerSettings", "footerSettings", "newsletterSettings", "uiLabels"] },
   },
   singletons: {
     // Cài đặt site: giá trị dự phòng cho metadata toàn site (đọc bởi src/lib/settings.ts). Mọi ô đều tùy chọn.
@@ -616,6 +616,37 @@ export default config({
         }),
       },
     }),
+    subtopics: collection({
+      label: "Chủ đề con",
+      path: "content/subtopics/*",
+      slugField: "name",
+      format: "json",
+      columns: ["name", "topic", "order", "description"] as never, // xem ghi chú về cột ở collection topics
+      schema: {
+        name: fields.slug({
+          name: { label: "Tên chủ đề con", validation: { isRequired: true } },
+          slug: { label: "Slug (tên file, duy nhất toàn site, là địa chỉ /blog/<chủ đề>/<slug>; không dùng \"trang\")" },
+        }),
+        topic: fields.relationship({
+          label: "Chủ đề",
+          description: "Chủ đề lớn mà chủ đề con này thuộc về",
+          collection: "topics",
+          validation: { isRequired: true },
+        }),
+        order: fields.integer({ label: "Thứ tự", description: "Hiển thị: số nhỏ hiện trước", defaultValue: 1 }),
+        description: fields.text({
+          label: "Mô tả ngắn",
+          multiline: true,
+          validation: { isRequired: true, length: { max: 200 } },
+        }),
+        image: fields.image({
+          label: "Ảnh",
+          description: "Tùy chọn. Hiện ở thẻ chủ đề con trên trang Blog; để trống thì dùng hình sinh tự động",
+          directory: "public/images/subtopics",
+          publicPath: "/images/subtopics/",
+        }),
+      },
+    }),
     books: collection({
       label: "Sách",
       path: "content/books/*",
@@ -666,6 +697,12 @@ export default config({
           label: "Chủ đề",
           collection: "topics",
           validation: { isRequired: true },
+        }),
+        // Bắt buộc ít nhất 1; mỗi chủ đề con phải thuộc đúng chủ đề ở ô trên (kiểm tra ở posts.ts và `npm run check-content`).
+        subtopics: fields.multiRelationship({
+          label: "Chủ đề con (chọn ít nhất một, phải thuộc chủ đề ở trên)",
+          collection: "subtopics",
+          validation: { length: { min: 1 } },
         }),
         date: fields.date({
           label: "Ngày đăng",

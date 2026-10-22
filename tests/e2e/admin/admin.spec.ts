@@ -22,6 +22,7 @@ test.afterAll(() => {
 const MENU = [
   { href: "/keystatic/collection/posts", name: "Bài viết" },
   { href: "/keystatic/collection/topics", name: "Chủ đề" },
+  { href: "/keystatic/collection/subtopics", name: "Chủ đề con" },
   { href: "/keystatic/collection/books", name: "Sách" },
   { href: "/keystatic/collection/redirects", name: "Chuyển hướng" },
   { href: "/keystatic/singleton/homePage", name: "Trang chủ" },
@@ -96,7 +97,7 @@ test.describe("Trang cài đặt (singleton) dạng thẻ", () => {
 });
 
 test.describe("Form Chủ đề / Sách / Chuyển hướng dạng thẻ; form Bài viết giữ nguyên", () => {
-  for (const path of ["collection/topics/create", "collection/books/create", "collection/redirects/create"]) {
+  for (const path of ["collection/topics/create", "collection/subtopics/create", "collection/books/create", "collection/redirects/create"]) {
     test(`${path}: dạng thẻ`, async ({ page }) => {
       await page.goto(`/keystatic/${path}`);
       await expect(page.locator("[data-ks-card]").first()).toBeVisible({ timeout: 30_000 });

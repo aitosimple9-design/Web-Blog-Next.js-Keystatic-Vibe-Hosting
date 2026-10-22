@@ -3,6 +3,9 @@ title: "Đánh dấu sách sao cho khỏi rối"
 slug: demo-06-danh-dau-sach
 description: "Một bộ ký hiệu đơn giản gồm ba loại dấu để lần sau mở lại, mắt tìm ra ý chính ngay."
 category: chu-de-1
+subtopics:
+  - chu-de-1-con-6
+  - chu-de-1-con-1
 date: 2026-09-13
 source:
   book: "Sách mẫu 6"

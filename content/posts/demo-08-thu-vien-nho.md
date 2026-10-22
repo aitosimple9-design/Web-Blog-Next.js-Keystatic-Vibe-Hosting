@@ -3,6 +3,8 @@ title: "Xây một thư viện nhỏ của riêng mình"
 slug: demo-08-thu-vien-nho
 description: "Không cần nhiều sách. Một kệ mười cuốn chọn kỹ có thể làm nền cho nhiều năm học."
 category: chu-de-1
+subtopics:
+  - chu-de-1-con-2
 date: 2026-09-05
 source:
   book: "Sách mẫu 1"

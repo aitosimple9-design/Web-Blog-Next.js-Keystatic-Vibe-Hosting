@@ -3,6 +3,8 @@ title: "Ghi chép gọn trong một trang giấy"
 slug: demo-02-ghi-chep-mot-trang
 description: "Cách rút một chương sách dài xuống còn một trang ghi chép, vừa đủ để xem lại sau vài tuần mà vẫn hiểu."
 category: chu-de-1
+subtopics:
+  - chu-de-1-con-2
 date: 2026-09-29
 source:
   book: "Sách mẫu 2"

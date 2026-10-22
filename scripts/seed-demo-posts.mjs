@@ -99,6 +99,8 @@ posts.forEach(([slug, category, title, description], i) => {
     `slug: ${slug}`,
     `description: "${description}"`,
     `category: ${category}`,
+    "subtopics:",
+    `  - ${category}-con-${(i % 2) + 1}`, // chủ đề con mẫu (content/subtopics/<chủ đề>-con-1|2)
     `date: ${iso}`,
     "source:",
     `  book: "${book}"`,

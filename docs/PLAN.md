@@ -179,6 +179,11 @@ Lộc duyệt 2026-10-16: cột SEO ở danh sách Bài viết + hộp điểm S
 - [x] Bước 5 `npm run check-content` báo thêm cảnh báo SEO từng bài + điểm trung bình, cảnh báo ảnh trong bài trùng file với ảnh bìa (lỗi thật gặp khi thử: hai ảnh cùng tên `cover.jpg` ghi đè nhau); tự bỏ qua có thông báo nếu Node cũ không đọc được .ts (2026-10-16)
 - [x] Thêm bước `npm run check-content` vào `.github/workflows/ci.yml` (Lộc tự commit, Claude không sửa được thư mục workflows) (đã có ở `ci.yml`)
 
+## Chủ đề con (Lộc giao 2026-10-22; 3 PR, mỗi PR Lộc merge)
+- [x] PR 1 — Dữ liệu và quản trị: `content/subtopics`, mục Keystatic "Chủ đề con", bài bắt buộc có `subtopics` (nhiều lựa chọn, phải thuộc chủ đề của bài), `check-content`, xem trước nhánh GitHub, 14 chủ đề con mẫu gán cho 22 bài
+- [ ] PR 2 — Trang Blog: khối chủ đề con phía trên danh sách bài (5 thẻ, trượt + nút hai bên), trang `/blog/<chủ đề>/<chủ đề con>` (+ phân trang, sitemap, canonical, chuyển hướng khi mất / đổi slug), khối bật / tắt trong Keystatic, nhãn vào "Nhãn giao diện"
+- [ ] PR 3 — Đồng bộ tài liệu (layout Blog, EXTENSIONS, design-reviewer), E2E, `ui-tester` 3 mốc
+
 ## Giai đoạn 8 — Deploy (chỉ làm với phương án được chọn)
 - [ ] Chốt Q9, Q10
 - [ ] [A] Keystatic chuyển sang GitHub mode (GitHub App/OAuth + biến môi trường). Next 16 dev cần `allowedDevOrigins: ["127.0.0.1"]` (đã thêm, Thinkmill/keystatic#1549); chờ Lộc chọn GitHub App hay OAuth

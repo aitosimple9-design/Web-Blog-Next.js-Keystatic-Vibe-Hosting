@@ -3,6 +3,8 @@ title: "Đọc hai cuốn cùng lúc có hợp với bạn?"
 slug: demo-05-doc-song-song
 description: "Khi nào đọc song song giúp hiểu sâu hơn, và khi nào nó chỉ khiến cuốn nào cũng dang dở."
 category: chu-de-1
+subtopics:
+  - chu-de-1-con-5
 date: 2026-09-17
 source:
   book: "Sách mẫu 5"

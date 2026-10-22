@@ -3,6 +3,8 @@ title: "Thói quen nhỏ, đổi thay lớn"
 slug: demo-09-thoi-quen-nho
 description: "Vì sao hai phút mỗi ngày bền hơn một giờ cuối tuần, và cách chọn thói quen đầu tiên cho đúng."
 category: chu-de-2
+subtopics:
+  - chu-de-2-con-1
 date: 2026-09-01
 source:
   book: "Sách mẫu 2"

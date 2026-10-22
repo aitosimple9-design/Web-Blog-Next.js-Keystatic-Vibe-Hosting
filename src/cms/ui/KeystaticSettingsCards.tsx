@@ -14,7 +14,7 @@ import { splitLabel } from "./settings-card-text";
 import { isDarkTheme } from "./ks-theme";
 
 // Chế độ GitHub có thêm /branch/<nhánh>/ sau /keystatic
-export const CARD_ROUTE = /^\/keystatic\/(?:branch\/[^/]+\/)?(?:singleton\/|collection\/(?:topics|books|redirects)\/(?:item\/[^/]+|create)\/?$)/;
+export const CARD_ROUTE = /^\/keystatic\/(?:branch\/[^/]+\/)?(?:singleton\/|collection\/(?:topics|subtopics|books|redirects)\/(?:item\/[^/]+|create)\/?$)/;
 const LIST = "data-ks-cards";
 const CARD = "data-ks-card";
 const HEAD = "data-ks-card-head";

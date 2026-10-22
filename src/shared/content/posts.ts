@@ -14,6 +14,7 @@ import rehypeStringify from "rehype-stringify";
 import { rehypeImageSize } from "@/shared/content/rehype-image-size";
 import type { Root, Element, Nodes } from "hast";
 import { topicBySlug, getTopics } from "@/shared/content/topics";
+import { subtopicBySlug } from "@/shared/content/subtopics";
 import { readingMinutes } from "@/shared/format";
 import { scoreSeo, type SeoInput, type SeoResult } from "@/shared/seo-score";
 
@@ -26,6 +27,8 @@ export type PostMeta = {
   title: string;
   description: string;
   category: string;
+  /** Slug các chủ đề con (content/subtopics) của bài: BẮT BUỘC ít nhất 1, mỗi chủ đề con phải thuộc chủ đề `category` */
+  subtopics: string[];
   date: string; // YYYY-MM-DD
   /** Ngày sửa gần nhất (YYYY-MM-DD, tùy chọn); dùng cho dateModified ở JSON-LD */
   updated?: string;
@@ -95,6 +98,14 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
         .join(", ")})`,
     );
   }
+  const rawSubs = Array.isArray(data.subtopics) ? (data.subtopics as unknown[]).filter((x): x is string => typeof x === "string" && x.trim() !== "").map((x) => x.trim()) : [];
+  const subtopics = [...new Set(rawSubs)];
+  if (subtopics.length === 0) fail(file, 'thiếu trường bắt buộc "subtopics" (chọn ít nhất một chủ đề con)');
+  for (const s of subtopics) {
+    const sub = subtopicBySlug(s);
+    if (!sub) fail(file, `chủ đề con "${s}" chưa có trong content/subtopics`);
+    if (sub.topic !== category) fail(file, `chủ đề con "${s}" thuộc chủ đề "${sub.topic}", không thuộc chủ đề "${category}" của bài`);
+  }
   const source = data.source as Record<string, unknown> | undefined;
   if (!source || typeof source !== "object") {
     fail(file, 'thiếu khối bắt buộc "source" (book, author)');
@@ -111,6 +122,7 @@ function parseMeta(file: string, data: Record<string, unknown>, body: string): P
     title: str(file, data, "title"),
     description,
     category,
+    subtopics,
     date: toIsoDate(file, data.date),
     updated,
     source: { book: str(file, source, "book"), author: str(file, source, "author") },
@@ -241,6 +253,16 @@ export function categoryOfRaw(raw: string): string | null {
   }
 }
 
+/** Chủ đề con (subtopics) ghi trong nội dung thô của bài; mảng rỗng nếu không đọc được. */
+export function subtopicsOfRaw(raw: string): string[] {
+  try {
+    const s = matter(raw).data.subtopics;
+    return Array.isArray(s) ? s.filter((x): x is string => typeof x === "string" && x.trim() !== "").map((x) => x.trim()) : [];
+  } catch {
+    return [];
+  }
+}
+
 /** Kết quả chấm đầy đủ của MỘT bài đã lưu, để hộp điểm SEO trong form đối chiếu với điểm chấm trực tiếp. Null nếu chưa có file. */
 export function getSeoResultBySlug(slug: string): SeoResult | null {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return null; // chặn đường dẫn lạ trước khi chạm vào file
@@ -260,6 +282,10 @@ export const getAllPosts = cache((): PostMeta[] =>
 
 export const getPostsByTopic = (topicSlug: string): PostMeta[] =>
   getAllPosts().filter((p) => p.category === topicSlug);
+
+/** Bài đã đăng thuộc một chủ đề con (một bài có thể thuộc nhiều chủ đề con) */
+export const getPostsBySubtopic = (subtopicSlug: string): PostMeta[] =>
+  getAllPosts().filter((p) => p.subtopics.includes(subtopicSlug));
 
 // ---------- render Markdown → HTML (chạy trên server, không gửi JS cho người đọc) ----------
 
