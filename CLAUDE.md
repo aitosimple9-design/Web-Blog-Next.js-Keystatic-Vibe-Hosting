@@ -207,13 +207,14 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
 - Không commit secret của Keystatic/GitHub; chỉ để trong biến môi trường.
 
 ## 9. Công cụ
-- **Subagents:** `design-reviewer`, `ui-tester` (Playwright), `content-editor`, `admin-sync-reviewer` (kiểm tra nguyên tắc đồng bộ admin, mục 8); dùng `Explore` khi cần đọc nhiều file.
+- **Subagents:** `design-reviewer`, `ui-tester` (Playwright), `content-editor`, `admin-sync-reviewer` (kiểm tra nguyên tắc đồng bộ admin, mục 8), `ui-ornament-director` (đạo diễn họa tiết: ra 3 phương án họa tiết / chiều sâu / chi tiết "chữ ký" cho một khối, chỉ đọc; Lộc yêu cầu 2026-10-22); dùng `Explore` khi cần đọc nhiều file.
 - **Khi nào gọi subagent (tiết kiệm token, Lộc yêu cầu 2026-10-16):**
   - `ui-tester` và `design-reviewer`: CHỈ khi thay đổi làm đổi DIỆN MẠO NHÌN THẤY của trang công khai (CSS, bố cục, markup, component mới, ảnh / màu / cỡ chữ). KHÔNG gọi khi chỉ đổi nguồn dữ liệu (đọc chữ / ảnh từ Keystatic), trang quản trị, script, test, tài liệu. Trang đã được `ui-tester` kiểm tra mà không đổi diện mạo thì KHÔNG chạy lại. Muốn chứng minh "mặc định giống hệt trước" thì so HTML trước / sau (`npm run build`, `curl` trang) hoặc dùng test, không chụp màn hình.
   - Khi buộc phải gọi `ui-tester`: MỘT lượt, chỉ các trang bị đổi, 3 mốc đại diện (375, 768, 1440px) và 1 theme; chỉ mở rộng 5 mốc × 2 theme khi đổi bố cục lớn hoặc component dùng chung. Giao đúng trang, không "quét cả site".
+  - `ui-ornament-director`: CHỈ khi bắt đầu thiết kế hoặc làm lại MỘT khối giao diện mới (Lộc đưa ảnh mẫu hoặc nói UI "chưa đẹp"). Không gọi cho sửa nhỏ / khoảng cách / chữ, không gọi lại khi đã chọn xong phương án. Việc nhỏ hơn thì dùng thẳng skill `ui-ornament-ideas` ngay trong phiên, không mở agent.
   - `admin-sync-reviewer`: CHỈ khi thêm / đổi cấu trúc admin (collection, singleton, ô ảnh, luật dọn ảnh) hoặc thêm nội dung mới hiển thị trên web. Không gọi cho thay đổi giao diện thuần, sửa bài, tài liệu. Test `tests/unit/project/admin-sync.test.ts` chạy ở CI đã chặn phần lớn lỗi.
   - Không chạy hai agent cho cùng một việc; sửa lỗi nhỏ đã biết thì tự chạy `lint` / `test` / `build` rồi xác nhận, không gọi lại agent. Agent tập trung vào việc thiết kế / kiểm tra có giá trị, không lặp lại việc đã làm.
-- **Skills thiết kế:** `frontend-design-direction` (trước khi dựng trang mới), `make-interfaces-feel-better`,
+- **Skills thiết kế:** `ui-ornament-ideas` (của dự án, `.claude/skills/ui-ornament-ideas/`: quy trình ý tưởng họa tiết + kho họa tiết đã dùng / ứng viên mới; dùng TRƯỚC khi dựng hoặc làm lại một khối; khối nào Lộc duyệt mở rộng thì ghi vào `EXTENSIONS.md` và cập nhật kho họa tiết), `frontend-design-direction` (trước khi dựng trang mới), `make-interfaces-feel-better`,
   `frontend-a11y` (form, modal, menu), `motion-system` (khi thêm animation).
 - **Plugin:** `feature-dev` cho tính năng lớn; `code-review` trước khi mở PR; `commit-commands` cho commit/PR.
 - **MCP:** `github` (Issue, PR, đọc log CI), `playwright` (qua `ui-tester`), `context7` (tài liệu thư viện mới nhất — dùng khi viết code Next.js / Tailwind / Keystatic).
