@@ -23,6 +23,7 @@ import { TopicMenu, TopicTabs } from "@/frontend/components/blog/TopicNav";
 import { TopicHero } from "@/frontend/components/blog/TopicHero";
 import { PostCard } from "@/frontend/components/blog/PostCard";
 import { Pagination } from "@/frontend/components/blog/Pagination";
+import { BrushEcho } from "@/frontend/components/ui/BrushEcho";
 import { Reveal } from "@/frontend/components/ui/Reveal";
 import { RevealText } from "@/frontend/components/ui/RevealText";
 import { Breadcrumb } from "@/frontend/components/ui/Breadcrumb";
@@ -130,6 +131,7 @@ export function BlogView({ slug, page, sub }: { slug: string; page: number; sub?
           />
         </div>
       </section>
+      <BrushEcho />
 
       <section
         aria-labelledby="post-list-title"

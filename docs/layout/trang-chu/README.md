@@ -15,7 +15,7 @@ Menu: Trang chủ · Book · Blog (`navGroups`, icon `home` / `book` / `blog`).
 2. **Câu chuyện** (`StorySection`, `paper`): nhãn, `h2`, ảnh thứ hai, 4 đoạn `prose-article` (66ch). Ảnh trôi chậm (`ScrollParallax`).
 3. **Cách mình đọc** (`PrincipleCards`, `paper-sunk`): `SectionHead` + 4 thẻ nguyên tắc đánh số (số `accent-warm`, `surface-raised`, `elevated-md`).
 4. **Con số** (`paper`): bài viết · cuốn sách · chủ đề, `CountUp`, đếm từ nội dung thật (`getSiteStats`).
-5. **Tủ sách của mình** (`BookShelf`, dải tối `inverse`, đáy `brush-bottom`): `Slider` các `BookCover`, mỗi bìa bấm sang `/blog/<chủ đề>`.
+5. **Tủ sách của mình** (`BookShelf`, dải tối `inverse`, đỉnh + đáy nét cọ `brush-both` khi không đứng ngay sau Hero; Lộc duyệt 2026-10-23): `Slider coverflow` các `BookCover` (bìa giữa to nhất, hai bên nhỏ dần + nghiêng 3D vào giữa, chữ chỉ rõ ở bìa giữa), mỗi bìa bấm sang `/blog/<chủ đề>`.
 6. **Bài tiêu biểu** (`paper-sunk`, kéo lên dưới nét cọ của Tủ sách bằng lề âm để nền tràn tới mép cọ): 3 `PostCard variant="tile"` (3 bài mới nhất) + liên kết "Xem tất cả bài viết".
 7. **Kết nối** (`paper`): lời mời + `SocialIcons` (7 icon) → **Newsletter** (`#dang-ky`) → Footer.
 Chỗ chừa (chưa dựng, thêm sau không phải thiết kế lại): Hành trình (timeline) sau khối 2; Lời chứng thực và "Làm việc cùng tôi" sau khối 6. Lời chứng thực chỉ dùng khi thật và có đồng ý; "Làm việc cùng tôi" cạnh tranh CTA chính nên cân nhắc.

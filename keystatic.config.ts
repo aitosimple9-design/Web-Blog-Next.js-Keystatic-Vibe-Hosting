@@ -385,18 +385,6 @@ export default config({
           },
           { label: "Khối Bài tiêu biểu (3 bài mới nhất tự lấy từ mục Bài viết)" },
         ),
-        connect: fields.object(
-          {
-            eyebrow: fields.text({ label: "Dòng nhỏ (mặc định: Kết nối)", validation: { length: { max: 30 } } }),
-            title: fields.text({ label: "Tiêu đề (mặc định: Kết nối với mình)", validation: { length: { max: 60 } } }),
-            text: fields.text({
-              label: "Đoạn mô tả (chú ý: đoạn mặc định có cam kết \"mỗi tuần\", hãy sửa cho đúng thực tế)",
-              multiline: true,
-              validation: { length: { max: 240 } },
-            }),
-          },
-          { label: "Khối Kết nối (hàng icon mạng xã hội lấy ở Cài đặt site)" },
-        ),
       },
     }),
     // Trang Book (/book): chữ Hero, dải chữ chạy, tiêu đề các khối (đọc bởi getBookPage ở src/lib/pages.ts). Ô để trống thì dùng chữ mặc định.

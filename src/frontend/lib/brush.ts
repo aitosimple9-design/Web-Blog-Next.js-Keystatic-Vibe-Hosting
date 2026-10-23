@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 
 export const brushStyle = {
   "--brush-url": 'url("/images/masks/brush-edge.svg")',
+  "--brush-top-url": 'url("/images/masks/brush-edge-top.svg")',
 } as CSSProperties;
 
 // Nền của khối trang theo vị trí (src/config/blocks.ts → layoutBlocks): paper / paper-sunk xen kẽ.

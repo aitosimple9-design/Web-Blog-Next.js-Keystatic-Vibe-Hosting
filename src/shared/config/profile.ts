@@ -58,9 +58,4 @@ export const home = {
   statLabels: { posts: "Bài viết", books: "Cuốn sách", topics: "Chủ đề" },
   storyEyebrow: "Câu chuyện",
   featured: { title: "Bài tiêu biểu", linkLabel: "Xem tất cả bài viết" },
-  connect: {
-    eyebrow: "Kết nối",
-    title: "Kết nối với mình",
-    text: "Mình đăng ghi chép mới mỗi tuần. Theo dõi mình ở nền tảng bạn hay dùng, hoặc nhận bài thẳng qua email ngay bên dưới.",
-  },
 };

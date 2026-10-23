@@ -78,7 +78,6 @@ export type HomePage = {
   principles: { title: string; dek: string; items: { title: string; text: string }[] };
   shelf: { title: string; dek: string; books: { title: string; topic: string }[] };
   featured: { title: string; linkLabel: string };
-  connect: { eyebrow: string; title: string; text: string };
 };
 
 // Hai cánh cửa mang chữ cái đầu của nửa đầu và nửa sau của tên: "Trần Ngọc Hoàng Ni" → "T·N" | "H·N"
@@ -97,7 +96,6 @@ export const getHomePage = cache((): HomePage => {
   const rPrinciples = obj(raw.principles);
   const rShelf = obj(raw.shelf);
   const rFeatured = obj(raw.featured);
-  const rConnect = obj(raw.connect);
   const rStats = obj(raw.statLabels);
 
   const name = text(raw.name) ?? profile.name;
@@ -171,11 +169,6 @@ export const getHomePage = cache((): HomePage => {
     featured: {
       title: text(rFeatured.title) ?? home.featured.title,
       linkLabel: text(rFeatured.linkLabel) ?? home.featured.linkLabel,
-    },
-    connect: {
-      eyebrow: text(rConnect.eyebrow) ?? home.connect.eyebrow,
-      title: text(rConnect.title) ?? home.connect.title,
-      text: text(rConnect.text) ?? home.connect.text,
     },
   };
 });

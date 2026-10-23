@@ -5,8 +5,7 @@
     "stats": 3,
     "shelf": 4,
     "featured": 5,
-    "connect": 6,
-    "newsletter": 7
+    "newsletter": 6
   },
   "name": "Trần Ngọc Hoàng Ni",
   "positioning": "Mình ghi lại điều đọng lại sau mỗi cuốn sách.",
@@ -88,10 +87,5 @@
   "featured": {
     "title": "Bài tiêu biểu",
     "linkLabel": "Xem tất cả bài viết"
-  },
-  "connect": {
-    "eyebrow": "Kết nối",
-    "title": "Kết nối với mình",
-    "text": "Mình đăng ghi chép mới mỗi tuần. Theo dõi mình ở nền tảng bạn hay dùng, hoặc nhận bài thẳng qua email ngay bên dưới."
   }
 }

@@ -44,7 +44,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Gradient `gradient-primary` (accent → accent-warm), viền sáng trong 1px, vệt sáng quét + nổi `elevated-md` khi hover (chỉ chuột, tắt khi giảm chuyển động). Khối form / thẻ dùng `surface-raised`; ô nhập `field-premium` có icon. Đã duyệt 2026-10-07, xem `docs/design-system/EXTENSIONS.md`. Nút phụ giữ nền quét phẳng.
 
 ### Đường nối giữa các dải nền (2026-10-07)
-- Không dùng đường kẻ ngang cứng hay cạnh đổi màu đột ngột giữa các dải: dải `paper-sunk` / chân trang `paper-raised` có vùng chuyển mờ về `paper` ở mép tiếp giáp (lớp `seam-*`). Dải chữ trang chủ không còn viền trên / dưới. Hero trang Blog và ảnh hero trang bài thì cắt đáy bằng mask nét cọ (`brush-bottom`), không dùng bóng mờ.
+- Không dùng đường kẻ ngang cứng hay cạnh đổi màu đột ngột giữa các dải: dải `paper-sunk` / chân trang `paper-raised` có vùng chuyển mờ về `paper` ở mép tiếp giáp (lớp `seam-*`). Dải chữ trang chủ không còn viền trên / dưới. Hero trang Blog và ảnh hero trang bài thì cắt đáy bằng mask nét cọ (`brush-bottom`), không dùng bóng mờ; dưới mép cọ có thêm nét "vọng" mảnh `ink` 6% (`BrushEcho`, Lộc duyệt 2026-10-23).
 
 ### Newsletter (form đăng ký)
 - Chữ: nhãn "Bản tin", tiêu đề "Nhận bài mới qua email", dek "Mỗi tuần một bài ghi chép sau khi đọc sách, gửi thẳng vào hộp thư của bạn.", 3 gạch đầu dòng: "Ý chính, ví dụ và cách áp dụng" · "Đọc trong khoảng 10 phút" · "Hủy đăng ký bất cứ lúc nào".

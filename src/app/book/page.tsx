@@ -14,6 +14,7 @@ import { Newsletter } from "@/frontend/components/layout/Newsletter";
 import { Hero } from "@/frontend/components/book/Hero";
 import { HeroBackdrop } from "@/frontend/components/book/HeroBackdrop";
 import { brushStyle } from "@/frontend/lib/brush";
+import { BrushEcho } from "@/frontend/components/ui/BrushEcho";
 import { TopicSlider } from "@/frontend/components/book/TopicSlider";
 import { LatestGrid } from "@/frontend/components/book/LatestGrid";
 import { ScrollMarquee } from "@/frontend/components/ui/Motion";
@@ -67,6 +68,7 @@ export default function BookPage() {
           ]}
         />
       </section>
+      <BrushEcho />
       {layout.map((b) => (
         <Fragment key={b.id}>{blocks[b.id]?.(b)}</Fragment>
       ))}

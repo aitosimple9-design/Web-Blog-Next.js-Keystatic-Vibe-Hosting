@@ -95,6 +95,8 @@ Khi mình chốt một mục: ghi kết quả vào cột "Đề xuất" kèm ng�
 - [x] Đường nối mềm giữa các dải nền, bỏ viền kẻ dải chữ (2026-10-07)
 - [x] Trang chủ mới (thương hiệu cá nhân, `/`): Hero trung tâm (chân dung xóa phông, tên khổng lồ sau người, cánh cửa mở đầu trang, thẻ kính mờ), Câu chuyện, Cách mình đọc, Con số, Tủ sách, Bài tiêu biểu, Kết nối; Trang chủ cũ chuyển sang `/book`; menu Trang chủ · Book · Blog; nội dung mẫu ở `src/shared/config/profile.ts` (2026-10-11)
 - [x] Hero Trang book nền tối, đáy nét cọ, họa tiết bằng token (dòng kẻ, chữ "Đọc" nét viền, vòng tròn `accent-warm`), không ảnh (2026-10-11)
+- [x] Tủ sách Trang chủ: coverflow (bìa giữa to, hai bên nghiêng nhỏ) + nét cọ đỉnh / đáy (2026-10-23)
+- [x] Nét cọ phân cách mượt hơn + nét vọng `BrushEcho` (2026-10-23)
 - [ ] Review bằng mắt toàn bộ trang cũ ở 2 theme + 5 mốc, `design-reviewer` duyệt
 - [x] Component `Newsletter` (form đăng ký) tái sử dụng được, đủ trạng thái (mặc định, lỗi, thành công)
 - [x] Component dùng chung theo `docs/layout/README.md`: `SiteHeader` (có tìm kiếm, nút theme, ☰), `SiteFooter` (7 icon mạng xã hội), `Slider` (chấm + nút ‹ ›), `SocialIcons`, `SearchBox`
