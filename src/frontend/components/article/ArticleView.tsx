@@ -14,6 +14,7 @@ import { ArticleHeader, SourceBox } from "@/frontend/components/article/ArticleP
 import { TOC } from "@/frontend/components/article/TOC";
 import { RelatedSlider } from "@/frontend/components/article/RelatedSlider";
 import { Breadcrumb } from "@/frontend/components/ui/Breadcrumb";
+import { BrushEcho } from "@/frontend/components/ui/BrushEcho";
 import { PostImage } from "@/frontend/components/ui/Media";
 import { ScrollProgress } from "@/frontend/components/ui/Motion";
 
@@ -73,7 +74,7 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
             lớp phủ `inverse` 55% (màu phẳng) giữ chữ dễ đọc; đáy cắt bằng mask nét cọ */}
         <section aria-label={getUiLabels().articleHead}>
           <div
-            className="on-inverse brush-bottom relative isolate min-h-[calc(clamp(560px,52vw,680px)+var(--header-height))] w-full overflow-hidden bg-inverse text-on-inverse"
+            className="on-inverse brush-bottom relative isolate z-10 min-h-[calc(clamp(560px,52vw,680px)+var(--header-height))] w-full overflow-hidden bg-inverse text-on-inverse"
             style={brushStyle}
           >
             <div className="absolute inset-0 -z-20">
@@ -111,6 +112,7 @@ export function ArticleView({ post, previewNote }: { post: Post; previewNote?: s
               />
             </div>
           </div>
+          <BrushEcho />
         </section>
 
         <div className={`wrap grid gap-s6 pt-s7 pb-s8 ${gridCols}`}>

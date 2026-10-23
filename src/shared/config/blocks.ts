@@ -21,7 +21,6 @@ export const PAGE_BLOCKS = {
       { id: "stats", label: "Con số" },
       { id: "shelf", label: "Tủ sách", kind: "dark" },
       { id: "featured", label: "Bài tiêu biểu" },
-      { id: "connect", label: "Kết nối" },
       { id: "newsletter", label: "Newsletter", kind: "fixed" },
     ],
   },

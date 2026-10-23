@@ -468,17 +468,75 @@ html[data-modality="pointer"] .field-premium:focus-visible {
 
 /* Đáy ảnh hero cắt bằng mask "nét cọ" (mép lởm chởm như vệt cọ khô) thay cho bóng mờ.
    Cần đặt biến --brush-url (xem brushStyle trong src/lib/brush.ts; url nằm ở style nội tuyến để bundler không xử lý).
-   Mask gồm: khối đặc phía trên + dải mép cọ cao 64px lát ngang ở đáy; phía dưới mép lộ nền trang (paper). */
+   Mask gồm: khối đặc phía trên + dải mép cọ cao 64px (rộng 2400px, mượt, có sợi lông cọ) lát ngang ở đáy; phía dưới mép lộ nền trang (paper). */
 .brush-bottom {
   --brush-h: clamp(40px, 5.5vw, 64px);
   -webkit-mask-image: linear-gradient(#000, #000), var(--brush-url);
   mask-image: linear-gradient(#000, #000), var(--brush-url);
-  -webkit-mask-size: 100% calc(100% - var(--brush-h) + 1px), 1200px var(--brush-h);
-  mask-size: 100% calc(100% - var(--brush-h) + 1px), 1200px var(--brush-h);
+  -webkit-mask-size: 100% calc(100% - var(--brush-h) + 1px), 2400px var(--brush-h);
+  mask-size: 100% calc(100% - var(--brush-h) + 1px), 2400px var(--brush-h);
   -webkit-mask-position: top, bottom;
   mask-position: top, bottom;
   -webkit-mask-repeat: no-repeat, repeat-x;
   mask-repeat: no-repeat, repeat-x;
+}
+
+/* Cắt CẢ đỉnh lẫn đáy bằng nét cọ (khối Tủ sách Trang chủ): thêm mask mép trên (--brush-top-url, bản lật dọc). Khối phải kéo lên đè dưới khối trước (PULL_UP) để mép lộ nền khối đó. */
+.brush-both {
+  --brush-h: clamp(40px, 5.5vw, 64px);
+  -webkit-mask-image: var(--brush-top-url), linear-gradient(#000, #000), var(--brush-url);
+  mask-image: var(--brush-top-url), linear-gradient(#000, #000), var(--brush-url);
+  -webkit-mask-size: 2400px var(--brush-h), 100% calc(100% - 2 * var(--brush-h) + 2px), 2400px var(--brush-h);
+  mask-size: 2400px var(--brush-h), 100% calc(100% - 2 * var(--brush-h) + 2px), 2400px var(--brush-h);
+  -webkit-mask-position: top, center, bottom;
+  mask-position: top, center, bottom;
+  -webkit-mask-repeat: repeat-x, no-repeat, repeat-x;
+  mask-repeat: repeat-x, no-repeat, repeat-x;
+}
+
+/* Thẻ coverflow (Slider `coverflow`): --cf-d = khoảng cách có dấu tới tâm (đơn vị: một bước thẻ), --cf-a = trị tuyệt đối; JS ghi lúc cuộn.
+   Chỉ transform + opacity. Giữa: to nhất, rõ nhất; hai bên: thu nhỏ, kéo sát vào giữa, nghiêng hướng vào giữa, mờ dần; chữ dưới bìa chỉ rõ ở bìa giữa. */
+.cf-card {
+  transform: perspective(900px) translateX(calc(var(--cf-d, 0) * -10%)) rotateY(calc(var(--cf-d, 0) * -16deg)) scale(calc(1 - var(--cf-a, 0) * 0.16));
+  opacity: calc(1 - var(--cf-a, 0) * 0.3);
+  will-change: transform;
+}
+.cf-card .cf-label {
+  opacity: max(0, calc(1 - var(--cf-a, 0) * 1.7));
+}
+/* Giảm chuyển động: giữ cỡ to / nhỏ và độ mờ, bỏ nghiêng 3D và kéo sát */
+@media (prefers-reduced-motion: reduce) {
+  .cf-card {
+    transform: scale(calc(1 - var(--cf-a, 0) * 0.16));
+  }
+}
+
+/* Nét "vọng" dưới mép cọ (Lộc duyệt 2026-10-23): cùng hình mép, lệch xuống --brush-echo-gap và sang ngang, tô `ink` 6% (một lớp mực thứ hai).
+   Phần tử đứng ngay sau dải `brush-bottom` (component BrushEcho), cao 0, z-9 dưới dải (z-10) nên chỉ phần lệch ra dưới mép là lộ. Tĩnh, không chuyển động. */
+.brush-echo {
+  --brush-h: clamp(40px, 5.5vw, 64px);
+  --brush-echo-gap: clamp(5px, 0.6vw, 8px);
+  position: relative;
+  z-index: 9;
+  height: 0;
+  pointer-events: none;
+}
+.brush-echo::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: calc(var(--brush-h) * -1 + var(--brush-echo-gap));
+  height: var(--brush-h);
+  background: var(--ink);
+  opacity: 0.06;
+  -webkit-mask-image: var(--brush-url);
+  mask-image: var(--brush-url);
+  -webkit-mask-size: 2400px var(--brush-h);
+  mask-size: 2400px var(--brush-h);
+  -webkit-mask-position: 36px 0;
+  mask-position: 36px 0;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
 }
 
 /* Chuyển trang bằng View Transitions: tắt khi giảm chuyển động */

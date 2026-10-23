@@ -13,13 +13,13 @@ import { getNewsletterSettings, getSiteSettings } from "@/shared/content/setting
 import { brushStyle, PULL_UP, toneBg, type SectionTone } from "@/frontend/lib/brush";
 import { PageShell } from "@/frontend/components/layout/PageShell";
 import { Newsletter } from "@/frontend/components/layout/Newsletter";
-import { SocialIcons } from "@/frontend/components/layout/SocialIcons";
 import { PersonBackdrop } from "@/frontend/components/home/PersonBackdrop";
 import { PersonHero } from "@/frontend/components/home/PersonHero";
 import { StorySection } from "@/frontend/components/home/StorySection";
 import { PrincipleCards } from "@/frontend/components/home/PrincipleCards";
 import { BookShelf } from "@/frontend/components/home/BookShelf";
 import { PostCard } from "@/frontend/components/blog/PostCard";
+import { BrushEcho } from "@/frontend/components/ui/BrushEcho";
 import { Reveal } from "@/frontend/components/ui/Reveal";
 import { RevealText } from "@/frontend/components/ui/RevealText";
 import { CountUp } from "@/frontend/components/ui/Motion";
@@ -104,21 +104,6 @@ export default function HomePage() {
         </div>
       </section>
     ),
-    connect: (b) => (
-      <section aria-labelledby="connect-title" className={`${toneBg(tone(b))} ${b.pullUp ? PULL_UP : "pt-s8"} pb-s8 text-center text-ink`}>
-        <Reveal className="wrap mx-auto max-w-2xl">
-          <p className="type-eyebrow flex items-center justify-center gap-s2 uppercase text-ink-faint">
-            <span aria-hidden className="block size-1.5 rotate-45 rounded-[1px] bg-accent-warm" />
-            {h.connect.eyebrow}
-          </p>
-          <h2 id="connect-title" className="type-display-lg mt-s3 text-balance">
-            <RevealText text={h.connect.title} />
-          </h2>
-          <p className="type-ui-body mx-auto mt-s4 max-w-lg text-pretty text-ink-faint">{h.connect.text}</p>
-          <SocialIcons className="mt-s5 justify-center" />
-        </Reveal>
-      </section>
-    ),
     newsletter: () => (
       <div id="dang-ky">
         <Newsletter settings={getNewsletterSettings()} />
@@ -145,6 +130,7 @@ export default function HomePage() {
         <PersonBackdrop />
         <PersonHero stats={{ posts: stats.posts, topics: stats.topics }} />
       </section>
+      <BrushEcho />
 
       {layout.map((b) => (
         <Fragment key={b.id}>{blocks[b.id]?.(b)}</Fragment>
