@@ -34,6 +34,33 @@
     "vercel": {
       "type": "http",
       "url": "https://mcp.vercel.com/aitosimple/web-blog-next-js-keystatic-vibe-hosting"
+    },
+    "unsplash": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@hanoak/unsplash-mcp-server@1.2.1"
+      ],
+      "env": {
+        "UNSPLASH_ACCESS_KEY": "${UNSPLASH_ACCESS_KEY:-}",
+        "UNSPLASH_APP_NAME": "web-blog-sach"
+      }
+    },
+    "pexels": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@hanoak/pexels-mcp-server@1.0.2"
+      ],
+      "env": {
+        "PEXELS_API_KEY": "${PEXELS_API_KEY:-}"
+      }
     }
   }
 }

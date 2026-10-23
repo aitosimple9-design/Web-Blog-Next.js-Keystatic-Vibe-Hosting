@@ -218,6 +218,7 @@ coverAlt: "Cuốn sổ mở trên bàn gỗ"   # mô tả ảnh bìa ≤ 125 ký
   `frontend-a11y` (form, modal, menu), `motion-system` (khi thêm animation).
 - **Plugin:** `feature-dev` cho tính năng lớn; `code-review` trước khi mở PR; `commit-commands` cho commit/PR.
 - **MCP:** `github` (Issue, PR, đọc log CI), `playwright` (qua `ui-tester`), `context7` (tài liệu thư viện mới nhất — dùng khi viết code Next.js / Tailwind / Keystatic).
+  - **Tìm ảnh (Lộc yêu cầu 2026-10-22):** `unsplash` (`@hanoak/unsplash-mcp-server@1.2.1`) và `pexels` (`@hanoak/pexels-mcp-server@1.0.2`), cả hai là gói cộng đồng KHÔNG chính thức (đã đọc mã: chỉ gọi `api.unsplash.com` / `api.pexels.com`, không có script cài đặt, đã ghim phiên bản). Khai báo ở `.mcp.json`; khóa API (`UNSPLASH_ACCESS_KEY`, `PEXELS_API_KEY`) do Lộc tự nhập ở `.claude/settings.local.json` (gitignore), Claude KHÔNG nhập hay in khóa. Dùng để tìm ảnh cho khối giao diện (skill `ui-ornament-ideas`). Quy tắc khi dùng ảnh: chỉ tải ảnh Lộc đã chọn, lưu đúng thư mục `public/images/...`, ghi tác giả, nguồn, giấy phép vào `public/images/CREDITS.md`; với Unsplash gọi `unsplash_track_download` khi dùng ảnh và hiện ghi công ở nơi cần; nén WebP trong ngân sách tốc độ. Nâng phiên bản gói phải đọc lại mã và hỏi Lộc.
 - Tên thật của công cụ có thể khác bản cài: nếu không tìm thấy, báo mình thay vì tự đoán.
 
 ## 10. Git & GitHub
