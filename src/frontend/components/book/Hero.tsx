@@ -1,3 +1,4 @@
+// Hero cao ĐÚNG một màn hình (min-h-svh ở page.tsx), nội dung căn giữa theo chiều dọc (my-auto).
 // Hero Trang Book (/book) (dải tối `inverse`, đáy cắt nét cọ, họa tiết nền ở HeroBackdrop). Một CTA chính duy nhất: "Đọc bài mới nhất".
 // 375: 1 cột (tiêu đề, ảnh 3:4 hẹp ≤ 22rem, chữ + CTA + icon, số liệu) · 768: 2 cột (ảnh 3:4 trái; chữ + số liệu phải) ·
 // 1024+: 3 cột (chữ | ảnh | số liệu dọc), tiêu đề hai dòng đè lên mép trên ảnh.
@@ -28,7 +29,7 @@ export function Hero({
   const title = [text.titleLine1, text.titleLine2].map((l) => l.split(/\s+/).filter(Boolean));
 
   return (
-    <div className="wrap grid gap-x-s6 gap-y-s5 pt-s5 pb-[calc(var(--brush-h)+var(--space-7))] tablet:grid-cols-2 tablet:pb-[calc(var(--brush-h)+var(--space-8))] desktop:grid-cols-[minmax(0,340px)_minmax(0,1fr)_minmax(0,220px)] desktop:gap-x-s6 desktop:pt-s7">
+    <div className="hero-zoom wrap my-auto grid gap-x-s6 gap-y-s5 desktop:gap-y-s7 pt-s5 pb-[calc(var(--brush-h)+var(--space-7))] tablet:grid-cols-2 tablet:pb-[calc(var(--brush-h)+var(--space-8))] desktop:grid-cols-[minmax(0,340px)_minmax(0,1fr)_minmax(0,220px)] desktop:gap-x-s6 desktop:pt-s7">
       {/* Tiêu đề: từng chữ trượt lên; đè lên mép trên ảnh từ 1024px */}
       <h1 className="type-display-xl relative z-10 text-balance tablet:col-span-2 desktop:col-span-2 desktop:col-start-1 desktop:row-start-1">
         {title.map((line, li) => (
@@ -101,14 +102,14 @@ export function Hero({
           {text.dek}
         </p>
         <div className="anim-fade-rise" style={{ "--delay": "640ms" } as React.CSSProperties}>
-          <Button href={href} variant="on-inverse" className="mt-s5 w-full tablet:w-auto">
+          <Button href={href} variant="on-inverse" className="mt-s5 w-full tablet:mt-s7 tablet:w-auto">
             {text.ctaLabel}
             <ArrowRightIcon />
           </Button>
         </div>
-        <div className="anim-fade-rise mt-s5" style={{ "--delay": "760ms" } as React.CSSProperties}>
+        <div className="anim-fade-rise mt-s5 tablet:mt-s8" style={{ "--delay": "760ms" } as React.CSSProperties}>
           <p className="type-caption text-on-inverse-soft">{text.followLabel}</p>
-          <SocialIcons featured="zalo" onDark className="mt-s3" />
+          <SocialIcons featured="zalo" onDark className="mt-s3 tablet:mt-s4" />
         </div>
       </div>
 

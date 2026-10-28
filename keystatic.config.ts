@@ -271,7 +271,7 @@ export default config({
           validation: { length: { max: 60 } },
         }),
         positioning: fields.text({
-          label: "Câu định vị dưới tên (cũng là mô tả khi chia sẻ, ≤ 160 ký tự)",
+          label: "Mô tả khi chia sẻ và trên Google (không hiện ở Hero Trang chủ, ≤ 160 ký tự)",
           multiline: true,
           validation: { length: { max: 160 } },
         }),

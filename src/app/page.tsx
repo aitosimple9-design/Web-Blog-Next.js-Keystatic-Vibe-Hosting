@@ -123,7 +123,7 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }} />
 
       <section
-        className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse pt-(--header-height) text-on-inverse"
+        className="on-inverse brush-bottom relative isolate z-10 flex min-h-svh flex-col overflow-hidden bg-inverse pt-(--header-height) text-on-inverse"
         style={brushStyle}
         aria-label={getUiLabels().intro}
       >

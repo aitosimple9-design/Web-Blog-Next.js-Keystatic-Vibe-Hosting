@@ -85,7 +85,7 @@ export function BlogView({ slug, page, sub }: { slug: string; page: number; sub?
   return (
     <PageShell tone="inverse">
       <section
-        className="on-inverse brush-bottom relative isolate z-10 overflow-hidden bg-inverse text-on-inverse"
+        className="on-inverse brush-bottom relative isolate z-10 flex min-h-svh flex-col overflow-hidden bg-inverse text-on-inverse"
         style={brushStyle}
         aria-label={getUiLabels().navTopics}
       >
@@ -100,7 +100,7 @@ export function BlogView({ slug, page, sub }: { slug: string; page: number; sub?
           className="anim-page -z-20 object-cover grayscale-[40%]"
         />
         <div aria-hidden className="absolute inset-0 -z-10 bg-inverse/80" />
-        <div className="wrap relative pt-[calc(var(--header-height)+var(--space-4))] tablet:pt-[calc(var(--header-height)+var(--space-5))]">
+        <div className="hero-zoom wrap relative flex flex-1 flex-col pt-[calc(var(--header-height)+var(--space-4))] tablet:pt-[calc(var(--header-height)+var(--space-5))]">
           {/* Tiêu đề "Blog" và dòng giới thiệu ẩn khỏi mắt nhìn (vẫn có cho trình đọc màn hình và SEO) */}
           <h1 className="sr-only">{subtopic ? `${subtopic.name} — ${topic.name}` : bp.heading}</h1>
           <p className="sr-only">{bp.intro}</p>
