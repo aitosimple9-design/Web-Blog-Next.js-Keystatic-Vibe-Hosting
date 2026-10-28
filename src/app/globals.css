@@ -481,6 +481,40 @@ html[data-modality="pointer"] .field-premium:focus-visible {
   mask-repeat: no-repeat, repeat-x;
 }
 
+/* Hero trên MÀN HÌNH LỚN (Lộc yêu cầu 2026-10-23): từ 1536px nội dung Hero được phóng to đều (`zoom` = --hz) nên khung nội dung và chữ, ảnh rộng ra theo màn hình thay vì co lại giữa dải.
+   Chỉ gắn lên PHẦN NỘI DUNG Hero (không gắn lên dải / nền). Công thức dùng svh / vw bên trong phải chia cho --hz (xem PersonHero). Trình duyệt không hỗ trợ zoom thì giữ cỡ thường. */
+:root {
+  --hz: 1;
+}
+@media (min-width: 1536px) {
+  :root {
+    --hz: 1.12;
+  }
+}
+@media (min-width: 1728px) {
+  :root {
+    --hz: 1.25;
+  }
+}
+@media (min-width: 1920px) {
+  :root {
+    --hz: 1.38;
+  }
+}
+@media (min-width: 2304px) {
+  :root {
+    --hz: 1.6;
+  }
+}
+@media (min-width: 2560px) {
+  :root {
+    --hz: 1.78;
+  }
+}
+.hero-zoom {
+  zoom: var(--hz);
+}
+
 /* Cắt CẢ đỉnh lẫn đáy bằng nét cọ (khối Tủ sách Trang chủ): thêm mask mép trên (--brush-top-url, bản lật dọc). Khối phải kéo lên đè dưới khối trước (PULL_UP) để mép lộ nền khối đó. */
 .brush-both {
   --brush-h: clamp(40px, 5.5vw, 64px);

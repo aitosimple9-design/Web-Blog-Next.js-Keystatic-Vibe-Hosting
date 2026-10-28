@@ -17,6 +17,7 @@ Thêm trang mới sau này: tạo thư mục `docs/layout/<ten-trang>/` với `R
 - Chú thích `w1`…`w4` trong mockup = thay đổi tại mốc 375 / 768 / 1024 / 1440. Phần "Thay đổi giữa các mốc" ở cuối mỗi mockup đã được chép vào spec.
 - Vùng bấm 44px (`tap`), khe 8px, thumb zone (hết màn hình đầu ở 812px).
 - Tên khối (`data-c`) = tên component cần dựng. Mockup là tham chiếu, KHÔNG chép nguyên mã.
+- Hero Trang chủ / Book / Blog cao đúng một màn hình (`min-h-svh`, Lộc yêu cầu 2026-10-23); từ 1536px nội dung Hero phóng đều (`hero-zoom`).
 - Khối của từng trang (Trang chủ, Book, Blog, Trang bài) bật / tắt và đổi thứ tự ở Keystatic theo danh mục `src/shared/config/blocks.ts` (Hero luôn đứng đầu); nền xen kẽ `paper` / `paper-sunk` và việc kéo lên dưới nét cọ tự tính theo vị trí (`layoutBlocks`), nên spec từng trang dưới đây là THỨ TỰ MẶC ĐỊNH.
 - Các file chạy mockup (`wf.css`, `support.js`, `vendor/`) chưa được cung cấp nên mockup chưa mở được bằng trình duyệt; cấu trúc và ghi chú vẫn đọc được trong file `.dc.html`.
 

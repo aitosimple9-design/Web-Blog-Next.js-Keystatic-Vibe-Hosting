@@ -31,16 +31,16 @@ export function TopicHero({
   const { hero } = getBlogPage();
   const [b1, b2, b3] = [books[0], books[1] ?? books[0], books[2] ?? books[0]];
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s3 pb-s9 text-center desktop:grid-cols-[minmax(0,1fr)_minmax(0,clamp(18rem,32vw,24rem))_minmax(0,1fr)] desktop:items-start desktop:gap-x-s5 desktop:pt-s2 desktop:text-left">
+    <div className="my-auto grid grid-cols-[minmax(0,1fr)] gap-s6 pt-s3 pb-s9 text-center desktop:grid-cols-[minmax(0,1fr)_minmax(0,clamp(18rem,32vw,24rem))_minmax(0,1fr)] desktop:items-start desktop:gap-x-s5 desktop:gap-y-s8 desktop:pt-s2 desktop:text-left">
       {/* Chữ + CTA */}
       <div className="anim-fade-rise mx-auto max-w-xl desktop:mx-0 desktop:max-w-none">
         <p className="type-eyebrow inline-block rounded-pill border-(length:--border-width) border-on-inverse-soft px-s4 py-s1 uppercase text-on-inverse-soft tablet:py-s2">
           {hero.eyebrow}
         </p>
-        <h2 className="type-display-lg mt-s3 text-balance text-on-inverse">{topic.name}</h2>
-        <p className="type-dek mt-s3 text-on-inverse-soft">{topic.description}</p>
+        <h2 className="type-display-lg mt-s3 text-balance text-on-inverse tablet:mt-s4">{topic.name}</h2>
+        <p className="type-dek mt-s3 text-on-inverse-soft tablet:mt-s5">{topic.description}</p>
         {latestHref ? (
-          <Button href={latestHref} variant="on-inverse" className="mt-s5">
+          <Button href={latestHref} variant="on-inverse" className="mt-s5 tablet:mt-s7">
             {hero.ctaLabel}
             <ArrowRightIcon />
           </Button>

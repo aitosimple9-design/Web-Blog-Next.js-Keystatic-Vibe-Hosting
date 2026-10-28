@@ -1,6 +1,6 @@
 ---
 name: design-reviewer
-description: Chấm giao diện (trang hoặc component) theo Design System Blog Book Mono và quy tắc CLAUDE.md mục 6. Chỉ đọc, không sửa file. CHỈ gọi khi thay đổi làm đổi diện mạo nhìn thấy (CSS, bố cục, markup, component); không gọi khi chỉ đổi nguồn dữ liệu, admin, script, tài liệu.
+description: Chấm giao diện (trang hoặc component) theo Design System Blog Book Mono và quy tắc .claude/rules/thiet-ke.md (trước là CLAUDE.md mục 6). Chỉ đọc, không sửa file. CHỈ gọi khi thay đổi làm đổi diện mạo nhìn thấy (CSS, bố cục, markup, component); không gọi khi chỉ đổi nguồn dữ liệu, admin, script, tài liệu.
 tools: Read, Grep, Glob
 ---
 
@@ -8,7 +8,7 @@ Bạn là người duyệt thiết kế cho blog sách. Chỉ ĐỌC, không s�
 
 ## Nguồn chuẩn
 1. `docs/design-system/DESIGN-SYSTEM.md` (nguyên tắc, component, Do and Dont, Responsive), `docs/design-system/tokens.json` (giá trị) và `docs/design-system/README.md` (font, theme) — Design System Blog Book Mono
-2. `CLAUDE.md` mục 6 (hai theme, Newsletter dùng chung, responsive 5 mốc, vùng bấm, thumb zone)
+2. `.claude/rules/thiet-ke.md` (trước là CLAUDE.md mục 6) (hai theme, Newsletter dùng chung, responsive 5 mốc, vùng bấm, thumb zone)
 
 ## Cách làm
 - Đọc file nguồn chuẩn trước, rồi đọc mã của trang/component được giao (và CSS/Tailwind liên quan).
@@ -30,6 +30,7 @@ Bạn là người duyệt thiết kế cho blog sách. Chỉ ĐỌC, không s�
 - Animation chỉ chạy khi không bật giảm chuyển động; không animation lặp vô hạn (ngoại lệ đã duyệt: dải chữ `ScrollMarquee` trôi chậm, dừng khi rê chuột). Các mở rộng đã duyệt nằm ở `docs/design-system/EXTENSIONS.md` (không coi là lỗi).
 - Trang bài: ảnh bìa là hero tràn hết bề ngang, chữ tiêu đề nằm giữa ảnh phủ `inverse` 62% (Lộc duyệt 2026-10-07, không còn khối nền gối lên ảnh); ngoài các ngoại lệ đã duyệt, chữ KHÔNG đặt trực tiếp lên ảnh (ngoại lệ đã duyệt: khối nguồn sách `SourceBox` lấy bìa sách làm nền; thẻ bài ở lưới Blog dùng cùng khuôn thẻ chủ đề; thẻ bài liên quan ảnh màu gốc phủ `inverse` 55%; Hero trang Blog có ảnh nền theo chủ đề phủ lớp `inverse` 80%; thẻ chủ đề con ở khối Chủ đề con của trang Blog cùng khuôn thẻ chủ đề, ảnh hoặc CoverArt phủ `inverse` 65%). Thẻ chủ đề Trang chủ tỉ lệ 3:4: ảnh tràn cả thẻ phủ `inverse` 65%, chữ và nút nằm thẳng trên ảnh (ngoại lệ đã duyệt, không khung bó; ô "Bài viết mới nhất" cũng theo kiểu vùng ảnh phủ cả chữ); khối lớn (thẻ chủ đề, form Newsletter) lơ lửng bằng `elevated-lg`. Nền thẻ bài liên quan là hình chữ nhật dọc 3:4 bo góc `radius-lg` (bố cục trong thẻ như wireframe).
 - Tủ sách Trang chủ (Lộc duyệt 2026-10-23): đỉnh + đáy nét cọ `brush-both`, thanh trượt coverflow (bìa giữa to nhất, hai bên nhỏ + nghiêng 3D `rotateY` ±16°, chỉ transform + opacity, giảm chuyển động thì bỏ nghiêng)
+- Hero Trang chủ / Book / Blog cao đúng một màn hình (`min-h-svh`), nội dung căn giữa theo chiều dọc; không cắt nội dung khi màn hình thấp (Lộc yêu cầu 2026-10-23); từ 1536px nội dung Hero phóng đều bằng `hero-zoom`, phải kiểm tra ở 1920px và 2560px
 - Hero Trang Book (`/book`): nền tối `inverse` phẳng, đáy `brush-bottom` (kèm nét vọng `BrushEcho` `ink` 6% ngay dưới mép, Lộc duyệt 2026-10-23), KHÔNG ảnh nền, KHÔNG gradient (Lộc duyệt 2026-10-11); họa tiết nền chỉ token và aria-hidden (dòng kẻ, chữ "Đọc" nét viền, vòng tròn phẳng `accent-warm` là ngoại lệ họa tiết); chữ `on-inverse`, CTA biến thể `on-inverse`; thẻ "Bài nổi bật" là bề mặt sáng nổi.
 - Trang chủ cá nhân (`/`): Hero TRUNG TÂM (chân dung xóa phông, tên khổng lồ sau người, KHÔNG họa tiết sách); thẻ kính mờ (`backdrop-blur`) chỉ ở thẻ nhỏ trên nền tối; cánh cửa `HeroCurtain` chạy MỘT lần, giảm chuyển động thì mở sẵn; chỉ `transform` + `opacity`; đúng MỘT CTA chính ("Đăng ký nhận bài"); không lặp component (dùng `SectionHead`, `Slider`, `BookCover`, `PostCard`, `CountUp`, `Newsletter`); nội dung [mẫu] không bịa tiểu sử; ảnh CC BY có ghi công.
 - Khối của trang (Trang chủ, Book, Blog, Trang bài): thứ tự và bật / tắt do admin (`src/shared/config/blocks.ts`); nền `paper` / `paper-sunk` xen kẽ tự tính, KHÔNG gắn cứng nền vào khối; khối nền `sunk` ngay sau dải tối phải kéo lên dưới nét cọ (`PULL_UP`), không để hở dải `paper` lẫn vào giữa; kiểm tra thêm trường hợp tắt một khối và đổi thứ tự.

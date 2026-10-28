@@ -1,3 +1,4 @@
+// Hero cao ĐÚNG một màn hình (min-h-svh ở page.tsx): cảnh dính đáy dải (người nằm trên nét cọ), phần dư chiều cao thành khoảng thở phía trên; cỡ người lớn theo chiều cao màn hình (--pw).
 // Hero Trang chủ cá nhân, bố cục TRUNG TÂM (dải tối `inverse`, đáy nét cọ; nền lưới dọc ở PersonBackdrop). Một CTA chính: "Đăng ký nhận bài".
 // Các lớp từ sau ra trước: tên khổng lồ (HeroName, nằm SAU người) · chấm tròn phẳng `accent-warm` · chân dung xóa phông (nền trong suốt) ·
 // chữ + CTA + icon (trái) và hai thẻ kính mờ số liệu (phải) · cánh cửa mở đầu trang (HeroCurtain, tách riêng, chạy một lần).
@@ -20,7 +21,7 @@ import { HeroName } from "@/frontend/components/home/HeroName";
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 // --pw: bề rộng người · --ph: chiều cao người (tỉ lệ ảnh 844x866) · --bh: chiều cao nét cọ ở đáy dải
 const vars = {
-  "--pw": "clamp(16rem, 44vw, 38rem)",
+  "--pw": "clamp(16rem, min(calc(46vw / var(--hz)), calc((100svh / var(--hz) - 9rem) / 1.026)), 42rem)",
   "--ph": "calc(var(--pw) * 1.026)",
   "--bh": "clamp(40px, 5.5vw, 64px)",
 } as CSSProperties;
@@ -35,7 +36,7 @@ const glass =
 export function PersonHero({ stats }: { stats: { posts: number; topics: number } }) {
   const h = getHomePage();
   return (
-    <div className="relative [perspective:1800px]" style={vars}>
+    <div className="hero-zoom relative mt-auto w-full [perspective:1800px]" style={vars}>
       <div className="wrap relative pb-[calc(var(--bh)+var(--space-7))] desktop:pb-0">
         <div className="anim-dolly">
         <PointerScene tilt={3.5}>
@@ -70,7 +71,7 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
                   width={h.portrait.width}
                   height={h.portrait.height}
                   priority
-                  sizes="(min-width: 1024px) 608px, 44vw"
+                  sizes="(min-width: 1024px) 672px, 46vw"
                   className="size-full object-contain"
                 />
               </div>
@@ -89,13 +90,12 @@ export function PersonHero({ stats }: { stats: { posts: number; topics: number }
             className="anim-fade-rise relative z-20 mx-auto mt-s5 max-w-xl text-center desktop:absolute! desktop:bottom-[calc(var(--bh)+var(--space-6))] desktop:left-0 desktop:mx-0 desktop:mt-0 desktop:w-[min(22rem,27%)] desktop:text-left"
             style={delay(1300)}
           >
-            <p className="type-dek text-pretty text-on-inverse-soft">{h.positioning}</p>
-            <Button href="#dang-ky" variant="on-inverse" className="mt-s5 w-full tablet:w-auto desktop:w-full">
+            <Button href="#dang-ky" variant="on-inverse" className="w-full tablet:w-auto desktop:w-full">
               {h.ctaLabel}
               <ArrowRightIcon />
             </Button>
-            <p className="type-caption mt-s5 text-on-inverse-soft">{h.followLabel}</p>
-            <SocialIcons featured="zalo" onDark className="mt-s3 justify-center desktop:justify-start" />
+            <p className="type-caption mt-s5 text-on-inverse-soft desktop:mt-s7">{h.followLabel}</p>
+            <SocialIcons featured="zalo" onDark className="mt-s3 justify-center desktop:mt-s4 desktop:justify-start" />
           </div>
 
           {/* Thẻ kính mờ: số liệu thật, đếm từ nội dung */}
