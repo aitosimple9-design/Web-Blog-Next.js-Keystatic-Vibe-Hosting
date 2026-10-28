@@ -22,7 +22,7 @@ Mỗi họa tiết đề xuất phải trả lời được: nó **dẫn mắt**
 - Có ảnh thật / vật thể tách nền chưa, hay phải dùng `CoverArt` và SVG tự vẽ.
 
 ## Quy trình
-1. **Đọc nguồn chuẩn:** `CLAUDE.md` mục 6, `docs/design-system/DESIGN-SYSTEM.md`, `docs/design-system/EXTENSIONS.md` (cái gì ĐÃ duyệt), spec trang ở `docs/layout/<trang>/README.md`, và `references/ornament-catalog.md` cạnh file này (kho họa tiết đã dùng và ứng viên mới).
+1. **Đọc nguồn chuẩn:** `.claude/rules/thiet-ke.md` (trước là CLAUDE.md mục 6), `docs/design-system/DESIGN-SYSTEM.md`, `docs/design-system/EXTENSIONS.md` (cái gì ĐÃ duyệt), spec trang ở `docs/layout/<trang>/README.md`, và `references/ornament-catalog.md` cạnh file này (kho họa tiết đã dùng và ứng viên mới).
 2. **Bóc ảnh mẫu thành 5 lớp, KHÔNG chép layout, chữ, hình:**
    - nền (màu, kết cấu, ảnh mờ) · chiều sâu (vật thể tách nền, bóng, chồng lớp) · họa tiết (đường nét, hình thoi, số lớn, viền) · chuyển động (cuộn, hover, nghiêng) · chi tiết ký hiệu (cái làm ảnh mẫu "nhớ được").
    - Ghi mỗi lớp: lấy ý nào, dịch sang token nào của dự án.
@@ -30,7 +30,7 @@ Mỗi họa tiết đề xuất phải trả lời được: nó **dẫn mắt**
 4. **Ngân sách họa tiết cho mỗi khối:** tối đa 1 họa tiết chính + 2 chi tiết phụ; tối đa 1 vật thể tách nền chồng mép; không card lồng card (một lớp khung nền, thẻ con không viền).
 5. **Đề xuất 3 phương án** cho Lộc chọn: **A an toàn** (chỉ dùng cái đã duyệt), **B cân bằng** (một mở rộng nhỏ), **C táo bạo** (cần nới quy tắc). Mỗi phương án viết mini-spec theo mẫu bên dưới.
 6. **Sau khi Lộc chọn: dựng bản thử MỘT khối**, chụp ở 375, 768, 1440px (một theme; thêm Đêm nếu có màu nền mới), **đặt cạnh ảnh mẫu** rồi sửa tới khi gần tinh thần ảnh mẫu. Chỉ rồi mới nhân ra các khối khác.
-7. **Đồng bộ tài liệu cùng lúc:** `docs/design-system/EXTENSIONS.md` (mở rộng mới), `CLAUDE.md` mục 6, spec trang ở `docs/layout/`, `.claude/agents/design-reviewer.md`, `docs/PLAN.md`; ảnh mới vào `public/images/CREDITS.md`.
+7. **Đồng bộ tài liệu cùng lúc:** `docs/design-system/EXTENSIONS.md` (mở rộng mới), `.claude/rules/thiet-ke.md` (trước là CLAUDE.md mục 6), spec trang ở `docs/layout/`, `.claude/agents/design-reviewer.md`, `docs/PLAN.md`; ảnh mới vào `public/images/CREDITS.md`.
 
 ## Mẫu mini-spec cho mỗi phương án
 ```
@@ -45,7 +45,7 @@ A11y / SEO: aria-hidden nếu trang trí, tương phản chữ trên họa tiế
 Cần duyệt: <mở rộng nào so với Design System, nếu có>
 ```
 
-## Ràng buộc cứng (từ CLAUDE.md mục 6)
+## Ràng buộc cứng (từ .claude/rules/thiet-ke.md (trước là CLAUDE.md mục 6))
 - Chỉ token, KHÔNG mã hex; đẹp ở cả hai theme Giấy và Đêm; MỘT màu nhấn `accent` (`accent-warm` chỉ đầu gradient và họa tiết, trừ khi Lộc duyệt mở rộng).
 - Chuyển động chỉ `transform` + `opacity`; KHÔNG vòng lặp vô hạn (ngoại lệ đã duyệt: `ScrollMarquee`); tắt khi giảm chuyển động.
 - Đổ bóng chỉ theo thang `elevated-*` (+ `inset-sunk*` đã duyệt); gradient chỉ nút chính, bề mặt nổi và vùng chuyển mờ giữa các dải (đã duyệt).

@@ -1,6 +1,6 @@
 ---
 name: content-editor
-description: Soạn và biên tập bài viết `content/posts/<slug>.md` theo WORKFLOW.md mục 4 và CLAUDE.md mục 5. Chỉ chạy khi chủ dự án giao việc viết bài và đã cung cấp tên sách, tác giả, ý chính.
+description: Soạn và biên tập bài viết `content/posts/<slug>.md` theo WORKFLOW.md mục 4 và .claude/rules/bai-viet.md (trước là CLAUDE.md mục 5). Chỉ chạy khi chủ dự án giao việc viết bài và đã cung cấp tên sách, tác giả, ý chính.
 tools: Read, Grep, Glob, Edit, Write
 ---
 
@@ -11,7 +11,7 @@ Bạn là biên tập viên cho blog kiến thức nâng cao từ sách. Viết 
 - Chỉ tạo file MỚI trong `content/posts/`. KHÔNG sửa hoặc xóa bài đã có khi chưa được yêu cầu rõ.
 - Làm trên nhánh `content/<slug>` do người gọi tạo.
 
-## Cấu trúc file (CLAUDE.md mục 5, dùng chung với dự án B)
+## Cấu trúc file (.claude/rules/bai-viet.md (trước là CLAUDE.md mục 5), dùng chung với dự án B)
 Định dạng `.md` thuần, frontmatter YAML đủ trường bắt buộc:
 `title`, `slug` (chữ thường, không dấu, nối bằng "-"), `description` (≤ 160 ký tự), `category`, `date` (YYYY-MM-DD),
 `source.book`, `source.author`; tùy chọn `cover`, `draft`.
