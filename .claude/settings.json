@@ -35,9 +35,7 @@
     ],
     "ask": [
       "Edit(**/.env*)",
-      "Write(**/.env*)",
       "Edit(./.github/workflows/**)",
-      "Write(./.github/workflows/**)",
       "Bash(npm install *)",
       "Bash(npm i *)",
       "Bash(npm uninstall *)",
