@@ -5,6 +5,11 @@ const ADMIN_PORT = 3200; // trang quản trị: next dev, Keystatic chế độ 
 const GITHUB_PORT = 3201; // trang quản trị: next dev, Keystatic chế độ GitHub nói chuyện với máy chủ GitHub GIẢ
 const MOCK_PORT = 3300; // máy chủ GitHub giả (tests/e2e/admin-github/mock-github.mjs)
 
+// E2E_ONLY=public | admin: chỉ chạy một nhóm project và chỉ bật server của nhóm đó (CI tách hai job). Không đặt thì chạy hết như trên máy.
+const ONLY = process.env.E2E_ONLY;
+const wantPublic = ONLY !== "admin";
+const wantAdmin = ONLY !== "public";
+
 export default defineConfig({
   testDir: "tests/e2e",
   fullyParallel: true,
@@ -14,14 +19,14 @@ export default defineConfig({
   use: { trace: "retain-on-failure" },
   projects: [
     // tests/e2e/public/: các trang công khai, SEO, chuyển hướng
-    { name: "chromium", testDir: "tests/e2e/public", use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${PORT}` } },
+    ...(wantPublic ? [{ name: "chromium", testDir: "tests/e2e/public", use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${PORT}` } }] : []),
     // tests/e2e/admin/: trang quản trị Keystatic (CHỈ ĐỌC, không ghi vào content/)
-    { name: "admin", testDir: "tests/e2e/admin", timeout: 90_000, use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${ADMIN_PORT}` } },
+    ...(wantAdmin ? [{ name: "admin", testDir: "tests/e2e/admin", timeout: 90_000, use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${ADMIN_PORT}` } }] : []),
     // tests/e2e/admin-github/: đường GitHub của trang quản trị (xác minh quyền, ghi chuyển hướng vào nhánh, xem trước / chấm SEO từ nhánh). Các test dùng chung một máy chủ giả có trạng thái nên chạy lần lượt
-    { name: "admin-github", testDir: "tests/e2e/admin-github", fullyParallel: false, timeout: 90_000, use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${GITHUB_PORT}` } },
+    ...(wantAdmin ? [{ name: "admin-github", testDir: "tests/e2e/admin-github", fullyParallel: false, timeout: 90_000, use: { ...devices["Desktop Chrome"], baseURL: `http://localhost:${GITHUB_PORT}` } }] : []),
   ],
   webServer: [
-    {
+    ...(wantPublic ? [{
       command: `npm run build && npm run start -- -p ${PORT}`,
       url: `http://localhost:${PORT}`,
       reuseExistingServer: !process.env.CI,
@@ -30,8 +35,8 @@ export default defineConfig({
       // Chạy như production nên next.config.ts đòi NEXT_PUBLIC_SITE_URL hợp lệ (https, không phải localhost): đặt địa chỉ giả cho test.
       env: { ALLOW_INDEXING: "true", NEXT_PUBLIC_SITE_URL: "https://e2e.example.com" },
       timeout: 300_000,
-    },
-    {
+    }] : []),
+    ...(wantAdmin ? [{
       // Trang quản trị chỉ chạy ở chế độ dev + local (isAdminRequest: máy không có VERCEL). Ép storage=local để .env.local của máy không làm lệch.
       command: `npm run dev -- -p ${ADMIN_PORT}`,
       url: `http://localhost:${ADMIN_PORT}/keystatic`,
@@ -52,6 +57,6 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       env: { NEXT_PUBLIC_KEYSTATIC_STORAGE: "github", GITHUB_API_URL: `http://localhost:${MOCK_PORT}`, NEXT_DIST_DIR: ".next-e2e-github" },
       timeout: 300_000,
-    },
+    }] : []),
   ],
 });

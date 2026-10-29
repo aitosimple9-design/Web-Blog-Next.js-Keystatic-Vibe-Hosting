@@ -14,9 +14,56 @@ permissions:
   contents: read
 
 jobs:
+  # Phân loại file đổi để chỉ chạy phần CI liên quan. Push lên main và file không nhận ra được: chạy hết.
+  # Dùng `if:` ở cấp job (không dùng paths-ignore) để job bị bỏ qua vẫn tính là đạt với luật bảo vệ `main`.
+  changes:
+    name: Phân loại thay đổi
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      check: ${{ steps.scope.outputs.check }}
+      public: ${{ steps.scope.outputs.public }}
+      admin: ${{ steps.scope.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Xác định phần cần chạy
+        id: scope
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          check=false; pub=false; adm=false
+          if [ "$EVENT" != "pull_request" ]; then
+            check=true; pub=true; adm=true
+            echo "Push lên main: chạy hết."
+          else
+            while IFS= read -r f; do
+              [ -z "$f" ] && continue
+              case "$f" in
+                # Nội dung và test đơn vị: chỉ cần check (đứng trước mẫu *.md vì bài viết là file .md)
+                content/*|public/images/*|tests/unit/*|scripts/*) check=true; echo "check: $f" ;;
+                # Chỉ tài liệu / cấu hình Claude: không cần CI
+                docs/*|.claude/*|*.md|.github/ISSUE_TEMPLATE/*|.github/pull_request_template.md) echo "bỏ qua: $f" ;;
+                # Trang quản trị
+                src/cms/*|src/app/api/*|src/app/keystatic/*|keystatic.config.ts|tests/e2e/admin/*|tests/e2e/admin-github/*) check=true; adm=true; echo "admin: $f" ;;
+                # Web công khai
+                src/frontend/*|src/app/*|public/*|next.config.ts|postcss.config.*|tests/e2e/public/*) check=true; pub=true; echo "public: $f" ;;
+                # Còn lại (package.json, lockfile, src/shared, playwright.config.ts, workflows, file lạ): chạy hết
+                *) check=true; pub=true; adm=true; echo "chạy hết: $f" ;;
+              esac
+            done < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          fi
+          { echo "check=$check"; echo "public=$pub"; echo "admin=$adm"; } >> "$GITHUB_OUTPUT"
+
   # Kiểm tra tĩnh + unit test + build. Tự bỏ qua khi nhánh chưa có code (package.json).
   check:
     name: Lint, typecheck, test, build
+    needs: changes
+    if: needs.changes.outputs.check == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -58,44 +105,81 @@ jobs:
         if: steps.detect.outputs.has_app == 'true'
         run: npm run build
 
-  # Test giao diện bằng Playwright. Chỉ chạy khi dự án có playwright.config.ts.
-  e2e:
-    name: E2E (Playwright)
+  # Test giao diện bằng Playwright, tách hai nhóm chạy song song (E2E_ONLY chọn project + server, xem playwright.config.ts).
+  e2e-public:
+    name: E2E web công khai
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs: check
+    needs: [changes, check]
+    if: needs.changes.outputs.public == 'true'
+    env:
+      E2E_ONLY: public
     steps:
       - uses: actions/checkout@v4
-
-      - name: Phát hiện cấu hình Playwright
-        id: detect
-        run: |
-          if [ -f playwright.config.ts ]; then echo "has_e2e=true" >> "$GITHUB_OUTPUT"; else echo "has_e2e=false" >> "$GITHUB_OUTPUT"; echo "Chưa có playwright.config.ts, bỏ qua E2E."; fi
-
       - uses: actions/setup-node@v4
-        if: steps.detect.outputs.has_e2e == 'true'
         with:
           node-version: 22
           cache: npm
-
       - name: Cài thư viện
-        if: steps.detect.outputs.has_e2e == 'true'
         run: npm ci
-
       - name: Cài trình duyệt Playwright
-        if: steps.detect.outputs.has_e2e == 'true'
         run: npx playwright install --with-deps chromium
-
       - name: Chạy E2E
-        if: steps.detect.outputs.has_e2e == 'true'
         run: npm run test:e2e
-
       - name: Lưu báo cáo khi lỗi
-        if: failure() && steps.detect.outputs.has_e2e == 'true'
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-public
           path: |
             playwright-report/
             test-results/
           retention-days: 7
+
+  e2e-admin:
+    name: E2E trang quản trị
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: [changes, check]
+    if: needs.changes.outputs.admin == 'true'
+    env:
+      E2E_ONLY: admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Cài thư viện
+        run: npm ci
+      - name: Cài trình duyệt Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Chạy E2E
+        run: npm run test:e2e
+      - name: Lưu báo cáo khi lỗi
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-admin
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # Job tổng GIỮ TÊN `E2E (Playwright)` vì luật bảo vệ `main` và auto-merge-content.yml đang yêu cầu đúng tên này.
+  # Đạt khi mọi job liên quan xanh hoặc được bỏ qua; đỏ nếu có job lỗi / bị hủy.
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [check, e2e-public, e2e-admin]
+    if: always()
+    steps:
+      - name: Tổng hợp kết quả
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Kết quả: $RESULTS"
+          case " $RESULTS " in
+            *" failure "*|*" cancelled "*) echo "Có job lỗi hoặc bị hủy."; exit 1 ;;
+          esac
