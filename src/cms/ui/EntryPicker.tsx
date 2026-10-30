@@ -1,22 +1,31 @@
 "use client";
 
-// Ô CHỌN trong form bài của Keystatic (hiện dùng cho "Tên sách" ở khối Nguồn sách): danh sách chọn có ô tìm kiếm lấy từ mục Sách, cuối danh sách
-// có nút "+ Thêm sách mới" mở hộp thoại kiểu YouTube để điền rồi tạo luôn, tạo xong tự chọn. Giá trị lưu vẫn là CHỮ (tên sách) nên cấu trúc bài không đổi.
-// Danh sách và việc tạo đi qua /api/danh-muc (src/cms/lib/entry-store.ts; chế độ GitHub commit vào nhánh đang soạn).
+// Ô CHỌN trong form của Keystatic (Tên sách, Chủ đề, Chủ đề con): danh sách chọn có ô tìm kiếm lấy từ mục tương ứng, cuối danh sách có nút
+// "+ Thêm … mới" mở hộp thoại kiểu YouTube để điền rồi tạo luôn, tạo xong tự chọn. Giá trị lưu không đổi so với ô cũ: Sách = TÊN (chữ),
+// Chủ đề = slug, Chủ đề con = danh sách slug. Danh sách và việc tạo đi qua /api/danh-muc (src/cms/lib/entry-store.ts; chế độ GitHub commit vào nhánh đang soạn).
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { branchOf } from "./ks-branch";
 import { isDarkTheme } from "./ks-theme";
 
+type Kind = "books" | "topics" | "subtopics";
 type Item = { slug: string; name: string };
 type Result = { ok: true; item: Item } | { ok: false; error: string };
 
+// Mỗi loại: danh từ trong câu chữ, giá trị lưu là tên hay slug, câu báo khi để trống
+const KINDS: Record<Kind, { noun: string; byName: boolean; missing: string }> = {
+  books: { noun: "sách", byName: true, missing: "Cần chọn sách." },
+  topics: { noun: "chủ đề", byName: false, missing: "Cần chọn chủ đề." },
+  subtopics: { noun: "chủ đề con", byName: false, missing: "Chọn ít nhất một chủ đề con." },
+};
+
 export type EntryPickerProps = {
+  kind: Kind;
   label: string;
-  /** Danh từ ngắn trong câu chữ: "sách" */
-  noun: string;
-  value: string;
-  onChange(value: string): void;
+  /** Giá trị đang chọn (ô chọn một thì có 0 hoặc 1 phần tử) */
+  values: string[];
+  multi?: boolean;
+  onChange(values: string[]): void;
   forceValidation: boolean;
 };
 
@@ -35,7 +44,8 @@ const query = () => {
   return b ? `&branch=${encodeURIComponent(b)}` : "";
 };
 
-export function EntryPicker({ label, noun, value, onChange, forceValidation }: EntryPickerProps) {
+export function EntryPicker({ kind, label, values, multi = false, onChange, forceValidation }: EntryPickerProps) {
+  const { noun, byName, missing } = KINDS[kind];
   const uid = useId();
   const [items, setItems] = useState<Item[]>([]);
   const [open, setOpen] = useState(false);
@@ -45,17 +55,18 @@ export function EntryPicker({ label, noun, value, onChange, forceValidation }: E
   const wrap = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const c = palette(dark);
+  const keyOf = (i: Item) => (byName ? i.name : i.slug);
 
   useEffect(() => {
     let live = true;
-    fetch(`/api/danh-muc?kind=books${query()}`, { cache: "no-store" })
+    fetch(`/api/danh-muc?kind=${kind}${query()}`, { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : []))
       .then((list: Item[]) => live && Array.isArray(list) && setItems(list))
       .catch(() => undefined);
     return () => {
       live = false;
     };
-  }, []);
+  }, [kind]);
 
   useEffect(() => {
     if (!open) return;
@@ -75,8 +86,9 @@ export function EntryPicker({ label, noun, value, onChange, forceValidation }: E
   }, [open, dialog]);
 
   const shown = items.filter((i) => i.name.toLowerCase().includes(filter.trim().toLowerCase()));
-  const known = !value || items.some((i) => i.name === value);
-  const invalid = forceValidation && !value.trim();
+  const nameOf = (v: string) => items.find((i) => keyOf(i) === v)?.name ?? v;
+  const unknown = values.filter((v) => items.length > 0 && !items.some((i) => keyOf(i) === v));
+  const invalid = forceValidation && values.length === 0;
   const toggle = () => {
     if (!open) {
       setDark(isDarkTheme());
@@ -84,23 +96,33 @@ export function EntryPicker({ label, noun, value, onChange, forceValidation }: E
     }
     setOpen(!open);
   };
-  const pick = (name: string) => {
-    onChange(name);
+  const pick = (key: string) => {
+    if (multi) return onChange(values.includes(key) ? values.filter((v) => v !== key) : [...values, key]);
+    onChange([key]);
     setOpen(false);
     trigger.current?.focus();
   };
   const created = (item: Item) => {
     setItems((prev) => [...prev.filter((i) => i.slug !== item.slug), item].sort((a, b) => a.name.localeCompare(b.name, "vi")));
     setDialog(false);
-    pick(item.name);
+    if (multi) {
+      onChange([...values.filter((v) => v !== keyOf(item)), keyOf(item)]);
+    } else {
+      pick(keyOf(item));
+    }
   };
 
   const row = { display: "block", width: "100%", textAlign: "left", font: "inherit", fontSize: 14, padding: "10px 12px", minHeight: 40, background: "transparent", color: "inherit", border: 0, cursor: "pointer" } as const;
+  const summary = values.map(nameOf).join(", ");
 
   return (
     <div ref={wrap} style={{ position: "relative", display: "flex", flexDirection: "column", gap: 4 }}>
-      <span id={`${uid}-label`} style={{ fontSize: 14, fontWeight: 500 }}>
-        {label}
+      <span style={{ fontSize: 14, fontWeight: 500 }}>
+        <span id={`${uid}-label`}>{label}</span>
+        <span aria-hidden="true" style={{ color: c.error }}>
+          {" "}
+          *
+        </span>
       </span>
       <button
         ref={trigger}
@@ -112,15 +134,19 @@ export function EntryPicker({ label, noun, value, onChange, forceValidation }: E
         aria-labelledby={`${uid}-label`}
         aria-invalid={invalid || undefined}
         onClick={toggle}
-        style={{ ...row, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, borderRadius: 6, border: `1px solid ${invalid ? c.error : c.line}`, color: value ? "inherit" : c.mute }}
+        style={{ ...row, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, borderRadius: 6, border: `1px solid ${invalid ? c.error : c.line}`, color: summary ? "inherit" : c.mute }}
       >
-        <span>{value || `Chọn ${noun}…`}</span>
+        <span>{summary || `Chọn ${noun}…`}</span>
         <span aria-hidden="true">▾</span>
       </button>
-      {!known && <span style={{ fontSize: 12, color: c.mute }}>“{value}” chưa có trong mục Sách (bài cũ); chọn một cuốn trong danh sách hoặc thêm mới.</span>}
+      {unknown.length > 0 && (
+        <span style={{ fontSize: 12, color: c.mute }}>
+          “{unknown.join("”, “")}” không có trong danh sách {noun} (bài cũ hoặc đã xóa); chọn lại trong danh sách hoặc thêm mới.
+        </span>
+      )}
       {invalid && (
         <span role="alert" style={{ fontSize: 12, color: c.error }}>
-          Cần chọn {noun}.
+          {missing}
         </span>
       )}
       {open && (
@@ -135,14 +161,18 @@ export function EntryPicker({ label, noun, value, onChange, forceValidation }: E
               style={{ width: "100%", boxSizing: "border-box", font: "inherit", fontSize: 14, padding: "8px 10px", borderRadius: 6, border: `1px solid ${c.line}`, background: "transparent", color: "inherit" }}
             />
           </div>
-          <ul id={`${uid}-list`} role="listbox" aria-labelledby={`${uid}-label`} style={{ listStyle: "none", margin: 0, padding: 0, maxHeight: 240, overflowY: "auto" }}>
-            {shown.map((i) => (
-              <li key={i.slug} role="option" aria-selected={i.name === value}>
-                <button type="button" onClick={() => pick(i.name)} style={{ ...row, fontWeight: i.name === value ? 600 : 400, background: i.name === value ? c.hover : "transparent" }}>
-                  {i.name}
-                </button>
-              </li>
-            ))}
+          <ul id={`${uid}-list`} role="listbox" aria-multiselectable={multi || undefined} aria-labelledby={`${uid}-label`} style={{ listStyle: "none", margin: 0, padding: 0, maxHeight: 240, overflowY: "auto" }}>
+            {shown.map((i) => {
+              const on = values.includes(keyOf(i));
+              return (
+                <li key={i.slug} role="option" aria-selected={on}>
+                  <button type="button" onClick={() => pick(keyOf(i))} style={{ ...row, fontWeight: on ? 600 : 400, background: on ? c.hover : "transparent" }}>
+                    {multi && <span aria-hidden="true">{on ? "☑ " : "☐ "}</span>}
+                    {i.name}
+                  </button>
+                </li>
+              );
+            })}
             {shown.length === 0 && <li style={{ padding: "10px 12px", fontSize: 14, color: c.mute }}>Không có {noun} nào khớp.</li>}
           </ul>
           <button type="button" onClick={() => setDialog(true)} style={{ ...row, borderTop: `1px solid ${c.line}`, color: c.accent, fontWeight: 600 }}>
@@ -150,16 +180,23 @@ export function EntryPicker({ label, noun, value, onChange, forceValidation }: E
           </button>
         </div>
       )}
-      {dialog && <CreateDialog noun={noun} initialName={filter.trim()} dark={dark} onClose={() => setDialog(false)} onCreated={created} />}
+      {dialog && <CreateDialog kind={kind} initialName={filter.trim()} dark={dark} onClose={() => setDialog(false)} onCreated={created} />}
     </div>
   );
 }
 
-function CreateDialog({ noun, initialName, dark, onClose, onCreated }: { noun: string; initialName: string; dark: boolean; onClose(): void; onCreated(item: Item): void }) {
+function CreateDialog({ kind, initialName, dark, onClose, onCreated }: { kind: Kind; initialName: string; dark: boolean; onClose(): void; onCreated(item: Item): void }) {
+  const { noun } = KINDS[kind];
   const c = palette(dark);
   const [name, setName] = useState(initialName);
+  const [description, setDescription] = useState("");
+  const [topic, setTopic] = useState("");
+  const [order, setOrder] = useState("");
+  const [topics, setTopics] = useState<Item[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const needsMore = kind !== "books";
+  const ready = !!name.trim() && (!needsMore || !!description.trim()) && (kind !== "subtopics" || !!topic);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -167,15 +204,23 @@ function CreateDialog({ noun, initialName, dark, onClose, onCreated }: { noun: s
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  useEffect(() => {
+    if (kind !== "subtopics") return;
+    fetch(`/api/danh-muc?kind=topics${query()}`, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: Item[]) => Array.isArray(list) && setTopics(list))
+      .catch(() => undefined);
+  }, [kind]);
+
   const submit = async () => {
-    if (!name.trim() || busy) return;
+    if (!ready || busy) return;
     setBusy(true);
     setError("");
     try {
       const res = await fetch("/api/danh-muc", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kind: "books", name, branch: branchOf() ?? undefined }),
+        body: JSON.stringify({ kind, name, description, topic, order: order ? Number(order) : undefined, branch: branchOf() ?? undefined }),
       });
       const r = (await res.json().catch(() => null)) as Result | null;
       if (r?.ok) return onCreated(r.item);
@@ -185,6 +230,10 @@ function CreateDialog({ noun, initialName, dark, onClose, onCreated }: { noun: s
     }
     setBusy(false);
   };
+
+  const box = { display: "flex", flexDirection: "column", gap: 2, padding: "8px 12px", borderRadius: 8, border: `1px solid ${c.line}` } as const;
+  const small = { fontSize: 12, color: c.mute } as const;
+  const input = { font: "inherit", fontSize: 15, padding: "4px 0", border: 0, outline: "none", background: "transparent", color: "inherit", width: "100%" } as const;
 
   return createPortal(
     <div
@@ -211,18 +260,38 @@ function CreateDialog({ noun, initialName, dark, onClose, onCreated }: { noun: s
           </button>
         </div>
         <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
-          <label style={{ display: "flex", flexDirection: "column", gap: 2, padding: "8px 12px", borderRadius: 8, border: `1px solid ${c.line}` }}>
-            <span style={{ fontSize: 12, color: c.mute }}>Tên {noun} (bắt buộc)</span>
-            <input
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={120}
-              placeholder={`Thêm tên ${noun}`}
-              style={{ font: "inherit", fontSize: 15, padding: "4px 0", border: 0, outline: "none", background: "transparent", color: "inherit" }}
-            />
+          <label style={box}>
+            <span style={small}>Tên {noun} (bắt buộc)</span>
+            <input autoFocus value={name} onChange={(e) => setName(e.target.value)} maxLength={120} placeholder={`Thêm tên ${noun}`} style={input} />
           </label>
-          <span style={{ fontSize: 12, color: c.mute }}>Ảnh bìa thêm sau ở mục Sách.</span>
+          {kind === "subtopics" && (
+            <label style={box}>
+              <span style={small}>Chủ đề (bắt buộc)</span>
+              <select value={topic} onChange={(e) => setTopic(e.target.value)} style={{ ...input, cursor: "pointer" }}>
+                <option value="" style={{ color: "#1f2328" }}>
+                  Chọn chủ đề
+                </option>
+                {topics.map((t) => (
+                  <option key={t.slug} value={t.slug} style={{ color: "#1f2328" }}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {needsMore && (
+            <>
+              <label style={box}>
+                <span style={small}>Mô tả ngắn (bắt buộc, tối đa 200 ký tự: {description.length}/200)</span>
+                <textarea value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} rows={4} placeholder="Thêm mô tả" style={{ ...input, resize: "vertical" }} />
+              </label>
+              <label style={box}>
+                <span style={small}>Thứ tự (số nhỏ hiện trước; để trống = xếp cuối)</span>
+                <input type="number" min={1} value={order} onChange={(e) => setOrder(e.target.value)} style={input} />
+              </label>
+            </>
+          )}
+          <span style={small}>{kind === "books" ? "Ảnh bìa thêm sau ở mục Sách." : kind === "topics" ? "Ảnh nền thêm sau ở mục Chủ đề." : "Ảnh bìa thêm sau ở mục Chủ đề con."}</span>
           {error && (
             <p role="alert" style={{ margin: 0, fontSize: 14, color: c.error }}>
               {error}
@@ -235,8 +304,8 @@ function CreateDialog({ noun, initialName, dark, onClose, onCreated }: { noun: s
           </button>
           <button
             type="submit"
-            disabled={!name.trim() || busy}
-            style={{ font: "inherit", fontSize: 14, fontWeight: 600, minHeight: 44, padding: "0 20px", borderRadius: 999, border: 0, background: c.fg, color: c.bg, opacity: !name.trim() || busy ? 0.4 : 1, cursor: !name.trim() || busy ? "default" : "pointer" }}
+            disabled={!ready || busy}
+            style={{ font: "inherit", fontSize: 14, fontWeight: 600, minHeight: 44, padding: "0 20px", borderRadius: 999, border: 0, background: c.fg, color: c.bg, opacity: !ready || busy ? 0.4 : 1, cursor: !ready || busy ? "default" : "pointer" }}
           >
             {busy ? "Đang tạo…" : "Tạo"}
           </button>

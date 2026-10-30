@@ -29,3 +29,32 @@ test("ô Tên sách: chọn trong danh sách và mở hộp Thêm sách mới", 
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
 });
+
+// Chủ đề (chọn một) và Chủ đề con (chọn nhiều) cũng là danh sách chọn có nút Thêm mới. Chỉ đọc, như trên.
+const firstName = (dir: string) => {
+  const d = path.join(process.cwd(), "content", dir);
+  const file = fs.readdirSync(d).find((f) => f.endsWith(".json"))!;
+  return (JSON.parse(fs.readFileSync(path.join(d, file), "utf8")) as { name: string }).name;
+};
+
+test("ô Chủ đề và Chủ đề con: chọn trong danh sách, mở hộp Thêm mới", async ({ page }) => {
+  await page.goto("/keystatic/collection/posts/create");
+  const topic = page.getByRole("combobox", { name: "Chủ đề", exact: true });
+  await expect(topic).toBeVisible({ timeout: 60_000 });
+  await topic.click();
+  await page.getByRole("option", { name: firstName("topics") }).click();
+  await expect(topic).toContainText(firstName("topics"));
+
+  const subs = page.getByRole("combobox", { name: /^Chủ đề con/ });
+  await subs.click();
+  const sub = page.getByRole("option", { name: firstName("subtopics") });
+  await sub.click();
+  await expect(sub).toHaveAttribute("aria-selected", "true");
+  await page.getByRole("button", { name: "+ Thêm chủ đề con mới" }).click();
+  const dialog = page.getByRole("dialog", { name: "Thêm chủ đề con mới" });
+  // ô chọn chủ đề cha của chủ đề con (thẻ select gốc)
+  await expect(dialog.getByRole("combobox", { name: /Chủ đề \(bắt buộc\)/ })).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Tạo" })).toBeDisabled();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
