@@ -2,6 +2,7 @@
 // Chỉ gọi sau khi `adminToken()` (src/lib/admin-access.ts) đã xác minh người gọi có quyền push. Token không bao giờ ghi log hay trả ra ngoài.
 import { githubHeaders } from "./admin-access";
 import { GITHUB_API, GITHUB_REPO } from "./github-repo";
+import { ENTRY_DIR, itemFromRaw, type EntryItem, type EntryKind, type EntryPlan } from "./entry-store";
 import type { RedirectFile, RedirectPlan } from "./redirect-tools";
 import { SLUG_RE } from "../../shared/redirect-patterns";
 
@@ -111,6 +112,37 @@ export async function fetchSubtopicRaw(token: string, branch: string, slug: stri
   if (res.status === 404) return null;
   if (!res.ok) return fail(res);
   return res.text();
+}
+
+/** Các mục Sách / Chủ đề / Chủ đề con ở một nhánh (404 = chưa có thư mục = rỗng) */
+export async function listEntriesGitHub(token: string, branch: string, kind: EntryKind): Promise<EntryItem[]> {
+  const dir = ENTRY_DIR[kind];
+  const res = await gh(token, `/contents/${dir}?ref=${enc(branch)}`);
+  if (res.status === 404) return [];
+  if (!res.ok) return fail(res);
+  const files = ((await res.json()) as { name: string; type: string }[]).filter((i) => i.type === "file" && i.name.endsWith(".json")).slice(0, MAX_REDIRECT_FILES);
+  const items = await Promise.all(
+    files.map(async (f): Promise<EntryItem | null> => {
+      const r = await gh(token, `/contents/${dir}/${enc(f.name)}?ref=${enc(branch)}`, { headers: { Accept: "application/vnd.github.raw+json" } });
+      if (!r.ok) return null;
+      try {
+        return itemFromRaw(f.name.slice(0, -5), JSON.parse(await r.text()));
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return items.filter((i): i is EntryItem => i !== null);
+}
+
+/** Tạo file một mục mới ở nhánh đang soạn (một commit). 422 nếu file đã có */
+export async function putEntryGitHub(token: string, branch: string, kind: EntryKind, plan: Extract<EntryPlan, { ok: true }>): Promise<void> {
+  const res = await gh(token, `/contents/${ENTRY_DIR[kind]}/${enc(plan.file)}`, {
+    method: "PUT",
+    body: JSON.stringify({ message: `content(${kind}): thêm ${plan.slug}`, content: b64(`${JSON.stringify(plan.data, null, 2)}
+`), branch }),
+  });
+  if (!res.ok) await fail(res);
 }
 
 /** Câu báo lỗi dễ hiểu cho người soạn bài */

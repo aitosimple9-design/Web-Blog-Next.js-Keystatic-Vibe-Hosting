@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
     "/api/ten-sach": ["./content/**/*"],
     "/api/thong-ke": ["./content/**/*"],
     "/api/chuyen-huong": ["./content/**/*"],
+    "/api/danh-muc": ["./content/**/*"],
     "/xem-truoc/bai-viet/[slug]": ["./content/**/*"],
   },
   async headers() {

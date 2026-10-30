@@ -4,6 +4,7 @@
 import { UI_LABEL_GROUPS } from "@/shared/config/ui-labels";
 import { collection, config, fields, singleton } from "@keystatic/core";
 import { GITHUB_REPO } from "@/cms/lib/github-repo";
+import { bookField } from "@/cms/ui/entry-fields";
 import { POST_FIELD_LABELS } from "@/cms/lib/seo-fields";
 import { PAGE_BLOCKS, type BlocksPageKey } from "@/shared/config/blocks";
 import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_KINDS, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/shared/redirect-patterns";
@@ -718,7 +719,8 @@ export default config({
         }),
         source: fields.object(
           {
-            book: fields.text({ label: "Tên sách", validation: { isRequired: true } }),
+            // Danh sách chọn từ mục Sách (+ nút Thêm sách mới); vẫn lưu TÊN sách dạng chữ nên cấu trúc bài không đổi
+            book: bookField("Tên sách"),
             author: fields.text({ label: "Tác giả", validation: { isRequired: true } }),
           },
           { label: "Nguồn sách" },

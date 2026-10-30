@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { KIND_PREFIX, REDIRECT_KINDS, type RedirectKind } from "@/shared/redirect-patterns";
+import { branchOf } from "./ks-branch";
 import { isDarkTheme } from "./ks-theme";
 
 const BOX = "data-ks-redirect-box";
@@ -18,16 +19,6 @@ const KIND_OF: Record<string, RedirectKind> = { posts: "Bài viết", topics: "C
 
 type Result = { ok: true; from: string; to: string; flattened: string[]; removed: string[] } | { ok: false; error: string };
 
-// Nhánh đang soạn (chế độ GitHub: địa chỉ có dạng /keystatic/branch/<nhánh>/...; chế độ local không có) để API biết commit chuyển hướng vào đâu
-function branchOf(): string | null {
-  const m = location.pathname.match(/\/keystatic\/branch\/([^/]+)/);
-  if (!m) return null;
-  try {
-    return decodeURIComponent(m[1]);
-  } catch {
-    return null;
-  }
-}
 const branchQuery = () => {
   const b = branchOf();
   return b ? `&branch=${encodeURIComponent(b)}` : "";
