@@ -4,7 +4,7 @@
 // keystatic.config.ts mà không qua file này, vì khi đó hộp điểm sẽ không tìm thấy ô và chấm sai.
 export const POST_FIELD_LABELS = {
   title: "Tiêu đề",
-  slug: "Slug (tên file, chữ thường không dấu nối bằng '-')",
+  slug: "Slug (tên file, chữ thường không dấu nối bằng '-'; rút gọn 3–6 từ, có từ khóa chính)",
   description: "Mô tả (≤ 160 ký tự, dùng cho meta description + Open Graph)",
   cover: "Ảnh bìa",
   coverAlt: "Mô tả ảnh bìa (alt)",

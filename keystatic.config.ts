@@ -602,7 +602,7 @@ export default config({
         postCount: fields.empty(),
         name: fields.slug({
           name: { label: "Tên chủ đề", validation: { isRequired: true } },
-          slug: { label: "Slug (tên file, khớp với ô Chủ đề của bài và địa chỉ /blog/<slug>)" },
+          slug: { label: "Slug (tên file, khớp với ô Chủ đề của bài và địa chỉ /blog/<slug>; rút gọn 3–6 từ, có từ khóa chính)" },
         }),
         order: fields.integer({ label: "Thứ tự", description: "Hiển thị: số nhỏ hiện trước", defaultValue: 1 }),
         description: fields.text({
@@ -629,7 +629,7 @@ export default config({
         postCount: fields.empty(),
         name: fields.slug({
           name: { label: "Tên chủ đề con", validation: { isRequired: true } },
-          slug: { label: "Slug (tên file, duy nhất toàn site, là địa chỉ /blog/<chủ đề>/<slug>; không dùng \"trang\")" },
+          slug: { label: "Slug (tên file, duy nhất toàn site, là địa chỉ /blog/<chủ đề>/<slug>; không dùng \"trang\"; rút gọn 3–6 từ, có từ khóa chính)" },
         }),
         topic: topicField("Chủ đề"),
         order: fields.integer({ label: "Thứ tự", description: "Hiển thị: số nhỏ hiện trước", defaultValue: 1 }),

@@ -2,9 +2,9 @@
 title: "Kể chuyện để nhớ"
 slug: demo-14-ke-chuyen-de-nho
 description: "Khi một ý tưởng được kể thành chuyện, não bộ giữ lại dễ hơn. Ba cấu trúc kể chuyện gọn cho người mới."
-category: chu-de-3
+category: tu-chu-tai-chinh
 subtopics:
-  - chu-de-3-con-2
+  - tam-ly-an-yen-ve-tien
 date: 2026-08-12
 source:
   book: "Sách mẫu 7"

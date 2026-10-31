@@ -2,10 +2,10 @@
 title: "Đặt câu hỏi trước khi mở sách"
 slug: demo-03-cau-hoi-truoc-khi-doc
 description: "Người đọc có câu hỏi sẵn thường tìm thấy câu trả lời nhanh hơn. Ba câu hỏi nên viết ra trước khi đọc."
-category: chu-de-1
+category: vung-vang-tu-than
 subtopics:
-  - chu-de-1-con-3
-  - chu-de-1-con-4
+  - xay-diem-tua-ben-trong
+  - lang-diu-con-gian
 date: 2026-09-25
 source:
   book: "Sách mẫu 3"
