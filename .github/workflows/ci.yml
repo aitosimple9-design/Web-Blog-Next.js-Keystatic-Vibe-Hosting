@@ -48,11 +48,13 @@ jobs:
                 content/*|public/images/*|tests/unit/*|scripts/*) check=true; echo "check: $f" ;;
                 # Chỉ tài liệu / cấu hình Claude: không cần CI
                 docs/*|.claude/*|*.md|.github/ISSUE_TEMPLATE/*|.github/pull_request_template.md) echo "bỏ qua: $f" ;;
-                # Trang quản trị
-                src/cms/*|src/app/api/*|src/app/keystatic/*|keystatic.config.ts|tests/e2e/admin/*|tests/e2e/admin-github/*) check=true; adm=true; echo "admin: $f" ;;
+                # API tìm kiếm là của WEB CÔNG KHAI (ô tìm kiếm): phải đứng trước mẫu src/app/api/* của trang quản trị
+                src/app/api/tim-kiem/*) check=true; pub=true; echo "public: $f" ;;
+                # Trang quản trị (kể cả trang xem trước bài nháp: test của nó nằm ở tests/e2e/admin)
+                src/cms/*|src/app/api/*|src/app/keystatic/*|src/app/xem-truoc/*|keystatic.config.ts|tests/e2e/admin/*|tests/e2e/admin-github/*) check=true; adm=true; echo "admin: $f" ;;
                 # Web công khai
-                src/frontend/*|src/app/*|public/*|next.config.ts|postcss.config.*|tests/e2e/public/*) check=true; pub=true; echo "public: $f" ;;
-                # Còn lại (package.json, lockfile, src/shared, playwright.config.ts, workflows, file lạ): chạy hết
+                src/frontend/*|src/app/*|public/*|postcss.config.*|tests/e2e/public/*) check=true; pub=true; echo "public: $f" ;;
+                # Còn lại (package.json, lockfile, src/shared, next.config.ts, playwright.config.ts, workflows, file lạ): chạy hết
                 *) check=true; pub=true; adm=true; echo "chạy hết: $f" ;;
               esac
             done < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
