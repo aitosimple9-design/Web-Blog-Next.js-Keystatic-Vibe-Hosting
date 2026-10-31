@@ -4,7 +4,7 @@
 import { UI_LABEL_GROUPS } from "@/shared/config/ui-labels";
 import { collection, config, fields, singleton } from "@keystatic/core";
 import { GITHUB_REPO } from "@/cms/lib/github-repo";
-import { bookField } from "@/cms/ui/entry-fields";
+import { bookField, subtopicsField, topicField } from "@/cms/ui/entry-fields";
 import { POST_FIELD_LABELS } from "@/cms/lib/seo-fields";
 import { PAGE_BLOCKS, type BlocksPageKey } from "@/shared/config/blocks";
 import { REDIRECT_FROM_MESSAGE, REDIRECT_FROM_RE, REDIRECT_KINDS, REDIRECT_TO_MESSAGE, REDIRECT_TO_RE } from "@/shared/redirect-patterns";
@@ -631,12 +631,7 @@ export default config({
           name: { label: "Tên chủ đề con", validation: { isRequired: true } },
           slug: { label: "Slug (tên file, duy nhất toàn site, là địa chỉ /blog/<chủ đề>/<slug>; không dùng \"trang\")" },
         }),
-        topic: fields.relationship({
-          label: "Chủ đề",
-          description: "Chủ đề lớn mà chủ đề con này thuộc về",
-          collection: "topics",
-          validation: { isRequired: true },
-        }),
+        topic: topicField("Chủ đề"),
         order: fields.integer({ label: "Thứ tự", description: "Hiển thị: số nhỏ hiện trước", defaultValue: 1 }),
         description: fields.text({
           label: "Mô tả ngắn",
@@ -698,17 +693,10 @@ export default config({
           validation: { isRequired: true, length: { max: 160 } },
         }),
         // Giá trị lưu là slug chủ đề (tên file trong content/topics), vẫn là `category: chu-de-1` như mục 5.
-        category: fields.relationship({
-          label: "Chủ đề",
-          collection: "topics",
-          validation: { isRequired: true },
-        }),
+        // Danh sách chọn có nút "+ Thêm chủ đề mới" (src/cms/ui/EntryPicker.tsx); vẫn lưu slug nên file bài không đổi
+        category: topicField("Chủ đề"),
         // Bắt buộc ít nhất 1; mỗi chủ đề con phải thuộc đúng chủ đề ở ô trên (kiểm tra ở posts.ts và `npm run check-content`).
-        subtopics: fields.multiRelationship({
-          label: "Chủ đề con (chọn ít nhất một, phải thuộc chủ đề ở trên)",
-          collection: "subtopics",
-          validation: { length: { min: 1 } },
-        }),
+        subtopics: subtopicsField("Chủ đề con (chọn ít nhất một, phải thuộc chủ đề ở trên)"),
         date: fields.date({
           label: "Ngày đăng",
           validation: { isRequired: true },
