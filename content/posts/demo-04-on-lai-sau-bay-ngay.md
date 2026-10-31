@@ -2,9 +2,9 @@
 title: "Ôn lại sau bảy ngày"
 slug: demo-04-on-lai-sau-bay-ngay
 description: "Một lần xem lại đúng lúc quan trọng hơn mười lần đọc lướt. Cách đặt lịch ôn nhẹ nhàng cho người bận."
-category: chu-de-1
+category: vung-vang-tu-than
 subtopics:
-  - chu-de-1-con-4
+  - lang-diu-con-gian
 date: 2026-09-21
 source:
   book: "Sách mẫu 4"

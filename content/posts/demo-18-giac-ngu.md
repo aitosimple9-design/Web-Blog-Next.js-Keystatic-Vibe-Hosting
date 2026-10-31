@@ -2,9 +2,9 @@
 title: "Ngủ đủ không phải là xa xỉ"
 slug: demo-18-giac-ngu
 description: "Những điều nên biết về giấc ngủ trước khi đổ lỗi cho ý chí của mình."
-category: chu-de-4
+category: hoc-tu-trang-sach
 subtopics:
-  - chu-de-4-con-2
+  - mo-rong-ky-nang-von-song
 date: 2026-07-27
 source:
   book: "Sách mẫu 4"

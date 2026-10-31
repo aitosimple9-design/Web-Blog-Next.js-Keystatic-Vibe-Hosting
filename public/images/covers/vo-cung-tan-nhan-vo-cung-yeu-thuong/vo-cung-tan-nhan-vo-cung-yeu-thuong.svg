@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#4a3b2c"/>
+  <rect x="14" y="0" width="3" height="600" fill="#fbfaf6" opacity="0.18"/>
+  <rect x="100" y="95" width="48" height="48" fill="#fbfaf6" opacity="0.85"/><rect x="162" y="95" width="48" height="48" fill="#fbfaf6" opacity="0.3"/><rect x="224" y="95" width="48" height="48" fill="#fbfaf6" opacity="0.85"/><rect x="100" y="157" width="48" height="48" fill="#fbfaf6" opacity="0.3"/><rect x="162" y="157" width="48" height="48" fill="#fbfaf6" opacity="0.85"/><rect x="224" y="157" width="48" height="48" fill="#fbfaf6" opacity="0.3"/><rect x="100" y="219" width="48" height="48" fill="#fbfaf6" opacity="0.85"/><rect x="162" y="219" width="48" height="48" fill="#fbfaf6" opacity="0.3"/><rect x="224" y="219" width="48" height="48" fill="#fbfaf6" opacity="0.85"/>
+  <text x="200" y="400" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="34" font-weight="600" fill="#fbfaf6">Vô cùng tàn</text><text x="200" y="442" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="34" font-weight="600" fill="#fbfaf6">nhẫn, vô cùng</text><text x="200" y="484" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="34" font-weight="600" fill="#fbfaf6">yêu thương</text>
+  <rect x="150" y="534" width="100" height="2" fill="#fbfaf6" opacity="0.5"/>
+  <text x="200" y="568" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="20" fill="#fbfaf6" opacity="0.8">Sara Imas</text>
+</svg>

@@ -28,7 +28,11 @@ describe("keystatic.config.ts", () => {
   it("collection books đọc được và tên sách khớp bìa trong bài", async () => {
     const books = await reader.collections.books.all();
     expect(books.length).toBeGreaterThan(0);
-    for (const b of books) expect(b.entry.cover).toBeTruthy();
+    // Bìa là tùy chọn (sách chưa có bìa dùng hình sinh tự động; check-content CẢNH BÁO). Có bìa thì phải là đường dẫn chữ.
+    for (const b of books) {
+      expect(b.entry.name.trim()).not.toBe("");
+      if (b.entry.cover) expect(b.entry.cover).toMatch(/^\/images\/covers\//);
+    }
   });
 
   it("Keystatic đọc được mọi bài và khớp với posts.ts", async () => {

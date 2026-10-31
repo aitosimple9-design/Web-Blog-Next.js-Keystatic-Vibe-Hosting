@@ -2,9 +2,9 @@
 title: "Sổ tay ý tưởng không cần đẹp"
 slug: demo-13-so-tay-y-tuong
 description: "Một cuốn sổ tay luộm thuộm nhưng được dùng mỗi ngày hơn hẳn cuốn sổ đẹp để trong ngăn kéo."
-category: chu-de-3
+category: tu-chu-tai-chinh
 subtopics:
-  - chu-de-3-con-1
+  - quy-hoc-van-nep-chi-tieu
 date: 2026-08-16
 source:
   book: "Sách mẫu 6"

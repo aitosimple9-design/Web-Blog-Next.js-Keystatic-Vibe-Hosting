@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
-  <rect width="400" height="600" fill="#0a0a0a"/>
-  <rect x="14" y="0" width="3" height="600" fill="#fbfaf6" opacity="0.18"/>
-  <rect x="70" y="90" width="28" height="230" fill="#ebe7db"/><rect x="114" y="110" width="28" height="210" fill="#dcc79e"/><rect x="158" y="130" width="28" height="190" fill="#ebe7db"/><rect x="202" y="90" width="28" height="230" fill="#dcc79e"/><rect x="246" y="110" width="28" height="210" fill="#ebe7db"/><rect x="290" y="130" width="28" height="190" fill="#dcc79e"/>
-  <text x="200" y="440" text-anchor="middle" font-family="'Source Serif 4', Georgia, 'Times New Roman', serif" font-size="38" font-weight="600" fill="#fbfaf6">SÁCH MẪU 2</text>
-  <rect x="150" y="466" width="100" height="2" fill="#fbfaf6" opacity="0.5"/>
-  <text x="200" y="500" text-anchor="middle" font-family="'Source Serif 4', Georgia, 'Times New Roman', serif" font-size="20" fill="#fbfaf6" opacity="0.85">Tác giả mẫu 4</text>
-  <text x="200" y="560" text-anchor="middle" font-family="'Source Serif 4', Georgia, 'Times New Roman', serif" font-size="12" letter-spacing="3" fill="#fbfaf6" opacity="0.55">BẢN DEMO</text>
-</svg>

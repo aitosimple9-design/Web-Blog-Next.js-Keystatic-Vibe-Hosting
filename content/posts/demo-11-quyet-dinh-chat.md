@@ -2,10 +2,10 @@
 title: "Quyết định tốt cần dữ kiện hay cần thời gian?"
 slug: demo-11-quyet-dinh-chat
 description: "Hai sai lầm phổ biến khi ra quyết định và một câu hỏi đơn giản giúp tránh cả hai."
-category: chu-de-2
+category: cung-con-lon-len
 subtopics:
-  - chu-de-2-con-1
-  - chu-de-2-con-2
+  - lang-nghe-ket-noi
+  - ren-nep-hoc-huong-di
 date: 2026-08-24
 source:
   book: "Sách mẫu 4"

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#ebe7db"/>
+  <rect x="14" y="0" width="3" height="600" fill="#0a0a0a" opacity="0.18"/>
+  <path d="M100 300V190a100 100 0 0 1 200 0v110z" fill="#0a0a0a" opacity="0.85"/>
+  <text x="200" y="400" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="34" font-weight="600" fill="#0a0a0a">Tư duy tích</text><text x="200" y="442" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="34" font-weight="600" fill="#0a0a0a">cực tạo thành</text><text x="200" y="484" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="34" font-weight="600" fill="#0a0a0a">công</text>
+  <rect x="150" y="534" width="100" height="2" fill="#0a0a0a" opacity="0.5"/>
+  <text x="200" y="568" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="20" fill="#0a0a0a" opacity="0.8">Napoleon Hill</text>
+</svg>
