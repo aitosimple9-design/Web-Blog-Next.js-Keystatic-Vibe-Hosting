@@ -8,9 +8,9 @@
     "newsletter": 6
   },
   "name": "Trần Ngọc Hoàng Ni",
-  "positioning": "Mình ghi lại điều đọng lại sau mỗi cuốn sách.",
+  "positioning": "Góc nhỏ của một người mẹ đơn thân: gom ánh sáng từ trang sách và lời Phật, thử trong nếp nhà rồi kể lại thật, để cùng vững vàng hơn từ bên trong.",
   "greeting": "Xin chào, mình là",
-  "ctaLabel": "Đăng ký nhận bài",
+  "ctaLabel": "Nhận thư an yên mỗi tuần",
   "followLabel": "Theo dõi mình",
   "portrait": "/images/profile/portrait-cutout.webp",
   "portraitAlt": "Chân dung Trần Ngọc Hoàng Ni",
@@ -23,34 +23,35 @@
     "eyebrow": "Câu chuyện",
     "title": "Vì sao mình đọc và viết",
     "paragraphs": [
-      "[mẫu] Mình bắt đầu đọc nghiêm túc khi nhận ra mình đọc rất nhiều nhưng quên gần hết sau vài tuần.",
-      "[mẫu] Từ đó mình tập ghi lại từng cuốn sách bằng lời của mình: ý chính là gì, có ví dụ nào làm mình nhớ, và mình đã thử áp dụng ra sao.",
-      "[mẫu] Blog này là nơi mình giữ những ghi chép đó, để bạn đỡ phải đọc lại từ đầu và có thể bắt đầu thử ngay trong ngày.",
-      "[mẫu] Mình không viết để thay thế cuốn sách. Mình viết để bạn biết cuốn nào đáng bỏ thời gian đọc trọn vẹn."
+      "Mình là một người mẹ đơn thân, đi qua những biến cố lớn của đời người cùng hai đứa con.",
+      "Ngày trước, mình từng nghĩ sóng gió gia đình đến từ nghịch cảnh bên ngoài. Đi qua nhiều vết rạn, mình mới hiểu: Nỗi khổ sâu nhất thường không nằm ở chuyện đời đẩy ta vào đâu, mà nằm ở chỗ ta bất lực, không giữ nổi sự bình tĩnh của chính mình khi bị dồn vào chân tường.",
+      "Có những hiểu biết, người ta phải trả giá bằng cả một sự tan vỡ mới chạm tới được. Mình không nhìn lại quá khứ bằng sự tiếc nuối hay câu chữ \"giá như\". Mình chỉ hiểu rằng: Nếu ngày ấy nội lực của mình đủ dày, lòng mình đủ tĩnh, có lẽ những tổn thương đã không cắt sâu đến thế.",
+      "Sách khai sáng cho mình lý trí, và lời Phật dạy trả lại cho mình sự tĩnh lặng. Cả hai dạy mình cách dừng lại một nhịp trước cơn giận, học cách buông tay những thứ không thuộc về mình, và tự xây lại một điểm tựa vững chãi từ bên trong.",
+      "Góc nhỏ này không sinh ra để rao giảng hay dạy dỗ bất kỳ ai. Mình viết lại những trang sách, không phải với tư cách một chuyên gia, mà là một người đàn bà từng đi qua giông bão, nhặt nhạnh từng chút ánh sáng trong sách để tự chữa lành cho mình và nuôi nấng hai con. Mình kể thật câu chuyện của mình, còn lại, xin để mỗi người ghé qua tự nhặt lấy điều phù hợp với hành trình của riêng bạn."
     ]
   },
   "storyImage": "/images/profile/story.jpg",
   "storyImageAlt": "Cuốn sách cũ đặt trên ghế sofa",
   "storyImagePosition": "50% 50%",
   "principles": {
-    "title": "Cách mình đọc",
-    "dek": "Bốn nguyên tắc mình giữ khi ghi chép một cuốn sách.",
+    "title": "Bốn giao ước khi lật mở từng trang sách",
+    "dek": "Khi ghi chép lại một cuốn sách, mình giữ cho mình bốn giới hạn tự tâm:",
     "items": [
       {
-        "title": "Diễn giải bằng lời mới",
-        "text": "[mẫu] Không chép lại câu chữ của tác giả. Mình viết lại ý bằng cách nói của mình để chắc rằng mình đã hiểu."
+        "title": "Viết lại bằng hơi thở của mình",
+        "text": "Mình không sao chép lại những định nghĩa đao to búa lớn của tác giả. Một ý niệm chỉ thực sự thuộc về mình khi mình có thể diễn đạt lại nó bằng vốn từ mộc mạc, bình dị nhất mà chính mình và những người chị em quanh mình đều hiểu được."
       },
       {
-        "title": "Có ví dụ",
-        "text": "[mẫu] Mỗi ý chính đi kèm một ví dụ đời thường, để bạn hình dung được và thử được."
+        "title": "Đặt sách vào giữa căn bếp và nếp nhà",
+        "text": "Triết lý cao siêu đến đâu cũng vô nghĩa nếu không chạm được vào đời sống. Mỗi cuốn sách mình kể sẽ luôn đi kèm một chuyện đời thường: một cơn cáu gắt với con, một khoảnh khắc nghẹn lời khi mệt mỏi, hay một lần học cách thở chậm lại giữa căn nhà bộn bề. Bạn đọc để thấy hình bóng mình trong đó, và biết mình có thể thử làm khác đi."
       },
       {
-        "title": "Ghi nguồn",
-        "text": "[mẫu] Mỗi bài đều ghi rõ tên sách và tác giả, để bạn tìm đọc bản gốc khi muốn đi sâu."
+        "title": "Tôn trọng người gieo hạt",
+        "text": "Mỗi cuốn sách là một công trình tâm huyết. Mình luôn ghi rõ tên sách và tác giả với lòng biết ơn sâu sắc, để nếu bạn muốn đi xa hơn những gì mình kể, bạn sẽ luôn tìm được lối về đúng với cội nguồn của cuốn sách gốc."
       },
       {
-        "title": "Thử rồi mới viết",
-        "text": "[mẫu] Mình chỉ kể cách áp dụng khi đã tự thử, và nói thật chỗ nào chưa hiệu quả."
+        "title": "Chỉ kể những điều xương thịt mình đã thử",
+        "text": "Đây là lời hứa danh dự của mình với từng con chữ. Mình không viết về sự buông bỏ nếu lòng mình còn đang thù hận. Mình không kể về sự bình an nếu mình chưa từng tập ngồi yên trong lúc bão lòng dâng lên. Điều gì mình đã áp dụng thành công, mình kể. Chỗ nào mình trầy trật làm chưa được, mình cũng xin nói thật."
       }
     ]
   },
@@ -59,28 +60,52 @@
     "dek": "Những cuốn sách ảnh hưởng đến mình nhiều nhất. Bấm vào bìa để đọc các bài cùng chủ đề.",
     "books": [
       {
-        "book": "sach-mau-1",
-        "topic": "chu-de-1"
-      },
-      {
-        "book": "sach-mau-2",
+        "book": "38-la-thu-gui-con-trai-rockefeller",
         "topic": "chu-de-2"
       },
       {
-        "book": "sach-mau-3",
-        "topic": "chu-de-3"
-      },
-      {
-        "book": "sach-mau-4",
-        "topic": "chu-de-1"
-      },
-      {
-        "book": "sach-mau-5",
+        "book": "buoi-sang-dieu-ky",
         "topic": "chu-de-4"
       },
       {
-        "book": "sach-mau-6",
-        "topic": "chu-de-5"
+        "book": "tu-duy-tich-cuc-tao-thanh-cong",
+        "topic": "chu-de-1"
+      },
+      {
+        "book": "phuong-hoang-tai-sinh",
+        "topic": "chu-de-1"
+      },
+      {
+        "book": "thinh-vuong-tuoi-30",
+        "topic": "chu-de-3"
+      },
+      {
+        "book": "tien-de-ra-tien",
+        "topic": "chu-de-3"
+      },
+      {
+        "book": "dong-tien-hanh-phuc",
+        "topic": "chu-de-3"
+      },
+      {
+        "book": "suc-manh-cua-giao-duc-tai-chinh",
+        "topic": "chu-de-3"
+      },
+      {
+        "book": "hon-tuyet-lan",
+        "topic": "chu-de-3"
+      },
+      {
+        "book": "vo-cung-tan-nhan-vo-cung-yeu-thuong",
+        "topic": "chu-de-2"
+      },
+      {
+        "book": "di-tim-le-song",
+        "topic": "chu-de-1"
+      },
+      {
+        "book": "nhung-nguoi-dan-ba-chay-cung-bay-soi",
+        "topic": "chu-de-1"
       }
     ]
   },

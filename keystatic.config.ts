@@ -343,7 +343,7 @@ export default config({
             items: fields.array(
               fields.object({
                 title: fields.text({ label: "Tên nguyên tắc", validation: { isRequired: true, length: { max: 40 } } }),
-                text: fields.text({ label: "Mô tả", multiline: true, validation: { isRequired: true, length: { max: 240 } } }),
+                text: fields.text({ label: "Mô tả", multiline: true, validation: { isRequired: true, length: { max: 400 } } }),
               }),
               {
                 label: "Các nguyên tắc (tối đa 4; để trống = dùng mẫu)",
