@@ -2,10 +2,10 @@
 title: "Vận động nhẹ mỗi ngày cho người ngồi nhiều"
 slug: demo-19-van-dong-nhe
 description: "Một chuỗi động tác năm phút có thể làm giữa các buổi họp, kèm lý do nó có ích."
-category: chu-de-4
+category: hoc-tu-trang-sach
 subtopics:
-  - chu-de-4-con-1
-  - chu-de-4-con-2
+  - nep-song-ky-luat-nho
+  - mo-rong-ky-nang-von-song
 date: 2026-07-23
 source:
   book: "Sách mẫu 5"

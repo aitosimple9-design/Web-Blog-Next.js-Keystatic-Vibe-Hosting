@@ -41,12 +41,12 @@ export const shelf = {
   title: "Tủ sách của mình",
   dek: "Những cuốn sách ảnh hưởng đến mình nhiều nhất. Bấm vào bìa để đọc các bài cùng chủ đề.",
   books: [
-    { title: "Sách mẫu 1", topic: "chu-de-1" },
-    { title: "Sách mẫu 2", topic: "chu-de-2" },
-    { title: "Sách mẫu 3", topic: "chu-de-3" },
-    { title: "Sách mẫu 4", topic: "chu-de-1" },
-    { title: "Sách mẫu 5", topic: "chu-de-4" },
-    { title: "Sách mẫu 6", topic: "chu-de-5" },
+    { title: "Sách mẫu 1", topic: "vung-vang-tu-than" },
+    { title: "Sách mẫu 2", topic: "cung-con-lon-len" },
+    { title: "Sách mẫu 3", topic: "tu-chu-tai-chinh" },
+    { title: "Sách mẫu 4", topic: "vung-vang-tu-than" },
+    { title: "Sách mẫu 5", topic: "hoc-tu-trang-sach" },
+    { title: "Sách mẫu 6", topic: "an-lac-noi-tam" },
   ],
 } as const;
 

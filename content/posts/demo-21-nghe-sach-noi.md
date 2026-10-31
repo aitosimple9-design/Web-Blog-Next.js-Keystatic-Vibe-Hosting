@@ -2,9 +2,9 @@
 title: "Sách nói có tính là đã đọc?"
 slug: demo-21-nghe-sach-noi
 description: "So sánh việc nghe và đọc: khi nào nghe có ích, khi nào nên cầm sách giấy."
-category: chu-de-5
+category: an-lac-noi-tam
 subtopics:
-  - chu-de-5-con-2
+  - khoang-lang-cho-rieng-minh
 date: 2026-07-15
 source:
   book: "Sách mẫu 7"

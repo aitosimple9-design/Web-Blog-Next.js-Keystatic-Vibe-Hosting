@@ -2,10 +2,10 @@
 title: "Đọc nhanh một bản báo cáo dài"
 slug: demo-15-doc-bao-cao
 description: "Cách đọc phần quan trọng trước, chi tiết sau, để nắm bản báo cáo ba mươi trang trong mười lăm phút."
-category: chu-de-3
+category: tu-chu-tai-chinh
 subtopics:
-  - chu-de-3-con-1
-  - chu-de-3-con-2
+  - quy-hoc-van-nep-chi-tieu
+  - tam-ly-an-yen-ve-tien
 date: 2026-08-08
 source:
   book: "Sách mẫu 1"
