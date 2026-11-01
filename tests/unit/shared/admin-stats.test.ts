@@ -40,6 +40,22 @@ describe("getAdminStats", () => {
     expect(s.posts.p2).toEqual({ topicName: "Chủ đề 1", subtopicNames: ["Con A", "Con B"] });
   });
 
+  it("đếm số bài ghi đúng tên sách và số bìa ở Tủ sách Trang chủ trỏ tới từng chủ đề / sách", () => {
+    const withBook = (book: string) => `---\ntitle: T\ncategory: cd-1\nsource:\n  book: "${book}"\n  author: A\n---\nNội dung\n`;
+    const root = setup({
+      "content/topics/cd-1.json": JSON.stringify({ name: "Chủ đề 1" }),
+      "content/books/sach-a.json": JSON.stringify({ name: "Sách A" }),
+      "content/books/sach-b.json": JSON.stringify({ name: "Sách B" }),
+      "content/posts/p1.md": withBook("Sách A"),
+      "content/posts/p2.md": withBook("Sách A"),
+      "content/posts/p3.md": withBook("Sách không có"),
+      "content/pages/trang-chu.json": JSON.stringify({ shelf: { books: [{ book: "sach-a", topic: "cd-1" }, { book: "sach-b", topic: "cd-1" }, null] } }),
+    });
+    const s = getAdminStats(root);
+    expect(s.books).toEqual({ "sach-a": { name: "Sách A", posts: 2 }, "sach-b": { name: "Sách B", posts: 0 } });
+    expect(s.shelf).toEqual({ topics: { "cd-1": 2 }, books: { "sach-a": 1, "sach-b": 1 } });
+  });
+
   it("file hỏng hoặc thiếu thư mục thì bỏ qua, không ném lỗi", () => {
     const root = setup({ "content/topics/x.json": "{hỏng", "content/posts/p.md": "---\n: : :\n  - [\n---\n" });
     expect(() => getAdminStats(root)).not.toThrow();
