@@ -29,16 +29,27 @@ export function readRedirectFiles(root: string = process.cwd()): RedirectEntry[]
     return [];
   }
   return names.map((f) => {
-    let raw: Record<string, unknown> = {};
+    let text: string | null = null;
     try {
-      const v: unknown = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
-      if (typeof v === "object" && v !== null) raw = v as Record<string, unknown>;
+      text = fs.readFileSync(path.join(dir, f), "utf8");
     } catch {
-      /* mục hỏng: from / to rỗng, bị bỏ ở buildRedirects và báo lỗi ở check-content */
+      /* đọc lỗi: như mục hỏng */
     }
-    const s = (k: string) => (typeof raw[k] === "string" ? (raw[k] as string).trim() : "");
-    return { file: f, from: s("from"), to: s("to"), permanent: raw.permanent !== false };
+    return parseRedirectEntry(f, text);
   });
+}
+
+/** Một mục chuyển hướng từ chữ JSON của file `file` (hỏng / thiếu ô thì ô rỗng). Dùng chung cho readRedirectFiles và kiểm tra nội dung từ nguồn khác (GitHub) */
+export function parseRedirectEntry(file: string, text: string | null): RedirectEntry {
+  let raw: Record<string, unknown> = {};
+  try {
+    const v: unknown = text === null ? null : JSON.parse(text);
+    if (typeof v === "object" && v !== null) raw = v as Record<string, unknown>;
+  } catch {
+    /* mục hỏng: from / to rỗng, bị bỏ ở buildRedirects và báo lỗi ở check-content */
+  }
+  const s = (k: string) => (typeof raw[k] === "string" ? (raw[k] as string).trim() : "");
+  return { file, from: s("from"), to: s("to"), permanent: raw.permanent !== false };
 }
 
 /** Lý do một mục không dùng được (null = hợp lệ về hình thức; chưa kiểm tra đích có tồn tại hay không) */
