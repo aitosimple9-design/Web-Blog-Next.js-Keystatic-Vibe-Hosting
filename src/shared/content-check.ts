@@ -22,6 +22,21 @@ export type CheckSource = {
   exists(rel: string): boolean;
 };
 
+/** Nguồn trong bộ nhớ: danh sách mọi đường dẫn file (vd. cây file của một nhánh GitHub) + chữ của các file cần đọc */
+export function memorySource(paths: Iterable<string>, texts: Map<string, string>): CheckSource {
+  const all = new Set(paths);
+  return {
+    list: (dir, ext) => {
+      const prefix = `${dir}/`;
+      const out: string[] = [];
+      for (const p of all) if (p.startsWith(prefix) && p.endsWith(ext) && !p.slice(prefix.length).includes("/")) out.push(p.slice(prefix.length));
+      return out.sort();
+    },
+    read: (rel) => texts.get(rel) ?? null,
+    exists: (rel) => all.has(rel),
+  };
+}
+
 /** Bản gốc để so slug (vd. nhánh main): chỉ cần liệt kê và đọc */
 export type BaseSource = { label: string; list(dir: string, ext: string): string[]; read(rel: string): string | null };
 

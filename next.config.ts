@@ -34,6 +34,8 @@ const nextConfig: NextConfig = {
     "/api/thong-ke": ["./content/**/*"],
     "/api/chuyen-huong": ["./content/**/*"],
     "/api/danh-muc": ["./content/**/*"],
+    // bản gốc (main) để "Kiểm tra nội dung" so slug ở chế độ GitHub
+    "/api/kiem-tra": ["./content/**/*"],
     "/xem-truoc/bai-viet/[slug]": ["./content/**/*"],
   },
   async headers() {

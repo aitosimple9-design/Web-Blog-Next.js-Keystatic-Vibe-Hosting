@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import fs from "node:fs";
+import path from "node:path";
 
 // E2E đường GITHUB của trang quản trị (web thật): xác minh quyền, tạo chuyển hướng ghi vào nhánh, xem trước và chấm SEO từ NHÁNH.
 // Chạy với máy chủ GitHub giả (tests/e2e/admin-github/mock-github.mjs, cổng 3300) nên không đụng repo thật. Xem playwright.config.ts.
@@ -15,7 +17,7 @@ test.beforeEach(async ({ request }) => {
 test.describe("Cổng quản trị viên (chế độ GitHub)", () => {
   test("không cookie / token giả / token chỉ đọc đều nhận 404 ở mọi API và trang xem trước", async ({ request }) => {
     for (const headers of [{}, BAD, READER]) {
-      for (const url of ["/api/chuyen-huong?existing=1", "/api/diem-seo", "/api/ten-sach", "/api/thong-ke", "/xem-truoc/bai-viet/bai-thu-nhanh?branch=nhanh-thu"]) {
+      for (const url of ["/api/chuyen-huong?existing=1", "/api/diem-seo", "/api/ten-sach", "/api/thong-ke", "/api/kiem-tra?branch=nhanh-thu", "/xem-truoc/bai-viet/bai-thu-nhanh?branch=nhanh-thu"]) {
         const res = await request.get(url, { headers });
         expect(res.status(), `${url} với ${JSON.stringify(headers)}`).toBe(404);
       }
@@ -119,6 +121,26 @@ test.describe("Xem trước bài từ NHÁNH", () => {
 
   test("tên nhánh lạ bị chặn (404)", async ({ request }) => {
     expect((await request.get("/xem-truoc/bai-viet/bai-thu-nhanh?branch=../x", { headers: ADMIN })).status()).toBe(404);
+  });
+});
+
+test.describe("Kiểm tra nội dung của NHÁNH (/api/kiem-tra)", () => {
+  const count = (dir: string, ext: string) => fs.readdirSync(path.join(process.cwd(), "content", dir)).filter((f) => f.endsWith(ext)).length;
+
+  test("đọc cả nhánh từ GitHub, chạy cùng luật với check-content: thấy bài lỗi chỉ có ở nhánh", async ({ request }) => {
+    const res = await request.get("/api/kiem-tra?branch=nhanh-thu", { headers: ADMIN });
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body).toMatchObject({ ok: true, mode: "github", branch: "nhanh-thu" });
+    expect(body.result.counts).toMatchObject({ posts: count("posts", ".md") + 2, topics: count("topics", ".json") + 1 });
+    expect(body.result.errors).toContain('content/posts/bai-loi-nhanh.md: thiếu trường bắt buộc "description"');
+    expect(JSON.stringify(body)).not.toContain("token-hop-le");
+  });
+
+  test("nhánh không có bài lỗi thì không báo bài đó", async ({ request }) => {
+    const body = await (await request.get("/api/kiem-tra?branch=main", { headers: ADMIN })).json();
+    expect(body.ok).toBe(true);
+    expect(body.result.errors.join("\n")).not.toContain("bai-loi-nhanh");
   });
 });
 
