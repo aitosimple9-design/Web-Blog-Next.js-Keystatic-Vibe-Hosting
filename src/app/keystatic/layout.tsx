@@ -3,6 +3,7 @@ import { KeystaticBlocksColumns } from "../../cms/ui/KeystaticBlocksColumns";
 import { KeystaticNavIcons } from "../../cms/ui/KeystaticNavIcons";
 import { KeystaticRedirectTools } from "../../cms/ui/KeystaticRedirectTools";
 import { KeystaticBreadcrumb } from "../../cms/ui/KeystaticBreadcrumb";
+import { KeystaticDeleteGuard } from "../../cms/ui/KeystaticDeleteGuard";
 import { KeystaticScrollbars } from "../../cms/ui/KeystaticScrollbars";
 import { KeystaticSiteUrlCard } from "../../cms/ui/KeystaticSiteUrlCard";
 import { KeystaticSettingsCards } from "../../cms/ui/KeystaticSettingsCards";
@@ -33,6 +34,8 @@ export default function KeystaticLayout({ children }: { children: ReactNode }) {
       <KeystaticScrollbars />
       {/* Thanh điều hướng "Bài viết > slug" gọn hơn */}
       <KeystaticBreadcrumb />
+      {/* Hộp "Delete entry" ở trang Chủ đề / Chủ đề con / Sách: cảnh báo khi mục đang được bài / tủ sách dùng */}
+      <KeystaticDeleteGuard />
       {children}
     </>
   );
