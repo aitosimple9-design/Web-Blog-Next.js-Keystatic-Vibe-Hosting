@@ -3,13 +3,28 @@
 // Ô CHỌN trong form của Keystatic (Tên sách, Chủ đề, Chủ đề con): danh sách chọn có ô tìm kiếm lấy từ mục tương ứng, cuối danh sách có nút
 // "+ Thêm … mới" mở hộp thoại kiểu YouTube để điền rồi tạo luôn, tạo xong tự chọn. Giá trị lưu không đổi so với ô cũ: Sách = TÊN (chữ),
 // Chủ đề = slug, Chủ đề con = danh sách slug. Danh sách và việc tạo đi qua /api/danh-muc (src/cms/lib/entry-store.ts; chế độ GitHub commit vào nhánh đang soạn).
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { branchOf } from "./ks-branch";
 import { isDarkTheme } from "./ks-theme";
 
 type Kind = "books" | "topics" | "subtopics";
-type Item = { slug: string; name: string };
+type Item = { slug: string; name: string; topic?: string };
+
+// Ô tùy biến của Keystatic chỉ thấy giá trị của chính nó: ô "Chủ đề" báo slug đang chọn qua kênh này để ô "Chủ đề con" cùng form
+// chỉ hiện chủ đề con thuộc chủ đề đó (mỗi lúc chỉ mở một form). Rỗng = chưa chọn chủ đề → hiện tất cả.
+let currentTopic = "";
+const topicListeners = new Set<() => void>();
+function publishTopic(slug: string) {
+  if (slug === currentTopic) return;
+  currentTopic = slug;
+  topicListeners.forEach((l) => l());
+}
+const subscribeTopic = (l: () => void) => {
+  topicListeners.add(l);
+  return () => topicListeners.delete(l);
+};
+const useCurrentTopic = () => useSyncExternalStore(subscribeTopic, () => currentTopic, () => "");
 type Result = { ok: true; item: Item } | { ok: false; error: string };
 
 // Mỗi loại: danh từ trong câu chữ, giá trị lưu là tên hay slug, câu báo khi để trống
@@ -56,6 +71,15 @@ export function EntryPicker({ kind, label, values, multi = false, onChange, forc
   const trigger = useRef<HTMLButtonElement>(null);
   const c = palette(dark);
   const keyOf = (i: Item) => (byName ? i.name : i.slug);
+  const picked = values[0] ?? "";
+  const topic = useCurrentTopic();
+  const byTopic = kind === "subtopics" && !!topic;
+
+  useEffect(() => {
+    if (kind !== "topics") return;
+    publishTopic(picked);
+    return () => publishTopic("");
+  }, [kind, picked]);
 
   useEffect(() => {
     let live = true;
@@ -85,9 +109,11 @@ export function EntryPicker({ kind, label, values, multi = false, onChange, forc
     };
   }, [open, dialog]);
 
-  const shown = items.filter((i) => i.name.toLowerCase().includes(filter.trim().toLowerCase()));
+  // Chủ đề con: chỉ hiện mục thuộc chủ đề đang chọn, nhưng vẫn giữ mục ĐÃ chọn (dù lệch) để còn bỏ chọn được
+  const shown = items.filter((i) => i.name.toLowerCase().includes(filter.trim().toLowerCase()) && (!byTopic || i.topic === topic || values.includes(keyOf(i))));
   const nameOf = (v: string) => items.find((i) => keyOf(i) === v)?.name ?? v;
   const unknown = values.filter((v) => items.length > 0 && !items.some((i) => keyOf(i) === v));
+  const offTopic = byTopic ? values.filter((v) => items.some((i) => keyOf(i) === v && i.topic !== topic)) : [];
   const invalid = forceValidation && values.length === 0;
   const toggle = () => {
     if (!open) {
@@ -144,6 +170,11 @@ export function EntryPicker({ kind, label, values, multi = false, onChange, forc
           “{unknown.join("”, “")}” không có trong danh sách {noun} (bài cũ hoặc đã xóa); chọn lại trong danh sách hoặc thêm mới.
         </span>
       )}
+      {offTopic.length > 0 && (
+        <span role="alert" style={{ fontSize: 12, color: c.error }}>
+          “{offTopic.map(nameOf).join("”, “")}” thuộc chủ đề khác với ô Chủ đề: bỏ chọn hoặc đổi Chủ đề, nếu không bài sẽ bị CI báo lỗi.
+        </span>
+      )}
       {invalid && (
         <span role="alert" style={{ fontSize: 12, color: c.error }}>
           {missing}
@@ -180,17 +211,17 @@ export function EntryPicker({ kind, label, values, multi = false, onChange, forc
           </button>
         </div>
       )}
-      {dialog && <CreateDialog kind={kind} initialName={filter.trim()} dark={dark} onClose={() => setDialog(false)} onCreated={created} />}
+      {dialog && <CreateDialog kind={kind} initialName={filter.trim()} initialTopic={topic} dark={dark} onClose={() => setDialog(false)} onCreated={created} />}
     </div>
   );
 }
 
-function CreateDialog({ kind, initialName, dark, onClose, onCreated }: { kind: Kind; initialName: string; dark: boolean; onClose(): void; onCreated(item: Item): void }) {
+function CreateDialog({ kind, initialName, initialTopic, dark, onClose, onCreated }: { kind: Kind; initialName: string; initialTopic: string; dark: boolean; onClose(): void; onCreated(item: Item): void }) {
   const { noun } = KINDS[kind];
   const c = palette(dark);
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState("");
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState(initialTopic);
   const [order, setOrder] = useState("");
   const [topics, setTopics] = useState<Item[]>([]);
   const [busy, setBusy] = useState(false);
