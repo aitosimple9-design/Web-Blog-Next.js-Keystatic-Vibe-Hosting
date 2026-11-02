@@ -1,16 +1,21 @@
 ---
-title: "Quản lý tiền bạc từ ba con số"
 slug: demo-17-tien-bac-co-ban
-description: "Ba con số cần biết mỗi tháng để nắm tình hình tài chính cá nhân, không cần bảng tính phức tạp."
+title: Quản lý tiền bạc từ ba con số
+description: >-
+  Ba con số cần biết mỗi tháng để nắm tình hình tài chính cá nhân, không cần
+  bảng tính phức tạp.
 category: hoc-tu-trang-sach
 subtopics:
   - nep-song-ky-luat-nho
 date: 2026-07-31
 source:
-  book: "Sách mẫu 3"
-  author: "Tác giả mẫu 1"
+  book: Tiền đẻ ra tiền
+  author: Duncan Bannatyne
 cover: /images/posts/demo-17-tien-bac-co-ban/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -22,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ ba là chấp nhận bản nháp. Bản nháp đầu tiên hiếm khi tốt, nhưng nó là thứ duy nhất có thể sửa được; trang giấy trắng thì không.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

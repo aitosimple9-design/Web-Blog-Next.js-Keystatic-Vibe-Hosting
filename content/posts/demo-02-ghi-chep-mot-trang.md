@@ -1,16 +1,21 @@
 ---
-title: "Ghi chép gọn trong một trang giấy"
 slug: demo-02-ghi-chep-mot-trang
-description: "Cách rút một chương sách dài xuống còn một trang ghi chép, vừa đủ để xem lại sau vài tuần mà vẫn hiểu."
+title: Ghi chép gọn trong một trang giấy
+description: >-
+  Cách rút một chương sách dài xuống còn một trang ghi chép, vừa đủ để xem lại
+  sau vài tuần mà vẫn hiểu.
 category: vung-vang-tu-than
 subtopics:
   - xay-diem-tua-ben-trong
 date: 2026-09-29
 source:
-  book: "Sách mẫu 2"
-  author: "Tác giả mẫu 2"
+  book: Những người đàn bà chạy cùng bầy sói
+  author: Clarissa Pinkola Estés
 cover: /images/posts/demo-02-ghi-chep-mot-trang/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -24,13 +29,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ nhất là nên bắt đầu từ việc nhỏ nhất có thể làm được ngay hôm nay. Việc nhỏ cho ta phản hồi nhanh, và phản hồi nhanh nuôi động lực tốt hơn mọi lời tự nhắc.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

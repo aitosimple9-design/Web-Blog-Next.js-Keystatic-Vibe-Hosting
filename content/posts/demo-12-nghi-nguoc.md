@@ -1,16 +1,21 @@
 ---
-title: "Nghĩ ngược để thấy rõ rủi ro"
 slug: demo-12-nghi-nguoc
-description: "Thay vì hỏi làm sao để thành công, thử hỏi điều gì chắc chắn làm ta thất bại. Cách làm và ví dụ."
+title: Nghĩ ngược để thấy rõ rủi ro
+description: >-
+  Thay vì hỏi làm sao để thành công, thử hỏi điều gì chắc chắn làm ta thất bại.
+  Cách làm và ví dụ.
 category: cung-con-lon-len
 subtopics:
   - ren-nep-hoc-huong-di
 date: 2026-08-20
 source:
-  book: "Sách mẫu 5"
-  author: "Tác giả mẫu 4"
+  book: Vô cùng tàn nhẫn, vô cùng yêu thương
+  author: Sara Imas
 cover: /images/posts/demo-12-nghi-nguoc/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -24,13 +29,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ hai là ghi lại. Một dòng ghi chú sau mỗi lần thử giúp ta thấy mình đang đi đâu, thay vì chỉ cảm thấy mình đang bận.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

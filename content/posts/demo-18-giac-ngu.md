@@ -1,16 +1,19 @@
 ---
-title: "Ngủ đủ không phải là xa xỉ"
 slug: demo-18-giac-ngu
-description: "Những điều nên biết về giấc ngủ trước khi đổ lỗi cho ý chí của mình."
+title: Ngủ đủ không phải là xa xỉ
+description: Những điều nên biết về giấc ngủ trước khi đổ lỗi cho ý chí của mình.
 category: hoc-tu-trang-sach
 subtopics:
   - mo-rong-ky-nang-von-song
 date: 2026-07-27
 source:
-  book: "Sách mẫu 4"
-  author: "Tác giả mẫu 2"
+  book: Buổi sáng diệu kỳ
+  author: Hal Elrod
 cover: /images/posts/demo-18-giac-ngu/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -24,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ hai là ghi lại. Một dòng ghi chú sau mỗi lần thử giúp ta thấy mình đang đi đâu, thay vì chỉ cảm thấy mình đang bận.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

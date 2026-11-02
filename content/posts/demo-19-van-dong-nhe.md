@@ -1,17 +1,20 @@
 ---
-title: "Vận động nhẹ mỗi ngày cho người ngồi nhiều"
 slug: demo-19-van-dong-nhe
-description: "Một chuỗi động tác năm phút có thể làm giữa các buổi họp, kèm lý do nó có ích."
+title: Vận động nhẹ mỗi ngày cho người ngồi nhiều
+description: Một chuỗi động tác năm phút có thể làm giữa các buổi họp, kèm lý do nó có ích.
 category: hoc-tu-trang-sach
 subtopics:
   - nep-song-ky-luat-nho
   - mo-rong-ky-nang-von-song
 date: 2026-07-23
 source:
-  book: "Sách mẫu 5"
-  author: "Tác giả mẫu 3"
+  book: Buổi sáng diệu kỳ
+  author: Hal Elrod
 cover: /images/posts/demo-19-van-dong-nhe/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -23,13 +26,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ hai là ghi lại. Một dòng ghi chú sau mỗi lần thử giúp ta thấy mình đang đi đâu, thay vì chỉ cảm thấy mình đang bận.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

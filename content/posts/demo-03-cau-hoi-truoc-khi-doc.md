@@ -1,17 +1,22 @@
 ---
-title: "Đặt câu hỏi trước khi mở sách"
 slug: demo-03-cau-hoi-truoc-khi-doc
-description: "Người đọc có câu hỏi sẵn thường tìm thấy câu trả lời nhanh hơn. Ba câu hỏi nên viết ra trước khi đọc."
+title: Đặt câu hỏi trước khi mở sách
+description: >-
+  Người đọc có câu hỏi sẵn thường tìm thấy câu trả lời nhanh hơn. Ba câu hỏi nên
+  viết ra trước khi đọc.
 category: vung-vang-tu-than
 subtopics:
   - xay-diem-tua-ben-trong
   - lang-diu-con-gian
 date: 2026-09-25
 source:
-  book: "Sách mẫu 3"
-  author: "Tác giả mẫu 3"
+  book: Phượng Hoàng Tái Sinh
+  author: Brian Tracy
 cover: /images/posts/demo-03-cau-hoi-truoc-khi-doc/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -23,13 +28,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ nhất là nên bắt đầu từ việc nhỏ nhất có thể làm được ngay hôm nay. Việc nhỏ cho ta phản hồi nhanh, và phản hồi nhanh nuôi động lực tốt hơn mọi lời tự nhắc.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

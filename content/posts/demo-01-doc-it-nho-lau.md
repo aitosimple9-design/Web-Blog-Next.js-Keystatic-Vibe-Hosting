@@ -1,16 +1,21 @@
 ---
-title: "Đọc ít mà nhớ lâu: ba thói quen sau mỗi chương sách"
 slug: demo-01-doc-it-nho-lau
-description: "Sau mỗi chương, dừng lại ba phút để tự nhắc lại ý chính bằng lời của mình. Một thói quen nhỏ giúp kiến thức ở lại lâu hơn."
+title: 'Đọc ít mà nhớ lâu: ba thói quen sau mỗi chương sách'
+description: >-
+  Sau mỗi chương, dừng lại ba phút để tự nhắc lại ý chính bằng lời của mình. Một
+  thói quen nhỏ giúp kiến thức ở lại lâu hơn.
 category: vung-vang-tu-than
 subtopics:
   - lang-diu-con-gian
 date: 2026-10-03
 source:
-  book: "Sách mẫu 1"
-  author: "Tác giả mẫu 1"
+  book: Đi tìm lẽ sống
+  author: Viktor Frankl
 cover: /images/posts/demo-01-doc-it-nho-lau/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -22,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ hai là ghi lại. Một dòng ghi chú sau mỗi lần thử giúp ta thấy mình đang đi đâu, thay vì chỉ cảm thấy mình đang bận.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

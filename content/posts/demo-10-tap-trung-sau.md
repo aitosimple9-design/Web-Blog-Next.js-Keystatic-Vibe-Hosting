@@ -1,16 +1,21 @@
 ---
-title: "Làm việc sâu trong một thế giới nhiều thông báo"
 slug: demo-10-tap-trung-sau
-description: "Bốn việc nên làm trước khi bắt đầu một buổi làm việc cần tập trung, và một việc nên bỏ."
+title: Làm việc sâu trong một thế giới nhiều thông báo
+description: >-
+  Bốn việc nên làm trước khi bắt đầu một buổi làm việc cần tập trung, và một
+  việc nên bỏ.
 category: cung-con-lon-len
 subtopics:
   - ren-nep-hoc-huong-di
 date: 2026-08-28
 source:
-  book: "Sách mẫu 3"
-  author: "Tác giả mẫu 2"
+  book: Vô cùng tàn nhẫn, vô cùng yêu thương
+  author: Sara Imas
 cover: /images/posts/demo-10-tap-trung-sau/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -24,13 +29,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ ba là chấp nhận bản nháp. Bản nháp đầu tiên hiếm khi tốt, nhưng nó là thứ duy nhất có thể sửa được; trang giấy trắng thì không.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 
