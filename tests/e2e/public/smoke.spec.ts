@@ -70,6 +70,16 @@ test("trang quản trị Keystatic mở được và không bị lập chỉ m�
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
 });
 
+// Máy chủ này là bản build production (next start) KHÔNG đặt NEXT_PUBLIC_KEYSTATIC_STORAGE=github, ở ngoài Vercel: đúng tình huống rủi ro khi lên
+// hosting khác (rà soát 2026-11-02). Mọi API quản trị và bộ xử lý local của Keystatic phải ĐÓNG (404), kể cả lệnh ghi.
+test("bản build production chế độ local: API quản trị và Keystatic local đều đóng", async ({ request }) => {
+  for (const url of ["/api/thong-ke", "/api/diem-seo", "/api/ten-sach", "/api/kiem-tra", "/api/danh-muc?kind=books", "/api/keystatic/tree"]) {
+    expect((await request.get(url)).status(), url).toBe(404);
+  }
+  expect((await request.post("/api/danh-muc", { data: { kind: "books", name: "Sách lạ" } })).status()).toBe(404);
+  expect((await request.post("/api/keystatic/update", { data: { additions: [], deletions: [] } })).status()).toBe(404);
+});
+
 test("sitemap không chứa trang quản trị", async ({ request }) => {
   expect(await (await request.get("/sitemap.xml")).text()).not.toContain("/keystatic");
 });

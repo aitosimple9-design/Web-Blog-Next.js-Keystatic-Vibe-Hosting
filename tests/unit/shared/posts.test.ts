@@ -285,20 +285,32 @@ describe("xem trước bài (getPostForPreview)", () => {
 });
 
 describe("cổng xem trước (isPreviewEnabled)", () => {
-  const set = (storage: string | undefined, vercel: string | undefined) => {
+  const set = (storage: string | undefined, vercel: string | undefined, nodeEnv = "development") => {
     if (storage === undefined) vi.stubEnv("NEXT_PUBLIC_KEYSTATIC_STORAGE", "");
     else vi.stubEnv("NEXT_PUBLIC_KEYSTATIC_STORAGE", storage);
     vi.stubEnv("VERCEL", vercel ?? "");
+    vi.stubEnv("NODE_ENV", nodeEnv);
   };
-  it("chỉ bật khi Keystatic ở chế độ local và không chạy trên Vercel", async () => {
+  it("chỉ bật khi Keystatic ở chế độ local, không chạy trên Vercel, và đang chạy next dev", async () => {
     const { isPreviewEnabled } = await import("@/cms/lib/preview");
     set("local", undefined);
+    expect(isPreviewEnabled()).toBe(true);
+    set(undefined, undefined);
     expect(isPreviewEnabled()).toBe(true);
     set("github", undefined);
     expect(isPreviewEnabled()).toBe(false);
     set("local", "1");
     expect(isPreviewEnabled()).toBe(false);
     set("github", "1");
+    expect(isPreviewEnabled()).toBe(false);
+    vi.unstubAllEnvs();
+  });
+
+  it("bản build production (next start) ở nơi khác Vercel mà thiếu storage=github: KHÔNG mở (rà soát 2026-11-02)", async () => {
+    const { isPreviewEnabled } = await import("@/cms/lib/preview");
+    set(undefined, undefined, "production");
+    expect(isPreviewEnabled()).toBe(false);
+    set("local", undefined, "production");
     expect(isPreviewEnabled()).toBe(false);
     vi.unstubAllEnvs();
   });

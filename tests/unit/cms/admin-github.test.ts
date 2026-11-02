@@ -25,11 +25,15 @@ describe("tokenFromCookieHeader", () => {
 });
 
 describe("quyền quản trị (isAdminCookieHeader)", () => {
-  it("chế độ local trên máy: cho qua; trên Vercel: không", async () => {
+  it("chế độ local trên máy (next dev): cho qua; trên Vercel hoặc bản build production: không", async () => {
     vi.stubEnv("NEXT_PUBLIC_KEYSTATIC_STORAGE", "local");
     vi.stubEnv("VERCEL", "");
+    vi.stubEnv("NODE_ENV", "development");
     expect(await isAdminCookieHeader(null)).toBe(true);
     vi.stubEnv("VERCEL", "1");
+    expect(await isAdminCookieHeader(null)).toBe(false);
+    vi.stubEnv("VERCEL", "");
+    vi.stubEnv("NODE_ENV", "production");
     expect(await isAdminCookieHeader(null)).toBe(false);
   });
 
