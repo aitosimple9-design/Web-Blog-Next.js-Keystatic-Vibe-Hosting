@@ -4,6 +4,7 @@ import { KeystaticNavIcons } from "../../cms/ui/KeystaticNavIcons";
 import { KeystaticRedirectTools } from "../../cms/ui/KeystaticRedirectTools";
 import { KeystaticBreadcrumb } from "../../cms/ui/KeystaticBreadcrumb";
 import { KeystaticDeleteGuard } from "../../cms/ui/KeystaticDeleteGuard";
+import { KeystaticContentCheck } from "../../cms/ui/KeystaticContentCheck";
 import { KeystaticScrollbars } from "../../cms/ui/KeystaticScrollbars";
 import { KeystaticSiteUrlCard } from "../../cms/ui/KeystaticSiteUrlCard";
 import { KeystaticSettingsCards } from "../../cms/ui/KeystaticSettingsCards";
@@ -36,6 +37,8 @@ export default function KeystaticLayout({ children }: { children: ReactNode }) {
       <KeystaticBreadcrumb />
       {/* Hộp "Delete entry" ở trang Chủ đề / Chủ đề con / Sách: cảnh báo khi mục đang được bài / tủ sách dùng */}
       <KeystaticDeleteGuard />
+      {/* Thẻ "Kiểm tra nội dung" đầu Dashboard: chạy cùng luật với CI trên nhánh đang soạn, kết quả ngay */}
+      <KeystaticContentCheck />
       {children}
     </>
   );
