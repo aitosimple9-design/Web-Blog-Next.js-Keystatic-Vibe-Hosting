@@ -29,11 +29,22 @@ export function KeystaticContentCheck() {
   const [host, setHost] = useState<HTMLElement | null>(null);
   const [dark, setDark] = useState(false);
 
-  // Chỉ đặt state khi có kết quả (lần đầu state đã là "loading"); nút "Kiểm tra lại" tự đặt "loading" trước khi gọi
+  // Chỉ đặt state khi có kết quả (lần đầu state đã là "loading"); nút "Kiểm tra lại" tự đặt "loading" trước khi gọi.
+  // 404 = cổng quản trị chưa nhận ra người dùng: lúc vừa tải trang, Keystatic có thể còn đang làm mới phiên đăng nhập GitHub (thấy thật trên
+  // Vercel 2026-11-02: lần đầu 404, gọi lại 200) → chờ rồi thử lại tối đa 2 lần trước khi báo lỗi.
   const load = useCallback(() => {
     const b = branchOf();
-    fetch(`/api/kiem-tra${b ? `?branch=${encodeURIComponent(b)}` : ""}`, { cache: "no-store" })
-      .then(async (r) => ((await r.json().catch(() => null)) as Response | null) ?? { ok: false as const, error: `Máy chủ trả lỗi ${r.status}` })
+    const url = `/api/kiem-tra${b ? `?branch=${encodeURIComponent(b)}` : ""}`;
+    const attempt = (left: number): Promise<Response> =>
+      fetch(url, { cache: "no-store" }).then(async (r) => {
+        if (r.status === 404 && left > 0) {
+          await new Promise((ok) => setTimeout(ok, 1500));
+          return attempt(left - 1);
+        }
+        if (r.status === 404) return { ok: false as const, error: "chưa xác nhận được quyền quản trị (phiên đăng nhập GitHub?). Tải lại trang hoặc bấm Kiểm tra lại." };
+        return ((await r.json().catch(() => null)) as Response | null) ?? { ok: false as const, error: `Máy chủ trả lỗi ${r.status}` };
+      });
+    attempt(2)
       .then((d) => setState(d.ok ? { phase: "done", data: d, at: new Date() } : { phase: "error", message: d.error }))
       .catch(() => setState({ phase: "error", message: "Không gọi được máy chủ, thử lại sau." }));
   }, []);
@@ -43,9 +54,11 @@ export function KeystaticContentCheck() {
     load();
   };
 
+  // Chỉ gọi khi Dashboard đã vẽ xong (có chỗ đặt thẻ): lúc đó Keystatic đã xong bước đăng nhập
+  const ready = active && host !== null;
   useEffect(() => {
-    if (active) load();
-  }, [active, pathname, load]);
+    if (ready) load();
+  }, [ready, pathname, load]);
 
   useEffect(() => {
     if (!active) return;
