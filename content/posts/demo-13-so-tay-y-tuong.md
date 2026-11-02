@@ -1,16 +1,21 @@
 ---
-title: "Sổ tay ý tưởng không cần đẹp"
 slug: demo-13-so-tay-y-tuong
-description: "Một cuốn sổ tay luộm thuộm nhưng được dùng mỗi ngày hơn hẳn cuốn sổ đẹp để trong ngăn kéo."
+title: Sổ tay ý tưởng không cần đẹp
+description: >-
+  Một cuốn sổ tay luộm thuộm nhưng được dùng mỗi ngày hơn hẳn cuốn sổ đẹp để
+  trong ngăn kéo.
 category: tu-chu-tai-chinh
 subtopics:
   - quy-hoc-van-nep-chi-tieu
 date: 2026-08-16
 source:
-  book: "Sách mẫu 6"
-  author: "Tác giả mẫu 1"
+  book: Đồng tiền hạnh phúc
+  author: Ken Honda
 cover: /images/posts/demo-13-so-tay-y-tuong/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -22,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ hai là ghi lại. Một dòng ghi chú sau mỗi lần thử giúp ta thấy mình đang đi đâu, thay vì chỉ cảm thấy mình đang bận.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

@@ -1,16 +1,21 @@
 ---
-title: "Đánh dấu sách sao cho khỏi rối"
 slug: demo-06-danh-dau-sach
-description: "Một bộ ký hiệu đơn giản gồm ba loại dấu để lần sau mở lại, mắt tìm ra ý chính ngay."
+title: Đánh dấu sách sao cho khỏi rối
+description: >-
+  Một bộ ký hiệu đơn giản gồm ba loại dấu để lần sau mở lại, mắt tìm ra ý chính
+  ngay.
 category: vung-vang-tu-than
 subtopics:
   - lang-diu-con-gian
 date: 2026-09-13
 source:
-  book: "Sách mẫu 6"
-  author: "Tác giả mẫu 2"
+  book: Những người đàn bà chạy cùng bầy sói
+  author: Clarissa Pinkola Estés
 cover: /images/posts/demo-06-danh-dau-sach/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -24,13 +29,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ hai là ghi lại. Một dòng ghi chú sau mỗi lần thử giúp ta thấy mình đang đi đâu, thay vì chỉ cảm thấy mình đang bận.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

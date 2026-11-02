@@ -1,16 +1,19 @@
 ---
-title: "Sách nói có tính là đã đọc?"
 slug: demo-21-nghe-sach-noi
-description: "So sánh việc nghe và đọc: khi nào nghe có ích, khi nào nên cầm sách giấy."
+title: Sách nói có tính là đã đọc?
+description: 'So sánh việc nghe và đọc: khi nào nghe có ích, khi nào nên cầm sách giấy.'
 category: an-lac-noi-tam
 subtopics:
   - khoang-lang-cho-rieng-minh
 date: 2026-07-15
 source:
-  book: "Sách mẫu 7"
-  author: "Tác giả mẫu 1"
+  book: Những người đàn bà chạy cùng bầy sói
+  author: Clarissa Pinkola Estés
 cover: /images/posts/demo-21-nghe-sach-noi/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -22,13 +25,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ nhất là nên bắt đầu từ việc nhỏ nhất có thể làm được ngay hôm nay. Việc nhỏ cho ta phản hồi nhanh, và phản hồi nhanh nuôi động lực tốt hơn mọi lời tự nhắc.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

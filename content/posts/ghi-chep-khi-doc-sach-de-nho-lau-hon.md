@@ -9,8 +9,8 @@ subtopics:
   - lang-diu-con-gian
 date: 2026-10-16
 source:
-  book: Sách mẫu 1
-  author: Tác giả mẫu 1
+  book: Đi tìm lẽ sống
+  author: Viktor Frankl
 cover: /images/posts/ghi-chep-khi-doc-sach-de-nho-lau-hon/cover.jpg
 coverAlt: Bàn tay đang ghi chú vào cuốn sổ mở trên bàn gỗ
 status: published

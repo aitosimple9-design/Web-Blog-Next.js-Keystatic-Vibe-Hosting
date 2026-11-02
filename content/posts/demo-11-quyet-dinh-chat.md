@@ -1,17 +1,22 @@
 ---
-title: "Quyết định tốt cần dữ kiện hay cần thời gian?"
 slug: demo-11-quyet-dinh-chat
-description: "Hai sai lầm phổ biến khi ra quyết định và một câu hỏi đơn giản giúp tránh cả hai."
+title: Quyết định tốt cần dữ kiện hay cần thời gian?
+description: >-
+  Hai sai lầm phổ biến khi ra quyết định và một câu hỏi đơn giản giúp tránh cả
+  hai.
 category: cung-con-lon-len
 subtopics:
   - lang-nghe-ket-noi
   - ren-nep-hoc-huong-di
 date: 2026-08-24
 source:
-  book: "Sách mẫu 4"
-  author: "Tác giả mẫu 3"
+  book: 38 lá thư gửi con trai Rockefeller
+  author: John D. Rockefeller
 cover: /images/posts/demo-11-quyet-dinh-chat/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -23,13 +28,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ ba là chấp nhận bản nháp. Bản nháp đầu tiên hiếm khi tốt, nhưng nó là thứ duy nhất có thể sửa được; trang giấy trắng thì không.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

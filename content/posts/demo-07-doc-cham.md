@@ -1,16 +1,21 @@
 ---
-title: "Đọc chậm một đoạn khó"
 slug: demo-07-doc-cham
-description: "Gặp đoạn khó, thay vì bỏ qua hãy thử bốn bước đọc chậm. Kết quả thường khiến cả chương trở nên dễ hiểu."
+title: Đọc chậm một đoạn khó
+description: >-
+  Gặp đoạn khó, thay vì bỏ qua hãy thử bốn bước đọc chậm. Kết quả thường khiến
+  cả chương trở nên dễ hiểu.
 category: vung-vang-tu-than
 subtopics:
   - lang-diu-con-gian
 date: 2026-09-09
 source:
-  book: "Sách mẫu 7"
-  author: "Tác giả mẫu 3"
+  book: Phượng Hoàng Tái Sinh
+  author: Brian Tracy
 cover: /images/posts/demo-07-doc-cham/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -22,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ hai là ghi lại. Một dòng ghi chú sau mỗi lần thử giúp ta thấy mình đang đi đâu, thay vì chỉ cảm thấy mình đang bận.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

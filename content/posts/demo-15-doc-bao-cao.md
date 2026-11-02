@@ -1,17 +1,22 @@
 ---
-title: "Đọc nhanh một bản báo cáo dài"
 slug: demo-15-doc-bao-cao
-description: "Cách đọc phần quan trọng trước, chi tiết sau, để nắm bản báo cáo ba mươi trang trong mười lăm phút."
+title: Đọc nhanh một bản báo cáo dài
+description: >-
+  Cách đọc phần quan trọng trước, chi tiết sau, để nắm bản báo cáo ba mươi trang
+  trong mười lăm phút.
 category: tu-chu-tai-chinh
 subtopics:
   - quy-hoc-van-nep-chi-tieu
   - tam-ly-an-yen-ve-tien
 date: 2026-08-08
 source:
-  book: "Sách mẫu 1"
-  author: "Tác giả mẫu 3"
+  book: Sức mạnh của giáo dục tài chính
+  author: Robert T. Kiyosaki
 cover: /images/posts/demo-15-doc-bao-cao/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -23,13 +28,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ nhất là nên bắt đầu từ việc nhỏ nhất có thể làm được ngay hôm nay. Việc nhỏ cho ta phản hồi nhanh, và phản hồi nhanh nuôi động lực tốt hơn mọi lời tự nhắc.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

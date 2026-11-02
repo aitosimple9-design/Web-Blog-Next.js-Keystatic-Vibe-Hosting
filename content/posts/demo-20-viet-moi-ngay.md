@@ -1,16 +1,19 @@
 ---
-title: "Viết mỗi ngày một đoạn"
 slug: demo-20-viet-moi-ngay
-description: "Một đoạn văn mỗi ngày nghe nhỏ, nhưng sau ba tháng là cả một cuốn sổ ý nghĩ."
+title: Viết mỗi ngày một đoạn
+description: Một đoạn văn mỗi ngày nghe nhỏ, nhưng sau ba tháng là cả một cuốn sổ ý nghĩ.
 category: an-lac-noi-tam
 subtopics:
   - hoc-buong-de-long-nhe
 date: 2026-07-19
 source:
-  book: "Sách mẫu 6"
-  author: "Tác giả mẫu 4"
+  book: Đi tìm lẽ sống
+  author: Viktor Frankl
 cover: /images/posts/demo-20-viet-moi-ngay/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -24,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ nhất là nên bắt đầu từ việc nhỏ nhất có thể làm được ngay hôm nay. Việc nhỏ cho ta phản hồi nhanh, và phản hồi nhanh nuôi động lực tốt hơn mọi lời tự nhắc.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

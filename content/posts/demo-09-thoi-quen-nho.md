@@ -1,16 +1,21 @@
 ---
-title: "Thói quen nhỏ, đổi thay lớn"
 slug: demo-09-thoi-quen-nho
-description: "Vì sao hai phút mỗi ngày bền hơn một giờ cuối tuần, và cách chọn thói quen đầu tiên cho đúng."
+title: Thói quen nhỏ, đổi thay lớn
+description: >-
+  Vì sao hai phút mỗi ngày bền hơn một giờ cuối tuần, và cách chọn thói quen đầu
+  tiên cho đúng.
 category: cung-con-lon-len
 subtopics:
   - lang-nghe-ket-noi
 date: 2026-09-01
 source:
-  book: "Sách mẫu 2"
-  author: "Tác giả mẫu 1"
+  book: 38 lá thư gửi con trai Rockefeller
+  author: John D. Rockefeller
 cover: /images/posts/demo-09-thoi-quen-nho/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -22,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ nhất là nên bắt đầu từ việc nhỏ nhất có thể làm được ngay hôm nay. Việc nhỏ cho ta phản hồi nhanh, và phản hồi nhanh nuôi động lực tốt hơn mọi lời tự nhắc.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

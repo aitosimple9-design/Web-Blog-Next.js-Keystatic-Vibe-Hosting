@@ -1,16 +1,21 @@
 ---
-title: "Đọc hai cuốn cùng lúc có hợp với bạn?"
 slug: demo-05-doc-song-song
-description: "Khi nào đọc song song giúp hiểu sâu hơn, và khi nào nó chỉ khiến cuốn nào cũng dang dở."
+title: Đọc hai cuốn cùng lúc có hợp với bạn?
+description: >-
+  Khi nào đọc song song giúp hiểu sâu hơn, và khi nào nó chỉ khiến cuốn nào cũng
+  dang dở.
 category: vung-vang-tu-than
 subtopics:
   - xay-diem-tua-ben-trong
 date: 2026-09-17
 source:
-  book: "Sách mẫu 5"
-  author: "Tác giả mẫu 1"
+  book: Đi tìm lẽ sống
+  author: Viktor Frankl
 cover: /images/posts/demo-05-doc-song-song/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -22,13 +27,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ ba là chấp nhận bản nháp. Bản nháp đầu tiên hiếm khi tốt, nhưng nó là thứ duy nhất có thể sửa được; trang giấy trắng thì không.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 

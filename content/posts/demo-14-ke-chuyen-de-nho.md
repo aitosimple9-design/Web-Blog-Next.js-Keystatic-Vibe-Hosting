@@ -1,16 +1,21 @@
 ---
-title: "Kể chuyện để nhớ"
 slug: demo-14-ke-chuyen-de-nho
-description: "Khi một ý tưởng được kể thành chuyện, não bộ giữ lại dễ hơn. Ba cấu trúc kể chuyện gọn cho người mới."
+title: Kể chuyện để nhớ
+description: >-
+  Khi một ý tưởng được kể thành chuyện, não bộ giữ lại dễ hơn. Ba cấu trúc kể
+  chuyện gọn cho người mới.
 category: tu-chu-tai-chinh
 subtopics:
   - tam-ly-an-yen-ve-tien
 date: 2026-08-12
 source:
-  book: "Sách mẫu 7"
-  author: "Tác giả mẫu 2"
+  book: Hòn tuyết lăn
+  author: Alice Schroeder
 cover: /images/posts/demo-14-ke-chuyen-de-nho/cover.jpg
+status: published
 draft: false
+tags: []
+related: []
 ---
 Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội dung do người viết giữ chỗ tự soạn, không trích từ cuốn sách nào, và sẽ được thay bằng bài thật khi blog chính thức ra mắt.
 
@@ -24,13 +29,10 @@ Bài này là bản mẫu dùng để dựng và kiểm tra giao diện. Nội d
 
 Ý chính thứ nhất là nên bắt đầu từ việc nhỏ nhất có thể làm được ngay hôm nay. Việc nhỏ cho ta phản hồi nhanh, và phản hồi nhanh nuôi động lực tốt hơn mọi lời tự nhắc.
 
-
 - Chọn một việc đủ nhỏ để hoàn thành trong mười phút.
 - Viết ra điều mình kỳ vọng xảy ra trước khi bắt đầu.
 - Sau khi làm xong, ghi lại một điều đã học được.
 - Xem lại ghi chép vào cuối tuần và chọn việc cho tuần sau.
-
-
 
 ## Một ví dụ
 
