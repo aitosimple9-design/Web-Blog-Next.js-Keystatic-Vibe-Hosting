@@ -145,6 +145,43 @@ export async function putEntryGitHub(token: string, branch: string, kind: EntryK
   if (!res.ok) await fail(res);
 }
 
+// ---------- đọc CẢ nhánh cho "Kiểm tra nội dung" (/api/kiem-tra) ----------
+// Cây file: 1 lần gọi (git/trees ?recursive=1). Nội dung file content/**/*.md|json: theo mã băm (git/blobs/<sha>), chạy song song có giới hạn.
+// Nội dung theo mã băm không bao giờ đổi nên nhớ lại giữa các lần gọi: lần kiểm tra sau chỉ tải file vừa sửa.
+const blobCache = new Map<string, string>();
+const BLOB_CACHE_MAX = 3000;
+const BLOB_CONCURRENCY = 12;
+const TEXT_FILE = /^content\/.+\.(?:md|json)$/;
+
+export type BranchContent = { paths: Set<string>; texts: Map<string, string>; truncated: boolean };
+
+export async function readBranchContent(token: string, branch: string): Promise<BranchContent> {
+  const res = await gh(token, `/git/trees/${enc(branch)}?recursive=1`);
+  if (!res.ok) return fail(res);
+  const tree = (await res.json()) as { tree?: { path: string; type: string; sha: string }[]; truncated?: boolean };
+  const blobs = (tree.tree ?? []).filter((t) => t.type === "blob");
+  const paths = new Set(blobs.map((b) => b.path));
+  const wanted = blobs.filter((b) => TEXT_FILE.test(b.path));
+  const texts = new Map<string, string>();
+  let next = 0;
+  const worker = async () => {
+    while (next < wanted.length) {
+      const b = wanted[next++];
+      let text = blobCache.get(b.sha);
+      if (text === undefined) {
+        const r = await gh(token, `/git/blobs/${enc(b.sha)}`, { headers: { Accept: "application/vnd.github.raw+json" } });
+        if (!r.ok) return fail(r);
+        text = await r.text();
+        if (blobCache.size >= BLOB_CACHE_MAX) blobCache.clear();
+        blobCache.set(b.sha, text);
+      }
+      texts.set(b.path, text);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(BLOB_CONCURRENCY, wanted.length) }, worker));
+  return { paths, texts, truncated: tree.truncated === true };
+}
+
 /** Câu báo lỗi dễ hiểu cho người soạn bài */
 export function friendlyGithubError(e: unknown): string {
   if (e instanceof GithubError) {
