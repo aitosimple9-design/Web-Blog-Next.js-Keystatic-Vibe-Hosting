@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { adminToken, isAdminRequest } from "@/cms/lib/admin-access";
 import { applyPlanGitHub, friendlyGithubError, listRedirectsGitHub, validBranch } from "@/cms/lib/github-content";
 import { createRedirect, listExisting, listItems, planRedirect, slugStatus, toExisting } from "@/cms/lib/redirect-tools";
+import { isSameOriginRequest } from "@/cms/lib/same-origin";
 import { KIND_PREFIX, type RedirectKind } from "@/shared/redirect-patterns";
 
 // Cấp danh sách mục (GET) và tạo chuyển hướng nhanh (POST) cho trang quản trị Keystatic (src/app/keystatic/KeystaticRedirectTools.tsx).
@@ -41,7 +42,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  if (!(await isAdminRequest(req))) return notFound();
+  if (!isSameOriginRequest(req) || !(await isAdminRequest(req))) return notFound();
   const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
   const s = (k: string) => (typeof body?.[k] === "string" ? (body[k] as string) : undefined);
   const input = { kind: s("kind") ?? "", oldSlug: s("oldSlug"), newSlug: s("newSlug"), from: s("from"), to: s("to"), label: s("label") };

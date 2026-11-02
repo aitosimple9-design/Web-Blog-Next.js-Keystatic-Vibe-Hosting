@@ -31,3 +31,12 @@ test("Dashboard có thẻ Kiểm tra nội dung, bấm Kiểm tra lại chạy l
   await card.getByRole("button", { name: "Kiểm tra lại" }).click();
   await expect(card.getByText(/^(Đạt|Chưa đạt):/)).toBeVisible({ timeout: 30_000 });
 });
+
+// Lệnh GHI từ trang web khác bị chặn (src/cms/lib/same-origin.ts): trang lạ không thể nhờ trình duyệt ghi file vào content/ khi đang chạy npm run dev.
+// Chỉ đọc: các lệnh đều bị từ chối trước khi ghi, và admin.spec tự kiểm tra content/ không đổi.
+test("lệnh ghi gửi từ trang khác (cross-site) bị từ chối: 404, không ghi gì", async ({ request }) => {
+  const cross = { "sec-fetch-site": "cross-site", origin: "https://trang-la.example" };
+  expect((await request.post("/api/danh-muc", { headers: cross, data: { kind: "books", name: "Sách lạ" } })).status()).toBe(404);
+  expect((await request.post("/api/chuyen-huong", { headers: cross, data: { kind: "Khác", from: "/la", to: "/blog" } })).status()).toBe(404);
+  expect((await request.post("/api/keystatic/update", { headers: cross, data: { additions: [], deletions: [] } })).status()).toBe(404);
+});

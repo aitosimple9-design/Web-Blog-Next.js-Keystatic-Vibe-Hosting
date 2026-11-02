@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { adminToken, isAdminRequest } from "@/cms/lib/admin-access";
 import { createEntryLocal, isEntryKind, listEntries, planEntry, type EntryItem, type EntryKind } from "@/cms/lib/entry-store";
 import { friendlyGithubError, listEntriesGitHub, putEntryGitHub, validBranch } from "@/cms/lib/github-content";
+import { isSameOriginRequest } from "@/cms/lib/same-origin";
 
 // Cấp danh sách Sách / Chủ đề / Chủ đề con (GET) và tạo nhanh một mục (POST) cho ô chọn trong form bài (src/cms/ui/EntryPicker.tsx).
 // Chỉ quản trị viên (src/cms/lib/admin-access.ts); còn lại 404. Chế độ local: ghi file ở máy. Chế độ GitHub: đọc / commit ở NHÁNH đang soạn bằng
@@ -32,7 +33,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  if (!(await isAdminRequest(req))) return notFound();
+  if (!isSameOriginRequest(req) || !(await isAdminRequest(req))) return notFound();
   const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
   const kind = body?.kind;
   if (!isEntryKind(kind)) return NextResponse.json({ ok: false, error: "Loại không hợp lệ." }, { status: 400, headers: noStore });
