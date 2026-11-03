@@ -199,7 +199,8 @@ export function Slider({
       </div>
 
       {showControls && !sides ? (
-        <div className="mt-s5 flex items-center justify-between gap-s4">
+        // relative z-10: hàng nút luôn nằm trên khung trượt (khung có lề âm phía dưới; mask `shadow-fade-x` tạo lớp vẽ riêng sẽ đè lên nút)
+        <div className="relative z-10 mt-s5 flex items-center justify-between gap-s4">
           <div className="flex items-center gap-2" aria-hidden>
             {Array.from({ length: s.positions }).map((_, i) => (
               <span

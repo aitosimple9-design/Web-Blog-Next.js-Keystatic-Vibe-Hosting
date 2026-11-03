@@ -21,6 +21,7 @@ Hai phần: **A. đã dùng / đã duyệt** (có thể tái dùng ngay) và **B
 | Mục lục có trục dọc mảnh, nút mốc, đoạn đã đọc phủ `accent` | trang bài | báo tiến độ |
 | Thanh đầu trang co thành viên thuốc khi cuộn | mọi trang | báo trạng thái cuộn |
 | Thanh trượt thẻ + nút ‹ › hai bên (`Slider controls="sides"`) | khối Chủ đề con | điều hướng |
+| Băng chuyền xếp lớp xoay vòng (`LatestCarousel`): thẻ giữa to nổi, hai bên nhỏ dần lùi sau phủ màu nền; nút tròn ‹ › + chấm + "1 / 5" | "Bài viết mới nhất" trang Book (từ 768px) | điều hướng, chiều sâu |
 
 ## B. Ứng viên mới (cần duyệt)
 | Họa tiết | Ý tưởng | Dùng ở đâu | Tài sản | Chi phí |

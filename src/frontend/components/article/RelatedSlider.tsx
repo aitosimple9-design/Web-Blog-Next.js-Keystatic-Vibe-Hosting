@@ -79,7 +79,7 @@ export function RelatedSlider({ posts }: { posts: PostMeta[] }) {
           <Slider
             label={getUiLabels().relatedList}
             gapClassName="gap-s4"
-            trackClassName="bleed-r -ml-6 -mb-24 pt-3 pb-32 pl-6 scroll-pl-6"
+            trackClassName="bleed-r shadow-fade-l -ml-4 -mb-24 pt-3 pb-32 pl-4 scroll-pl-4"
             itemClassName="w-[272px] tablet:w-[300px] desktop:w-[320px]"
             items={posts.map((p) => (
               <RelatedCard key={p.slug} post={p} />

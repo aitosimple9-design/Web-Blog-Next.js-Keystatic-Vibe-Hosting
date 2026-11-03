@@ -13,25 +13,25 @@ Mockup: `Home.dc.html` (cùng thư mục). Route: `/book`. Từ 2026-10-11 Trang
 1b. **Dải chữ** (`paper`, viền kẻ trên và dưới): "Đọc · Ghi chép · Suy ngẫm · Áp dụng · Nhớ lâu", cỡ `display-sm`, dấu phân cách hình thoi `accent-warm`; tự trôi chậm 60s, dừng khi rê chuột, tắt khi giảm chuyển động.
 2. **TopicSlider** (`paper`) — tiêu đề mục (`SectionHead`: căn giữa, tiêu đề `display-lg`, dek chữ sans `ui-body` màu `ink-faint`, đường kẻ họa tiết hình thoi) "Chủ đề" + dek "Chọn một chủ đề để đọc các bài ghi chép liên quan. Vuốt ngang để xem thêm."
    - Thẻ chủ đề: icon, tên, mô tả 2 dòng, "12 bài", nút "Xem bài →"
-3. **LatestGrid** (`paper-sunk`) — tiêu đề mục `SectionHead` như trên, "Bài viết mới nhất" + dek "Những bài ghi chép mới đăng gần đây."
-   - Lưới bento: 4 **PostTile** (vùng ảnh (bo `radius-md`, nổi `elevated-md`) kéo xuống phủ cả phần chữ, phủ `inverse` 65%, chữ nằm thẳng trên ảnh, nhãn chủ đề là huy hiệu pill trong mờ giống huy hiệu số bài ở thẻ chủ đề (đệm `space-5`, các dòng cách nhau `space-4`, giãn dòng tiêu đề 1,5), không có thẻ bao: nhãn chủ đề, tiêu đề 2 dòng, "03 tháng 10, 2026 · 12 phút đọc") + 1 **StatTile** ("120+ Bài viết đã đăng" + nút "Xem tất cả →")
+3. **LatestGrid** (`paper-sunk`) — tiêu đề mục `SectionHead` như trên, "Bài viết mới nhất" + dek "Những bài ghi chép mới đăng gần đây." (Lộc duyệt băng chuyền 2026-11-03, thay lưới bento)
+   - **Băng chuyền 5 bài** (`LatestCarousel`, bài thứ 2–6 vì bài 1 đã ở Hero): 5 **PostTile** (bo 24px = `radius-lg` × 1,5, ngoại lệ đã duyệt; ảnh tràn phủ `inverse` 65%, chữ trên ảnh; nhãn chủ đề pill trong mờ, tiêu đề 2 dòng, "03 tháng 10, 2026 · 12 phút đọc"); thẻ giữa thêm 2 dòng tóm tắt, bài mới nhất có nhãn "Mới nhất". Dưới: "22+ Bài viết đã đăng" + nút phụ "Xem tất cả →" (bỏ ô số liệu đen)
 4. **Newsletter** (`paper`) → 5. **Footer** (`paper-raised`)
 
 ## Thay đổi theo mốc
 | Mốc | Hero | TopicSlider | LatestGrid |
 |---|---|---|---|
-| 375 / 414 | 1 cột: tiêu đề,icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 số(rộng tối đa 22rem, căn giữa), chữ + CTA, hàng 7 icon (Zalo giữa, to nhất), 3 số liệu | trượt ngang, 1 thẻ, lộ mép thẻ kế; 5 chấm | 1 cột, mỗi ô cao 320px |
-| 768 | 2 cột:icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 số(rộng tối đa 22rem) trái; chữ + CTA + số liệu phải; lề 32px | khoảng 2,5 thẻ; 4 chấm | 2 cột, ô đầu cao hai hàng |
-| 1024 | 3 cột: chữ + CTA + icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 số\| ảnh 3:4 \| 3 số liệu xếp dọc; tiêu đề hai dòng đè lên mép trên ảnh; ô tìm kiếm mở rộng | **4 thẻ hiện đủ, không lòi mép**; ‹ › trượt từng thẻ để xem thẻ thứ 5; 2 chấm | 4 cột: 2 ô cao, 1 ô rộng, ô số liệu, 1 ô thường |
-| 1440 | như 1024; cột chữ 340px, cột số liệu 220px; khung 1120px, dải nền tràn | 4 thẻ, rộng thêm | như 1024, rộng hơn |
+| 375 / 414 | 1 cột: tiêu đề,icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 số(rộng tối đa 22rem, căn giữa), chữ + CTA, hàng 7 icon (Zalo giữa, to nhất), 3 số liệu | trượt ngang, 1 thẻ, lộ mép thẻ kế; 5 chấm | trượt ngang 1 thẻ 3:4 rộng 80% + mép thẻ kế; chấm theo vị trí, không nút |
+| 768 | 2 cột:icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 số(rộng tối đa 22rem) trái; chữ + CTA + số liệu phải; lề 32px | khoảng 2,5 thẻ; 4 chấm | băng chuyền xếp lớp (xem 1024), thẻ rộng 28vw |
+| 1024 | 3 cột: chữ + CTA + icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 số\| ảnh 3:4 \| 3 số liệu xếp dọc; tiêu đề hai dòng đè lên mép trên ảnh; ô tìm kiếm mở rộng | **4 thẻ hiện đủ, không lòi mép**; ‹ › trượt từng thẻ để xem thẻ thứ 5; 2 chấm | băng chuyền xếp lớp xoay vòng: thẻ giữa 108% nhấc cao 14px (rê chuột 24px), mọi thẻ `elevated-lg`, kế 88%, ngoài 74%, thẻ bên phủ màu nền 28% / 50% và chỉ hiện tiêu đề; ‹ › 48px + 5 chấm + "1 / 5"; bấm thẻ bên đưa vào giữa, phím ← → |
+| 1440 | như 1024; cột chữ 340px, cột số liệu 220px; khung 1120px, dải nền tràn | 4 thẻ, rộng thêm | như 1024, thẻ tối đa 340px |
 
-- Thanh trượt chủ đề chừa đệm dưới ≈128px (kéo lại bằng lề âm) và đệm hai bên để bóng thẻ không bị cắt; ảnh ô "Bài viết mới nhất" nổi nhẹ `elevated-md`.
+- Thanh trượt chủ đề chừa đệm dưới ≈128px (kéo lại bằng lề âm) và đệm 16px hai bên; từ 1024px dải đệm mờ dần (`shadow-fade-x`) để bóng thẻ tan ra thay vì bị cắt thẳng (2026-11-03); ảnh ô "Bài viết mới nhất" nổi nhẹ `elevated-md`.
 - Nút ‹ bị khóa ở đầu, › bị khóa ở cuối; chấm và nút cập nhật khi cuộn.
 - Newsletter: xem `../README.md` (375 xếp dọc · 768 Họ tên + SĐT cùng hàng · 1024 chữ trái, form phải).
 - Footer: 375 xếp dọc · 768+ logo · menu · icon | ảnh 3:4 (rộng tối đa 21rem, căn giữa cột) | 3 sốtrên một hàng.
 
 ## Component cần dựng
-`Hero` (+ `FeaturedPost`), `StatBlock`, `SocialIcons`, `SectionHead` (tiêu đề mục căn giữa + họa tiết), `ScrollMarquee` (dải chữ), `Slider` + `TopicCard` (thẻ dọc tỉ lệ 3:4 (tên · mô tả · nút cách đều nhau `space-4`): ảnh theo chủ đề từ `content/topics/*.json` tràn cả thẻ, phủ `inverse` 65%; chip số thứ tự nền đặc góc trên; số bài là huy hiệu pill (viền mảnh, nền `on-inverse` 15%, số đậm); tên · số bài · mô tả · nút nằm thẳng trên ảnh ở đáy thẻ, không khung bó; lơ lửng `elevated-lg`, hover nhấc + ảnh phóng + lớp phủ nhạt đi), `LatestGrid` + `PostTile` + `StatTile`, `Newsletter`, `SiteHeader`, `SiteFooter`.
+`Hero` (+ `FeaturedPost`), `StatBlock`, `SocialIcons`, `SectionHead` (tiêu đề mục căn giữa + họa tiết), `ScrollMarquee` (dải chữ), `Slider` + `TopicCard` (thẻ dọc tỉ lệ 3:4 (tên · mô tả · nút cách đều nhau `space-4`): ảnh theo chủ đề từ `content/topics/*.json` tràn cả thẻ, phủ `inverse` 65%; chip số thứ tự nền đặc góc trên; số bài là huy hiệu pill (viền mảnh, nền `on-inverse` 15%, số đậm); tên · số bài · mô tả · nút nằm thẳng trên ảnh ở đáy thẻ, không khung bó; lơ lửng `elevated-lg`, hover nhấc + ảnh phóng + lớp phủ nhạt đi), `LatestGrid` + `LatestCarousel` + `PostTile`, `Newsletter`, `SiteHeader`, `SiteFooter`.
 
 ## Dữ liệu
 - Bài nổi bật: bài mới nhất (hoặc đánh dấu nổi bật — cần trường mới nếu Lộc muốn; hiện chưa có trong cấu trúc bài, hỏi trước khi thêm).

@@ -47,7 +47,7 @@ export default function BookPage() {
       </div>
     ),
     topics: (l) => <TopicSlider topics={getTopics()} counts={countByTopic()} text={b.topics} tone={tone(l)} pullUp={l.pullUp} />,
-    latest: (l) => <LatestGrid posts={rest.slice(0, 4)} total={stats.posts} text={b.latest} tone={tone(l)} pullUp={l.pullUp} />,
+    latest: (l) => <LatestGrid posts={rest.slice(0, 5)} total={stats.posts} text={b.latest} tone={tone(l)} pullUp={l.pullUp} />,
     newsletter: () => <Newsletter settings={getNewsletterSettings()} />,
   };
   return (

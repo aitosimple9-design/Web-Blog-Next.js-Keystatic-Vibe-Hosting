@@ -240,3 +240,6 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 **Tính năng / hệ thống**
 - [ ] Trang riêng cho Sách (Lộc đang cân nhắc); khi có thì thêm địa chỉ vào `KIND_PREFIX` (`src/shared/redirect-patterns.ts`), nút Tạo chuyển hướng ở trang sửa Sách và kiểm tra slug sách ở `check-content`
 - [x] (2026-10-20) Đưa nốt chữ giao diện nhỏ còn nằm trong mã (aria-label, "phút đọc"...) lên admin nếu Lộc muốn (hiện duyệt GIỮ trong mã)
+
+**Giao diện**
+- [x] (2026-11-03) "Bài viết mới nhất" trang Book thành băng chuyền 5 bài: máy tính xếp lớp xoay vòng có nút ‹ › + chấm, điện thoại trượt ngang (`LatestCarousel`, nhánh `feat/book-latest-carousel`)

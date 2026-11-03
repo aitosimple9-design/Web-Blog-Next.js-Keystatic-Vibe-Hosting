@@ -152,10 +152,16 @@ html {
 }
 
 /* Cho phần tử trong khung `wrap` tràn ra hai mép màn hình, nhưng nội dung vẫn thẳng hàng với khung */
+/* Khung trượt tràn ra hai mép màn hình, thẻ đầu vẫn thẳng lề nội dung (`wrap`).
+   scroll-padding KHÔNG dùng được `50vw - 50%` như padding (ở scroll-padding, % tính theo chính khung cuộn → ra 0, thẻ đầu bị hít sát mép trái; sửa 2026-11-03):
+   đặt bằng đúng lề của `wrap` (space-5 dưới 768px, space-6 từ 768px; màn rộng hơn content-max thì là nửa phần dư). */
 @utility bleed {
   margin-inline: calc(50% - 50vw);
   padding-inline: calc(50vw - 50%);
-  scroll-padding-inline: calc(50vw - 50%);
+  scroll-padding-inline: max(var(--space-5), calc(50vw - var(--content-max) / 2));
+  @media (min-width: 768px) {
+    scroll-padding-inline: max(var(--space-6), calc(50vw - var(--content-max) / 2));
+  }
 }
 @utility bleed-r {
   margin-right: calc(50% - 50vw);
@@ -542,6 +548,127 @@ html[data-modality="pointer"] .field-premium:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .cf-card {
     transform: scale(calc(1 - var(--cf-a, 0) * 0.16));
+  }
+}
+
+/* Băng chuyền "Bài viết mới nhất" trang Book (LatestCarousel, Lộc duyệt 2026-11-03). Chỉ transform + opacity.
+   Dưới 768px: trượt ngang, thẻ rộng 80% tỉ lệ 3:4, lộ mép thẻ kế.
+   Từ 768px: thẻ chồng giữa khung; data-pos (-2..2, JS ghi) đặt độ lệch / cỡ / lớp: giữa 108% nổi elevated-lg, kế bên 88% mờ 28%, ngoài 74% mờ 50%;
+   thẻ bên chỉ hiện tiêu đề, thẻ giữa hiện thêm nhãn chủ đề, tóm tắt, ngày. --lc-w: bề ngang thẻ (vừa 5 thẻ trong khung từ 768 tới 1440). */
+.lc-track {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding: var(--space-2) var(--space-4) var(--space-8);
+  margin: 0 calc(var(--space-4) * -1) calc((var(--space-8) - var(--space-5)) * -1);
+  scroll-padding-inline: var(--space-4);
+}
+.lc-item {
+  position: relative;
+  flex: 0 0 80%;
+  aspect-ratio: 3 / 4;
+  scroll-snap-align: start;
+}
+/* Thẻ trong băng chuyền bo 24px = `radius-lg` × 1,5 (ngoại lệ Lộc duyệt 2026-11-03, theo ảnh mẫu; chỉ ở băng chuyền này, PostCard tile mặc định `radius-md`) */
+.lc-item {
+  --lc-radius: calc(var(--radius-lg) * 1.5);
+}
+.lc-item > article {
+  border-radius: var(--lc-radius);
+  box-shadow: var(--elevated-lg);
+}
+.lc-dim {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--lc-radius);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-slow) var(--ease-smooth);
+}
+.lc-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rule-strong);
+  opacity: 0.5;
+  transition: transform var(--motion-normal) var(--ease-smooth), opacity var(--motion-normal);
+}
+.lc-dot[aria-current="true"]::before {
+  background: var(--accent);
+  opacity: 1;
+  transform: scaleX(2.6);
+}
+.lc-btn {
+  transition: transform var(--motion-fast) var(--ease-smooth);
+}
+.lc-btn:active {
+  transform: scale(0.95);
+}
+@media (hover: hover) {
+  .lc-btn:hover {
+    transform: translateY(-2px);
+  }
+}
+@media (min-width: 768px) {
+  .lc-track {
+    --lc-w: min(28vw, 340px);
+    display: block;
+    position: relative;
+    overflow: visible;
+    height: calc(var(--lc-w) * 4 / 3 * 1.08 + var(--space-8));
+    padding: 0;
+    margin: 0;
+  }
+  .lc-item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--lc-w);
+    --x: 0%;
+    --y: -14px;
+    --s: 1.08;
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(var(--s));
+    z-index: 5;
+    transition: transform var(--motion-slow) var(--ease-smooth);
+  }
+  .lc-item[data-pos="1"] { --x: 66%; --y: 0px; --s: 0.88; z-index: 4; cursor: pointer; }
+  .lc-item[data-pos="-1"] { --x: -66%; --y: 0px; --s: 0.88; z-index: 4; cursor: pointer; }
+  .lc-item[data-pos="2"] { --x: 122%; --y: 0px; --s: 0.74; z-index: 3; cursor: pointer; }
+  .lc-item[data-pos="-2"] { --x: -122%; --y: 0px; --s: 0.74; z-index: 3; cursor: pointer; }
+  .lc-item[data-pos="1"] .lc-dim, .lc-item[data-pos="-1"] .lc-dim { opacity: 0.28; }
+  .lc-item[data-pos="2"] .lc-dim, .lc-item[data-pos="-2"] .lc-dim { opacity: 0.5; }
+  .lc-item[data-pos="0"] .tile-excerpt { display: -webkit-box; }
+  .lc-item .tile-topic, .lc-item .tile-meta { transition: opacity var(--motion-normal) var(--ease-smooth); }
+  .lc-item:not([data-pos="0"]) .tile-topic, .lc-item:not([data-pos="0"]) .tile-meta { opacity: 0; }
+  /* Thẻ trong băng chuyền không dùng lift của PostCard; độ nhấc do --y của khung thẻ (thẻ giữa -14px, rê chuột -24px) */
+  .lc-item > article, .lc-item > article:hover { transform: none; }
+}
+@media (min-width: 768px) and (hover: hover) {
+  .lc-item[data-pos="1"]:hover, .lc-item[data-pos="-1"]:hover { --s: 0.92; }
+  .lc-item[data-pos="2"]:hover, .lc-item[data-pos="-2"]:hover { --s: 0.78; }
+  .lc-item[data-pos="0"]:hover { --y: -24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lc-item, .lc-dim, .lc-dot::before, .lc-btn, .lc-item .tile-topic, .lc-item .tile-meta { transition: none; }
+}
+
+/* Khung trượt thẻ có bóng `elevated-lg` (khối Chủ đề trang Book): khung cuộn ngang buộc phải cắt bóng ở mép, nên dải đệm 16px làm MỜ DẦN
+   (mask, không phải màu) để bóng tan ra thay vì cụt thẳng (Lộc yêu cầu 2026-11-03).
+   Bên trái khung chỉ lấn ra 16px = khe giữa hai thẻ, nên thẻ vừa trượt qua nằm gọn ngoài khung, không lòi mép.
+   Dưới 1024px: chỉ mờ bên trái (bên phải tràn tới mép màn hình, lộ mép thẻ kế là chủ ý); từ 1024px: mờ cả hai bên, thẻ thứ 5 không lòi mép. */
+/* `shadow-fade-l`: chỉ mờ bên trái ở mọi cỡ (thanh Bài liên quan: bên phải tràn tới mép màn hình ở mọi cỡ) */
+.shadow-fade-x,
+.shadow-fade-l {
+  -webkit-mask-image: linear-gradient(to right, transparent, black var(--space-4));
+  mask-image: linear-gradient(to right, transparent, black var(--space-4));
+}
+@media (min-width: 1024px) {
+  .shadow-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black var(--space-4), black calc(100% - var(--space-4)), transparent);
+    mask-image: linear-gradient(to right, transparent, black var(--space-4), black calc(100% - var(--space-4)), transparent);
   }
 }
 

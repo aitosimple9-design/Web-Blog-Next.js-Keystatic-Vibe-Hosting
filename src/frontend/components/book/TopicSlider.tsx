@@ -82,7 +82,7 @@ export function TopicSlider({
         <div className="@container mt-s6">
           <Slider
             label={getUiLabels().topicList}
-            trackClassName="bleed desktop:-ml-4 desktop:-mr-2 desktop:pl-4 desktop:pr-2 desktop:scroll-px-4 -mb-24 pt-3 pb-32"
+            trackClassName="bleed-r shadow-fade-x -ml-4 pl-4 scroll-pl-4 desktop:-mr-4 desktop:pr-4 desktop:scroll-px-4 -mb-24 pt-3 pb-32"
             itemClassName="w-[86cqw] tablet:w-[calc((100cqw-2*var(--space-4))/2.5)] desktop:w-[calc((100cqw-3*var(--space-4))/4)] [&>*]:h-full"
             items={topics.map((t, i) => (
               <TopicCard

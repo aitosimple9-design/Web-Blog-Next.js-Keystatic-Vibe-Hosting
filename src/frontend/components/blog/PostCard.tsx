@@ -1,4 +1,4 @@
-// Thẻ bài. `card`: lưới Blog (ảnh 3:2, nhãn, tiêu đề, tóm tắt, chân thẻ). `tile`: ô lưới bento Trang chủ.
+// Thẻ bài. `card`: lưới Blog (ảnh 3:2, nhãn, tiêu đề, tóm tắt, chân thẻ). `tile`: thẻ băng chuyền "Bài viết mới nhất" trang Book.
 // Bấm được CẢ thẻ nhưng chỉ có MỘT liên kết (tiêu đề kéo giãn phủ thẻ) để trình đọc màn hình không đọc lặp.
 import { fillLabel } from "@/shared/config/ui-labels";
 import { getUiLabels } from "@/shared/content/ui-labels";
@@ -14,11 +14,17 @@ export function PostCard({
   variant = "card",
   priority,
   className = "",
+  excerpt = false,
+  badge,
 }: {
   post: PostMeta;
   variant?: "card" | "tile";
   priority?: boolean;
   className?: string;
+  /** Chỉ `tile`: có thêm dòng tóm tắt (lớp `tile-excerpt`, ẩn sẵn; băng chuyền Bài mới nhất hiện ở thẻ giữa) */
+  excerpt?: boolean;
+  /** Chỉ `tile`: nhãn nhỏ góc trên trái (vd. "Mới nhất") */
+  badge?: string;
 }) {
   const topic = topicBySlug(post.category)?.name ?? post.category;
   const href = `/bai-viet/${post.slug}`;
@@ -45,8 +51,13 @@ export function PostCard({
           aria-hidden
           className="absolute inset-0 -z-10 bg-inverse/65 transition-opacity duration-(--motion-normal) ease-(--ease-smooth) group-hover:opacity-80"
         />
+        {badge ? (
+          <span className="type-caption absolute left-s4 top-s4 rounded-pill bg-on-inverse px-s3 py-1 font-semibold text-inverse">
+            {badge}
+          </span>
+        ) : null}
         <div className="flex flex-col gap-s4">
-          <span className="type-caption inline-flex w-fit rounded-pill border-(length:--border-width) border-on-inverse-soft/60 bg-on-inverse/15 px-s3 py-1 text-on-inverse">
+          <span className="tile-topic type-caption inline-flex w-fit rounded-pill border-(length:--border-width) border-on-inverse-soft/60 bg-on-inverse/15 px-s3 py-1 text-on-inverse">
             {topic}
           </span>
           <h3 className="type-title line-clamp-2 leading-normal">
@@ -57,7 +68,10 @@ export function PostCard({
               <span className="ul-grow">{post.title}</span>
             </Link>
           </h3>
-          <p className="type-caption text-on-inverse-soft">
+          {excerpt ? (
+            <p className="tile-excerpt type-ui-body line-clamp-2 hidden text-on-inverse">{post.description}</p>
+          ) : null}
+          <p className="tile-meta type-caption text-on-inverse-soft">
             {formatDateLong(post.date)} · {formatReadTime(post.readingMinutes, getUiLabels().readTime)}
           </p>
         </div>
