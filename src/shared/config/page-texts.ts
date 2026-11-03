@@ -31,6 +31,8 @@ export const bookDefaults = {
     dek: "Những bài ghi chép mới đăng gần đây.",
     totalLabel: "Bài viết đã đăng",
     allLabel: "Xem tất cả",
+    /** Nhãn nhỏ góc trên thẻ bài mới nhất trong băng chuyền */
+    newLabel: "Mới nhất",
   },
 };
 export type BookPageTexts = typeof bookDefaults;

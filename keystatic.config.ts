@@ -436,6 +436,7 @@ export default config({
             dek: t("Mô tả dưới tiêu đề", 200, true),
             totalLabel: t("Nhãn dưới tổng số bài (mặc định: Bài viết đã đăng)", 40),
             allLabel: t("Chữ nút xem tất cả (mặc định: Xem tất cả)", 30),
+            newLabel: t("Nhãn góc trên thẻ bài mới nhất (mặc định: Mới nhất)", 20),
           },
           { label: "Khối Bài viết mới nhất (bài tự lấy từ mục Bài viết)" },
         ),
