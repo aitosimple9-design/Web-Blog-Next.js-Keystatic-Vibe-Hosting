@@ -14,7 +14,7 @@ import { BookCover, PostImage } from "@/frontend/components/ui/Media";
 function RelatedCard({ post }: { post: PostMeta }) {
   const topic = topicBySlug(post.category)?.name ?? post.category;
   return (
-    <article className="on-inverse group relative isolate flex aspect-[3/4] w-full flex-col justify-between gap-s5 overflow-hidden rounded-lg bg-inverse p-s5 text-on-inverse shadow-elevated-lg transition-[transform,box-shadow] duration-(--motion-normal) ease-(--ease-smooth) motion-safe:hover:-translate-y-2">
+    <article className="on-inverse group relative isolate flex aspect-[3/4] w-full flex-col justify-between gap-s5 overflow-hidden rounded-card bg-inverse p-s5 text-on-inverse shadow-elevated-lg transition-[transform,box-shadow] duration-(--motion-normal) ease-(--ease-smooth) motion-safe:hover:-translate-y-2">
       {/* Ảnh bài (màu gốc) tràn cả thẻ, phủ `inverse` 55% để chữ đọc rõ; nhạt đi khi hover */}
       <div className="absolute inset-0 -z-20 transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.04]">
         <PostImage

@@ -14,7 +14,7 @@ Mockup: `Home.dc.html` (cùng thư mục). Route: `/book`. Từ 2026-10-11 Trang
 2. **TopicSlider** (`paper`) — tiêu đề mục (`SectionHead`: căn giữa, tiêu đề `display-lg`, dek chữ sans `ui-body` màu `ink-faint`, đường kẻ họa tiết hình thoi) "Chủ đề" + dek "Chọn một chủ đề để đọc các bài ghi chép liên quan. Vuốt ngang để xem thêm."
    - Thẻ chủ đề: icon, tên, mô tả 2 dòng, "12 bài", nút "Xem bài →"
 3. **LatestGrid** (`paper-sunk`) — tiêu đề mục `SectionHead` như trên, "Bài viết mới nhất" + dek "Những bài ghi chép mới đăng gần đây." (Lộc duyệt băng chuyền 2026-11-03, thay lưới bento)
-   - **Băng chuyền 5 bài** (`LatestCarousel`, bài thứ 2–6 vì bài 1 đã ở Hero): 5 **PostTile** (bo 24px = `radius-lg` × 1,5, ngoại lệ đã duyệt; ảnh tràn phủ `inverse` 65%, chữ trên ảnh; nhãn chủ đề pill trong mờ, tiêu đề 2 dòng, "03 tháng 10, 2026 · 12 phút đọc"); thẻ giữa thêm 2 dòng tóm tắt, bài mới nhất có nhãn "Mới nhất". Dưới: "22+ Bài viết đã đăng" + nút phụ "Xem tất cả →" (bỏ ô số liệu đen)
+   - **Băng chuyền 5 bài** (`LatestCarousel`, bài thứ 2–6 vì bài 1 đã ở Hero): 5 **PostTile** (bo theo tỉ lệ `rounded-card` 7% bề ngang ≈ 24px; ảnh tràn phủ `inverse` 65%, chữ trên ảnh; nhãn chủ đề pill trong mờ, tiêu đề 2 dòng, "03 tháng 10, 2026 · 12 phút đọc"); thẻ giữa thêm 2 dòng tóm tắt, bài mới nhất có nhãn "Mới nhất". Dưới: "22+ Bài viết đã đăng" + nút phụ "Xem tất cả →" (bỏ ô số liệu đen)
 4. **Newsletter** (`paper`) → 5. **Footer** (`paper-raised`)
 
 ## Thay đổi theo mốc

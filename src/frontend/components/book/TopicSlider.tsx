@@ -20,7 +20,7 @@ function TopicCard({
   count: number;
 }) {
   return (
-    <article className="group lift surface-hover on-inverse relative isolate aspect-[3/4] w-full overflow-hidden rounded-lg bg-inverse text-on-inverse shadow-elevated-lg">
+    <article className="group lift surface-hover on-inverse relative isolate aspect-[3/4] w-full overflow-hidden rounded-card bg-inverse text-on-inverse shadow-elevated-lg">
       {/* Ảnh tràn cả thẻ; lớp phủ `inverse` 65% (một màu phẳng, không gradient) để chữ đọc rõ, nhạt đi khi hover */}
       <Image
         src={topic.image}
