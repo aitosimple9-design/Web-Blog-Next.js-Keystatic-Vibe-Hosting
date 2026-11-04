@@ -15,6 +15,7 @@ import {
 } from "motion/react";
 import { createContext, useContext, useEffect, useRef, type ReactNode } from "react";
 import { motionTokens, springs } from "@/frontend/lib/motion-tokens";
+import { useReducedMotionSafe } from "@/frontend/lib/reduced-motion";
 
 /* ---------- Cảnh theo con trỏ: nghiêng nhẹ + nhiều lớp trôi theo độ sâu ---------- */
 
@@ -31,7 +32,7 @@ export function PointerScene({
   /** Góc nghiêng tối đa (độ). 0 = không nghiêng, chỉ trôi các lớp */
   tilt?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const ref = useRef<HTMLDivElement>(null);
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
@@ -67,7 +68,9 @@ export function PointerScene({
       <motion.div
         ref={ref}
         className={className}
-        style={tilt && !reduce ? { rotateX, rotateY, transformPerspective: 1000 } : undefined}
+        // Style giống nhau ở server và trình duyệt (không phụ thuộc `reduce`) để không lệch khi hydrate;
+        // khi giảm chuyển động thì không gắn listener nên góc nghiêng đứng yên ở 0
+        style={tilt ? { rotateX, rotateY, transformPerspective: 1000 } : undefined}
       >
         {children}
       </motion.div>
@@ -86,12 +89,12 @@ export function PointerLayer({
   className?: string;
 }) {
   const p = useContext(PointerCtx);
-  const reduce = useReducedMotion();
   const zero = useMotionValue(0);
   const tx = useTransform(p?.x ?? zero, (v) => v * depth);
   const ty = useTransform(p?.y ?? zero, (v) => v * depth);
   return (
-    <motion.div className={className} style={reduce ? undefined : { x: tx, y: ty }}>
+    // Luôn gắn x / y (khớp server); giảm chuyển động thì PointerScene không nghe chuột nên giá trị đứng yên ở 0
+    <motion.div className={className} style={{ x: tx, y: ty }}>
       {children}
     </motion.div>
   );
@@ -182,13 +185,14 @@ export function ScrollParallax({
   amount?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
+  const still = useMotionValue("0%");
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [`-${amount}%`, `${amount}%`]);
   return (
     <div ref={ref} className={`overflow-hidden ${className}`}>
       {/* `relative`: ảnh `fill` (absolute) bên trong cần cha có position, nếu không Next cảnh báo "parent element with invalid position" */}
-      <motion.div className="relative size-full scale-[1.16]" style={reduce ? undefined : { y }}>
+      <motion.div className="relative size-full scale-[1.16]" style={{ y: reduce ? still : y }}>
         {children}
       </motion.div>
     </div>
