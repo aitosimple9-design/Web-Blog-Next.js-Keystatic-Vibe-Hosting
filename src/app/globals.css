@@ -131,8 +131,9 @@
 }
 
 /* Nhảy đến nội dung chính */
+/* fixed (không phải absolute): Tab hết vòng quay lại liên kết này khi đang cuộn giữa trang thì vẫn hiện trong màn hình (2026-11-04) */
 .skip-link {
-  position: absolute;
+  position: fixed;
   left: var(--space-4);
   top: -100px;
   z-index: 100;

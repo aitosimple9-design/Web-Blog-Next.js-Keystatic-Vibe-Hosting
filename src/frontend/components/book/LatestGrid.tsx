@@ -10,6 +10,7 @@ import { Reveal } from "@/frontend/components/ui/Reveal";
 import { LatestCarousel } from "@/frontend/components/book/LatestCarousel";
 import type { BookPageTexts } from "@/shared/config/page-texts";
 import { toneBg, type SectionTone } from "@/frontend/lib/brush";
+import { getUiLabels } from "@/shared/content/ui-labels";
 
 export function LatestGrid({
   posts,
@@ -31,7 +32,8 @@ export function LatestGrid({
 
         <Reveal className="mt-s6">
           <LatestCarousel
-            label={text.title}
+            // Tên riêng cho khung băng chuyền, KHÁC tiêu đề khối (hai vùng trùng tên là lỗi axe `landmark-unique`)
+            label={getUiLabels().latestList}
             dimClassName={tone === "sunk" ? "bg-paper-sunk" : "bg-paper"}
             items={posts.map((p, i) => (
               <PostCard key={p.slug} post={p} variant="tile" excerpt badge={i === 0 ? text.newLabel : undefined} />
