@@ -82,7 +82,7 @@ export function PostCard({
   // Thẻ bài (lưới Blog): cùng khuôn với thẻ chủ đề, ảnh tràn cả thẻ 3:4 phủ `inverse` 65%, chữ nằm thẳng trên ảnh, nổi `elevated`
   return (
     <article
-      className={`group lift surface-hover on-inverse relative isolate flex aspect-[3/4] h-full w-full flex-col justify-end overflow-hidden rounded-lg bg-inverse p-s5 text-on-inverse shadow-elevated-lg ${className}`}
+      className={`group lift surface-hover on-inverse relative isolate flex aspect-[3/4] h-full w-full flex-col justify-end overflow-hidden rounded-card bg-inverse p-s5 text-on-inverse shadow-elevated-lg ${className}`}
     >
       <div className="absolute inset-0 -z-20">
         <PostImage

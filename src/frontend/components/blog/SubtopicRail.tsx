@@ -15,7 +15,7 @@ import { subtopicHref } from "@/shared/blog-links";
 function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; current: boolean }) {
   return (
     <article
-      className={`group lift surface-hover on-inverse relative isolate aspect-[3/4] w-full overflow-hidden rounded-lg bg-inverse text-on-inverse shadow-elevated-sm ${
+      className={`group lift surface-hover on-inverse relative isolate aspect-[3/4] w-full overflow-hidden rounded-card bg-inverse text-on-inverse shadow-elevated-sm ${
         current ? "outline-2 outline-offset-2 outline-accent" : ""
       }`}
     >

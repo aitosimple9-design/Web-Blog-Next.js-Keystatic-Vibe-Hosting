@@ -243,3 +243,4 @@ Toàn bộ giai đoạn này: Claude hướng dẫn và soạn cấu hình, **m�
 
 **Giao diện**
 - [x] (2026-11-03) "Bài viết mới nhất" trang Book thành băng chuyền 5 bài: máy tính xếp lớp xoay vòng có nút ‹ › + chấm, điện thoại trượt ngang (`LatestCarousel`, nhánh `feat/book-latest-carousel`)
+- [x] (2026-11-03) Bo góc theo tỉ lệ `rounded-card` (7% bề ngang) cho mọi thẻ 3:4: chủ đề, chủ đề con, danh sách Blog, bài liên quan, băng chuyền (nhánh `feat/card-radius-ratio`)

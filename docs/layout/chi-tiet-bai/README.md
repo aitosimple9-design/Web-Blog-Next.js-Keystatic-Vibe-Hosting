@@ -35,7 +35,7 @@ Dải nền: Nav (paper, viền dưới) · hero (ảnh) · thân bài (`paper`)
 - Nav: ☰ ẩn từ 768; ô tìm kiếm mở rộng từ 1024.
 
 ### RelatedSlider — nền thẻ HÌNH CHỮ NHẬT DỌC 3:4
-- **Nền thẻ:** hình chữ nhật dọc tỉ lệ **3:4**, bo góc `radius-lg` (16px), xen kẽ nền tối (`inverse`) / sáng (`paper-raised`).
+- **Nền thẻ:** hình chữ nhật dọc tỉ lệ **3:4**, bo góc theo tỉ lệ `rounded-card` (7% bề ngang, ≈ 19–22px; trước là `radius-lg` 16px, đổi 2026-11-03), xen kẽ nền tối (`inverse`) / sáng (`paper-raised`).
 - **Bố cục bên trong (giữ đúng wireframe, không đổi):** hàng trên gồm nhãn chủ đề (chữ viết hoa nhỏ) + tiêu đề (tối đa 3 dòng) bên trái và bìa sách nhỏ bên phải; hàng dưới gồm tóm tắt 2 dòng và "6 phút đọc".
 - Rộng: 375 → 272px (lộ mép thẻ kế) · 768 → 300px · 1024+ → 320px (cao = rộng × 4/3) · hàng tràn ra mép phải màn hình, thẻ cuối vẫn cuộn vào đủ.
 - **Hover:** thẻ nhấc lên 8px. Bấm được cả thẻ (một liên kết duy nhất, phủ cả thẻ).
