@@ -31,10 +31,12 @@ export function BookShelf({ pullUp = false }: { pullUp?: boolean }) {
         key={b.title}
         href={`/blog/${b.topic}`}
         className="group lift block no-underline"
-        aria-label={`${b.title}, xem bài cùng chủ đề ${topic.name}`}
+        // Tên đọc phải CHỨA nguyên chữ hiển thị theo đúng thứ tự (tên sách rồi tên chủ đề) để điều khiển bằng giọng nói gọi được (WCAG 2.5.3)
+        aria-label={`${b.title} ${topic.name}, xem bài cùng chủ đề`}
       >
         <BookCover fluid title={b.title} seed={b.title} />
         <p className="type-label cf-label mt-s3 line-clamp-2">{b.title}</p>
+        {/* Khoảng trắng giữa hai dòng: công cụ đo trợ năng ghép chữ hiển thị liền nhau nên tên sách dính tên chủ đề */}{" "}
         <p className="type-caption cf-label mt-s1 inline-flex items-center gap-s1 text-on-inverse-soft">
           {topic.name}
           <ArrowRightIcon

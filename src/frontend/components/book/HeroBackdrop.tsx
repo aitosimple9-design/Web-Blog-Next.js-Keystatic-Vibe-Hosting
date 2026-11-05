@@ -4,14 +4,17 @@
 // Ba lớp, từ sau ra trước: (1) dòng kẻ ngang mảnh như trang vở · (2) chữ "Đọc" khổng lồ chỉ có nét viền, như con dấu in chìm ·
 // (3) vòng tròn phẳng `accent-warm` + vòng viền lệch tâm, ló sau thẻ bài nổi bật.
 // Chuyển động: chỉ transform, trôi nhẹ theo thanh cuộn (chữ đi lên, vòng tròn đi xuống), tắt khi giảm chuyển động, không vòng lặp.
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
+import { useReducedMotionSafe } from "@/frontend/lib/reduced-motion";
 
 export function HeroBackdrop({ word = "Đọc" }: { word?: string }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
+  const still = useMotionValue(0);
   const { scrollY } = useScroll();
   const wordY = useTransform(scrollY, [0, 700], [0, -60]);
   const orbY = useTransform(scrollY, [0, 700], [0, 70]);
-  const drift = (y: typeof wordY) => (reduce ? undefined : { y });
+  // Giảm chuyển động: đứng yên ở 0 (vẫn gắn style để server và trình duyệt khớp nhau khi hydrate)
+  const drift = (y: typeof wordY) => ({ y: reduce ? still : y });
 
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden text-on-inverse">

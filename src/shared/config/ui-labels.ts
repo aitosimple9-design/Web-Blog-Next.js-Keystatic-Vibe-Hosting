@@ -24,6 +24,7 @@ export const UI_LABEL_GROUPS = [
       ["statsSection", "Khối con số ở Trang chủ", "Con số"],
       ["relatedList", "Danh sách bài liên quan", "Danh sách bài liên quan"],
       ["topicList", "Danh sách chủ đề ở trang Book", "Danh sách chủ đề"],
+      ["latestList", "Băng chuyền bài mới nhất ở trang Book", "Danh sách bài mới nhất"],
       ["subtopicList", "Thanh trượt chủ đề con ở trang Blog", "Danh sách chủ đề con"],
       ["shelfList", "Tủ sách ở Trang chủ", "Tủ sách"],
     ],
