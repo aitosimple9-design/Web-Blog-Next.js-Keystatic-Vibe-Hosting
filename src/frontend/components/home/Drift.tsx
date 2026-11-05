@@ -2,9 +2,9 @@
 
 // Lớp trôi theo thanh cuộn (thị sai): dịch chuyển dọc từ `from` tới `to` (px) khi cuộn 0 → 700px.
 // Chỉ transform, tắt khi giảm chuyển động. Dùng ở Hero Trang chủ cá nhân: tên trôi lên nhanh hơn người nên có chiều sâu.
-import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
-import { useReducedMotionSafe } from "@/frontend/lib/reduced-motion";
+// Không dùng thư viện motion (tối ưu tốc độ 2026-11-05): `useScrollDrift` ghi transform qua ref.
 import type { ReactNode } from "react";
+import { useScrollDrift } from "@/frontend/components/ui/Motion";
 
 export function Drift({
   children,
@@ -17,13 +17,10 @@ export function Drift({
   to?: number;
   className?: string;
 }) {
-  const reduce = useReducedMotionSafe();
-  const still = useMotionValue(from);
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 700], [from, to]);
+  const ref = useScrollDrift<HTMLDivElement>(from, to);
   return (
-    <motion.div className={className} style={{ y: reduce ? still : y }}>
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
