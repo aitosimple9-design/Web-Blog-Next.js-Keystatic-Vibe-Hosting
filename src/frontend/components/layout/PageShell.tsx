@@ -22,7 +22,7 @@ export function PageShell({ tone = "paper", children }: { tone?: HeaderTone; chi
         showSearch={header.showSearch}
         showThemeToggle={header.showThemeToggle}
       />
-      <main id="main" tabIndex={-1} className="anim-page outline-none">
+      <main id="main" tabIndex={-1} className="outline-none">
         {children}
       </main>
       <SiteFooter />

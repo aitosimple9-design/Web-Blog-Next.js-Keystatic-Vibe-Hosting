@@ -97,7 +97,7 @@ export function BlogView({ slug, page, sub }: { slug: string; page: number; sub?
           fill
           priority
           sizes="100vw"
-          className="anim-page -z-20 object-cover grayscale-[40%]"
+          className="-z-20 object-cover grayscale-[40%]"
         />
         <div aria-hidden className="absolute inset-0 -z-10 bg-inverse/80" />
         <div className="hero-zoom wrap relative flex flex-1 flex-col pt-[calc(var(--header-height)+var(--space-4))] tablet:pt-[calc(var(--header-height)+var(--space-5))]">

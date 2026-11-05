@@ -216,9 +216,11 @@ html {
     transform: none;
   }
 }
+/* fade-rise / pop-in bắt đầu từ mờ 20% (KHÔNG phải 0): Chrome không tính phần tử opacity 0 là "nội dung lớn nhất" (LCP),
+   nên ảnh / chữ Hero bắt đầu trong suốt làm LCP rơi về chữ logo và điểm tốc độ mobile tụt (đo 2026-11-04). Vẫn là hiện dần + trượt. */
 @keyframes fade-rise {
   from {
-    opacity: 0;
+    opacity: 0.2;
     transform: translateY(18px);
   }
   to {
@@ -228,7 +230,7 @@ html {
 }
 @keyframes pop-in {
   from {
-    opacity: 0;
+    opacity: 0.2;
     transform: scale(0.82);
   }
   to {

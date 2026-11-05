@@ -4,17 +4,12 @@
 // Ba lớp, từ sau ra trước: (1) dòng kẻ ngang mảnh như trang vở · (2) chữ "Đọc" khổng lồ chỉ có nét viền, như con dấu in chìm ·
 // (3) vòng tròn phẳng `accent-warm` + vòng viền lệch tâm, ló sau thẻ bài nổi bật.
 // Chuyển động: chỉ transform, trôi nhẹ theo thanh cuộn (chữ đi lên, vòng tròn đi xuống), tắt khi giảm chuyển động, không vòng lặp.
-import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
-import { useReducedMotionSafe } from "@/frontend/lib/reduced-motion";
+import { useScrollDrift } from "@/frontend/components/ui/Motion";
 
 export function HeroBackdrop({ word = "Đọc" }: { word?: string }) {
-  const reduce = useReducedMotionSafe();
-  const still = useMotionValue(0);
-  const { scrollY } = useScroll();
-  const wordY = useTransform(scrollY, [0, 700], [0, -60]);
-  const orbY = useTransform(scrollY, [0, 700], [0, 70]);
-  // Giảm chuyển động: đứng yên ở 0 (vẫn gắn style để server và trình duyệt khớp nhau khi hydrate)
-  const drift = (y: typeof wordY) => ({ y: reduce ? still : y });
+  // Trôi theo thanh cuộn 0 → 700px (chữ lên 60px, vòng tròn xuống 70px); giảm chuyển động thì đứng yên. Không dùng thư viện motion (2026-11-05)
+  const wordRef = useScrollDrift<HTMLDivElement>(0, -60);
+  const orbRef = useScrollDrift<HTMLDivElement>(0, 70);
 
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden text-on-inverse">
@@ -29,7 +24,7 @@ export function HeroBackdrop({ word = "Đọc" }: { word?: string }) {
       </svg>
 
       {/* (2) Chữ khổng lồ chỉ có nét viền */}
-      <motion.div style={drift(wordY)} className="absolute -bottom-[4%] left-[1%] w-[min(100%,920px)] opacity-[0.2]">
+      <div ref={wordRef} className="absolute -bottom-[4%] left-[1%] w-[min(100%,920px)] opacity-[0.2]">
         <svg viewBox="0 0 1000 440" className="w-full" focusable="false">
           <text
             x="0"
@@ -45,16 +40,16 @@ export function HeroBackdrop({ word = "Đọc" }: { word?: string }) {
             {word}
           </text>
         </svg>
-      </motion.div>
+      </div>
 
       {/* (3) Vòng tròn phẳng accent-warm + vòng viền lệch tâm (nhỏ, ló sau góc trên phải của thẻ ảnh; ẩn dưới 768px vì đè lên tiêu đề) */}
-      <motion.div
-        style={drift(orbY)}
+      <div
+        ref={orbRef}
         className="absolute top-[4%] right-[6%] hidden size-[clamp(96px,13vw,120px)] tablet:block desktop:top-[5%] desktop:right-[27%] desktop:size-[clamp(150px,17vw,230px)]"
       >
         <span className="absolute inset-0 rounded-pill bg-accent-warm" />
         <span className="absolute -inset-[14%] translate-x-[8%] translate-y-[6%] rounded-pill border-(length:--border-width) border-on-inverse/25" />
-      </motion.div>
+      </div>
     </div>
   );
 }
