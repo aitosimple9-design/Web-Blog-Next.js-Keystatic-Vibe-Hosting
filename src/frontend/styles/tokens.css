@@ -304,7 +304,7 @@
   font-family: var(--font-sans-stack);
   font-size: 14px;
   line-height: 1.4;
-  font-weight: 500;
+  font-weight: 600;
 }
 @utility type-caption {
   font-family: var(--font-sans-stack);
@@ -329,6 +329,6 @@
   font-family: var(--font-sans-stack);
   font-size: 15px;
   line-height: 1.2;
-  font-weight: 500;
+  font-weight: 600;
 }
 

@@ -46,7 +46,7 @@ function SubtopicCard({ sub, count, current }: { sub: Subtopic; count: number; c
             <span className="sr-only"> ({fillLabel(getUiLabels().subtopicPosts, { n: String(count) })})</span>
           </Link>
         </h3>
-        {sub.description ? <p className="type-caption line-clamp-2 text-on-inverse">{sub.description}</p> : null}
+        {sub.description ? <p className="type-caption line-clamp-2 text-on-inverse/85">{sub.description}</p> : null}
       </div>
     </article>
   );

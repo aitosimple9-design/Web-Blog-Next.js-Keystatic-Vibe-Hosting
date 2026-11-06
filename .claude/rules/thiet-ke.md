@@ -36,7 +36,7 @@ paths:
   Màu nhấn trùng màu mực nên liên kết trong bài LUÔN gạch chân; thứ bậc đến từ cỡ chữ, độ đậm, khoảng trắng.
 - Component dùng đúng tên trong Design System (thêm `SectionHead`, `SocialIcons`, `ScrollMarquee`, `Breadcrumb` đã duyệt 2026-10-07; `PostCard`, `TopicCard`, `FeaturedPost`, `BookRef`, `Takeaways`, `Newsletter`, `SiteHeader`, `SiteFooter`, `Tag`);
   KHÔNG tự tạo component trùng vai trò. Thiếu component (phân trang, tìm kiếm, bình luận, trang tác giả — Known Gaps) → hỏi Lộc, đề xuất ghép từ component sẵn có.
-- Chữ: tiêu đề và bài đọc serif, giao diện sans; không hạ line-height dưới giá trị token (dấu tiếng Việt); `prose-sm` từ 480px trở xuống.
+- Chữ: tiêu đề và bài đọc serif, giao diện sans; không hạ line-height dưới giá trị token (dấu tiếng Việt); `prose-sm` từ 480px trở xuống. Sans chỉ 400 / 600 (không thêm 500: thêm một bộ file font); serif biến thiên 300 / 400 / 600. Mô tả trên thẻ luôn nhẹ hơn tiêu đề (serif 300 hoặc sans 400, màu `on-inverse` 85%; Lộc duyệt 2026-11-05).
 - Lỗi form: biểu tượng + chữ giải thích cách sửa + viền dày; không báo lỗi chỉ bằng màu. Vòng focus bàn phím không bao giờ tắt.
 - Bố cục trang bài: một cột, hoặc `guide` với `TOC` dính bên trái từ `bp-desktop` (1024px); dưới đó TOC thành khối trên thân bài.
 - Mọi bài có `BookRef` ghi nguồn sách; ngày viết bằng chữ ("03 tháng 10, 2026") kèm thời gian đọc.

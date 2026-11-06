@@ -69,7 +69,7 @@ export function PostCard({
             </Link>
           </h3>
           {excerpt ? (
-            <p className="tile-excerpt type-ui-body line-clamp-2 hidden text-on-inverse">{post.description}</p>
+            <p className="tile-excerpt type-ui-body line-clamp-2 hidden text-on-inverse/85">{post.description}</p>
           ) : null}
           <p className="tile-meta type-caption text-on-inverse-soft">
             {formatDateLong(post.date)} · {formatReadTime(post.readingMinutes, getUiLabels().readTime)}
@@ -112,7 +112,7 @@ export function PostCard({
             <span className="ul-grow">{post.title}</span>
           </Link>
         </h3>
-        <p className="type-excerpt line-clamp-2 text-on-inverse">
+        <p className="type-excerpt line-clamp-2 font-light text-on-inverse/85">
           {post.description}
         </p>
         <div className="flex items-center justify-between gap-s3">

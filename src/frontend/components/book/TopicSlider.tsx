@@ -47,7 +47,7 @@ function TopicCard({
             bài
           </p>
         </div>
-        <p className="type-excerpt line-clamp-2 text-on-inverse">
+        <p className="type-excerpt line-clamp-2 font-light text-on-inverse/85">
           {topic.description}
         </p>
         <Link
