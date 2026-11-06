@@ -8,9 +8,10 @@ import { isIndexable } from "@/frontend/lib/indexing";
 import "./globals.css";
 
 // Font theo Design System: Source Serif 4 (tiêu đề + bài đọc) và Be Vietnam Pro (giao diện), subset tiếng Việt.
+// Source Serif 4 là font BIẾN THIÊN (một file chứa mọi độ đậm): không liệt kê `weight` để dùng nguyên dải 200–900
+// (cùng file, không tải thêm), nên mô tả trên thẻ dùng được độ đậm 300 nhẹ hơn tiêu đề 600 (2026-11-05).
 const serif = Source_Serif_4({
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "600"],
   style: ["normal"],
   variable: "--next-serif",
   display: "swap",
@@ -19,15 +20,15 @@ const serif = Source_Serif_4({
 // không tải thêm 4 file font (~120KB) ở đường tới hạn của lần tải đầu (tối ưu tốc độ 2026-10-22). Dùng ở prose.css.
 const serifItalic = Source_Serif_4({
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "600"],
   style: ["italic"],
   variable: "--next-serif-italic",
   display: "swap",
   preload: false,
 });
+// Be Vietnam Pro là font TĨNH (mỗi độ đậm một bộ file): chỉ giữ 400 (chữ thường) + 600 (nhấn); `label` / `nav` lên 600 (2026-11-05)
 const sans = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "600"],
   variable: "--next-sans",
   display: "swap",
 });

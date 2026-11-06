@@ -237,7 +237,8 @@ Cỡ chữ, line-height, trọng số và tracking của từng token: xem `type
 ### Principles
 - Không hạ line-height của tiêu đề xuống thấp hơn giá trị trong token (thấp nhất là `display-xl`) để dấu tiếng Việt chồng (ệ, ẫ, ử) không bị cắt.
 - Không dùng letter-spacing âm cho chữ dưới `tracking-neg-limit`; chỉ `display-xl` và `display-lg` có tracking âm, và hạ về 0 ở khung hẹp.
-- Chỉ dùng các trọng số có trong token; trọng số trung (`label`, `nav`) chỉ cho sans, không dùng đậm hơn mức của `display-xl`.
+- Chỉ dùng các trọng số có trong token. Sans (Be Vietnam Pro, font tĩnh: mỗi độ đậm một bộ file) CHỈ có 400 và 600 (`label`, `nav` lên 600 từ 2026-11-05 để bỏ hẳn bộ file 500, nhẹ trang). Serif (Source Serif 4, font biến thiên: một file mọi độ đậm) dùng 300 / 400 / 600; không dùng đậm hơn mức của `display-xl`.
+- **Mô tả trên thẻ nhẹ hơn tiêu đề (2026-11-05):** ở mọi thẻ ảnh phủ chữ (chủ đề, chủ đề con, thẻ bài, bài liên quan, băng chuyền), tiêu đề serif 600 `on-inverse`; mô tả serif `type-excerpt` dùng độ đậm 300 (`font-light`) và màu `on-inverse` 85%; mô tả sans (chủ đề con, băng chuyền) giữ 400, màu `on-inverse` 85%.
 - Bài đọc là `prose`, khổ dòng tối đa `measure-prose`; từ `bp-phone` trở xuống dùng `prose-sm`. Không đặt chữ bài đọc nhỏ hơn `prose-sm`.
 - `eyebrow` chỉ cho cụm ngắn, viết hoa bằng CSS.
 - Ngày đăng viết bằng chữ ("03 tháng 10, 2026") kèm thời gian đọc ("8 phút đọc"), dùng `caption` màu `ink-faint`.

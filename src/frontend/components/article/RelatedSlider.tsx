@@ -46,7 +46,7 @@ function RelatedCard({ post }: { post: PostMeta }) {
         <BookCover size="sm" title={post.source.book} className="mt-s1" />
       </div>
       <div>
-        <p className="type-excerpt line-clamp-2 text-on-inverse">
+        <p className="type-excerpt line-clamp-2 font-light text-on-inverse/85">
           {post.description}
         </p>
         <p className="type-caption mt-s3 text-on-inverse-soft">
